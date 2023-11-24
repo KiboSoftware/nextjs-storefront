@@ -3,8 +3,10 @@ import { useState } from 'react'
 import { QueryQuotesArgs } from '@/lib/gql/types'
 
 export const useHandleB2BContacts = ({
+  salesRepUserId,
   b2bContacts: initialData,
 }: {
+  salesRepUserId: string
   b2bContacts?: {
     startIndex: number
     pageSize: number
@@ -14,9 +16,9 @@ export const useHandleB2BContacts = ({
   }
 }) => {
   const [b2bContactsSearchParam, setB2BContactsSearchParam] = useState<QueryQuotesArgs>({
-    filter: '',
+    filter: `salesrep.userid eq '${salesRepUserId}'`,
     pageSize: initialData?.pageSize || 5,
-    sortBy: '',
+    sortBy: 'email asc',
     startIndex: initialData?.startIndex || 0,
     q: '',
   })

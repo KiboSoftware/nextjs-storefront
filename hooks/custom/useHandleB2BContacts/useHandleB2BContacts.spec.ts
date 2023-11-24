@@ -16,6 +16,7 @@ describe('useHandleB2BContacts', () => {
     const { result } = renderHook(
       () =>
         useHandleB2BContacts({
+          salesRepUserId: '1',
           b2bContacts: initialData,
         }),
       {

@@ -22,3 +22,5 @@ export { default as ListItem } from '@/components/b2b/Lists/ListItem/ListItem'
 export { default as ListTable } from '@/components/b2b/Lists/ListTable/ListTable'
 export { default as ProductViewDialog } from '@/components/b2b/Lists/ProductViewDialog/ProductViewDialog'
 export { default as ViewLists } from '@/components/b2b/Lists/ViewLists/ViewLists'
+
+export { default as AccountsTable } from '@/components/b2b/seller/AccountsTable/AccountsTable'

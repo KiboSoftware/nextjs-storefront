@@ -5,8 +5,7 @@ import { useRouter } from 'next/router'
 import { useTranslation } from 'next-i18next'
 import { serverSideTranslations } from 'next-i18next/serverSideTranslations'
 
-// import AccountsTable from '@/components/b2b/seller/AccountsTable/AccountsTable'
-import AccountsTable from '@/components/b2b/seller/AccountsTable/AccountsTable'
+import { AccountsTable } from '@/components/b2b'
 import { MobileB2BLayout } from '@/components/layout'
 import { QuotesTemplate } from '@/components/page-templates'
 import { useB2BQuote, useGetB2BContacts, useGetQuotes, useHandleB2BContacts } from '@/hooks'
@@ -18,19 +17,17 @@ import { QuoteCollection } from '@/lib/gql/types'
 interface ManageQuotesPageProps {
   quotes: QuoteCollection
   b2bContactsCollection: any
-  salesRepUserId?: string
+  salesRepUserId: string
 }
-
-const { publicRuntimeConfig } = getConfig()
-const authCookieName = publicRuntimeConfig.userCookieKey.toLowerCase()
 
 export async function getServerSideProps(context: GetServerSidePropsContext) {
   const { locale, req, res } = context
 
+  const { publicRuntimeConfig } = getConfig()
+  const authCookieName = publicRuntimeConfig.userCookieKey.toLowerCase()
+
   const cookies = req?.cookies
   const salesRepUserId = decodeParseCookieValue(cookies[authCookieName])?.userId
-
-  // const response = await getCurrentUser(req as NextApiRequest, res as NextApiResponse)
 
   const quotes =
     (await getQuotes(req as NextApiRequest, res as NextApiResponse, salesRepUserId)) || []
@@ -54,12 +51,11 @@ export async function getServerSideProps(context: GetServerSidePropsContext) {
 const ManageQuotesPage: NextPage<ManageQuotesPageProps> = (props) => {
   const { quotes, b2bContactsCollection, salesRepUserId } = props
 
-  console.log('salesRepUserId', salesRepUserId)
-
   // B2B Contacts API implementation
 
   const { b2bContactsSearchParam, handleB2BContactsSearchParam } = useHandleB2BContacts({
     b2bContacts: b2bContactsCollection,
+    salesRepUserId,
   })
 
   const { data: b2bContacts } = useGetB2BContacts(b2bContactsSearchParam, b2bContactsCollection)
