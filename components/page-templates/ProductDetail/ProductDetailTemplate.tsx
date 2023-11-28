@@ -359,7 +359,7 @@ const ProductDetailTemplate = (props: ProductDetailTemplateProps) => {
         isValidForAddToWishlist as boolean
       )
     }
-  }, [isB2B, isValidForAddToCart(), isValidForAddToWishlist])
+  }, [isB2B, isValidForAddToCart(), isValidForAddToWishlist, JSON.stringify(addToCartPayload)])
 
   return (
     <Grid container>

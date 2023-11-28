@@ -4,7 +4,13 @@ import { useProductCardActions } from './useProductCardActions'
 import { AddToCartDialog } from '@/components/dialogs'
 import { ProductQuickViewDialog } from '@/components/product'
 import { useModalContext } from '@/context'
-import { useAddCartItem, useWishlist, useCreateQuoteItem } from '@/hooks'
+import {
+  useAddCartItem,
+  useWishlist,
+  useCreateQuoteItem,
+  useDeleteCurrentCart,
+  useUpdateWishlistItemMutation,
+} from '@/hooks'
 import { ProductCustom } from '@/lib/types'
 
 const showModalMock = jest.fn()
@@ -17,6 +23,12 @@ const addToCartMutateAsyncMock = jest.fn(() => Promise.resolve(cartResponse))
 
 const quoteItemResponse = { id: 'mock-create-quote-item-response-id' }
 const createQuoteItemMutateAsyncMock = jest.fn(() => Promise.resolve(quoteItemResponse))
+
+const deleteCurrentCartResponse = { id: 'mock-delete-current-cart-response-id' }
+const deleteCurrentCartMutateAsyncMock = jest.fn(() => Promise.resolve(deleteCurrentCartResponse))
+
+const updateWishlistResponse = { id: 'mock-update-wishlist-response-id' }
+const updateWishlistMutateAsyncMock = jest.fn(() => Promise.resolve(updateWishlistResponse))
 
 const addOrRemoveWishlistItemMock = jest.fn()
 jest.mock('@/hooks', () => ({
@@ -31,7 +43,10 @@ jest.mock('@/hooks', () => ({
     createQuoteItem: { mutateAsync: createQuoteItemMutateAsyncMock, isPending: false },
   })),
   useUpdateWishlistItemMutation: jest.fn(() => ({
-    updateWishlist: jest.fn(),
+    updateWishlist: { mutateAsync: updateWishlistMutateAsyncMock },
+  })),
+  useDeleteCurrentCart: jest.fn(() => ({
+    deleteCurrentCart: { mutateAsync: deleteCurrentCartMutateAsyncMock },
   })),
 }))
 
@@ -127,5 +142,37 @@ describe('useProductCardActions', () => {
       quoteId,
       updateMode,
     })
+  })
+
+  it('should handle delete current cart', async () => {
+    const { result } = renderHook(() => useProductCardActions())
+    const { deleteCurrentCart } = useDeleteCurrentCart()
+    await act(async () => {
+      await result.current.handleDeleteCurrentCart()
+    })
+
+    expect(deleteCurrentCart.mutateAsync).toHaveBeenCalled()
+  })
+
+  it('should handle add items to list', async () => {
+    const { result } = renderHook(() => useProductCardActions())
+    const { updateWishlist } = useUpdateWishlistItemMutation()
+
+    const payload = {
+      wishlistId: '123',
+      wishlistInput: {
+        id: '123',
+        items: undefined,
+      },
+    }
+    await act(async () => {
+      await result.current.handleAddToList({
+        listData: { id: '123' },
+        onUpdateListData: jest.fn(),
+        product,
+      })
+    })
+
+    expect(updateWishlist.mutateAsync).toHaveBeenCalledWith(payload)
   })
 })

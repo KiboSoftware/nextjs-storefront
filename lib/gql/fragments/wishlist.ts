@@ -4,6 +4,8 @@ fragment wishlistItem on CrWishlistItem {
     quantity
     total
     subtotal
+    discountTotal
+    discountedTotal
     productDiscounts {
       discountQuantity
       productQuantity

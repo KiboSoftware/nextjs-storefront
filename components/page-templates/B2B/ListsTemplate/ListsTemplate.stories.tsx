@@ -11,3 +11,10 @@ export default {
 const Template: ComponentStory<typeof ListsTemplate> = () => <ListsTemplate />
 
 export const Common = Template.bind({})
+
+export const ListsTemplateMobile = Template.bind({})
+ListsTemplateMobile.parameters = {
+  viewport: {
+    defaultViewport: 'iphone12promax',
+  },
+}

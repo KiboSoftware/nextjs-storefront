@@ -6,7 +6,7 @@ import { useMutation, useQueryClient } from '@tanstack/react-query'
 import { makeGraphQLClient } from '@/lib/gql/client'
 import { createWishlistItemMutation } from '@/lib/gql/mutations'
 import { buildAddToWishlistItemParams } from '@/lib/helpers'
-import { wishlistKeys } from '@/lib/react-query/queryKeys'
+import { customerWishlistKeys, wishlistKeys } from '@/lib/react-query/queryKeys'
 import type { WishlistProductInput } from '@/lib/types'
 
 import type { Maybe, CrWishlist } from '@/lib/gql/types'
@@ -15,13 +15,13 @@ interface WishlistItemInputParams {
   product: WishlistProductInput
   customerAccountId: number
   currentWishlist?: Maybe<CrWishlist>
+  quantity?: number
 }
 
 const addToWishlist = async (props: WishlistItemInputParams) => {
   const client = makeGraphQLClient()
-  const { product, currentWishlist } = props
-
-  const variables = buildAddToWishlistItemParams(product, currentWishlist?.id as string)
+  const { product, currentWishlist, quantity } = props
+  const variables = buildAddToWishlistItemParams(product, currentWishlist?.id as string, quantity)
   const response = await client.request({
     document: createWishlistItemMutation,
     variables,
@@ -51,6 +51,7 @@ export const useAddToWishlistItem = () => {
       mutationFn: addToWishlist,
       onSuccess: () => {
         queryClient.invalidateQueries({ queryKey: wishlistKeys.all })
+        queryClient.invalidateQueries({ queryKey: customerWishlistKeys.all })
       },
     }),
   }

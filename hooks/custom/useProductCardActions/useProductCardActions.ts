@@ -4,6 +4,7 @@ import { useModalContext } from '@/context'
 import {
   useAddCartItem,
   useCreateQuoteItem,
+  useDeleteCurrentCart,
   useUpdateWishlistItemMutation,
   useWishlist,
 } from '@/hooks'
@@ -18,6 +19,7 @@ export const useProductCardActions = (shouldFetchShippingMethods?: boolean) => {
   const { addOrRemoveWishlistItem, checkProductInWishlist } = useWishlist()
   const { createQuoteItem } = useCreateQuoteItem({ shouldFetchShippingMethods })
   const { updateWishlist } = useUpdateWishlistItemMutation()
+  const { deleteCurrentCart } = useDeleteCurrentCart()
 
   const handleAddToCart = async (payload: any, showConfirmationModal = true) => {
     try {
@@ -32,7 +34,7 @@ export const useProductCardActions = (shouldFetchShippingMethods?: boolean) => {
         })
       }
     } catch (err) {
-      console.log(err)
+      console.error(err)
     }
   }
 
@@ -50,7 +52,7 @@ export const useProductCardActions = (shouldFetchShippingMethods?: boolean) => {
         quantity,
       })
     } catch (err) {
-      console.log(err)
+      console.error(err)
     }
   }
 
@@ -67,7 +69,7 @@ export const useProductCardActions = (shouldFetchShippingMethods?: boolean) => {
     quoteDetails?: any
     listData?: any
     shouldFetchShippingMethods?: boolean
-    onUpdateListData?: (param: CrWishlist) => void
+    onUpdateListData?: (param: CrWishlist, addToCartPayload: any) => any
   }) => {
     showModal({
       Component: ProductQuickViewDialog,
@@ -97,7 +99,7 @@ export const useProductCardActions = (shouldFetchShippingMethods?: boolean) => {
     onUpdateListData,
   }: {
     listData: CrWishlist | undefined
-    onUpdateListData: (param: CrWishlist) => void
+    onUpdateListData: (param: CrWishlist) => any
     product: Product
   }) => {
     const items = listData?.items
@@ -127,10 +129,18 @@ export const useProductCardActions = (shouldFetchShippingMethods?: boolean) => {
   }
 
   const isATCLoading = addToCart.isPending
+  const handleDeleteCurrentCart = async () => {
+    try {
+      await deleteCurrentCart.mutateAsync()
+    } catch (err) {
+      console.error(err)
+    }
+  }
 
   return {
     handleAddToCart,
     handleAddToQuote,
+    handleDeleteCurrentCart,
     openProductQuickViewModal,
     handleWishList,
     checkProductInWishlist,

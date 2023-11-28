@@ -22,4 +22,5 @@ export interface WishlistItemInWishlistParams {
 export interface WishlistHookParams {
   isRemovedFromWishlist?: boolean
   delay?: number
+  isCreateList?: boolean
 }

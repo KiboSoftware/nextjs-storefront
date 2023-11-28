@@ -15,6 +15,7 @@ const { listData } = stories
 
 const onEditFormToggleMock = jest.fn()
 const onUpdateListDataMock = jest.fn()
+const onHandleAddListToCartMock = jest.fn()
 
 const nonConfigurableProductMock: Product = {
   productCode: 'pdt1',
@@ -27,6 +28,16 @@ const nonConfigurableProductMock: Product = {
   personalizationScore: 0,
   score: 0,
   updateDate: undefined,
+}
+
+const configurableProductMock: Product = {
+  ...nonConfigurableProductMock,
+  productCode: 'pdt2',
+  options: [
+    {
+      isRequired: true,
+    },
+  ],
 }
 
 jest.mock('@/components/b2b/Lists/ListItem/ListItem', () => ({
@@ -60,6 +71,13 @@ jest.mock('@/components/b2b/B2BProductSearch/B2BProductSearch', () => ({
           data-testid="add-non-configurable-product-button"
           onClick={() => onAddProduct(nonConfigurableProductMock)}
         >
+          Add Non Configurable Product
+        </button>
+
+        <button
+          data-testid="add-configurable-product-button"
+          onClick={() => onAddProduct(configurableProductMock)}
+        >
           Add Configurable Product
         </button>
       </div>
@@ -85,12 +103,13 @@ function setup() {
       {...Common.args}
       onEditFormToggle={onEditFormToggleMock}
       onUpdateListData={onUpdateListDataMock}
+      onHandleAddListToCart={onHandleAddListToCartMock}
     />
   )
   return { user }
 }
 
-describe('[componenet] - Edit list', () => {
+describe('[component] - Edit list', () => {
   it('should render the component', () => {
     setup()
     expect(screen.getByText(listData.name)).toBeVisible()
@@ -206,7 +225,7 @@ describe('[componenet] - Edit list', () => {
     })
   })
 
-  it('should add product to list', async () => {
+  it('should add non configurable product to list', async () => {
     setup()
     const b2bSearch = screen.getByTestId('product-search')
     const b2bSearchInput = within(b2bSearch).getByTestId('search-input')
@@ -220,6 +239,41 @@ describe('[componenet] - Edit list', () => {
 
     await waitFor(() => {
       expect(screen.getByText(/pdt1/i)).toBeVisible()
+    })
+  })
+
+  it('should handle configurable product', async () => {
+    setup()
+    const b2bSearch = screen.getByTestId('product-search')
+    const b2bSearchInput = within(b2bSearch).getByTestId('search-input')
+
+    fireEvent.change(b2bSearchInput, { target: { value: configurableProductMock.productCode } })
+
+    expect(b2bSearchInput).toHaveValue(configurableProductMock.productCode)
+    const productSuggestion = within(b2bSearch).getByTestId('add-configurable-product-button')
+
+    fireEvent.click(productSuggestion)
+
+    await waitFor(() => {
+      expect(screen.getByText(/product-configuration-options/i)).toBeVisible()
+    })
+  })
+
+  it('should add all items present in list to cart when users click on add all items to cart link', async () => {
+    const { user } = setup()
+    const addAllItemsToCartLink = screen.getByText(/add-all-items-to-cart/i)
+    user.click(addAllItemsToCartLink)
+    await waitFor(() => {
+      expect(onHandleAddListToCartMock).toBeCalled()
+    })
+  })
+
+  it('should reset the cart add all items present in list to cart when users click on empty cart and add all items to cart link', async () => {
+    const { user } = setup()
+    const emptyCartAndAddAllItemsToCartLink = screen.getByText(/empty-cart-add-list-to-cart/i)
+    user.click(emptyCartAndAddAllItemsToCartLink)
+    await waitFor(() => {
+      expect(onHandleAddListToCartMock).toBeCalled()
     })
   })
 })

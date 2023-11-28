@@ -21,23 +21,30 @@ import { ListTable, EditList } from '@/components/b2b'
 import { styles } from '@/components/b2b/Lists/ViewLists/ViewLists.style'
 import { ConfirmationDialog } from '@/components/dialogs'
 import { useAuthContext, useModalContext, useSnackbarContext } from '@/context'
-import { PageProps, useCreateWishlist, useGetWishlist, useDeleteWishlist } from '@/hooks'
-import { useAddItemsToCurrentCart } from '@/hooks/mutations/cart/useAddItemsToCurrentCart/useAddItemsToCurrentCart'
+import {
+  PageProps,
+  useCreateWishlist,
+  useGetWishlist,
+  useDeleteWishlist,
+  useProductCardActions,
+} from '@/hooks'
 
 import { CrWishlist, CrWishlistItem, Maybe, WishlistCollection } from '@/lib/gql/types'
 
 export interface ViewListsProps {
   onEditFormToggle: () => void
   isEditFormOpen: boolean
+  onAddListToCart: (items: any) => any
 }
 
 const ViewLists = (props: ViewListsProps) => {
-  const { onEditFormToggle, isEditFormOpen } = props
+  const { onEditFormToggle, isEditFormOpen, onAddListToCart } = props
   const { publicRuntimeConfig } = getConfig()
   const { createWishlist } = useCreateWishlist()
   const { deleteWishlist } = useDeleteWishlist()
   const { showSnackbar } = useSnackbarContext()
   const { showModal } = useModalContext()
+  const { handleDeleteCurrentCart } = useProductCardActions()
 
   // declaring states
   const [paginationState, setPaginationState] = useState<PageProps>({
@@ -59,7 +66,6 @@ const ViewLists = (props: ViewListsProps) => {
   const response = useGetWishlist(paginationState)
   const wishlistsResponse = response.data as WishlistCollection
   const { isPending } = response
-  const { addItemsToCurrentCart } = useAddItemsToCurrentCart()
 
   // copy list function
   const createListName = (name: string) => {
@@ -73,20 +79,20 @@ const ViewLists = (props: ViewListsProps) => {
     return listName
   }
 
-  const handleCopyList = (id: string) => {
+  const handleCopyList = async (id: string) => {
     const newWishlist =
       wishlistsResponse.items &&
       wishlistsResponse?.items.find((item: Maybe<CrWishlist>) => item?.id === id)
     const newListName = createListName(newWishlist?.name as string)
     setIsLoading(true)
     try {
-      createWishlist.mutate({
+      await createWishlist.mutateAsync({
         customerAccountId: user?.id,
         name: newListName,
         items: newWishlist?.items,
       })
     } catch (e: any) {
-      alert(e?.message)
+      console.error(e)
     }
     setIsLoading(false)
   }
@@ -119,16 +125,18 @@ const ViewLists = (props: ViewListsProps) => {
     const list = wishlistsResponse?.items?.find((item) => item?.id === id)
     setIsLoading(true)
     try {
-      const response = await addItemsToCurrentCart.mutateAsync({
-        items: list?.items as CrWishlistItem[],
-      })
+      const response = await onAddListToCart(list?.items as Array<CrWishlistItem>)
       if (response) showSnackbar(t('list-added-to-cart'), 'success')
       setIsLoading(false)
     } catch (e) {
-      console.log(e)
+      console.error(e)
     }
 
     setIsLoading(false)
+  }
+  const handleEmptyCartAndAddListToCart = (id: string) => {
+    handleDeleteCurrentCart()
+    handleAddListToCart(id)
   }
 
   // handle filter for current user list
@@ -207,6 +215,7 @@ const ViewLists = (props: ViewListsProps) => {
               onDeleteList={handleDeleteList}
               onEditList={handleEditList}
               onAddListToCart={handleAddListToCart}
+              onEmptyCartAndAddListToCart={handleEmptyCartAndAddListToCart}
             />
             <Pagination
               count={wishlistsResponse ? wishlistsResponse.pageCount : 1}

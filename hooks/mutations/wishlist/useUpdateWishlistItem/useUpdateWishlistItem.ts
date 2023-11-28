@@ -5,7 +5,8 @@ import { useMutation, useQueryClient } from '@tanstack/react-query'
 
 import { makeGraphQLClient } from '@/lib/gql/client'
 import { updateWishlistMutation, updateWishlistItemQuantityMutation } from '@/lib/gql/mutations'
-import { wishlistKeys } from '@/lib/react-query/queryKeys'
+import { customerWishlistKeys, wishlistKeys } from '@/lib/react-query/queryKeys'
+import { WishlistHookParams } from '@/lib/types'
 
 import { CrWishlist, CrWishlistInput, CrWishlistItem } from '@/lib/gql/types'
 
@@ -63,7 +64,7 @@ const updateWishlistItemQuantity = async (
  * @returns 'response?.createWishlistItem', which contains wishlist items for current user
  */
 
-export const useUpdateWishlistItemMutation = () => {
+export const useUpdateWishlistItemMutation = (params?: WishlistHookParams) => {
   const queryClient = useQueryClient()
 
   return {
@@ -77,6 +78,9 @@ export const useUpdateWishlistItemMutation = () => {
       mutationFn: updateWishlistItemQuantity,
       onSuccess: () => {
         queryClient.invalidateQueries({ queryKey: wishlistKeys.all })
+        if (params?.isCreateList) {
+          queryClient.invalidateQueries({ queryKey: customerWishlistKeys.all })
+        }
       },
     }),
   }

@@ -54,11 +54,17 @@ const EditList = (props: EditListProps) => {
   const mdScreen = useMediaQuery<boolean>(theme.breakpoints.up('md'))
   const { t } = useTranslation('common')
   const { updateWishlist } = useUpdateWishlistItemMutation()
-  const { openProductQuickViewModal, handleAddToList } = useProductCardActions()
+  const { openProductQuickViewModal, handleAddToList, handleDeleteCurrentCart } =
+    useProductCardActions()
 
   const handleAddListToCart = async (id: string) => {
     await handleSaveWishlist()
     onHandleAddListToCart(id)
+  }
+
+  const handleEmptyCartAndAddListToCart = async (id: string) => {
+    handleDeleteCurrentCart()
+    handleAddListToCart(id)
   }
 
   const handleSaveWishlist = async () => {
@@ -72,7 +78,7 @@ const EditList = (props: EditListProps) => {
       onUpdateListData(response.updateWishlist)
       onEditFormToggle()
     } catch (e) {
-      console.log(e)
+      console.error(e)
     }
   }
 
@@ -88,14 +94,21 @@ const EditList = (props: EditListProps) => {
       const response = await updateWishlist.mutateAsync(payload)
       onUpdateListData(response.updateWishlist)
     } catch (e) {
-      console.log('error', e)
+      console.error(e)
     }
   }
 
-  const handleChangeQuantity = (id: string, quantity: number) => {
+  const handleChangeQuantity = async (id: string, quantity: number) => {
     const items = listData?.items
     const currentItem = items?.find((item: Maybe<CrWishlistItem>) => item?.id === id)
     if (currentItem) currentItem.quantity = quantity
+    if (listData) listData.items = items
+    const payload = {
+      wishlistId: listData?.id as string,
+      wishlistInput: listData as CrWishlistInput,
+    }
+    const response = await updateWishlist.mutateAsync(payload)
+    onUpdateListData(response.updateWishlist)
   }
 
   const handleAddProduct = async (product?: Product) => {
@@ -215,12 +228,24 @@ const EditList = (props: EditListProps) => {
           <Typography variant="h3" fontWeight={'bold'}>
             {t('list-items')}
           </Typography>
-          <Button
-            onClick={() => handleAddListToCart(listData?.id as string)}
-            sx={{ ...styles.addAllItemsToCartButton }}
-          >
-            <Link sx={{ ...styles.addAllItemsToCartLink }}>{t('add-all-items-to-cart')}</Link>
-          </Button>
+          {listData?.items && listData?.items?.length > 0 && (
+            <Stack direction="row">
+              <Button
+                onClick={() => handleEmptyCartAndAddListToCart(listData?.id as string)}
+                sx={{ ...styles.addAllItemsToCartButton }}
+              >
+                <Link sx={{ ...styles.addAllItemsToCartLink }}>
+                  {t('empty-cart-add-list-to-cart')}
+                </Link>
+              </Button>
+              <Button
+                onClick={() => handleAddListToCart(listData?.id as string)}
+                sx={{ ...styles.addAllItemsToCartButton }}
+              >
+                <Link sx={{ ...styles.addAllItemsToCartLink }}>{t('add-all-items-to-cart')}</Link>
+              </Button>
+            </Stack>
+          )}
         </Stack>
       </Box>
 
@@ -229,10 +254,10 @@ const EditList = (props: EditListProps) => {
           {t('no-item-in-list-text')}
         </Typography>
       ) : (
-        listData?.items?.map((item: Maybe<CrWishlistItem>) => {
+        listData?.items?.map((item: Maybe<CrWishlistItem>, index) => {
           return (
             <ListItem
-              key={item?.product?.productCode}
+              key={(item?.product?.productCode as string) + index}
               item={item as CrWishlistItem}
               onDeleteItem={handleDeleteItem}
               onChangeQuantity={handleChangeQuantity}

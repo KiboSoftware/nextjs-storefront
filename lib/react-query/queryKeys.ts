@@ -150,3 +150,8 @@ export const quoteKeys = {
   all: ['quote'] as const,
   detail: (id: string) => [...quoteKeys.all, id] as const,
 }
+
+export const customerWishlistKeys = {
+  all: ['customerWishlist'] as const,
+  detail: (id: string) => [...customerWishlistKeys.all, id] as const,
+}

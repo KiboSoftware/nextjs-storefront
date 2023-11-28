@@ -41,7 +41,7 @@ jest.mock('@/components/common/QuantitySelector/QuantitySelector', () => ({
       </button>
       <input value={quantity} data-testid="change-input" onChange={onQuantityUpdate as any} />
       <button onClick={onIncrease} data-testid="increase-button">
-        Decrease
+        Increase
       </button>
     </div>
   ),
@@ -90,8 +90,11 @@ describe('[component] - ListItem', () => {
     user.click(increaseBtn)
     await waitFor(() => {
       expect(within(quantitySelector).getByTestId('change-input')).toHaveValue(
-        (lineItem.quantity + 1).toString()
+        lineItem.quantity.toString()
       )
+    })
+    await waitFor(() => {
+      expect(onChangeQuantityMock).toBeCalled()
     })
   })
 
@@ -102,8 +105,26 @@ describe('[component] - ListItem', () => {
     user.click(decreaseBtn)
     await waitFor(() => {
       expect(within(quantitySelector).getByTestId('change-input')).toHaveValue(
-        (lineItem.quantity - 1).toString()
+        lineItem.quantity.toString()
       )
+    })
+    await waitFor(() => {
+      expect(onChangeQuantityMock).toBeCalled()
+    })
+  })
+
+  it('should update item quantity', async () => {
+    const { user } = setup()
+    const quantitySelector = screen.getByTestId('quantity-selector')
+    const quantityUpdateInput = within(quantitySelector).getByTestId('change-input')
+    user.type(quantityUpdateInput, '3')
+    await waitFor(() => {
+      expect(within(quantitySelector).getByTestId('change-input')).toHaveValue(
+        lineItem.quantity.toString()
+      )
+    })
+    await waitFor(() => {
+      expect(onChangeQuantityMock).toBeCalled()
     })
   })
 

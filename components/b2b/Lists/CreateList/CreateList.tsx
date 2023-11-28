@@ -1,43 +1,47 @@
-import React, { FormEvent, useState } from 'react'
+import React, { FormEvent, useEffect, useState } from 'react'
 
 import ArrowBackIosIcon from '@mui/icons-material/ArrowBackIos'
-import { Button, useMediaQuery, useTheme, IconButton, Box, Typography } from '@mui/material'
+import {
+  Button,
+  useMediaQuery,
+  useTheme,
+  IconButton,
+  Box,
+  Typography,
+  Stack,
+  Link,
+} from '@mui/material'
 import { useRouter } from 'next/router'
 import { useTranslation } from 'next-i18next'
 
 import { B2BProductSearch, ListItem } from '@/components/b2b'
 import styles from '@/components/b2b/Lists/CreateList/CreateList.style'
 import { KiboTextBox } from '@/components/common'
-import { useAuthContext } from '@/context'
-import { useCreateWishlist, useProductCardActions } from '@/hooks'
+import { useAuthContext, useSnackbarContext } from '@/context'
+import {
+  useAddToWishlistItem,
+  useCreateWishlist,
+  useDeleteWishlistItemById,
+  useProductCardActions,
+  useUpdateWishlistItemMutation,
+  useGetCustomerWishlist,
+} from '@/hooks'
 import { productGetters } from '@/lib/getters'
 import { ProductCustom } from '@/lib/types'
 
-import { CrProductOption, CrProductPrice, CrWishlistItem, Product } from '@/lib/gql/types'
+import { CrWishlistItem, Product } from '@/lib/gql/types'
 
 export interface CreateListProps {
   onCreateFormToggle: (param: boolean) => void
-}
-
-type CreateListItems = {
-  product: {
-    productCode: string
-  }
-  quantity: number
-}
-interface CreateListState {
-  name: string
-  items: CreateListItems[]
+  onAddListToCart: (items: any) => any
 }
 
 const CreateList = (props: CreateListProps) => {
-  const { onCreateFormToggle } = props
-  const [listState, setListState] = useState<CreateListState>({
-    name: '',
-    items: [],
-  })
-  const [productList, setProductList] = useState<CrWishlistItem[]>([])
-  const { openProductQuickViewModal } = useProductCardActions()
+  const { onCreateFormToggle, onAddListToCart } = props
+
+  const [newListState, setNewListState] = useState<any>({})
+  const [listName, setListName] = useState('')
+  const { openProductQuickViewModal, handleDeleteCurrentCart } = useProductCardActions()
 
   const theme = useTheme()
   const mdScreen = useMediaQuery<boolean>(theme.breakpoints.up('md'))
@@ -45,73 +49,43 @@ const CreateList = (props: CreateListProps) => {
   const { t } = useTranslation('common')
   const { user } = useAuthContext()
   const { createWishlist } = useCreateWishlist()
+  const { updateWishlist, updateWishlistItemQuantity } = useUpdateWishlistItemMutation({
+    isCreateList: true,
+  })
+  const { addToWishlist } = useAddToWishlistItem()
+  const { showSnackbar } = useSnackbarContext()
+  const { deleteWishlistItemById } = useDeleteWishlistItemById({ isCreateList: true })
+  const response = useGetCustomerWishlist({
+    customerAccountId: user?.id as number,
+    wishlistName: newListState?.name,
+  })
 
-  const onUpdateListData = (product: any) => {
-    const { items } = listState
-    const item = {
-      product: {
-        productCode: product?.productCode as string,
-        variationProductCode: product?.variationProductCode as string,
-        options: product?.options?.map((option: any) => {
-          const selected = option?.values?.find((value: any) => value?.isSelected)
-          return {
-            name: option?.attributeDetail?.name,
-            value: selected?.value || selected?.stringValue || selected?.shopperEnteredValue,
-            attributeFQN: option?.attributeFQN,
-          }
-        }) as CrProductOption[],
-        isPackagedStandAlone: product?.isPackagedStandAlone,
-        price: product?.price,
-        imageUrl: productGetters.getCoverImage(product),
-        name: productGetters.getName(product),
-        description: productGetters.getDescription(product),
-      },
-      quantity: 1,
+  const handleAddListToCart = async () => {
+    const response = await onAddListToCart(newListState?.items)
+    if (response) {
+      showSnackbar(t('list-added-to-cart'), 'success')
+      onCreateFormToggle(false)
     }
-    items.push(item)
+  }
 
-    // converting product to CrWishlistItem
-    const crWishlistProduct: CrWishlistItem = {
-      quantity: 1,
-      product: {
-        productCode: product?.productCode,
-        variationProductCode: product?.variationProductCode,
-        options: product?.options?.map((option: any) => {
-          const selected = option?.values?.find((value: any) => value?.isSelected)
-          return {
-            name: option?.attributeDetail?.name,
-            value: selected?.value || selected?.stringValue || selected?.shopperEnteredValue,
-            attributeFQN: option?.attributeFQN,
-          }
-        }) as CrProductOption[],
-        isPackagedStandAlone: product?.isPackagedStandAlone,
-        price: product?.price,
-        imageUrl: productGetters.getCoverImage(product),
-        name: productGetters.getName(product),
-        description: productGetters.getDescription(product),
-      },
-    }
-
-    setListState((currentState) => ({ ...currentState, items: items }))
-    // setting state to show the products below
-    setProductList((currentVal) => [...currentVal, crWishlistProduct])
+  const onUpdateListData = async (product: any, payload: any) => {
+    await addToWishlist.mutateAsync({
+      customerAccountId: user?.id as number,
+      product,
+      currentWishlist: newListState,
+      quantity: payload.quantity,
+    })
+  }
+  const handleEmptyCartAndAddListToCart = () => {
+    handleDeleteCurrentCart()
+    handleAddListToCart()
   }
   const handleSubmit = async (e: FormEvent) => {
     e.preventDefault()
-    try {
-      await createWishlist.mutateAsync({
-        customerAccountId: user?.id,
-        name: listState.name,
-        items: listState.items,
-      })
-      setListState({ name: '', items: [] })
-      onCreateFormToggle(false)
-    } catch (e) {
-      console.log(e)
-    }
+    onCreateFormToggle(false)
   }
 
-  const handleAddProduct = (product?: Product) => {
+  const handleAddProduct = async (product?: any) => {
     // setting state for creation of list in backend
     if (productGetters.isVariationProduct(product as Product)) {
       const dialogProps = {
@@ -127,67 +101,61 @@ const CreateList = (props: CreateListProps) => {
         onUpdateListData,
       })
     } else {
-      const { items } = listState
-      const item = {
-        product: {
-          productCode: product?.productCode as string,
-          variationProductCode: product?.variationProductCode as string,
-          options: product?.options as CrProductOption[],
-          isPackagedStandAlone: product?.isPackagedStandAlone,
-          price: product?.price as CrProductPrice,
-          imageUrl:
-            (product?.content?.productImages?.length as number) > 0
-              ? (product?.content?.productImages?.[0]?.imageUrl as string)
-              : '',
-          name: product?.content?.productName as string,
-          description: product?.content?.productFullDescription as string,
-        },
-        quantity: 1,
-      }
-      items.push(item)
-
-      // converting product to CrWishlistItem
-      const crWishlistProduct: CrWishlistItem = {
-        quantity: 1,
-        product: {
-          productCode: product?.productCode,
-          variationProductCode: product?.variationProductCode,
-          options: product?.options as CrProductOption[],
-          isPackagedStandAlone: product?.isPackagedStandAlone,
-          price: product?.price as CrProductPrice,
-          imageUrl:
-            (product?.content?.productImages?.length as number) > 0
-              ? (product?.content?.productImages?.[0]?.imageUrl as string)
-              : '',
-          name: product?.content?.productName as string,
-          description: product?.content?.productFullDescription as string,
-        },
-      }
-
-      setListState((currentState) => ({ ...currentState, items: items }))
-      // setting state to show the products below
-      setProductList((currentVal) => [...currentVal, crWishlistProduct])
+      await addToWishlist.mutateAsync({
+        product,
+        customerAccountId: user?.id as number,
+        currentWishlist: newListState,
+      })
     }
   }
 
-  const handleListNameChange = (e: string, userEnteredValue: string) => {
-    setListState((currentVal) => ({ ...currentVal, name: userEnteredValue }))
+  const handleCreateListAndUpdateWishlistName = async () => {
+    setListName(listName || newListState?.name)
+    if (!newListState?.name && listName) {
+      try {
+        const listData = await createWishlist.mutateAsync({
+          customerAccountId: user?.id,
+          name: listName,
+        })
+        if (listData) {
+          setNewListState(listData)
+        }
+      } catch (e) {
+        console.error(e)
+      }
+    } else if (listName) {
+      try {
+        const listData = await updateWishlist.mutateAsync({
+          wishlistId: newListState?.id,
+          wishlistInput: { name: listName },
+        })
+        if (listData) {
+          setNewListState(listData?.updateWishlist)
+        }
+      } catch (e) {
+        console.error(e)
+      }
+    }
   }
 
-  const handleDeleteItem = (id: string) => {
-    const items: any = listState.items.filter((item) => {
-      return item.product.productCode !== id
+  const handleDeleteItem = async (id: string) => {
+    await deleteWishlistItemById.mutateAsync({
+      wishlistId: newListState?.id,
+      wishlistItemId: id,
     })
-    setListState((currentState) => ({ ...currentState, items: items }))
-    setProductList((currentState) =>
-      currentState.filter((item: CrWishlistItem) => item.product?.productCode !== id)
-    )
   }
 
-  const handleChangeQuantity = (id: string, quantity: number) => {
-    const item = listState.items.find((item) => item.product.productCode === id)
-    if (item?.quantity) item.quantity = quantity
+  const handleChangeQuantity = async (id: string, quantity: number) => {
+    await updateWishlistItemQuantity.mutateAsync({
+      quantity,
+      wishlistId: newListState?.id,
+      wishlistItemId: id,
+    })
   }
+
+  useEffect(() => {
+    setNewListState(response?.data)
+  }, [JSON.stringify(response?.data)])
 
   return (
     <>
@@ -229,7 +197,7 @@ const CreateList = (props: CreateListProps) => {
                   variant="contained"
                   type="submit"
                   form="wishlist-form"
-                  disabled={listState.name.length === 0}
+                  disabled={!newListState?.name}
                 >
                   {t('save-and-close')}
                 </Button>
@@ -259,27 +227,54 @@ const CreateList = (props: CreateListProps) => {
             <KiboTextBox
               placeholder={t('name-this-list')}
               name="listName"
-              value={listState.name}
-              onChange={handleListNameChange}
+              value={listName}
+              onChange={(_, value) => setListName(value)}
+              onBlur={handleCreateListAndUpdateWishlistName}
               label={t('list-name')}
               sx={{ maxWidth: '360px' }}
             />
           </Box>
-          <Box sx={{ maxWidth: '360px' }}>
-            <B2BProductSearch onAddProduct={handleAddProduct} />
-          </Box>
+          {listName && (
+            <Box sx={{ maxWidth: '360px' }}>
+              <B2BProductSearch onAddProduct={handleAddProduct} />
+            </Box>
+          )}
         </form>
-        <Typography variant="h3" sx={{ fontWeight: 'bold' }}>
-          {t('list-items')}
-        </Typography>
-        {productList.length === 0 ? (
+        <Box>
+          <Stack direction="row" sx={{ justifyContent: 'space-between', alignItems: 'baseline' }}>
+            <Typography variant="h3" fontWeight={'bold'}>
+              {t('list-items')}
+            </Typography>
+            {newListState?.items?.length > 0 && (
+              <Stack direction="row">
+                <Button
+                  onClick={handleEmptyCartAndAddListToCart}
+                  sx={{ ...styles.addAllItemsToCartButton }}
+                >
+                  <Link sx={{ ...styles.addAllItemsToCartLink }}>
+                    {t('empty-cart-add-list-to-cart')}
+                  </Link>
+                </Button>
+                <Button onClick={handleAddListToCart} sx={{ ...styles.addAllItemsToCartButton }}>
+                  <Link sx={{ ...styles.addAllItemsToCartLink }}>{t('add-all-items-to-cart')}</Link>
+                </Button>
+              </Stack>
+            )}
+          </Stack>
+        </Box>
+        {!newListState?.name && (
+          <Typography variant="body2" color="GrayText" marginTop="20px">
+            {t('add-list-name-to-search-products')}
+          </Typography>
+        )}
+        {newListState?.items?.length === 0 ? (
           <Typography variant="body2" color="GrayText" marginTop="20px">
             {t('no-item-in-list-text')}
           </Typography>
         ) : (
-          productList.map((item: CrWishlistItem) => (
+          newListState?.items?.map((item: CrWishlistItem, index: any) => (
             <ListItem
-              key={item.product?.productCode as string}
+              key={(item.product?.productCode as string) + index}
               item={item}
               onDeleteItem={handleDeleteItem}
               onChangeQuantity={handleChangeQuantity}
@@ -304,7 +299,7 @@ const CreateList = (props: CreateListProps) => {
               type="submit"
               form="wishlist-form"
               sx={{ width: '100%' }}
-              disabled={listState.name.length === 0}
+              disabled={!newListState?.name}
             >
               {t('save-and-close')}
             </Button>

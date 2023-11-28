@@ -1,5 +1,6 @@
 import React from 'react'
 
+import { useMediaQuery } from '@mui/material'
 import { composeStories } from '@storybook/testing-react'
 import { fireEvent, render, screen, waitFor, within } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
@@ -7,11 +8,12 @@ import mediaQuery from 'css-mediaquery'
 import mockRouter from 'next-router-mock'
 
 import * as stories from './ListsTemplate.stories'
+import { renderWithQueryClient } from '@/__test__/utils'
 import { CreateListProps } from '@/components/b2b/Lists/CreateList/CreateList'
 import { EditListProps } from '@/components/b2b/Lists/EditList/EditList'
 import { ViewListsProps } from '@/components/b2b/Lists/ViewLists/ViewLists'
 
-const { Common } = composeStories(stories)
+const { Common, ListsTemplateMobile } = composeStories(stories)
 
 const createMatchMedia = (width: number) => (query: string) => ({
   matches: mediaQuery.match(query, { width }),
@@ -24,9 +26,13 @@ const createMatchMedia = (width: number) => (query: string) => ({
   dispatchEvent: jest.fn(),
 })
 
+jest.mock('@mui/material', () => ({
+  ...jest.requireActual('@mui/material'),
+  useMediaQuery: jest.fn(),
+}))
+const user = userEvent.setup()
 const setup = () => {
-  const user = userEvent.setup()
-  render(<Common />)
+  renderWithQueryClient(<Common />)
   return { user }
 }
 
@@ -45,15 +51,25 @@ const EditListMock = ({ onEditFormToggle, listData, onUpdateListData }: EditList
 jest.mock(
   '@/components/b2b/Lists/ViewLists/ViewLists',
   () =>
-    ({ onEditFormToggle, isEditFormOpen }: ViewListsProps) =>
-      isEditFormOpen
-        ? EditListMock({
-            onEditFormToggle: onEditFormToggle,
-            listData: {},
-            onUpdateListData: () => console.log('updateList'),
-            onHandleAddListToCart: () => console.log('addListToCart'),
-          })
-        : ListTableMock({ onEditFormToggle: onEditFormToggle })
+    function viewList({ onEditFormToggle, isEditFormOpen, onAddListToCart }: ViewListsProps) {
+      return (
+        <>
+          {isEditFormOpen
+            ? EditListMock({
+                onEditFormToggle: onEditFormToggle,
+                listData: {},
+                onUpdateListData: () => console.log('updateList'),
+                onHandleAddListToCart: () => console.log('addListToCart'),
+              })
+            : ListTableMock({ onEditFormToggle: onEditFormToggle })}
+
+          <button
+            data-testid="onAddListToCart-button"
+            onClick={() => onAddListToCart(['item1', 'item2'])}
+          ></button>
+        </>
+      )
+    }
 )
 
 jest.mock('@/components/b2b/Lists/CreateList/CreateList', () => ({
@@ -69,7 +85,11 @@ jest.mock('@/components/b2b/Lists/CreateList/CreateList', () => ({
   },
 }))
 
-describe('[component] - ListsTemplate', () => {
+describe('[component] - ListsTemplate Desktop', () => {
+  beforeEach(() => {
+    const useMediaQueryMock = useMediaQuery as jest.Mock
+    useMediaQueryMock.mockReturnValue(true)
+  })
   it('should render template', () => {
     setup()
     const heading = screen.getByRole('heading')
@@ -79,22 +99,7 @@ describe('[component] - ListsTemplate', () => {
   })
 
   it('should redirect to /my-account page when my-account button clicked', async () => {
-    window.matchMedia = createMatchMedia(1024)
-    const { user } = setup()
-    const myAccountBtn = screen.getByTestId('my-account-button')
-    expect(myAccountBtn).toBeVisible()
-    user.click(myAccountBtn)
-    await waitFor(() => {
-      expect(mockRouter).toMatchObject({
-        asPath: '/my-account',
-        pathname: '/my-account',
-      })
-    })
-  })
-
-  it('should redirect to /my-account page in mobile view when my-account button clicked', async () => {
-    window.matchMedia = createMatchMedia(500)
-    const { user } = setup()
+    setup()
     const myAccountBtn = screen.getByTestId('my-account-button')
     expect(myAccountBtn).toBeVisible()
     user.click(myAccountBtn)
@@ -107,7 +112,6 @@ describe('[component] - ListsTemplate', () => {
   })
 
   it('should toggle edit list form when edit list button clicked', async () => {
-    window.matchMedia = createMatchMedia(1024)
     setup()
     const viewLists = screen.getByTestId('view-lists-mock')
     const editToggleBtn = within(viewLists).getByTestId('toggle-edit-form')
@@ -125,7 +129,6 @@ describe('[component] - ListsTemplate', () => {
   })
 
   it('should open create list form when create list button clicked', async () => {
-    window.matchMedia = createMatchMedia(1024)
     setup()
     const createFormBtn = screen.getByTestId('create-new-list-btn')
 
@@ -139,10 +142,27 @@ describe('[component] - ListsTemplate', () => {
 
     expect(screen.getByTestId('view-lists-mock')).toBeVisible()
   })
+})
+describe('[component] - ListsTemplate Mobile', () => {
+  beforeEach(() => {
+    const useMediaQueryMock = useMediaQuery as jest.Mock
+    useMediaQueryMock.mockReturnValue(false)
+  })
+  it('should redirect to /my-account page in mobile view when my-account button clicked', async () => {
+    renderWithQueryClient(<ListsTemplateMobile {...ListsTemplateMobile.args} />)
+    const myAccountBtn = screen.getByTestId('my-account-button')
+    expect(myAccountBtn).toBeVisible()
+    user.click(myAccountBtn)
+    await waitFor(() => {
+      expect(mockRouter).toMatchObject({
+        asPath: '/my-account',
+        pathname: '/my-account',
+      })
+    })
+  })
 
   it('should toggle edit list form in mobile view when edit list button clicked', async () => {
-    window.matchMedia = createMatchMedia(500)
-    setup()
+    renderWithQueryClient(<ListsTemplateMobile {...ListsTemplateMobile.args} />)
     const viewLists = screen.getByTestId('view-lists-mock')
     const editToggleBtn = within(viewLists).getByTestId('toggle-edit-form')
 
@@ -158,5 +178,25 @@ describe('[component] - ListsTemplate', () => {
     fireEvent.click(editToggleBtnEditList)
 
     expect(viewLists).toBeVisible()
+  })
+
+  it('should redirect to my-account if clicked on my-account button', async () => {
+    renderWithQueryClient(<ListsTemplateMobile {...ListsTemplateMobile.args} />)
+    const myAccountBtn = screen.getByTestId('my-account-button')
+    expect(myAccountBtn).toBeVisible()
+    await user.click(myAccountBtn)
+    await waitFor(() => {
+      expect(mockRouter).toMatchObject({
+        asPath: '/my-account',
+        pathname: '/my-account',
+      })
+    })
+  })
+
+  it('should add list to cart', async () => {
+    renderWithQueryClient(<ListsTemplateMobile {...ListsTemplateMobile.args} />)
+    const addListToCartBtn = screen.getByTestId('onAddListToCart-button')
+
+    await user.click(addListToCartBtn)
   })
 })

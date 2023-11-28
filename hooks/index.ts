@@ -48,6 +48,7 @@ export * from './queries/subscription/useGetSubscriptions/useGetSubscriptions'
 
 // wishlist
 export * from './queries/wishlist/useGetWishlist/useGetWishlist'
+export * from './queries/wishlist/useGetCustomerWishlist/useGetCustomerWishlist'
 
 // b2b
 export * from './queries/b2b/useGetB2BUserQuery/useGetB2BUserQuery'
@@ -144,6 +145,7 @@ export * from './mutations/wishlist/useAddToWishlistItem/useAddToWishlistItem'
 export * from './mutations/wishlist/useDeleteWishlistItem/useDeleteWishlistItem'
 export * from './mutations/wishlist/useCreateWishlist/useCreateWishlist'
 export * from './mutations/wishlist/useDeleteWishlist/useDeleteWishlist'
+export * from './mutations/wishlist/useDeleteWishlistItemById/useDeleteWishlistItemById'
 export * from './mutations/wishlist/useUpdateWishlistItem/useUpdateWishlistItem'
 
 //Subscription
