@@ -18,17 +18,16 @@ export async function getServerSideProps(context: GetServerSidePropsContext) {
   const { locale, req, res } = context
 
   const response = await getCurrentUser(req as NextApiRequest, res as NextApiResponse)
-  const quotes =
-    (await getQuotes(
-      req as NextApiRequest,
-      res as NextApiResponse,
-      response?.currentAccount?.id
-    )) || []
+  const quotes = await getQuotes(
+    req as NextApiRequest,
+    res as NextApiResponse,
+    response?.customerAccount?.id
+  )
 
   return {
     props: {
       quotes,
-      customerAccount: response?.customerAccount || null,
+      customerAccount: response?.customerAccount,
       ...(await serverSideTranslations(locale as string, ['common'])),
     },
   }

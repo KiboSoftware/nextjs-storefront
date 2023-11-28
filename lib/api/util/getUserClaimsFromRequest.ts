@@ -9,6 +9,7 @@ import type { KiboRequest } from '@/lib/types'
 import type { NextApiRequest, NextApiResponse } from 'next'
 
 const { publicRuntimeConfig } = getConfig()
+
 const authCookieName = publicRuntimeConfig.userCookieKey.toLowerCase()
 
 const getUserClaimsFromRequest = async (

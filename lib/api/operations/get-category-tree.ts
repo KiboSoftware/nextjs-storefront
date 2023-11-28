@@ -2,7 +2,6 @@ import { NextApiRequest } from 'next'
 import getConfig from 'next/config'
 
 import { getAdditionalHeader } from '../util'
-import { getSellerTenantInfo } from '../util/seller'
 import { fetcher } from '@/lib/api/util'
 import cache from '@/lib/api/util/cache'
 import { getCategoryTreeQuery } from '@/lib/gql/queries'
@@ -19,13 +18,9 @@ export default async function getCategoryTree(req?: NextApiRequest) {
     if (!cachedItems) {
       const headers = req ? getAdditionalHeader(req) : {}
 
-      const response = await fetcher(
-        { query: getCategoryTreeQuery, variables: {} },
-        { headers },
-        getSellerTenantInfo(req)
-      )
+      const response = await fetcher({ query: getCategoryTreeQuery, variables: {} }, { headers })
       const items = response?.data?.categoriesTree?.items
-      if (items?.length) {
+      if (items.length) {
         cache.set(cacheKey, items, cacheTimeOut)
       }
 

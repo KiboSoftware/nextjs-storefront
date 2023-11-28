@@ -1,6 +1,5 @@
 import { NextApiRequest, NextApiResponse } from 'next'
 
-import { getSellerTenantInfo } from '../util/seller'
 import { fetcher, getAdditionalHeader, getUserClaimsFromRequest } from '@/lib/api/util'
 import { getQuoteByIDQuery as query } from '@/lib/gql/queries'
 
@@ -20,10 +19,6 @@ export default async function getQuote(
   const userClaims = await getUserClaimsFromRequest(req, res)
 
   const headers = getAdditionalHeader(req)
-  const response = await fetcher(
-    { query, variables },
-    { userClaims, headers },
-    getSellerTenantInfo(req)
-  )
+  const response = await fetcher({ query, variables }, { userClaims, headers })
   return response.data?.quote
 }

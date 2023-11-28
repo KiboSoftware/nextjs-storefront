@@ -1,6 +1,5 @@
 import { NextApiRequest, NextApiResponse } from 'next'
 
-import { getSellerTenantInfo } from '../util/seller'
 import { fetcher, getAdditionalHeader, getUserClaimsFromRequest } from '@/lib/api/util'
 import { getCheckoutQuery as query } from '@/lib/gql/queries'
 
@@ -19,10 +18,6 @@ export default async function getCheckout(
 
   const headers = getAdditionalHeader(req)
 
-  const response = await fetcher(
-    { query, variables },
-    { userClaims, headers },
-    getSellerTenantInfo(req)
-  )
+  const response = await fetcher({ query, variables }, { userClaims, headers })
   return response.data?.checkout
 }

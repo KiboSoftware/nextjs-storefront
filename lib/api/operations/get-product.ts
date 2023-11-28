@@ -1,7 +1,6 @@
 import { NextApiRequest } from 'next'
 
 import { getAdditionalHeader } from '../util'
-import { getSellerTenantInfo } from '../util/seller'
 import { fetcher } from '@/lib/api/util'
 import { getProductQuery } from '@/lib/gql/queries'
 
@@ -12,10 +11,6 @@ export default async function getProduct(productCode: string, req?: NextApiReque
 
   const headers = req ? getAdditionalHeader(req) : {}
 
-  const response = await fetcher(
-    { query: getProductQuery, variables },
-    { headers },
-    getSellerTenantInfo(req)
-  )
+  const response = await fetcher({ query: getProductQuery, variables }, { headers })
   return response.data?.product
 }
