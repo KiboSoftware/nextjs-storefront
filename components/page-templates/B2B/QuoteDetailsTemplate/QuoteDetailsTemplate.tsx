@@ -70,6 +70,7 @@ import {
 import { useQuoteActions } from '@/hooks/custom/useQuoteActions/useQuoteActions'
 import {
   AddressType,
+  CountryCode,
   DefaultId,
   FulfillmentOptions as FulfillmentOptionsConstant,
   QuoteStatus,
@@ -378,7 +379,7 @@ const QuoteDetailsTemplate = (props: QuoteDetailsTemplateProps) => {
 
   const handleSaveAddressToQuote = async ({ contact }: { contact: CrContact }) => {
     try {
-      if (!allowInvalidAddresses) {
+      if (!allowInvalidAddresses && contact?.address?.countryCode === CountryCode.US) {
         await validateCustomerAddress.mutateAsync({
           addressValidationRequestInput: { address: contact?.address as CuAddress },
         })

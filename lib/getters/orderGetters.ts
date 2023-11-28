@@ -271,6 +271,7 @@ const getOrderPaymentCardDetails = (card: CrPaymentCard) => {
     expireMonth: cardGetters.getExpireMonth(card),
     expireYear: cardGetters.getExpireYear(card),
     cardType: cardGetters.getCardType(card),
+    isCardInfoSaved: card?.isCardInfoSaved,
   }
 }
 

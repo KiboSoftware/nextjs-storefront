@@ -33,6 +33,7 @@ const getAddressType = (address?: GenericAddress) => address?.addressType || ''
 const getCityOrTown = (address?: GenericAddress) => address?.cityOrTown || ''
 const getPostalOrZipCode = (address?: GenericAddress) => address?.postalOrZipCode || ''
 const getStateOrProvince = (address?: GenericAddress) => address?.stateOrProvince || ''
+const getCountryCode = (address?: GenericAddress) => address?.countryCode || ''
 
 const getAddress = (address: GenericAddress | null) => {
   return {
@@ -44,6 +45,7 @@ const getAddress = (address: GenericAddress | null) => {
     cityOrTown: getCityOrTown(address),
     postalOrZipCode: getPostalOrZipCode(address),
     stateOrProvince: getStateOrProvince(address),
+    countryCode: getCountryCode(address),
   }
 }
 const getFirstName = (contact?: GenericContact): string => contact?.firstName || ''

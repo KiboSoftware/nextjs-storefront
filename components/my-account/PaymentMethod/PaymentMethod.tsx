@@ -99,6 +99,7 @@ const PaymentMethod = (props: PaymentMethodProps) => {
 
   const [paymentMethodStartIndex, setPaymentMethodStartIndex] = useState<number>(0)
   const savedCardsAndContacts = userGetters.getSavedCardsAndBillingDetails(cards, contacts)
+
   const [displaySavedCardsAndContacts, setSavedCardsAndContacts] = useState<PaymentAndBilling[]>(
     savedCardsAndContacts?.slice(paymentMethodStartIndex, paymentMethodPageSize)
   )
@@ -350,6 +351,7 @@ const PaymentMethod = (props: PaymentMethodProps) => {
                       expireMonth={cardGetters.getExpireMonth(each.cardInfo)}
                       expireYear={cardGetters.getExpireYear(each.cardInfo)}
                       cardType={cardGetters.getCardType(each.cardInfo)}
+                      paymentType={cardGetters.getPaymentType(each.cardInfo)}
                       {...addressGetters.getAddress(
                         each?.billingAddressInfo?.contact?.address as CrAddress
                       )}

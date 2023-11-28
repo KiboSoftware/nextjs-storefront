@@ -19,9 +19,12 @@ import {
   useCreateOrder,
   useGetCards,
   useGetCustomerPurchaseOrderAccount,
+  useCreateCustomerCard,
+  useCreateCustomerAddress,
 } from '@/hooks'
-import { AccountType } from '@/lib/constants'
+import { AccountType, AddressType } from '@/lib/constants'
 import { orderGetters } from '@/lib/getters'
+import { buildCreateCustomerCardParam, buildAddressParams } from '@/lib/helpers'
 import type { PersonalDetails } from '@/lib/types'
 
 import type { CrOrder, CrOrderInput, PaymentActionInput } from '@/lib/gql/types'
@@ -49,6 +52,8 @@ const StandardShipCheckoutTemplate = (props: StandardShipCheckoutProps) => {
   const { isAuthenticated, user } = useAuthContext()
   const { data: addressCollection } = useGetCustomerAddresses(user?.id as number)
   const { data: cardCollection } = useGetCards(user?.id as number)
+  const { createCustomerAddress } = useCreateCustomerAddress()
+  const { createCustomerCard } = useCreateCustomerCard()
   const isB2BUser = user?.accountType?.toLowerCase() === AccountType.B2B.toLowerCase()
 
   const { data: customerPurchaseOrderAccount } = useGetCustomerPurchaseOrderAccount(
@@ -138,7 +143,32 @@ const StandardShipCheckoutTemplate = (props: StandardShipCheckoutProps) => {
   }
 
   const handleCreateOrder = async (order: CrOrder) => {
+    const orderPayments = orderGetters.getNewOrderPayments(order as CrOrder)
     await createOrder.mutateAsync(order)
+
+    if (orderPayments[0]?.billingInfo?.card?.isCardInfoSaved) {
+      const address = {
+        ...orderPayments[0].billingInfo.billingContact.address,
+        contact: {
+          ...orderPayments[0].billingInfo.billingContact,
+          email: user?.emailAddress as string,
+        },
+      }
+      const params = buildAddressParams({
+        accountId: user?.id as number,
+        address,
+        isDefaultAddress: false,
+        addressType: AddressType.BILLING,
+      })
+      const savedCustomerAddressRes = await createCustomerAddress.mutateAsync(params)
+
+      const cardParams = buildCreateCustomerCardParam(
+        orderPayments[0].billingInfo,
+        user?.id as number,
+        savedCustomerAddressRes.id
+      )
+      await createCustomerCard.mutateAsync(cardParams)
+    }
 
     router.push(
       { pathname: '/order-confirmation', query: { checkoutId: order.id } },
