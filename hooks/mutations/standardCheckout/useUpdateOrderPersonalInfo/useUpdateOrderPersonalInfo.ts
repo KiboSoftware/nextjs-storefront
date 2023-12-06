@@ -36,7 +36,6 @@ const updatePersonalInfo = async ({ checkout, email, payments }: any) => {
       // continuityOrderOrdinal: checkout.continuityOrderOrdinal,
       ...checkout,
       ...(email && { email: email as string }),
-      ...(payments && { payments: payments as string }),
     },
   }
   const response = await client.request({

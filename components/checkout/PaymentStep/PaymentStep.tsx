@@ -600,13 +600,12 @@ const PaymentStep = (props: PaymentStepProps) => {
 
     const paymentWithNewStatus = orderGetters.getSelectedPaymentType(checkout)
 
-    if (
-      paymentWithNewStatus?.billingInfo?.card?.paymentServiceCardId === selectedCardRadio &&
-      !isInstallmentEnabled
-    ) {
-      setStepStatusComplete()
-      setStepNext()
-      return
+    if (paymentWithNewStatus?.billingInfo?.card?.paymentServiceCardId === selectedCardRadio) {
+      if (selectedInstallmentId === (paymentWithNewStatus as any)?.installmentPlanCode) {
+        setStepStatusComplete()
+        setStepNext()
+        return
+      }
     }
     paymentActionToBeAdded = {
       ...buildCardPaymentActionForCheckoutParams(
@@ -1039,11 +1038,14 @@ const PaymentStep = (props: PaymentStepProps) => {
                             control={
                               <Checkbox
                                 checked={isInstallmentEnabled}
-                                onChange={(_, checked) => setIsInstallmentEnabled(checked)}
-                                data-testid="convert-to-installments"
+                                onChange={(_, checked) => {
+                                  setIsInstallmentEnabled(checked)
+                                  setSelectedInstallmentId('')
+                                }}
+                                data-testid="pay-to-installments"
                               />
                             }
-                            label={`${t('Convert to installments')}`}
+                            label={`${t('Pay in installments')}`}
                           />
                         ) : null}
 
