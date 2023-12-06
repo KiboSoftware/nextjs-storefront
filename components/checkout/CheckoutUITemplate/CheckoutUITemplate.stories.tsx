@@ -51,6 +51,8 @@ const Template: ComponentStory<typeof CheckoutUITemplate> = (args) => (
         checkout={orderMock.checkout}
         onVoidPayment={handleVoidPayment}
         onAddPayment={handleAddPayment}
+        installmentPlans={[]}
+        updateCheckoutPersonalInfo={() => Promise.resolve()}
       />
       <ReviewStep
         checkout={orderMock.checkout}
@@ -92,6 +94,8 @@ const MultiShipTemplate: ComponentStory<typeof CheckoutUITemplate> = (args) => (
         checkout={orderMock.checkout}
         onVoidPayment={handleVoidPayment}
         onAddPayment={handleAddPayment}
+        installmentPlans={[]}
+        updateCheckoutPersonalInfo={() => Promise.resolve()}
       />
       {/* <ReviewStep checkout={checkoutMock.checkout} onBackButtonClick={() => null} /> */}
     </CheckoutUITemplate>

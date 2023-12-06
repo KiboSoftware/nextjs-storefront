@@ -31,6 +31,7 @@ export interface PaymentMethod {
   cardType: string
   cardNumberPartOrMask: string
   expiry: string
+  installmentPlanCode?: string
 }
 export interface CheckoutDetails {
   shipItems: Maybe<CrOrderItem>[]

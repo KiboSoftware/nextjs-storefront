@@ -149,6 +149,7 @@ const getPaymentMethods = (order: CrOrder) => {
         cardType: item?.billingInfo?.card?.paymentOrCardType,
         cardNumberPartOrMask: item?.billingInfo?.card?.cardNumberPartOrMask,
         expiry: item?.billingInfo?.card?.expireMonth + ' / ' + item?.billingInfo?.card?.expireYear,
+        installmentPlanCode: (item as any).installmentPlanCode,
       }
     }) as PaymentMethod[]
 }

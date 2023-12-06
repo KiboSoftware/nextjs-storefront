@@ -22,6 +22,7 @@ const KeyValueDisplay = (prop: KeyValueDisplayProps) => {
       pt={0.5}
       display="flex"
       flexDirection={direction}
+      alignItems={'center'}
       flexWrap="wrap"
       gap={1}
       sx={{ ...sx }}

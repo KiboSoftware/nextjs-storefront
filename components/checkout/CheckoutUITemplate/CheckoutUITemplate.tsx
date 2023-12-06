@@ -18,6 +18,7 @@ interface CheckoutUITemplateProps<T> {
   checkout: T
   promoError: string
   isMultiShipEnabled?: boolean
+  installmentPlans?: any[]
   handleApplyCouponCode: (couponCode: string) => void
   handleRemoveCouponCode: (couponCode: string) => void
   children?: React.ReactNode
@@ -33,6 +34,7 @@ const CheckoutUITemplate = <T extends CrOrder | Checkout>(props: CheckoutUITempl
     handleApplyCouponCode,
     handleRemoveCouponCode,
     promoError,
+    installmentPlans,
     isMultiShipEnabled = false,
     children,
   } = props
@@ -130,6 +132,7 @@ const CheckoutUITemplate = <T extends CrOrder | Checkout>(props: CheckoutUITempl
             handleApplyCouponCode={handleApplyCouponCode}
             handleRemoveCouponCode={handleRemoveCouponCode}
             promoError={promoError}
+            installmentPlans={installmentPlans}
           />
         )}
       </Box>

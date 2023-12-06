@@ -1,7 +1,7 @@
 import { UserAuthTicket } from '@kibocommerce/graphql-client'
 
 const protocolRegx = new RegExp(/https?:\/\//)
-const addProtocolToHost = (hostname: string | undefined) =>
+export const addProtocolToHost = (hostname: string | undefined) =>
   hostname && !hostname.match(protocolRegx) ? `https://${hostname}` : hostname
 
 export const getGraphqlUrl = () => `${addProtocolToHost(process.env.KIBO_API_HOST)}/graphql`

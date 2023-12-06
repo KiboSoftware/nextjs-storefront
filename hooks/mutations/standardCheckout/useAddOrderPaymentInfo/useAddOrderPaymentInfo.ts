@@ -2,7 +2,9 @@
  * @module useAddOrderPaymentInfo
  */
 import { useMutation, useQueryClient } from '@tanstack/react-query'
+import getConfig from 'next/config'
 
+import { apiAuthClient } from '@/lib/api/util/api-auth-client'
 import { makeGraphQLClient } from '@/lib/gql/client'
 import { addPaymentMethodToCheckout } from '@/lib/gql/mutations'
 import { checkoutKeys } from '@/lib/react-query/queryKeys'
@@ -17,13 +19,18 @@ export interface PaymentMethodInput {
   paymentAction: PaymentActionInput
 }
 
+const client = makeGraphQLClient(
+  `${process.env.NEXT_PUBLIC_URL ? process.env.NEXT_PUBLIC_URL : ''}/api/checkout/add-payment`
+)
 const updatePaymentMethod = async (params: PaymentMethodInput) => {
-  const client = makeGraphQLClient()
+  // const client = makeGraphQLClient()
 
   const response = await client.request({
     document: addPaymentMethodToCheckout,
     variables: params,
   })
+
+  console.log('hook response', response)
 
   return response?.createOrderPaymentAction
 }

@@ -217,6 +217,8 @@ const TestComponent = (param: any) => {
         }
         onAddPayment={onAddPaymentMock}
         onVoidPayment={onVoidPaymentMock}
+        installmentPlans={[]}
+        updateCheckoutPersonalInfo={() => Promise.resolve()}
       />
       <Button onClick={handleSubmit}>Review Order</Button>
     </>

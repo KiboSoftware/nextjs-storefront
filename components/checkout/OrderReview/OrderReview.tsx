@@ -15,6 +15,7 @@ import {
 } from '@mui/material'
 import { useTranslation } from 'next-i18next'
 
+import { InstallmentPlans } from '@/__mocks__/stories/installmentPlans'
 import { AddressCard, KeyValueDisplay, KiboImage, PromoCodeBadge } from '@/components/common'
 import { useCheckoutStepContext } from '@/context'
 import { checkoutGetters, orderGetters } from '@/lib/getters'
@@ -26,6 +27,7 @@ interface OrderReviewProps {
   checkout: CrOrder | Checkout
   isMultiShipEnabled?: boolean
   promoError: string
+  installmentPlans?: any[]
   handleApplyCouponCode: (couponCode: string) => void
   handleRemoveCouponCode: (couponCode: string) => void
 }
@@ -100,6 +102,7 @@ const OrderReview = (props: OrderReviewProps) => {
     handleApplyCouponCode,
     handleRemoveCouponCode,
     promoError,
+    installmentPlans,
   } = props
 
   const { steps, setActiveStep } = useCheckoutStepContext()
@@ -145,6 +148,10 @@ const OrderReview = (props: OrderReviewProps) => {
   const multiShippingAddressesList = checkoutGetters.getOrderAddresses(
     checkout as Checkout
   ) as CustomerContact[]
+
+  const selectedInstallment = installmentPlans?.find(
+    (plan) => plan?.plan_code === paymentMethods?.[0]?.installmentPlanCode
+  )
 
   return (
     <Accordion
@@ -266,6 +273,32 @@ const OrderReview = (props: OrderReviewProps) => {
                     <Typography variant="body1">{paymentMethod?.expiry}</Typography>
                   </Stack>
                 </Box>
+                {selectedInstallment && (
+                  <Box pt={2}>
+                    <Typography variant="h4" gutterBottom>
+                      {' '}
+                      Installment Plan{' '}
+                    </Typography>
+                    <KeyValueDisplay
+                      option={{
+                        name: 'First installment amount',
+                        value: selectedInstallment?.first_payment_amount,
+                      }}
+                    />
+                    <KeyValueDisplay
+                      option={{
+                        name: 'Frequency',
+                        value: `${selectedInstallment?.installment_frequency} days`,
+                      }}
+                    />
+                    <KeyValueDisplay
+                      option={{
+                        name: 'Total number of payments',
+                        value: selectedInstallment?.no_of_payments,
+                      }}
+                    />
+                  </Box>
+                )}
               </Box>
             ))}
             {purchaseOrderPaymentMethods?.map((paymentMethod: any) => (

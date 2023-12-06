@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 
 import getConfig from 'next/config'
 import { useRouter } from 'next/router'
@@ -91,8 +91,8 @@ const StandardShipCheckoutTemplate = (props: StandardShipCheckoutProps) => {
 
   const { updateOrderPersonalInfo } = useUpdateOrderPersonalInfo()
 
-  const updateCheckoutPersonalInfo = async (formData: PersonalDetails) => {
-    const { email } = formData
+  const updateCheckoutPersonalInfo = async (formData: any) => {
+    // const { email, payments } = formData
 
     if (allowInvalidAddresses && order?.fulfillmentInfo?.fulfillmentContact?.address) {
       order.fulfillmentInfo.fulfillmentContact.address.isValidated = true
@@ -100,7 +100,8 @@ const StandardShipCheckoutTemplate = (props: StandardShipCheckoutProps) => {
 
     const personalInfo: PersonalInfo = {
       checkout: order as CrOrderInput,
-      email: email as string,
+      ...(formData.email && { email: formData.email as string }),
+      ...(formData.payments && { payments: formData.payments as string }),
     }
     await updateOrderPersonalInfo.mutateAsync(personalInfo)
   }
@@ -178,6 +179,18 @@ const StandardShipCheckoutTemplate = (props: StandardShipCheckoutProps) => {
 
   const { shipItems, pickupItems } = orderGetters.getCheckoutDetails(order as CrOrder)
 
+  const [installmentPlans, setInstallmentPlans] = useState<any[]>([])
+
+  const getInstallments = async () => {
+    const installments = await fetch(`/api/checkout/get-installments`)
+    const installmentPlans = await installments.json()
+    setInstallmentPlans(installmentPlans?.data?.checkout?.items)
+  }
+
+  useEffect(() => {
+    order?.items?.some((item) => item?.subscription) && getInstallments()
+  }, [order])
+
   return (
     <>
       <CheckoutUITemplate
@@ -185,6 +198,7 @@ const StandardShipCheckoutTemplate = (props: StandardShipCheckoutProps) => {
         handleApplyCouponCode={handleApplyCouponCode}
         handleRemoveCouponCode={handleRemoveCouponCode}
         promoError={promoError}
+        installmentPlans={installmentPlans}
       >
         <DetailsStep
           checkout={order as CrOrder}
@@ -203,6 +217,8 @@ const StandardShipCheckoutTemplate = (props: StandardShipCheckoutProps) => {
           onVoidPayment={handleVoidPayment}
           onAddPayment={handleAddPayment}
           isMultiShipEnabled={false}
+          installmentPlans={installmentPlans}
+          updateCheckoutPersonalInfo={updateCheckoutPersonalInfo}
         />
         <ReviewStep
           checkout={order as CrOrder}

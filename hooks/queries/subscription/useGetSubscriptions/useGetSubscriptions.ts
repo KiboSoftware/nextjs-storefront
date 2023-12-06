@@ -12,9 +12,11 @@ export interface SubscriptionType {
   isSuccess: boolean
   isFetching: boolean
 }
-
+const client = makeGraphQLClient(
+  `${process.env.NEXT_PUBLIC_URL ? process.env.NEXT_PUBLIC_URL : ''}/api/checkout/get-subscriptions`
+)
 const getSubscriptions = async () => {
-  const client = makeGraphQLClient()
+  // const client = makeGraphQLClient()
   const response = await client.request({
     document: getSubscriptionsQuery,
     variables: {},

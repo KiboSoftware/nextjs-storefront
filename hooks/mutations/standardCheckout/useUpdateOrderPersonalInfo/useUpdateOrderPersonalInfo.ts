@@ -14,19 +14,29 @@ import type { CrOrderInput } from '@/lib/gql/types'
  * @hidden
  */
 export interface PersonalInfo {
-  checkout: CrOrderInput
+  checkout: any
   email: string
 }
 
-const updatePersonalInfo = async ({ checkout, email }: PersonalInfo) => {
-  const client = makeGraphQLClient()
+const client = makeGraphQLClient(
+  `${process.env.NEXT_PUBLIC_URL ? process.env.NEXT_PUBLIC_URL : ''}/api/checkout/update-order`
+)
+
+const updatePersonalInfo = async ({ checkout, email, payments }: any) => {
+  // const client = makeGraphQLClient()
 
   const personalInfo = {
     orderId: checkout?.id as string,
     updateMode: CheckoutUpdateMode.APPLY_TO_ORIGINAL,
     orderInput: {
+      // amountAvailableForRefund: checkout.amountAvailableForRefund,
+      // amountRefunded: checkout.amountRefunded,
+      // amountRemainingForPayment: checkout.amountRemainingForPayment,
+      // totalCollected: checkout.totalCollected,
+      // continuityOrderOrdinal: checkout.continuityOrderOrdinal,
       ...checkout,
-      email,
+      ...(email && { email: email as string }),
+      ...(payments && { payments: payments as string }),
     },
   }
   const response = await client.request({

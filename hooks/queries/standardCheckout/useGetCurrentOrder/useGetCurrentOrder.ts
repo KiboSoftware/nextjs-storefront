@@ -24,7 +24,12 @@ export interface UseCheckoutResponse {
 }
 
 const getCheckout = async (checkoutId?: string | null) => {
-  const client = makeGraphQLClient()
+  const client = makeGraphQLClient(
+    `${
+      process.env.NEXT_PUBLIC_URL ? process.env.NEXT_PUBLIC_URL : ''
+    }/api/checkout/get-current-order`
+  )
+  // const client = makeGraphQLClient()
 
   const response = await client.request({
     document: getCheckoutQuery,

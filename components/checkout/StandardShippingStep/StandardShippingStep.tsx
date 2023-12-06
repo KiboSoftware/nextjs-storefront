@@ -58,7 +58,7 @@ const StandardShippingStep = (props: ShippingProps) => {
   const userShippingAddress = isAuthenticated
     ? userGetters.getUserShippingAddress(addresses?.items as CustomerContact[])
     : []
-  if (checkoutShippingContact && checkoutShippingContact.id === null) {
+  if (checkoutShippingContact && !checkoutShippingContact.id) {
     checkoutShippingContact.id = DefaultId.ADDRESSID
   }
   const shipItems = orderGetters.getShipItems(checkout)
@@ -72,9 +72,7 @@ const StandardShippingStep = (props: ShippingProps) => {
   const [selectedShippingAddressId, setSelectedShippingAddressId] = useState<number>(
     checkoutShippingContact?.id as number
   )
-  const [savedShippingAddresses, setSavedShippingAddresses] = useState<
-    CustomerContact[] | undefined
-  >(
+  const [savedShippingAddresses, setSavedShippingAddresses] = useState<CustomerContact[]>(
     userGetters.getAllShippingAddresses(
       checkoutShippingContact,
       userShippingAddress as CustomerContact[]
@@ -302,7 +300,7 @@ const StandardShippingStep = (props: ShippingProps) => {
       {shouldShowAddAddressButton && (
         <>
           <Stack gap={2} width="100%">
-            {defaultShippingAddress && (
+            {/* {defaultShippingAddress && (
               <>
                 <Typography variant="h4" fontWeight={'bold'}>
                   {t('your-default-shipping-address')}
@@ -338,18 +336,20 @@ const StandardShippingStep = (props: ShippingProps) => {
                   onChange={handleAddressSelect}
                 />
               </>
-            )}
+            )} */}
 
-            {previouslySavedShippingAddress?.length > 0 && (
+            {savedShippingAddresses?.length > 0 && (
               <>
-                <Typography variant="h4" fontWeight={'bold'}>
+                {/* <Typography variant="h4" fontWeight={'bold'}>
                   {t('previously-saved-shipping-addresses')}
-                </Typography>
+                </Typography> */}
                 <KiboRadio
-                  radioOptions={previouslySavedShippingAddress?.map((address, index) => {
+                  radioOptions={savedShippingAddresses?.map((address, index) => {
                     return {
                       value: String(address.id),
                       name: String(address.id),
+                      // add logic for isPrimary
+                      // optionIndicator: index === 0 ? t('primary') : '',
                       label: (
                         <AddressCard
                           firstName={address?.firstName as string}

@@ -14,6 +14,7 @@ import {
   Button,
   Box,
   Tooltip,
+  MenuItem,
 } from '@mui/material'
 import getConfig from 'next/config'
 import { useTranslation } from 'next-i18next'
@@ -22,7 +23,14 @@ import { Controller, useForm } from 'react-hook-form'
 import * as yup from 'yup'
 
 import { CardDetailsForm, PurchaseOrderForm } from '@/components/checkout'
-import { AddressForm, KiboTextBox, KiboRadio, PaymentBillingCard } from '@/components/common'
+import {
+  AddressForm,
+  KiboTextBox,
+  KiboRadio,
+  PaymentBillingCard,
+  KiboSelect,
+  KeyValueDisplay,
+} from '@/components/common'
 import { useCheckoutStepContext, STEP_STATUS, useAuthContext, useSnackbarContext } from '@/context'
 import { usePaymentTypes, useValidateCustomerAddress } from '@/hooks'
 import { CountryCode, CurrencyCode, PaymentType, PaymentWorkflow } from '@/lib/constants'
@@ -68,8 +76,10 @@ interface PaymentStepProps {
   addressCollection?: CustomerContactCollection
   cardCollection?: CardCollection
   customerPurchaseOrderAccount?: CustomerPurchaseOrderAccount
+  installmentPlans: any[]
   onVoidPayment: (id: string, paymentId: string, paymentAction: PaymentActionInput) => Promise<void>
   onAddPayment: (id: string, paymentAction: PaymentActionInput) => Promise<void>
+  updateCheckoutPersonalInfo: (params: any) => Promise<void>
 }
 
 interface PaymentsType {
@@ -149,8 +159,10 @@ const PaymentStep = (props: PaymentStepProps) => {
     cardCollection,
     addressCollection,
     customerPurchaseOrderAccount,
+    installmentPlans,
     onVoidPayment,
     onAddPayment,
+    updateCheckoutPersonalInfo,
   } = props
 
   const { t } = useTranslation('common')
@@ -194,6 +206,18 @@ const PaymentStep = (props: PaymentStepProps) => {
     useState<string>(checkoutPaymentType)
 
   const [isAddingNewPayment, setIsAddingNewPayment] = useState<boolean>(false)
+
+  const [isInstallmentEnabled, setIsInstallmentEnabled] = useState<boolean>(
+    !!(checkoutPayment as any)?.installmentPlanCode
+  )
+  const [selectedInstallmentId, setSelectedInstallmentId] = useState<string>(
+    (checkoutPayment as any)?.installmentPlanCode
+  )
+
+  // const [installmentPlans, setInstallmentPlans] = useState<any[]>([])
+  const selectedInstallment = installmentPlans.find(
+    (installment) => installment?.plan_code === selectedInstallmentId
+  )
 
   const handlePaymentTypeRadioChange = (value: string) => {
     setSelectedPaymentTypeRadio(value)
@@ -274,6 +298,9 @@ const PaymentStep = (props: PaymentStepProps) => {
 
   const shouldShowPreviouslySavedCards =
     selectedPaymentTypeRadio === PaymentType.CREDITCARD && cardOptions.length && !isAddingNewPayment
+
+  const shouldShowInstallmentPlans =
+    shouldShowPreviouslySavedCards && checkout.items?.some((item) => item?.subscription)
 
   // Form Data
   const [cardFormDetails, setCardFormDetails] = useState<CardForm>({})
@@ -447,24 +474,26 @@ const PaymentStep = (props: PaymentStepProps) => {
 
     setIsAddingNewPayment(false)
 
-    setCardOptions([
-      ...cardOptions,
-      {
-        cardInfo: {
-          id: tokenizedCardResponse.id,
-          cardNumberPart: tokenizedCardResponse.numberPart,
-          paymentType: PaymentType.CREDITCARD,
-          expireMonth: card.expireMonth,
-          expireYear: card.expireYear,
-          isCardInfoSaved: card.isCardInfoSaved,
-          cardType: card.cardType,
+    if (!cardOptions.some((each) => each.cardInfo?.id === tokenizedCardResponse.id)) {
+      setCardOptions([
+        ...cardOptions,
+        {
+          cardInfo: {
+            id: tokenizedCardResponse.id,
+            cardNumberPart: tokenizedCardResponse.numberPart,
+            paymentType: PaymentType.CREDITCARD,
+            expireMonth: card.expireMonth,
+            expireYear: card.expireYear,
+            isCardInfoSaved: card.isCardInfoSaved,
+            cardType: card.cardType,
+          },
+          billingAddressInfo: {
+            ...billingFormAddress,
+            isSameBillingShippingAddress: billingFormAddress.isSameBillingShippingAddress,
+          },
         },
-        billingAddressInfo: {
-          ...billingFormAddress,
-          isSameBillingShippingAddress: billingFormAddress.isSameBillingShippingAddress,
-        },
-      },
-    ])
+      ])
+    }
 
     setSelectedCardRadio(tokenizedCardResponse.id as string)
     setValidateForm(false)
@@ -571,7 +600,10 @@ const PaymentStep = (props: PaymentStepProps) => {
 
     const paymentWithNewStatus = orderGetters.getSelectedPaymentType(checkout)
 
-    if (paymentWithNewStatus?.billingInfo?.card?.paymentServiceCardId === selectedCardRadio) {
+    if (
+      paymentWithNewStatus?.billingInfo?.card?.paymentServiceCardId === selectedCardRadio &&
+      !isInstallmentEnabled
+    ) {
       setStepStatusComplete()
       setStepNext()
       return
@@ -583,7 +615,8 @@ const PaymentStep = (props: PaymentStepProps) => {
         { ...cardDetails },
         tokenizedData,
         selectedPaymentMethod?.billingAddressInfo?.contact as CrContact,
-        isSameAsShipping
+        isSameAsShipping,
+        isInstallmentEnabled && selectedInstallmentId ? selectedInstallmentId : ''
       ),
       actionName: '',
     }
@@ -996,16 +1029,85 @@ const PaymentStep = (props: PaymentStepProps) => {
                       </>
                     ) : null}
                     {!(shouldShowPurchaseOrderForm || shouldShowCardForm) ? (
-                      <Box pt={2}>
-                        <Button
-                          variant="contained"
-                          color="inherit"
-                          sx={{ width: { xs: '100%', sm: '50%' } }}
-                          onClick={handleAddPaymentMethod}
-                        >
-                          {t('add-payment-method')}
-                        </Button>
-                      </Box>
+                      <>
+                        {shouldShowInstallmentPlans ? (
+                          <FormControlLabel
+                            sx={{
+                              width: '100%',
+                              paddingLeft: '0.5rem',
+                            }}
+                            control={
+                              <Checkbox
+                                checked={isInstallmentEnabled}
+                                onChange={(_, checked) => setIsInstallmentEnabled(checked)}
+                                data-testid="convert-to-installments"
+                              />
+                            }
+                            label={`${t('Convert to installments')}`}
+                          />
+                        ) : null}
+
+                        {isInstallmentEnabled && (
+                          <Box sx={{ pl: 5 }}>
+                            <Box pb={1}>
+                              <Typography variant="h4">{t('Installment plan details')}</Typography>
+                            </Box>
+                            <Box pb={1} width="60%">
+                              <KiboSelect
+                                name={'adjustment'}
+                                value={selectedInstallmentId}
+                                onChange={(_, value) => {
+                                  setSelectedInstallmentId(value)
+                                }}
+                              >
+                                {installmentPlans?.map((option: any) => (
+                                  <MenuItem
+                                    sx={{ typography: 'body2' }}
+                                    key={option?.id}
+                                    value={option?.plan_code}
+                                  >
+                                    {`${option?.no_of_payments} installments for ${option?.installment_frequency} days`}
+                                  </MenuItem>
+                                ))}
+                              </KiboSelect>
+                            </Box>
+
+                            {selectedInstallment && (
+                              <>
+                                <KeyValueDisplay
+                                  option={{
+                                    name: 'First installment amount',
+                                    value: selectedInstallment.first_payment_amount,
+                                  }}
+                                />
+                                <KeyValueDisplay
+                                  option={{
+                                    name: 'Frequency',
+                                    value: `${selectedInstallment.installment_frequency} days`,
+                                  }}
+                                />
+                                <KeyValueDisplay
+                                  option={{
+                                    name: 'Total number of payments',
+                                    value: selectedInstallment.no_of_payments,
+                                  }}
+                                />
+                              </>
+                            )}
+                          </Box>
+                        )}
+
+                        <Box pt={2}>
+                          <Button
+                            variant="contained"
+                            color="inherit"
+                            sx={{ width: { xs: '100%', sm: '50%' } }}
+                            onClick={handleAddPaymentMethod}
+                          >
+                            {t('add-payment-method')}
+                          </Button>
+                        </Box>
+                      </>
                     ) : null}
                   </Box>
                 ) : null}

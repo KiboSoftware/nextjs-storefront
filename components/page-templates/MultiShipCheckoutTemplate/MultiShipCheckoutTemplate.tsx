@@ -207,6 +207,9 @@ const MultiShipCheckoutTemplate = (props: MultiShipCheckoutProps) => {
           isMultiShipEnabled={isMultiShipEnabled}
           onVoidPayment={handleVoidPayment}
           onAddPayment={handleAddPayment}
+          // demo purpose only
+          installmentPlans={[]}
+          updateCheckoutPersonalInfo={() => Promise.resolve()}
         />
         <ReviewStep
           checkout={checkout as Checkout}
