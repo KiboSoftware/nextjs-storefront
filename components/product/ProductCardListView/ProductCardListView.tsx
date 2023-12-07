@@ -211,10 +211,11 @@ const ProductCardListView = (props: ProductCardListViewProps) => {
                       {t('quick-view')}
                     </Button>
                   ) : null}
-                  {/* <QuantitySelector /> */}
-                  <Button variant="contained" color="primary" onClick={handleAddToCart}>
-                    {t('add-to-cart')}
-                  </Button>
+                  {isShowWishlistIcon && (
+                    <Button variant="contained" color="primary" onClick={handleAddToCart}>
+                      {t('add-to-cart')}
+                    </Button>
+                  )}
                 </Box>
               </Box>
             </Card>

@@ -176,7 +176,6 @@ const ProductCard = (props: ProductCardProps) => {
                   emptyIcon={<StarRounded data-testid="empty-rating" />}
                   data-testid="product-rating"
                 />
-                {/* {isShowWishlistIcon && ( */}
                 <Box pt={2} textAlign={'center'} sx={{ opacity: 0 }} className="quick-actions">
                   {showQuickViewButton && (
                     <Button

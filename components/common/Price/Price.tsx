@@ -104,7 +104,7 @@ const Price = (props: PriceProps) => {
       ) : (
         <SalePriceTypography
           price={price}
-          salePrice={salePrice}
+          salePrice={price === salePrice ? undefined : salePrice}
           variant={variant}
           color={color}
           fontWeight={fontWeight}

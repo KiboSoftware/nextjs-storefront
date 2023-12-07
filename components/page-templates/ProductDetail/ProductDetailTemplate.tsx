@@ -119,8 +119,8 @@ const ProductDetailTemplate = (props: ProductDetailTemplateProps) => {
   } = props
   const { t } = useTranslation('common')
 
-  const hideFulfillmentOptions = product.fulfillmentTypesSupported?.some(
-    (type) => type.toLowerCase() === 'digital'
+  const isDigitalFulfillment = product.fulfillmentTypesSupported?.some(
+    (type) => type === FulfillmentOptionsConstant.DIGITAL
   )
 
   const [purchaseType, setPurchaseType] = useState<string>(PurchaseTypes.ONETIMEPURCHASE)
@@ -171,7 +171,9 @@ const ProductDetailTemplate = (props: ProductDetailTemplateProps) => {
   } = productGetters.getProductDetails(
     {
       ...currentProduct,
-      fulfillmentMethod: selectedFulfillmentOption?.method,
+      fulfillmentMethod: isDigitalFulfillment
+        ? FulfillmentOptionsConstant.DIGITAL
+        : selectedFulfillmentOption?.method,
       purchaseLocationCode: selectedFulfillmentOption?.location?.code as string,
     },
     productPriceResponse?.price as ProductPrice
@@ -521,7 +523,7 @@ const ProductDetailTemplate = (props: ProductDetailTemplateProps) => {
           )}
           {!addItemToList &&
             purchaseType === PurchaseTypes.ONETIMEPURCHASE &&
-            !hideFulfillmentOptions && (
+            !isDigitalFulfillment && (
               <FulfillmentOptions
                 title={t('fulfillment-options')}
                 fulfillmentOptions={fulfillmentOptions}
@@ -537,7 +539,7 @@ const ProductDetailTemplate = (props: ProductDetailTemplateProps) => {
             <Typography fontWeight="600" variant="body2">
               {selectedFulfillmentOption?.method && `${quantityLeft} ${t('item-left')}`}
             </Typography>
-            {!hideFulfillmentOptions && (
+            {!isDigitalFulfillment && (
               <MuiLink
                 color="inherit"
                 variant="body2"

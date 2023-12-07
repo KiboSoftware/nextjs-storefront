@@ -23,7 +23,7 @@ import {
   useValidateCustomerAddress,
   useCreateCustomerAddress,
 } from '@/hooks'
-import { DefaultId, AddressType, CountryCode } from '@/lib/constants'
+import { DefaultId, AddressType, CountryCode, FulfillmentOptions } from '@/lib/constants'
 import { orderGetters, userGetters } from '@/lib/getters'
 import { actions, buildAddressParams, hasPermission } from '@/lib/helpers'
 import { Address } from '@/lib/types'
@@ -45,6 +45,7 @@ interface ShippingProps {
 
 const StandardShippingStep = (props: ShippingProps) => {
   const { checkout, savedUserAddressData: addresses, isAuthenticated } = props
+
   // Use this to submit the form with reCaptcha: Don't delete this code
   // const { executeRecaptcha } = useReCaptcha()
   // const { showSnackbar } = useSnackbarContext()
@@ -272,8 +273,16 @@ const StandardShippingStep = (props: ShippingProps) => {
   }, [selectedShippingAddressId, checkout, shouldShowAddAddressButton])
 
   useEffect(() => {
-    if (!shipItems.length) setStepStatusValid()
-  }, [shipItems.length])
+    if (
+      checkout.items?.every((item) => item?.fulfillmentMethod === FulfillmentOptions.DIGITAL) ||
+      !shipItems.length
+    )
+      setStepStatusValid()
+  }, [])
+
+  if (checkout.items?.every((item) => item?.fulfillmentMethod === FulfillmentOptions.DIGITAL)) {
+    return <Typography variant="h4">{t('digital-products-shipping-text')}</Typography>
+  }
 
   if (!shipItems.length) {
     return (

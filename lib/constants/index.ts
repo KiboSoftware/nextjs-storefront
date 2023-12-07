@@ -7,6 +7,7 @@ export enum FormStates {
 export enum FulfillmentOptions {
   SHIP = 'Ship',
   PICKUP = 'Pickup',
+  DIGITAL = 'Digital',
 }
 
 export enum PaymentWorkflow {
