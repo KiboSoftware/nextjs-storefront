@@ -10,24 +10,24 @@ import { wishlistKeys } from '@/lib/react-query/queryKeys'
 
 import { CrWishlist, CrWishlistInput } from '@/lib/gql/types'
 
-const createWishlist = async (listInput: number | CrWishlistInput): Promise<CrWishlist> => {
+const createWishlist = async (data: number | CrWishlistInput): Promise<CrWishlist> => {
   const client = makeGraphQLClient()
 
   const { publicRuntimeConfig } = getConfig()
-
+  debugger
   const variables =
-    typeof listInput === 'number'
+    typeof data === 'number'
       ? {
           wishlistInput: {
-            listInput,
+            customerAccountId: data,
             name: publicRuntimeConfig.defaultWishlistName,
           },
         }
       : {
           wishlistInput: {
-            customerAccountId: listInput.customerAccountId,
-            name: listInput.name,
-            items: listInput.items,
+            customerAccountId: data.customerAccountId,
+            name: data.name,
+            items: data.items,
           },
         }
   const response = await client.request({

@@ -98,13 +98,22 @@ export const useProductDetailTemplate = (props: UseProductDetailTemplateProps) =
   const selectProductOption = async (
     attributeFQN: string,
     value: string,
-    shopperEnteredValue?: string | boolean
+    shopperEnteredValue?: string | boolean,
+    isEnabled?: boolean
   ) => {
-    const updatedOptions = updateShopperEnteredValues({
-      attributeFQN,
-      value,
-      shopperEnteredValue,
-    })
+    const updatedOptions = !isEnabled
+      ? [
+          {
+            attributeFQN,
+            value,
+            shopperEnteredValue,
+          },
+        ]
+      : updateShopperEnteredValues({
+          attributeFQN,
+          value,
+          shopperEnteredValue,
+        })
 
     try {
       const {
@@ -113,6 +122,8 @@ export const useProductDetailTemplate = (props: UseProductDetailTemplateProps) =
         purchasableState,
         productImages,
         inventoryInfo,
+        priceRange,
+        price,
       }: ConfiguredProduct = await configureProduct.mutateAsync({
         productCode,
         updatedOptions: updatedOptions.map((option) => {
@@ -138,6 +149,8 @@ export const useProductDetailTemplate = (props: UseProductDetailTemplateProps) =
       setUpdatedShopperEnteredValues(responseOptions)
       setCurrentProduct({
         ...currentProduct,
+        priceRange,
+        price,
         variationProductCode: variationProductCode,
         options: options,
         purchasableState: purchasableState,

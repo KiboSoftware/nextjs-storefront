@@ -57,16 +57,18 @@ const ProductInformation = (props: ProductInformationProps) => {
         py={2}
         data-testid="product-content"
       />
-      <StyledAccordion>
-        <AccordionSummary data-testid="accordian" expandIcon={<ExpandMore />}>
-          <Typography variant="subtitle2" fontWeight={700}>
-            {t('product-specs')}
-          </Typography>
-        </AccordionSummary>
-        <AccordionDetails>
-          <ProductOptionList options={options} />
-        </AccordionDetails>
-      </StyledAccordion>
+      {options.length > 0 && (
+        <StyledAccordion>
+          <AccordionSummary data-testid="accordian" expandIcon={<ExpandMore />}>
+            <Typography variant="subtitle2" fontWeight={700}>
+              {t('product-specs')}
+            </Typography>
+          </AccordionSummary>
+          <AccordionDetails>
+            <ProductOptionList options={options} />
+          </AccordionDetails>
+        </StyledAccordion>
+      )}
     </>
   )
 }

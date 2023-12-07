@@ -30,15 +30,11 @@ const { publicRuntimeConfig } = getConfig()
 type GenericProduct = Product | ProductCustom | CrProduct
 
 const getName = (product: GenericProduct): string => {
-  if ('name' in product) {
-    return product?.name as string
-  }
-
-  if ('content' in product) {
-    return product?.content?.productName as string
-  }
-
-  return ''
+  return (
+    ((product as CrProduct)?.name as string) ||
+    ((product as Product)?.content?.productName as string) ||
+    ''
+  )
 }
 
 const getProductId = (product: GenericProduct): string => product?.productCode as string
@@ -240,7 +236,7 @@ const validateAddToCartForOneTime = (product: ProductCustom): boolean => {
       Boolean(product.purchaseLocationCode)
     )
   }
-  return false
+  return Boolean(product?.purchasableState?.isPurchasable)
 }
 
 const getVariationProductCodeOrProductCode = (product: ProductCustom): string => {

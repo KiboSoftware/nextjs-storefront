@@ -64,7 +64,7 @@ const ProductCardListView = (props: ProductCardListViewProps) => {
     imageUrl,
     placeholderImageUrl = DefaultImage,
     rating = 4,
-    productDescription,
+    productDescription = '',
     imageHeight = 140,
     imageAltText = 'product-image-alt',
     isLoading = false,
@@ -185,9 +185,12 @@ const ProductCardListView = (props: ProductCardListViewProps) => {
                   data-testid="product-rating"
                 />
                 <Box>
-                  <Typography variant="body1" color={'text.secondary'}>
-                    {productDescription}
-                  </Typography>
+                  <Box
+                    data-testid="short-description"
+                    dangerouslySetInnerHTML={{
+                      __html: productDescription,
+                    }}
+                  />
                 </Box>
                 <Box py={1}>
                   <Price
@@ -200,15 +203,13 @@ const ProductCardListView = (props: ProductCardListViewProps) => {
 
                 <Box pt={1} display={'flex'} gap={2}>
                   {showQuickViewButton ? (
-                    <Box
-                      sx={{
-                        ...ProductCardStyles.hoveredButtons,
-                        ...ProductCardStyles.quickViewButton,
-                      }}
+                    <Button
+                      variant="contained"
+                      color="primary"
                       onClick={handleOpenProductQuickViewModal}
                     >
-                      <Typography variant="caption">{t('quick-view')}</Typography>
-                    </Box>
+                      {t('quick-view')}
+                    </Button>
                   ) : null}
                   {/* <QuantitySelector /> */}
                   <Button variant="contained" color="primary" onClick={handleAddToCart}>

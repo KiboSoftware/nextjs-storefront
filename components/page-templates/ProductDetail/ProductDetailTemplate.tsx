@@ -119,6 +119,10 @@ const ProductDetailTemplate = (props: ProductDetailTemplateProps) => {
   } = props
   const { t } = useTranslation('common')
 
+  const hideFulfillmentOptions = product.fulfillmentTypesSupported?.some(
+    (type) => type.toLowerCase() === 'digital'
+  )
+
   const [purchaseType, setPurchaseType] = useState<string>(PurchaseTypes.ONETIMEPURCHASE)
   const [selectedFrequency, setSelectedFrequency] = useState<string>('')
   const [isSubscriptionPricingSelected, setIsSubscriptionPricingSelected] = useState<boolean>(false)
@@ -191,11 +195,8 @@ const ProductDetailTemplate = (props: ProductDetailTemplateProps) => {
   )
 
   const isValidForAddToCart = () => {
-    if (quantityLeft < 1) {
-      return false
-    }
     if (purchaseType === PurchaseTypes.SUBSCRIPTION) {
-      return !!selectedFrequency
+      return !!selectedFrequency && !(quantityLeft < 1)
     } else {
       return isValidForOneTime
     }
@@ -439,7 +440,15 @@ const ProductDetailTemplate = (props: ProductDetailTemplateProps) => {
                   value={productGetters.getOptionSelectedValue(option as ProductOption)}
                   label={productGetters.getOptionName(option as ProductOption)}
                   attributeFQN={option?.attributeFQN as string}
-                  onDropdownChange={selectProductOption}
+                  onDropdownChange={async (attributeFQN, selectedValue) =>
+                    await selectProductOption(
+                      attributeFQN,
+                      selectedValue,
+                      undefined,
+                      option?.values?.find((value) => value?.value === selectedValue)
+                        ?.isEnabled as boolean
+                    )
+                  }
                 />
               </Box>
             )
@@ -510,15 +519,17 @@ const ProductDetailTemplate = (props: ProductDetailTemplateProps) => {
               })}
             </KiboSelect>
           )}
-          {!addItemToList && purchaseType === PurchaseTypes.ONETIMEPURCHASE && (
-            <FulfillmentOptions
-              title={t('fulfillment-options')}
-              fulfillmentOptions={fulfillmentOptions}
-              selected={selectedFulfillmentOption?.method}
-              onFulfillmentOptionChange={(value: string) => handleFulfillmentOptionChange(value)}
-              onStoreSetOrUpdate={() => handleProductPickupLocation()}
-            />
-          )}
+          {!addItemToList &&
+            purchaseType === PurchaseTypes.ONETIMEPURCHASE &&
+            !hideFulfillmentOptions && (
+              <FulfillmentOptions
+                title={t('fulfillment-options')}
+                fulfillmentOptions={fulfillmentOptions}
+                selected={selectedFulfillmentOption?.method}
+                onFulfillmentOptionChange={(value: string) => handleFulfillmentOptionChange(value)}
+                onStoreSetOrUpdate={() => handleProductPickupLocation()}
+              />
+            )}
         </Box>
 
         {!addItemToList && (
@@ -526,14 +537,16 @@ const ProductDetailTemplate = (props: ProductDetailTemplateProps) => {
             <Typography fontWeight="600" variant="body2">
               {selectedFulfillmentOption?.method && `${quantityLeft} ${t('item-left')}`}
             </Typography>
-            <MuiLink
-              color="inherit"
-              variant="body2"
-              sx={{ cursor: 'pointer' }}
-              onClick={() => handleProductPickupLocation(t('check-nearby-store'))}
-            >
-              {t('nearby-stores')}
-            </MuiLink>
+            {!hideFulfillmentOptions && (
+              <MuiLink
+                color="inherit"
+                variant="body2"
+                sx={{ cursor: 'pointer' }}
+                onClick={() => handleProductPickupLocation(t('check-nearby-store'))}
+              >
+                {t('nearby-stores')}
+              </MuiLink>
+            )}
           </Box>
         )}
         {!isB2B && (
@@ -580,7 +593,7 @@ const ProductDetailTemplate = (props: ProductDetailTemplateProps) => {
             <Divider />
           </Grid>
           <Grid item xs={12}>
-            {properties?.length > 0 && (
+            {description && (
               <Box paddingY={3}>
                 <ProductInformation productFullDescription={description} options={properties} />
               </Box>
