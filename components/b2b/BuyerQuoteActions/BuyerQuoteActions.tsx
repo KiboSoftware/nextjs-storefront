@@ -5,23 +5,19 @@ import { useTranslation } from 'next-i18next'
 import { QuoteStatus } from '@/lib/constants'
 import { hasPermission, actions } from '@/lib/helpers'
 
-import { Quote } from '@/lib/gql/types'
-
 interface BuyerQuoteActionsProps {
-  quote: Quote
-  quoteId: string
+  hasDraft: boolean
   mode: string
   status: string
   isSubmitForApprovalEnabled: boolean
   handleClearChanges: () => void
-  handleEditQuote: (quoteId: string) => void
+  handleEditQuote: () => void
   handleSubmitForApproval: () => void
   handleGotoCheckout: () => void
   handlePrint: () => void
 }
 export default function BuyerQuoteActions({
-  quote,
-  quoteId,
+  hasDraft,
   mode,
   status,
   isSubmitForApprovalEnabled,
@@ -31,6 +27,7 @@ export default function BuyerQuoteActions({
   handleGotoCheckout,
   handlePrint,
 }: BuyerQuoteActionsProps) {
+  console.log('statussssssss', status)
   const { t } = useTranslation()
 
   return (
@@ -56,7 +53,7 @@ export default function BuyerQuoteActions({
                 disabled={
                   QuoteStatus[status] === QuoteStatus.InReview ||
                   QuoteStatus[status] === QuoteStatus.Completed ||
-                  !(quote?.hasDraft as boolean)
+                  !hasDraft
                 }
                 onClick={handleClearChanges}
               >
@@ -73,7 +70,7 @@ export default function BuyerQuoteActions({
                   QuoteStatus[status] === QuoteStatus.Completed ||
                   QuoteStatus[status] === QuoteStatus.Expired
                 }
-                onClick={() => handleEditQuote(quoteId)}
+                onClick={handleEditQuote}
               >
                 {t('edit-quote')}
               </LoadingButton>
@@ -87,8 +84,7 @@ export default function BuyerQuoteActions({
               {t('print-quote')}
             </LoadingButton>
           </Box>
-          {(QuoteStatus[quote?.status as string] !== QuoteStatus.ReadyForCheckout ||
-            mode === 'edit') && (
+          {mode === 'edit' && (
             <Box>
               <LoadingButton
                 variant="contained"
@@ -99,7 +95,7 @@ export default function BuyerQuoteActions({
                   QuoteStatus[status] === QuoteStatus.Completed ||
                   QuoteStatus[status] === QuoteStatus.Expired ||
                   !isSubmitForApprovalEnabled ||
-                  !quote?.hasDraft
+                  !hasDraft
                 }
                 onClick={handleSubmitForApproval}
               >
@@ -109,13 +105,13 @@ export default function BuyerQuoteActions({
           )}
           <NoSsr>
             {hasPermission(actions.CREATE_CHECKOUT) &&
-              QuoteStatus[quote?.status as string] === QuoteStatus.ReadyForCheckout && (
+              QuoteStatus[status] === QuoteStatus.ReadyForCheckout && (
                 <Box>
                   <LoadingButton
                     variant="contained"
                     color="primary"
                     fullWidth
-                    disabled={quote?.hasDraft as boolean}
+                    disabled={hasDraft}
                     onClick={handleGotoCheckout}
                   >
                     {t('continue-to-checkout')}
