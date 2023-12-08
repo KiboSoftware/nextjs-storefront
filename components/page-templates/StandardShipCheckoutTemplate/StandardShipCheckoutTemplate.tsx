@@ -176,7 +176,7 @@ const StandardShipCheckoutTemplate = (props: StandardShipCheckoutProps) => {
     )
   }
 
-  const { shipItems, pickupItems } = orderGetters.getCheckoutDetails(order as CrOrder)
+  const { shipItems, pickupItems, digitalItems } = orderGetters.getCheckoutDetails(order as CrOrder)
 
   return (
     <>
@@ -209,6 +209,7 @@ const StandardShipCheckoutTemplate = (props: StandardShipCheckoutProps) => {
           isMultiShipEnabled={isMultiShipEnabled}
           shipItems={shipItems}
           pickupItems={pickupItems}
+          digitalItems={digitalItems}
           personalDetails={personalDetails}
           orderSummaryProps={orderDetails?.orderSummary}
           onCreateOrder={handleCreateOrder}

@@ -45,6 +45,7 @@ interface ReviewStepProps {
   checkout: CrOrder | Checkout
   shipItems?: Maybe<CrOrderItem>[]
   pickupItems?: Maybe<CrOrderItem>[]
+  digitalItems?: Maybe<CrOrderItem>[]
   personalDetails?: any
   orderSummaryProps: any
   isMultiShipEnabled: boolean
@@ -103,6 +104,7 @@ const ReviewStep = (props: ReviewStepProps) => {
     orderSummaryProps,
     shipItems,
     pickupItems,
+    digitalItems,
     onCreateOrder,
     isMultiShipEnabled,
   } = props
