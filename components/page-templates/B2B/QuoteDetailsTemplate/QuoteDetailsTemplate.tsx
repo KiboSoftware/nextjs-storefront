@@ -5,7 +5,6 @@ import { FiberManualRecord } from '@mui/icons-material'
 import ArrowBackIos from '@mui/icons-material/ArrowBackIos'
 import Close from '@mui/icons-material/Close'
 import Done from '@mui/icons-material/Done'
-import { LoadingButton } from '@mui/lab'
 import {
   Stack,
   Typography,
@@ -37,7 +36,7 @@ import {
   QuotesCommentThread,
   QuotesHistory,
 } from '@/components/b2b'
-import BuyerQuoteActions from '@/components/b2b/BuyerQuoteActions/BuyerQuoteActions'
+import { BuyerQuoteActions } from '@/components/b2b'
 import { CartItemList } from '@/components/cart'
 import { ShippingMethod } from '@/components/checkout'
 import { AddressCard, AddressForm, KiboRadio, KiboTextBox } from '@/components/common'
