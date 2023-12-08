@@ -406,4 +406,5 @@ export const orderGetters = {
   getLineItemSubtotal,
   getShippingDiscounts,
   getItemTaxTotal,
+  getDigitalItems,
 }

@@ -64,6 +64,7 @@ const StandardShippingStep = (props: ShippingProps) => {
   }
   const shipItems = orderGetters.getShipItems(checkout)
   const pickupItems = orderGetters.getPickupItems(checkout)
+  const digitalItems = orderGetters.getDigitalItems(checkout)
 
   const [isAddressSavedToAccount, setIsAddressSavedToAccount] = useState<boolean>(false)
   const [validateForm, setValidateForm] = useState<boolean>(false)
@@ -266,7 +267,7 @@ const StandardShippingStep = (props: ShippingProps) => {
   useEffect(() => {
     // eslint-disable-next-line @typescript-eslint/no-extra-semi
     ;(selectedShippingAddressId && checkoutShippingMethodCode && shouldShowAddAddressButton) ||
-    (!shipItems.length && pickupItems.length)
+    (!shipItems.length && (pickupItems.length || digitalItems.length))
       ? setStepStatusValid()
       : setStepStatusIncomplete()
     // eslint-disable-next-line react-hooks/exhaustive-deps
