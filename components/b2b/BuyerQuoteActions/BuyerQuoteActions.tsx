@@ -27,7 +27,6 @@ export default function BuyerQuoteActions({
   handleGotoCheckout,
   handlePrint,
 }: BuyerQuoteActionsProps) {
-  console.log('statussssssss', status)
   const { t } = useTranslation()
 
   return (
