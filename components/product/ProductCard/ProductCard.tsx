@@ -37,6 +37,7 @@ export interface ProductCardProps {
   showQuickViewButton?: boolean
   badge?: string
   isATCLoading?: boolean
+  fulfillmentTypesSupported?: string[]
   onAddOrRemoveWishlistItem?: () => void
   onClickQuickViewModal?: () => void
   onClickAddToCart?: (payload: any) => void
@@ -72,6 +73,7 @@ const ProductCard = (props: ProductCardProps) => {
     onAddOrRemoveWishlistItem,
     showQuickViewButton = true,
     isATCLoading,
+    fulfillmentTypesSupported,
     onClickQuickViewModal,
     onClickAddToCart,
   } = props
@@ -91,7 +93,9 @@ const ProductCard = (props: ProductCardProps) => {
       product: {
         productCode: productCode,
         variationProductCode: variationProductCode,
-        fulfillmentMethod: FulfillmentOptionsConstant.SHIP,
+        fulfillmentMethod: fulfillmentTypesSupported?.includes(FulfillmentOptionsConstant.DIGITAL)
+          ? FulfillmentOptionsConstant.DIGITAL
+          : FulfillmentOptionsConstant.SHIP,
         purchaseLocationCode: '',
       },
       quantity: 1,

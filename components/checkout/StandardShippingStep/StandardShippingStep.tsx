@@ -284,26 +284,34 @@ const StandardShippingStep = (props: ShippingProps) => {
       isValidated: false,
       postalOrZipCode: 'n/a',
       stateOrProvince: 'n/a',
+      cityOrTown: 'n/a',
+      address1: 'n/a',
     }
 
     await updateOrderShippingInfo.mutateAsync({
       checkout,
       contact: {
         address,
+        firstName: '',
+        lastNameOrSurname: '',
+        phoneNumbers: { home: '' },
       },
     })
 
     setStepStatusValid()
   }
 
+  console.log('checkoutttt', checkout.email)
+
   useEffect(() => {
+    console.log('checkoutttt useeffect', checkout.email)
     if (isAllItemsDigital || !shipItems.length)
       if (isAllItemsDigital) {
         handleDigitalProductShipping()
       } else {
         setStepStatusValid()
       }
-  }, [])
+  }, [checkout.email, isAllItemsDigital, shipItems.length])
 
   if (checkout.items?.every((item) => item?.fulfillmentMethod === FulfillmentOptions.DIGITAL)) {
     return <Typography variant="h4">{t('digital-products-shipping-text')}</Typography>

@@ -152,6 +152,7 @@ const ProductListingTemplate = (props: ProductListingTemplateProps) => {
       isShowWishlistIcon: !productGetters.isVariationProduct(product),
       isLoading: isLoading,
       isATCLoading,
+      fulfillmentTypesSupported: product?.fulfillmentTypesSupported as string[],
       onAddOrRemoveWishlistItem: () => handleWishList(product as ProductCustom),
       onClickQuickViewModal: () => openProductQuickViewModal({ product: product as ProductCustom }),
       onClickAddToCart: (payload: any) => handleAddToCart(payload),

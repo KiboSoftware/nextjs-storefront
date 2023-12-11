@@ -99,7 +99,9 @@ const StandardShipCheckoutTemplate = (props: StandardShipCheckoutProps) => {
     }
 
     const personalInfo: PersonalInfo = {
-      checkout: order as CrOrderInput,
+      checkout: {
+        ...order,
+      } as CrOrderInput,
       email: email as string,
     }
     await updateOrderPersonalInfo.mutateAsync(personalInfo)
