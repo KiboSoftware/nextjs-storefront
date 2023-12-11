@@ -75,6 +75,7 @@ const ProductCardListView = (props: ProductCardListViewProps) => {
     showQuickViewButton = false,
     productCode,
     variationProductCode,
+    fulfillmentTypesSupported,
     onAddOrRemoveWishlistItem,
     onClickQuickViewModal,
     onClickAddToCart,
@@ -99,7 +100,9 @@ const ProductCardListView = (props: ProductCardListViewProps) => {
       product: {
         productCode: productCode,
         variationProductCode: variationProductCode,
-        fulfillmentMethod: FulfillmentOptionsConstant.SHIP,
+        fulfillmentMethod: fulfillmentTypesSupported?.includes(FulfillmentOptionsConstant.DIGITAL)
+          ? FulfillmentOptionsConstant.DIGITAL
+          : FulfillmentOptionsConstant.SHIP,
         purchaseLocationCode: '',
       },
       quantity: 1,

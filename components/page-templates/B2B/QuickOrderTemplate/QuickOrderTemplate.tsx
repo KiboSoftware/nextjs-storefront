@@ -81,7 +81,11 @@ const QuickOrderTemplate = (props: QuickOrderTemplateProps) => {
         product: {
           productCode: productGetters.getProductId(product),
           variationProductCode: productGetters.getVariationProductCode(product),
-          fulfillmentMethod: FulfillmentOptionsConstant.SHIP,
+          fulfillmentMethod: product?.fulfillmentTypesSupported?.includes(
+            FulfillmentOptionsConstant.DIGITAL
+          )
+            ? FulfillmentOptionsConstant.DIGITAL
+            : FulfillmentOptionsConstant.SHIP,
           purchaseLocationCode: '',
         },
         quantity: 1,

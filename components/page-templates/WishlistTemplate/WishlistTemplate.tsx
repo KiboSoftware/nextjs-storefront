@@ -72,6 +72,7 @@ const WishlistTemplate = () => {
                     })}
                     title={productGetters.getName(item?.product as ProductCustom) as string}
                     rating={productGetters.getRating(item?.product as ProductCustom)}
+                    fulfillmentTypesSupported={item?.product?.fulfillmentTypesSupported as string[]}
                     onAddOrRemoveWishlistItem={() =>
                       handleWishList(item?.product as WishlistProductInput)
                     }
