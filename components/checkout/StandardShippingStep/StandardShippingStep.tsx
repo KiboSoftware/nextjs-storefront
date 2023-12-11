@@ -273,12 +273,36 @@ const StandardShippingStep = (props: ShippingProps) => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [selectedShippingAddressId, checkout, shouldShowAddAddressButton])
 
+  const isAllItemsDigital = checkout.items?.every(
+    (item) => item?.fulfillmentMethod === FulfillmentOptions.DIGITAL
+  )
+
+  const handleDigitalProductShipping = async () => {
+    const address = {
+      addressType: 'Residential',
+      countryCode: 'US',
+      isValidated: false,
+      postalOrZipCode: 'n/a',
+      stateOrProvince: 'n/a',
+    }
+
+    await updateOrderShippingInfo.mutateAsync({
+      checkout,
+      contact: {
+        address,
+      },
+    })
+
+    setStepStatusValid()
+  }
+
   useEffect(() => {
-    if (
-      checkout.items?.every((item) => item?.fulfillmentMethod === FulfillmentOptions.DIGITAL) ||
-      !shipItems.length
-    )
-      setStepStatusValid()
+    if (isAllItemsDigital || !shipItems.length)
+      if (isAllItemsDigital) {
+        handleDigitalProductShipping()
+      } else {
+        setStepStatusValid()
+      }
   }, [])
 
   if (checkout.items?.every((item) => item?.fulfillmentMethod === FulfillmentOptions.DIGITAL)) {

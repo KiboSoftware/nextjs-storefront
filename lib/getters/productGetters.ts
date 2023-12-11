@@ -226,7 +226,10 @@ const getSegregatedOptions = (product: ProductCustom) => {
 }
 
 const validateAddToCartForOneTime = (product: ProductCustom): boolean => {
-  if (product.fulfillmentMethod === FulfillmentOptions.SHIP) {
+  if (
+    product.fulfillmentMethod === FulfillmentOptions.SHIP ||
+    product.fulfillmentMethod === FulfillmentOptions.DIGITAL
+  ) {
     return Boolean(product?.purchasableState?.isPurchasable)
   }
   if (product.fulfillmentMethod === FulfillmentOptions.PICKUP) {
@@ -236,7 +239,8 @@ const validateAddToCartForOneTime = (product: ProductCustom): boolean => {
       Boolean(product.purchaseLocationCode)
     )
   }
-  return Boolean(product?.purchasableState?.isPurchasable)
+
+  return false
 }
 
 const getVariationProductCodeOrProductCode = (product: ProductCustom): string => {

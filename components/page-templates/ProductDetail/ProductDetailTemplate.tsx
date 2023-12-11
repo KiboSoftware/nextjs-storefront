@@ -199,9 +199,10 @@ const ProductDetailTemplate = (props: ProductDetailTemplateProps) => {
   const isValidForAddToCart = () => {
     if (purchaseType === PurchaseTypes.SUBSCRIPTION) {
       return !!selectedFrequency && !(quantityLeft < 1)
-    } else {
+    } else if (isDigitalFulfillment) {
       return isValidForOneTime
     }
+    return isValidForOneTime && !(quantityLeft < 1)
   }
 
   const isProductInWishlist = checkProductInWishlist({

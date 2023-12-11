@@ -287,6 +287,16 @@ const ReviewStep = (props: ReviewStepProps) => {
         </Stack>
       )}
 
+      {digitalItems && digitalItems.length > 0 && (
+        <Stack gap={4}>
+          <Typography variant="h3" component="h3" sx={{ fontWeight: 'bold' }} color="text.primary">
+            {t('digital-products')}
+          </Typography>
+          <ProductItemList items={digitalItems} testId={'review-digital-items'} />
+          <Divider sx={{ mb: '1.438rem' }} />
+        </Stack>
+      )}
+
       <OrderPrice {...orderPriceProps} />
 
       <Box sx={{ mt: '31px', mb: '35px' }}>
