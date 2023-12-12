@@ -14,7 +14,7 @@ import { usePriceRangeFormatter } from '@/hooks'
 import { FulfillmentOptions as FulfillmentOptionsConstant } from '@/lib/constants'
 import DefaultImage from '@/public/product_placeholder.svg'
 
-import type { Product, ProductPriceRange } from '@/lib/gql/types'
+import type { CrProductOption, Product, ProductPriceRange } from '@/lib/gql/types'
 export interface ProductCardProps {
   title?: string
   link: string
@@ -37,6 +37,7 @@ export interface ProductCardProps {
   showQuickViewButton?: boolean
   badge?: string
   isATCLoading?: boolean
+  options?: CrProductOption[]
   fulfillmentTypesSupported?: string[]
   onAddOrRemoveWishlistItem?: () => void
   onClickQuickViewModal?: () => void
@@ -73,6 +74,7 @@ const ProductCard = (props: ProductCardProps) => {
     onAddOrRemoveWishlistItem,
     showQuickViewButton = true,
     isATCLoading,
+    options,
     fulfillmentTypesSupported,
     onClickQuickViewModal,
     onClickAddToCart,
@@ -97,6 +99,7 @@ const ProductCard = (props: ProductCardProps) => {
           ? FulfillmentOptionsConstant.DIGITAL
           : FulfillmentOptionsConstant.SHIP,
         purchaseLocationCode: '',
+        options: options,
       },
       quantity: 1,
     }
