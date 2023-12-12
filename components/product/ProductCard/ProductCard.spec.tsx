@@ -5,7 +5,7 @@ import { render, screen, waitFor, act } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
 
 import * as stories from './ProductCard.stories' // import all stories from the stories file
-
+import { FulfillmentOptions as FulfillmentOptionsConstant } from '@/lib/constants'
 const {
   Common,
   WithSalePrice,
@@ -189,6 +189,85 @@ describe('[components] Product Card Component', () => {
 
       await waitFor(() => {
         expect(onClickQuickViewModalMock).toBeCalled()
+      })
+    })
+  })
+
+  describe('Product Card with Add to Cart Button', () => {
+    it('should add item to cart button with ship fulfillment', async () => {
+      const onClickAddToCartMock = jest.fn()
+      render(
+        <Common
+          {...Common.args}
+          isShowWishlistIcon={true}
+          onClickAddToCart={onClickAddToCartMock}
+        />
+      )
+
+      const addToCartButton = screen.getByRole('button', {
+        name: 'add-to-cart',
+        hidden: true,
+      })
+
+      await userEvent.hover(screen.getByTestId('quick-actions'))
+
+      await waitFor(() => {
+        expect(addToCartButton).toBeInTheDocument()
+      })
+
+      await userEvent.click(addToCartButton)
+
+      const payload = {
+        product: {
+          productCode: Common.args?.productCode,
+          variationProductCode: Common.args?.variationProductCode,
+          fulfillmentMethod: FulfillmentOptionsConstant.SHIP,
+          purchaseLocationCode: '',
+        },
+        quantity: 1,
+      }
+
+      await waitFor(() => {
+        expect(onClickAddToCartMock).toBeCalledWith(payload)
+      })
+    })
+
+    it('should add digital item to cart button with digital fulfillment', async () => {
+      const onClickAddToCartMock = jest.fn()
+      render(
+        <Common
+          {...Common.args}
+          isShowWishlistIcon={true}
+          fulfillmentTypesSupported={[FulfillmentOptionsConstant.DIGITAL]}
+          onClickAddToCart={onClickAddToCartMock}
+        />
+      )
+
+      const addToCartButton = screen.getByRole('button', {
+        name: 'add-to-cart',
+        hidden: true,
+      })
+
+      await userEvent.hover(screen.getByTestId('quick-actions'))
+
+      await waitFor(() => {
+        expect(addToCartButton).toBeInTheDocument()
+      })
+
+      await userEvent.click(addToCartButton)
+
+      const payload = {
+        product: {
+          productCode: Common.args?.productCode,
+          variationProductCode: Common.args?.variationProductCode,
+          fulfillmentMethod: FulfillmentOptionsConstant.DIGITAL,
+          purchaseLocationCode: '',
+        },
+        quantity: 1,
+      }
+
+      await waitFor(() => {
+        expect(onClickAddToCartMock).toBeCalledWith(payload)
       })
     })
   })

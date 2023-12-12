@@ -180,7 +180,13 @@ const ProductCard = (props: ProductCardProps) => {
                   emptyIcon={<StarRounded data-testid="empty-rating" />}
                   data-testid="product-rating"
                 />
-                <Box pt={2} textAlign={'center'} sx={{ opacity: 0 }} className="quick-actions">
+                <Box
+                  pt={2}
+                  textAlign={'center'}
+                  sx={{ opacity: 0 }}
+                  className="quick-actions"
+                  data-testid="quick-actions"
+                >
                   {showQuickViewButton && (
                     <Button
                       sx={{ mr: 2 }}
@@ -196,13 +202,12 @@ const ProductCard = (props: ProductCardProps) => {
                       variant="contained"
                       color="primary"
                       onClick={handleAddToCart}
-                      loading={isATCLoading}
+                      // loading={isATCLoading}
                     >
                       {t('add-to-cart')}
                     </LoadingButton>
                   )}
                 </Box>
-                {/* )} */}
               </Box>
             </Card>
           </Box>
