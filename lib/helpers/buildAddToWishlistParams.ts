@@ -13,10 +13,9 @@ export const buildAddToWishlistItemParams = (
       quantity: quantity ? quantity : 1,
       product: {
         options: product?.options?.map((option: any) => {
-          const selected = option?.values?.find((value: any) => value?.isSelected)
           return {
             name: option?.attributeDetail?.name,
-            value: selected?.value || selected?.stringValue || selected?.shopperEnteredValue,
+            value: option?.value,
             attributeFQN: option?.attributeFQN,
           }
         }),
