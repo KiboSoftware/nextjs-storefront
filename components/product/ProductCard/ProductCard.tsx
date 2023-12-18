@@ -14,7 +14,7 @@ import { usePriceRangeFormatter } from '@/hooks'
 import { FulfillmentOptions as FulfillmentOptionsConstant } from '@/lib/constants'
 import DefaultImage from '@/public/product_placeholder.svg'
 
-import type { Product, ProductPriceRange } from '@/lib/gql/types'
+import type { CrProductOption, Product, ProductPriceRange } from '@/lib/gql/types'
 export interface ProductCardProps {
   title?: string
   link: string
@@ -37,6 +37,8 @@ export interface ProductCardProps {
   showQuickViewButton?: boolean
   badge?: string
   isATCLoading?: boolean
+  options?: CrProductOption[]
+  fulfillmentTypesSupported?: string[]
   onAddOrRemoveWishlistItem?: () => void
   onClickQuickViewModal?: () => void
   onClickAddToCart?: (payload: any) => void
@@ -72,6 +74,8 @@ const ProductCard = (props: ProductCardProps) => {
     onAddOrRemoveWishlistItem,
     showQuickViewButton = true,
     isATCLoading,
+    options,
+    fulfillmentTypesSupported,
     onClickQuickViewModal,
     onClickAddToCart,
   } = props
@@ -91,8 +95,11 @@ const ProductCard = (props: ProductCardProps) => {
       product: {
         productCode: productCode,
         variationProductCode: variationProductCode,
-        fulfillmentMethod: FulfillmentOptionsConstant.SHIP,
+        fulfillmentMethod: fulfillmentTypesSupported?.includes(FulfillmentOptionsConstant.DIGITAL)
+          ? FulfillmentOptionsConstant.DIGITAL
+          : FulfillmentOptionsConstant.SHIP,
         purchaseLocationCode: '',
+        options: options,
       },
       quantity: 1,
     }
@@ -176,8 +183,13 @@ const ProductCard = (props: ProductCardProps) => {
                   emptyIcon={<StarRounded data-testid="empty-rating" />}
                   data-testid="product-rating"
                 />
-                {/* {isShowWishlistIcon && ( */}
-                <Box pt={2} textAlign={'center'} sx={{ opacity: 0 }} className="quick-actions">
+                <Box
+                  pt={2}
+                  textAlign={'center'}
+                  sx={{ opacity: 0 }}
+                  className="quick-actions"
+                  data-testid="quick-actions"
+                >
                   {showQuickViewButton && (
                     <Button
                       sx={{ mr: 2 }}
@@ -193,13 +205,12 @@ const ProductCard = (props: ProductCardProps) => {
                       variant="contained"
                       color="primary"
                       onClick={handleAddToCart}
-                      loading={isATCLoading}
+                      // loading={isATCLoading}
                     >
                       {t('add-to-cart')}
                     </LoadingButton>
                   )}
                 </Box>
-                {/* )} */}
               </Box>
             </Card>
           </Box>

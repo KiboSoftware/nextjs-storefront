@@ -1,4 +1,4 @@
-import { Typography, Box, SxProps, Theme } from '@mui/material'
+import { Typography, Box, SxProps, Theme, Stack } from '@mui/material'
 
 import type { PriceOnly, PriceRange, SalePrice } from '@/lib/types'
 interface PriceProps extends PriceOnly, SalePrice, PriceStyles {
@@ -78,10 +78,18 @@ const PriceRangeTypography = ({ priceRange }: { priceRange: PriceRange }) => {
   const { lower, upper } = priceRange
 
   return (
-    <Box display="flex" alignItems="center" gap={1} data-testid="price-range">
-      <Price price={lower?.price} {...(lower?.salePrice && { salePrice: lower?.salePrice })} />
+    <Box display="flex" alignItems="center" flexWrap={'wrap'} gap={0.5} data-testid="price-range">
+      <Price
+        variant="body2"
+        price={lower?.price}
+        {...(lower?.salePrice && { salePrice: lower?.salePrice })}
+      />
       <Typography variant="body2">-</Typography>
-      <Price price={upper?.price} {...(upper?.salePrice && { salePrice: upper?.salePrice })} />
+      <Price
+        variant="body2"
+        price={upper?.price}
+        {...(upper?.salePrice && { salePrice: upper?.salePrice })}
+      />
     </Box>
   )
 }
@@ -96,7 +104,7 @@ const Price = (props: PriceProps) => {
       ) : (
         <SalePriceTypography
           price={price}
-          salePrice={salePrice}
+          salePrice={price === salePrice ? undefined : salePrice}
           variant={variant}
           color={color}
           fontWeight={fontWeight}

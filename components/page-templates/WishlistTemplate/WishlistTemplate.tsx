@@ -10,7 +10,7 @@ import { productGetters } from '@/lib/getters'
 import { uiHelpers } from '@/lib/helpers'
 import type { WishlistProductInput, ProductCustom } from '@/lib/types'
 
-import type { Maybe, CrWishlistItem, Product } from '@/lib/gql/types'
+import type { Maybe, CrWishlistItem, Product, CrProduct, CrProductOption } from '@/lib/gql/types'
 
 const WishlistTemplate = () => {
   const router = useRouter()
@@ -72,6 +72,10 @@ const WishlistTemplate = () => {
                     })}
                     title={productGetters.getName(item?.product as ProductCustom) as string}
                     rating={productGetters.getRating(item?.product as ProductCustom)}
+                    fulfillmentTypesSupported={item?.product?.fulfillmentTypesSupported as string[]}
+                    options={
+                      productGetters.getOptions(item?.product as CrProduct) as CrProductOption[]
+                    }
                     onAddOrRemoveWishlistItem={() =>
                       handleWishList(item?.product as WishlistProductInput)
                     }

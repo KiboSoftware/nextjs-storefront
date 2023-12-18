@@ -13,10 +13,13 @@ export const buildAddOrRemoveWishlistItemParams = (
     variationProductCode,
     isPackagedStandAlone,
     options:
-      product?.options?.map((productOption) => ({
-        attributeFQN: productOption?.attributeFQN,
-        name: productOption?.attributeDetail?.name,
-        value: productOption?.values?.find((v) => v?.isSelected)?.value,
-      })) || [],
+      product?.options?.map((productOption) => {
+        const selected = productOption?.values?.find((value: any) => value?.isSelected)
+        return {
+          attributeFQN: productOption?.attributeFQN,
+          name: productOption?.attributeDetail?.name,
+          value: selected?.value || selected?.stringValue || selected?.shopperEnteredValue,
+        }
+      }) || [],
   }
 }

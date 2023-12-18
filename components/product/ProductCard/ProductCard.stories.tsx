@@ -18,25 +18,22 @@ Common.args = {
   link: '/product/test-123',
   price: '$19.98',
   title: 'This is a product',
+  fulfillmentTypesSupported: ['SHIP'],
+  productCode: 'test-product-code',
+  isShowWishlistIcon: true,
 }
 
 export const WithSalePrice = Template.bind({})
 // More on args: https://storybook.js.org/docs/react/writing-stories/args
 WithSalePrice.args = {
-  imageUrl: `https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcR-FMCFLCcOwFxZ3FNt8RKne3iqrwqY8OOnCw&usqp=CAU`,
-  link: '/product/test-123',
-  price: '$19.98',
+  ...Common.args,
   salePrice: '$8.99',
-  title: 'This is a product',
 }
 
 export const WithRating = Template.bind({})
 // More on args: https://storybook.js.org/docs/react/writing-stories/args
 WithRating.args = {
-  imageUrl: `https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcR-FMCFLCcOwFxZ3FNt8RKne3iqrwqY8OOnCw&usqp=CAU`,
-  link: '/product/test-123',
-  price: '$19.98',
-  title: 'This is a product',
+  ...Common.args,
   rating: 3.5,
 }
 

@@ -15,7 +15,7 @@ export interface ProductOptionSelectProps {
   placeholder?: string
   label?: string
   attributeFQN: string
-  onDropdownChange: (attributeFQN: string, value: string) => void
+  onDropdownChange: (attributeFQN: string, value: string) => Promise<void>
 }
 
 const ProductOptionSelect = (props: ProductOptionSelectProps) => {

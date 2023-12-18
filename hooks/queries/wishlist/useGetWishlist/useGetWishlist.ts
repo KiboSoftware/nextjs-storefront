@@ -71,10 +71,14 @@ export const useGetWishlist = (params?: PageProps): UseWishlistResponse => {
       ? wishlistKeys.page({ ...params, startIndex: params.startIndex + params.pageSize })
       : wishlistKeys.all,
     queryFn: () =>
-      getWishlists({
-        ...(params as PageProps),
-        startIndex: params ? params?.startIndex + params?.pageSize : 0,
-      }),
+      getWishlists(
+        params
+          ? {
+              ...(params as PageProps),
+              startIndex: params ? params?.startIndex + params?.pageSize : 0,
+            }
+          : undefined
+      ),
   })
 
   return { data, isPending, isSuccess, isFetching, isLoading, refetch }

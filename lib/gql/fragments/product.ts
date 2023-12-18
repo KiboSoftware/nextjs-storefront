@@ -58,6 +58,7 @@ fragment productOptions on Product {
     values {
       value
       isSelected
+      isEnabled
       deltaPrice
       stringValue
     }

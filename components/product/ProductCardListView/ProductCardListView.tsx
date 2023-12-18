@@ -38,6 +38,7 @@ export interface ProductCardListViewProps {
   showQuickViewButton?: boolean
   badge?: string
   isATCLoading?: boolean
+  fulfillmentTypesSupported?: string[]
   onAddOrRemoveWishlistItem?: () => Promise<void>
   onClickQuickViewModal?: () => void
   onClickAddToCart?: (payload: any) => Promise<void>
@@ -64,7 +65,7 @@ const ProductCardListView = (props: ProductCardListViewProps) => {
     imageUrl,
     placeholderImageUrl = DefaultImage,
     rating = 4,
-    productDescription,
+    productDescription = '',
     imageHeight = 140,
     imageAltText = 'product-image-alt',
     isLoading = false,
@@ -74,6 +75,7 @@ const ProductCardListView = (props: ProductCardListViewProps) => {
     showQuickViewButton = false,
     productCode,
     variationProductCode,
+    fulfillmentTypesSupported,
     onAddOrRemoveWishlistItem,
     onClickQuickViewModal,
     onClickAddToCart,
@@ -98,7 +100,9 @@ const ProductCardListView = (props: ProductCardListViewProps) => {
       product: {
         productCode: productCode,
         variationProductCode: variationProductCode,
-        fulfillmentMethod: FulfillmentOptionsConstant.SHIP,
+        fulfillmentMethod: fulfillmentTypesSupported?.includes(FulfillmentOptionsConstant.DIGITAL)
+          ? FulfillmentOptionsConstant.DIGITAL
+          : FulfillmentOptionsConstant.SHIP,
         purchaseLocationCode: '',
       },
       quantity: 1,
@@ -185,9 +189,12 @@ const ProductCardListView = (props: ProductCardListViewProps) => {
                   data-testid="product-rating"
                 />
                 <Box>
-                  <Typography variant="body1" color={'text.secondary'}>
-                    {productDescription}
-                  </Typography>
+                  <Box
+                    data-testid="short-description"
+                    dangerouslySetInnerHTML={{
+                      __html: productDescription,
+                    }}
+                  />
                 </Box>
                 <Box py={1}>
                   <Price
@@ -200,20 +207,19 @@ const ProductCardListView = (props: ProductCardListViewProps) => {
 
                 <Box pt={1} display={'flex'} gap={2}>
                   {showQuickViewButton ? (
-                    <Box
-                      sx={{
-                        ...ProductCardStyles.hoveredButtons,
-                        ...ProductCardStyles.quickViewButton,
-                      }}
+                    <Button
+                      variant="contained"
+                      color="primary"
                       onClick={handleOpenProductQuickViewModal}
                     >
-                      <Typography variant="caption">{t('quick-view')}</Typography>
-                    </Box>
+                      {t('quick-view')}
+                    </Button>
                   ) : null}
-                  {/* <QuantitySelector /> */}
-                  <Button variant="contained" color="primary" onClick={handleAddToCart}>
-                    {t('add-to-cart')}
-                  </Button>
+                  {isShowWishlistIcon && (
+                    <Button variant="contained" color="primary" onClick={handleAddToCart}>
+                      {t('add-to-cart')}
+                    </Button>
+                  )}
                 </Box>
               </Box>
             </Card>

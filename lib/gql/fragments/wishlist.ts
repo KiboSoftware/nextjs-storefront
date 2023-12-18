@@ -24,6 +24,7 @@ fragment wishlistItem on CrWishlistItem {
         description
         imageUrl
         variationProductCode
+        fulfillmentTypesSupported
         options {
             attributeFQN
             name

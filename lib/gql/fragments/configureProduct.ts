@@ -12,6 +12,7 @@ fragment configureProductOptions on ConfiguredProduct {
     values {
       value
       isSelected
+      isEnabled
       deltaPrice
       stringValue
       shopperEnteredValue
@@ -23,6 +24,20 @@ export const configureProductInfo = `
 fragment configureProductInfo on ConfiguredProduct {
         productCode
         variationProductCode
+        priceRange {
+          upper {
+            price
+            salePrice
+          }
+          lower {
+            price
+            salePrice
+          }
+        }
+        price{
+          price
+          salePrice
+        }
         productImages {
           imageUrl
           altText

@@ -23,7 +23,7 @@ import {
   useValidateCustomerAddress,
   useCreateCustomerAddress,
 } from '@/hooks'
-import { DefaultId, AddressType, CountryCode } from '@/lib/constants'
+import { DefaultId, AddressType, CountryCode, FulfillmentOptions } from '@/lib/constants'
 import { orderGetters, userGetters } from '@/lib/getters'
 import { actions, buildAddressParams, hasPermission } from '@/lib/helpers'
 import { Address } from '@/lib/types'
@@ -45,6 +45,7 @@ interface ShippingProps {
 
 const StandardShippingStep = (props: ShippingProps) => {
   const { checkout, savedUserAddressData: addresses, isAuthenticated } = props
+
   // Use this to submit the form with reCaptcha: Don't delete this code
   // const { executeRecaptcha } = useReCaptcha()
   // const { showSnackbar } = useSnackbarContext()
@@ -63,6 +64,7 @@ const StandardShippingStep = (props: ShippingProps) => {
   }
   const shipItems = orderGetters.getShipItems(checkout)
   const pickupItems = orderGetters.getPickupItems(checkout)
+  const digitalItems = orderGetters.getDigitalItems(checkout)
 
   const [isAddressSavedToAccount, setIsAddressSavedToAccount] = useState<boolean>(false)
   const [validateForm, setValidateForm] = useState<boolean>(false)
@@ -265,15 +267,55 @@ const StandardShippingStep = (props: ShippingProps) => {
   useEffect(() => {
     // eslint-disable-next-line @typescript-eslint/no-extra-semi
     ;(selectedShippingAddressId && checkoutShippingMethodCode && shouldShowAddAddressButton) ||
-    (!shipItems.length && pickupItems.length)
+    (!shipItems.length && (pickupItems.length || digitalItems.length))
       ? setStepStatusValid()
       : setStepStatusIncomplete()
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [selectedShippingAddressId, checkout, shouldShowAddAddressButton])
 
+  const isAllItemsDigital = checkout.items?.every(
+    (item) => item?.fulfillmentMethod === FulfillmentOptions.DIGITAL
+  )
+
+  const handleDigitalProductShipping = async () => {
+    const address = {
+      addressType: 'Residential',
+      countryCode: 'US',
+      isValidated: false,
+      postalOrZipCode: 'n/a',
+      stateOrProvince: 'n/a',
+      cityOrTown: 'n/a',
+      address1: 'n/a',
+    }
+
+    await updateOrderShippingInfo.mutateAsync({
+      checkout,
+      contact: {
+        address,
+        firstName: '',
+        lastNameOrSurname: '',
+        phoneNumbers: { home: '' },
+      },
+    })
+
+    setStepStatusValid()
+  }
+
+  console.log('checkoutttt', checkout.email)
+
   useEffect(() => {
-    if (!shipItems.length) setStepStatusValid()
-  }, [shipItems.length])
+    console.log('checkoutttt useeffect', checkout.email)
+    if (isAllItemsDigital || !shipItems.length)
+      if (isAllItemsDigital) {
+        handleDigitalProductShipping()
+      } else {
+        setStepStatusValid()
+      }
+  }, [checkout.email, isAllItemsDigital, shipItems.length])
+
+  if (checkout.items?.every((item) => item?.fulfillmentMethod === FulfillmentOptions.DIGITAL)) {
+    return <Typography variant="h4">{t('digital-products-shipping-text')}</Typography>
+  }
 
   if (!shipItems.length) {
     return (

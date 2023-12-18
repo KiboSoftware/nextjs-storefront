@@ -99,7 +99,9 @@ const StandardShipCheckoutTemplate = (props: StandardShipCheckoutProps) => {
     }
 
     const personalInfo: PersonalInfo = {
-      checkout: order as CrOrderInput,
+      checkout: {
+        ...order,
+      } as CrOrderInput,
       email: email as string,
     }
     await updateOrderPersonalInfo.mutateAsync(personalInfo)
@@ -176,7 +178,7 @@ const StandardShipCheckoutTemplate = (props: StandardShipCheckoutProps) => {
     )
   }
 
-  const { shipItems, pickupItems } = orderGetters.getCheckoutDetails(order as CrOrder)
+  const { shipItems, pickupItems, digitalItems } = orderGetters.getCheckoutDetails(order as CrOrder)
 
   return (
     <>
@@ -209,6 +211,7 @@ const StandardShipCheckoutTemplate = (props: StandardShipCheckoutProps) => {
           isMultiShipEnabled={isMultiShipEnabled}
           shipItems={shipItems}
           pickupItems={pickupItems}
+          digitalItems={digitalItems}
           personalDetails={personalDetails}
           orderSummaryProps={orderDetails?.orderSummary}
           onCreateOrder={handleCreateOrder}
