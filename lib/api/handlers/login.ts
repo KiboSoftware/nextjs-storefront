@@ -1,8 +1,10 @@
 import getConfig from 'next/config'
 
 import { fetcher, getAdditionalHeader } from '../util'
+import getRequestDetails from '../util/get-request-details'
 import getUserClaimsFromRequest from '../util/getUserClaimsFromRequest'
 import { fromBitVectorSetArray } from '@/lib/helpers'
+import logger from '@/next-logger.config'
 
 import type { NextApiRequest, NextApiResponse } from 'next'
 
@@ -63,5 +65,9 @@ export default async function loginHandler(req: NextApiRequest, res: NextApiResp
     res.status(200).json(loginResponse)
   } catch (error: any) {
     res.status(error?.code).json({ message: error?.message })
+
+    const requestDetails = getRequestDetails(req)
+    logger.info(requestDetails, 'Login handler: request details')
+    logger.error(error, 'Error in Login handler')
   }
 }

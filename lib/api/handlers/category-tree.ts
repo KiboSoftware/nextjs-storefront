@@ -1,4 +1,6 @@
 import { getCategoryTree } from '../operations'
+import getRequestDetails from '../util/get-request-details'
+import logger from '@/next-logger.config'
 
 import type { NextApiRequest, NextApiResponse } from 'next'
 
@@ -15,5 +17,9 @@ export default async function categoryTreeHandler(req: NextApiRequest, res: Next
     res.status(200).json(response)
   } catch (error: any) {
     res.status(error?.code).json({ message: error?.message })
+
+    const requestDetails = getRequestDetails(req)
+    logger.info(requestDetails, 'Category-tree handler: request details')
+    logger.error(error, 'Error in Category-tree handler')
   }
 }

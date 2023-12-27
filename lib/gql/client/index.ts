@@ -21,3 +21,7 @@ export const LOGOUT_ENDPOINT = `${
 export const REGISTER_USER_ENDPOINT = `${
   process.env.NEXT_PUBLIC_URL ? process.env.NEXT_PUBLIC_URL : ''
 }/api/user/register`
+
+export const LOGGER_ENDPOINT = `${
+  process.env.NEXT_PUBLIC_URL ? process.env.NEXT_PUBLIC_URL : ''
+}/api/logger`

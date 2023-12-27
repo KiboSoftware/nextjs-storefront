@@ -1,5 +1,8 @@
 import getConfig from 'next/config'
 
+import getRequestDetails from '../util/get-request-details'
+import logger from '@/next-logger.config'
+
 import type { NextApiRequest, NextApiResponse } from 'next'
 
 const config = getConfig()
@@ -14,5 +17,9 @@ export default async function logoutHandler(req: NextApiRequest, res: NextApiRes
     console.error(error)
     const message = 'An unexpected error ocurred'
     res.status(500).json({ data: null, errors: [{ message }] })
+
+    const requestDetails = getRequestDetails(req)
+    logger.info(requestDetails, 'Logout handler: request details')
+    logger.error(error, 'Error in Logout handler')
   }
 }

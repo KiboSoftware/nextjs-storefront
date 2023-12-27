@@ -1,5 +1,7 @@
 import { productSearch } from '../operations'
+import getRequestDetails from '../util/get-request-details'
 import type { CategorySearchParams } from '@/lib/types'
+import logger from '@/next-logger.config'
 
 import type { NextApiRequest, NextApiResponse } from 'next'
 
@@ -17,5 +19,9 @@ export default async function searchHandler(req: NextApiRequest, res: NextApiRes
     res.status(200).json({ results: response?.data?.products })
   } catch (error: any) {
     res.status(error?.code).json({ message: error?.message })
+
+    const requestDetails = getRequestDetails(req)
+    logger.info(requestDetails, 'Search handler: request details')
+    logger.error(error, 'Error in Search handler')
   }
 }
