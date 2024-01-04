@@ -1,10 +1,12 @@
 import { getCategoryTree } from '../operations'
-import getRequestDetails from '../util/get-request-details'
-import logger from '@/next-logger.config'
+import { NextApiRequestWithLogger } from '@/lib/types'
 
-import type { NextApiRequest, NextApiResponse } from 'next'
+import type { NextApiResponse } from 'next'
 
-export default async function categoryTreeHandler(req: NextApiRequest, res: NextApiResponse) {
+export default async function categoryTreeHandler(
+  req: NextApiRequestWithLogger,
+  res: NextApiResponse
+) {
   try {
     res.setHeader('Cache-Control', 'public, s-maxage=10, stale-while-revalidate=59')
     const response = await getCategoryTree(req)
@@ -17,9 +19,6 @@ export default async function categoryTreeHandler(req: NextApiRequest, res: Next
     res.status(200).json(response)
   } catch (error: any) {
     res.status(error?.code).json({ message: error?.message })
-
-    const requestDetails = getRequestDetails(req)
-    logger.info(requestDetails, 'Category-tree handler: request details')
-    logger.error(error, 'Error in Category-tree handler')
+    req.logger.error(error, 'Error in Category-tree handler')
   }
 }

@@ -1,18 +1,17 @@
 import getConfig from 'next/config'
 
 import { fetcher, getAdditionalHeader } from '../util'
-import getRequestDetails from '../util/get-request-details'
 import getUserClaimsFromRequest from '../util/getUserClaimsFromRequest'
 import { fromBitVectorSetArray } from '@/lib/helpers'
-import logger from '@/next-logger.config'
+import { NextApiRequestWithLogger } from '@/lib/types'
 
-import type { NextApiRequest, NextApiResponse } from 'next'
+import type { NextApiResponse } from 'next'
 
 const config = getConfig()
 const maxCookieAge = config?.publicRuntimeConfig?.maxCookieAge
 const cookieName = config?.publicRuntimeConfig.userCookieKey.toLowerCase()
 
-export default async function loginHandler(req: NextApiRequest, res: NextApiResponse) {
+export default async function loginHandler(req: NextApiRequestWithLogger, res: NextApiResponse) {
   try {
     const { query, variables } = req.body
     const userClaims = await getUserClaimsFromRequest(req, res)
@@ -65,9 +64,6 @@ export default async function loginHandler(req: NextApiRequest, res: NextApiResp
     res.status(200).json(loginResponse)
   } catch (error: any) {
     res.status(error?.code).json({ message: error?.message })
-
-    const requestDetails = getRequestDetails(req)
-    logger.info(requestDetails, 'Login handler: request details')
-    logger.error(error, 'Error in Login handler')
+    req.logger.error(error, 'Error in Login handler')
   }
 }

@@ -4,7 +4,7 @@ const pino = require('pino')
 const transport = pino.transport({
   targets: [
     {
-      target: 'pino/file', // 'pino/file','pino-pretty',
+      target: 'pino-pretty', // 'pino/file','pino-pretty',
       options: { destination: process.stdout.fd, colorize: false },
     },
   ],

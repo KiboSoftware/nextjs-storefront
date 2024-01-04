@@ -1,17 +1,12 @@
-import getRequestDetails from '../util/get-request-details'
-import logger from '@/next-logger.config'
+import { NextApiRequestWithLogger } from '@/lib/types'
 
-import type { NextApiRequest, NextApiResponse } from 'next'
+import type { NextApiResponse } from 'next'
 
-export default async function loggerHandler(req: NextApiRequest, res: NextApiResponse) {
+export default async function loggerHandler(req: NextApiRequestWithLogger, res: NextApiResponse) {
   try {
-    // get variables
-
-    const requestDetails = getRequestDetails(req)
-    logger.info(requestDetails, 'Client error: request details')
-    logger.error(req.body, 'Client Error')
+    console.log('------------req.body-----------', req.body)
+    req.logger.error(req.body, 'Client Error')
   } catch (error: any) {
     res.status(error?.code).json({ message: error?.message })
-    logger.error(error, 'Error in Logger handler')
   }
 }
