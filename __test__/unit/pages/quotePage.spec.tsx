@@ -1,16 +1,17 @@
 import '@testing-library/jest-dom'
 import { render, screen } from '@testing-library/react'
 
-import { customerB2BUserForPage0Mock, quoteMock } from '@/__mocks__/stories'
+import { b2BAccountResponseMock, customerB2BUserForPage0Mock, quoteMock } from '@/__mocks__/stories'
 import { RQNotificationContextProvider } from '@/context'
 import * as operations from '@/lib/api/operations'
 import QuotePage, { getServerSideProps } from '@/src/pages/my-account/b2b/quote/[quoteId]'
 
-import { B2BUserCollection, Quote } from '@/lib/gql/types'
+import { B2BAccount, B2BUserCollection, Quote } from '@/lib/gql/types'
 
 const mockOperations = operations as {
   getQuote(quoteId: string, draft: boolean, req: any, res: any): Promise<Quote>
   getB2BUsers(req: any, res: any): Promise<B2BUserCollection>
+  getB2BAccount(req: any, res: any, id: number): Promise<B2BAccount>
 }
 
 const context = {
@@ -30,6 +31,7 @@ jest.mock('@/lib/api/operations', () => ({
   __esModule: true,
   getQuote: jest.fn(),
   getB2BUsers: jest.fn(),
+  getB2BAccount: jest.fn(),
 }))
 
 jest.mock('next-i18next/serverSideTranslations', () => ({
@@ -79,8 +81,10 @@ describe('[page] Quote Page', () => {
   it('should run getServerSideProps method', async () => {
     const mockQuote = { quoteId: 'quote-id' }
     const mockB2BUsers = customerB2BUserForPage0Mock
+    const mockB2BAccount = b2BAccountResponseMock
     mockOperations.getQuote = jest.fn().mockImplementationOnce(async () => mockQuote)
     mockOperations.getB2BUsers = jest.fn().mockImplementation(async () => mockB2BUsers)
+    mockOperations.getB2BAccount = jest.fn().mockImplementation(async () => mockB2BAccount)
     const response = await getServerSideProps(context as any)
     expect(response).toStrictEqual({
       props: {
@@ -89,6 +93,7 @@ describe('[page] Quote Page', () => {
         currentB2BUser: customerB2BUserForPage0Mock,
         b2bUsers: customerB2BUserForPage0Mock,
         mode: '',
+        b2bAccount: b2BAccountResponseMock,
         _nextI18Next: {
           initialI18nStore: { 'mock-locale': [{}], en: [{}] },
           initialLocale: 'mock-locale',
@@ -105,6 +110,7 @@ describe('[page] Quote Page', () => {
       mode: '',
       currentB2BUser: customerB2BUserForPage0Mock,
       b2bUsers: customerB2BUserForPage0Mock,
+      b2bAccount: b2BAccountResponseMock,
     }
     render(
       <RQNotificationContextProvider>

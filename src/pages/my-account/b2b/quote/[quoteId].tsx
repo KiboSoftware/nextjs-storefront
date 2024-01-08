@@ -3,7 +3,7 @@ import { serverSideTranslations } from 'next-i18next/serverSideTranslations'
 
 import { QuoteDetailsTemplate } from '@/components/page-templates'
 import { useGetQuoteByID } from '@/hooks/queries/b2b/quotes/useGetQuoteById/useGetQuoteById'
-import { getB2BUsers, getQuote } from '@/lib/api/operations'
+import { getB2BAccount, getB2BUsers, getQuote } from '@/lib/api/operations'
 
 import type { Quote } from '@/lib/gql/types'
 import type { NextPage, GetServerSidePropsContext, NextApiRequest, NextApiResponse } from 'next'
@@ -14,6 +14,7 @@ interface QuotePageProps {
   mode: string
   currentB2BUser: any
   b2bUsers: any
+  b2bAccount: any
 }
 
 export async function getServerSideProps(context: GetServerSidePropsContext) {
@@ -25,6 +26,11 @@ export async function getServerSideProps(context: GetServerSidePropsContext) {
   const currentB2BUser =
     (await getB2BUsers(req as NextApiRequest, res as NextApiResponse, quote?.userId as string)) ??
     null
+  const b2bAccount = await getB2BAccount(
+    req as NextApiRequest,
+    res as NextApiResponse,
+    quote?.customerAccountId as number
+  )
 
   if (!quote) {
     return { notFound: true }
@@ -37,13 +43,14 @@ export async function getServerSideProps(context: GetServerSidePropsContext) {
       mode,
       b2bUsers,
       currentB2BUser,
+      b2bAccount,
       ...(await serverSideTranslations(locale as string, ['common'])),
     },
   }
 }
 
 const QuotePage: NextPage<QuotePageProps> = (props) => {
-  const { quoteId, quote: initialQuote, mode, currentB2BUser, b2bUsers } = props
+  const { quoteId, quote: initialQuote, mode, currentB2BUser, b2bUsers, b2bAccount } = props
   const draft = true
   const router = useRouter()
   const { data: quoteResult } = useGetQuoteByID({ quoteId, draft, initialQuote })
@@ -58,6 +65,7 @@ const QuotePage: NextPage<QuotePageProps> = (props) => {
       currentB2BUser={currentB2BUser}
       initialB2BUsers={b2bUsers}
       onAccountTitleClick={handleGoToQuotes}
+      b2bAccount={b2bAccount}
     />
   )
 }

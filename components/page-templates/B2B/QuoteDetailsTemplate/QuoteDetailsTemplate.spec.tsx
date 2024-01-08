@@ -11,6 +11,7 @@ import QuoteDetailsTemplate from './QuoteDetailsTemplate'
 import * as stories from './QuoteDetailsTemplate.stories'
 import { server } from '@/__mocks__/msw/server'
 import {
+  b2BAccountResponseMock,
   customerB2BUserForPage0Mock,
   orderMock,
   quoteMock,
@@ -154,6 +155,7 @@ const TestComponent = () => {
     mode: 'edit',
     initialB2BUsers: customerB2BUserForPage0Mock,
     currentB2BUser: customerB2BUserForPage0Mock,
+    b2bAccount: b2BAccountResponseMock,
     onAccountTitleClick: onAccountTitleClickMock,
   }
   return <QuoteDetailsTemplate {...props} />
