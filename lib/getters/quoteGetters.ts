@@ -1,6 +1,6 @@
 import { format } from 'date-fns'
 
-import { DateFormat, FulfillmentOptions } from '../constants'
+import { DateFormat, FulfillmentOptions, QuoteStatus } from '../constants'
 import {
   AuditRecord,
   AuditRecordChange,
@@ -139,6 +139,83 @@ const getSubmitForApprovalEnabled = (
   return false
 }
 
+const isClearChangesButtonDisabled = (status: string, hasDraft: boolean) => {
+  return (
+    QuoteStatus[status] === QuoteStatus.InReview ||
+    QuoteStatus[status] === QuoteStatus.Completed ||
+    !hasDraft
+  )
+}
+
+const isEditQuoteButtonDisabled = (status: string) => {
+  return (
+    QuoteStatus[status] === QuoteStatus.InReview ||
+    QuoteStatus[status] === QuoteStatus.Completed ||
+    QuoteStatus[status] === QuoteStatus.Expired
+  )
+}
+
+const isSubmitForApprovalButtonDisabled = (
+  status: string,
+  hasDraft: boolean,
+  isSaveAndExitEnabled: boolean
+) => {
+  return (
+    QuoteStatus[status] === QuoteStatus.InReview ||
+    QuoteStatus[status] === QuoteStatus.Completed ||
+    QuoteStatus[status] === QuoteStatus.Expired ||
+    !isSaveAndExitEnabled ||
+    !hasDraft
+  )
+}
+
+const isQuoteNameTextBoxDisabled = (status: string) => {
+  return (
+    QuoteStatus[status] === QuoteStatus.InReview ||
+    QuoteStatus[status] === QuoteStatus.Completed ||
+    QuoteStatus[status] === QuoteStatus.Expired
+  )
+}
+
+const isQuoteNameEditable = (
+  status: string,
+  isTextBoxEmpty: boolean,
+  isNameNotModified: boolean
+) => {
+  return (
+    QuoteStatus[status] === QuoteStatus.InReview ||
+    QuoteStatus[status] === QuoteStatus.Completed ||
+    QuoteStatus[status] === QuoteStatus.Expired ||
+    isTextBoxEmpty ||
+    isNameNotModified
+  )
+}
+
+const shouldShowB2BProductSearch = (status: string, mode: string) => {
+  return (
+    mode &&
+    QuoteStatus[status as string] !== QuoteStatus.InReview &&
+    QuoteStatus[status as string] !== QuoteStatus.Completed
+  )
+}
+
+const isAddressEditable = (status: string, mode: string) => {
+  return (
+    mode &&
+    QuoteStatus[status] !== QuoteStatus.InReview &&
+    QuoteStatus[status] !== QuoteStatus.Completed &&
+    QuoteStatus[status] !== QuoteStatus.Expired
+  )
+}
+
+const showSelectedAddress = (status: string, mode: string) => {
+  return (
+    !mode ||
+    QuoteStatus[status as string] === QuoteStatus.InReview ||
+    QuoteStatus[status as string] === QuoteStatus.Completed
+  )
+}
+
 export const quoteGetters = {
   getQuotes,
   getNumber,
@@ -160,4 +237,13 @@ export const quoteGetters = {
   getEmailAddressAndDate,
   getQuoteCreatedBy,
   getSubmitForApprovalEnabled,
+
+  isClearChangesButtonDisabled,
+  isEditQuoteButtonDisabled,
+  isSubmitForApprovalButtonDisabled,
+  isQuoteNameTextBoxDisabled,
+  isQuoteNameEditable,
+  shouldShowB2BProductSearch,
+  isAddressEditable,
+  showSelectedAddress,
 }

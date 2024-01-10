@@ -753,11 +753,7 @@ const QuoteDetailsTemplate = (props: QuoteDetailsTemplateProps) => {
                       }}
                       onBlur={field.onBlur}
                       required
-                      disabled={
-                        QuoteStatus[status] === QuoteStatus.InReview ||
-                        QuoteStatus[status] === QuoteStatus.Completed ||
-                        QuoteStatus[status] === QuoteStatus.Expired
-                      }
+                      disabled={quoteGetters.isQuoteNameTextBoxDisabled(status)}
                     />
                   </Box>
                 )}
@@ -773,13 +769,11 @@ const QuoteDetailsTemplate = (props: QuoteDetailsTemplateProps) => {
                     aria-label="item-view"
                     name="item-view"
                     data-testid="save-quote-name"
-                    disabled={
-                      QuoteStatus[status] === QuoteStatus.InReview ||
-                      QuoteStatus[status] === QuoteStatus.Completed ||
-                      QuoteStatus[status] === QuoteStatus.Expired ||
-                      !Boolean(quoteNameField.name) ||
+                    disabled={quoteGetters.isQuoteNameEditable(
+                      status,
+                      !Boolean(quoteNameField.name),
                       quote?.name === quoteNameInputValue
-                    }
+                    )}
                     onClick={handleSubmit(handleSaveQuoteName)}
                   >
                     <Done />
@@ -861,11 +855,9 @@ const QuoteDetailsTemplate = (props: QuoteDetailsTemplateProps) => {
           <Typography variant="h2" mb={2}>
             {t('quote-summary')}
           </Typography>
-          {mode &&
-            QuoteStatus[quote?.status as string] !== QuoteStatus.InReview &&
-            QuoteStatus[quote?.status as string] !== QuoteStatus.Completed && (
-              <B2BProductSearch onAddProduct={handleAddProduct} />
-            )}
+          {quoteGetters.shouldShowB2BProductSearch(status, mode as string) && (
+            <B2BProductSearch onAddProduct={handleAddProduct} />
+          )}
         </Grid>
 
         {/* Product details table section */}
@@ -946,10 +938,7 @@ const QuoteDetailsTemplate = (props: QuoteDetailsTemplateProps) => {
                     </Typography>
                   }
                   {shouldShowAddAddressButton &&
-                    mode &&
-                    QuoteStatus[status] !== QuoteStatus.InReview &&
-                    QuoteStatus[status] !== QuoteStatus.Completed &&
-                    QuoteStatus[status] !== QuoteStatus.Expired && (
+                    quoteGetters.isAddressEditable(status, mode as string) && (
                       <Box pb={2}>
                         <Stack gap={2} width="100%">
                           {defaultShippingAddress && (
@@ -1061,10 +1050,7 @@ const QuoteDetailsTemplate = (props: QuoteDetailsTemplateProps) => {
                       </Box>
                     )}
                   {!shouldShowAddAddressButton &&
-                    mode &&
-                    QuoteStatus[status] !== QuoteStatus.InReview &&
-                    QuoteStatus[status] !== QuoteStatus.Completed &&
-                    QuoteStatus[status] !== QuoteStatus.Expired && (
+                    quoteGetters.isAddressEditable(status, mode as string) && (
                       <>
                         <AddressForm
                           isUserLoggedIn={false}
@@ -1114,9 +1100,7 @@ const QuoteDetailsTemplate = (props: QuoteDetailsTemplateProps) => {
                         </Box>
                       </>
                     )}
-                  {(!mode ||
-                    QuoteStatus[quote?.status as string] === QuoteStatus.InReview ||
-                    QuoteStatus[quote?.status as string] === QuoteStatus.Completed) && (
+                  {quoteGetters.showSelectedAddress(status, mode as string) && (
                     <Stack direction="row" justifyContent="space-between">
                       {quote?.fulfillmentInfo?.fulfillmentContact && (
                         <Box pb={1}>

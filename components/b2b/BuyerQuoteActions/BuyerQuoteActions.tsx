@@ -3,6 +3,7 @@ import { Grid, Stack, NoSsr, Box } from '@mui/material'
 import { useTranslation } from 'next-i18next'
 
 import { QuoteStatus } from '@/lib/constants'
+import { quoteGetters } from '@/lib/getters'
 import { hasPermission, actions } from '@/lib/helpers'
 
 interface BuyerQuoteActionsProps {
@@ -16,6 +17,7 @@ interface BuyerQuoteActionsProps {
   handleGotoCheckout: () => void
   handlePrint: () => void
 }
+
 export default function BuyerQuoteActions({
   hasDraft,
   mode,
@@ -49,11 +51,7 @@ export default function BuyerQuoteActions({
                 variant="contained"
                 color="secondary"
                 sx={{ width: { xs: '50%', md: '100%' } }}
-                disabled={
-                  QuoteStatus[status] === QuoteStatus.InReview ||
-                  QuoteStatus[status] === QuoteStatus.Completed ||
-                  !hasDraft
-                }
+                disabled={quoteGetters.isClearChangesButtonDisabled(status, hasDraft)}
                 onClick={handleClearChanges}
               >
                 {t('clear-changes')}
@@ -64,11 +62,7 @@ export default function BuyerQuoteActions({
                 variant="contained"
                 color="secondary"
                 sx={{ width: { xs: '50%', md: '100%' } }}
-                disabled={
-                  QuoteStatus[status] === QuoteStatus.InReview ||
-                  QuoteStatus[status] === QuoteStatus.Completed ||
-                  QuoteStatus[status] === QuoteStatus.Expired
-                }
+                disabled={quoteGetters.isEditQuoteButtonDisabled(status)}
                 onClick={handleEditQuote}
               >
                 {t('edit-quote')}
@@ -89,13 +83,11 @@ export default function BuyerQuoteActions({
                 variant="contained"
                 color="primary"
                 fullWidth
-                disabled={
-                  QuoteStatus[status] === QuoteStatus.InReview ||
-                  QuoteStatus[status] === QuoteStatus.Completed ||
-                  QuoteStatus[status] === QuoteStatus.Expired ||
-                  !isSubmitForApprovalEnabled ||
-                  !hasDraft
-                }
+                disabled={quoteGetters.isSubmitForApprovalButtonDisabled(
+                  status,
+                  isSubmitForApprovalEnabled,
+                  hasDraft
+                )}
                 onClick={handleSubmitForApproval}
               >
                 {t('submit-for-approval')}
