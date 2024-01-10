@@ -207,14 +207,18 @@ const OrderSummaryEditable = (props: OrderSummaryEditableProps) => {
         <ListItemText primary={<Typography variant="body2">{t('duty-total')}</Typography>} />
       </ListItem>
 
-      <PromoCodeBadge
-        onApplyCouponCode={onApplyCouponCode}
-        onRemoveCouponCode={onRemoveCouponCode}
-        promoError={!!promoError}
-        helpText={promoError}
-        promoList={promoList as string[]}
-        isEdit={!!mode}
-      />
+      {QuoteStatus[status as string] !== QuoteStatus.InReview &&
+        QuoteStatus[status as string] !== QuoteStatus.Completed &&
+        QuoteStatus[status as string] !== QuoteStatus.Expired && (
+          <PromoCodeBadge
+            onApplyCouponCode={onApplyCouponCode}
+            onRemoveCouponCode={onRemoveCouponCode}
+            promoError={!!promoError}
+            helpText={promoError}
+            promoList={promoList as string[]}
+            isEdit={!!mode}
+          />
+        )}
 
       <ListItem
         slotProps={{

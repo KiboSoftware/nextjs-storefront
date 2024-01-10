@@ -108,7 +108,7 @@ const getQuoteCreatedBy = (firstName: string, lastName: string) => {
   return firstName || lastName ? `${firstName} ${lastName}` : '-'
 }
 
-const getSaveAndExitEnabled = (
+const getSubmitForApprovalEnabled = (
   quoteName: string,
   fulfillmentInfo: any,
   shiptItems: any,
@@ -159,5 +159,5 @@ export const quoteGetters = {
   getQuoteShippingMethodCode,
   getEmailAddressAndDate,
   getQuoteCreatedBy,
-  getSaveAndExitEnabled,
+  getSubmitForApprovalEnabled,
 }
