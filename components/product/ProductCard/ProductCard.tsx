@@ -182,7 +182,7 @@ const ProductCard = (props: ProductCardProps) => {
                   precision={0.5}
                   readOnly
                   size="small"
-                  icon={<StarRounded sx={{ color: 'rating[900]' }} data-testid="filled-rating" />}
+                  icon={<StarRounded data-testid="filled-rating" />}
                   emptyIcon={<StarRounded data-testid="empty-rating" />}
                   data-testid="product-rating"
                   sx={{ ...ProductCardStyles.rating }}

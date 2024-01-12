@@ -93,6 +93,11 @@ const styles = {
     cursor: 'pointer',
     paddingLeft: '30rem',
   },
+  rating: {
+    '& .MuiRating-iconFilled': {
+      color: '#e79667',
+    },
+  },
 }
 
 const StyledLink = styled(Link)(({ theme }: { theme: Theme }) => ({
@@ -412,8 +417,9 @@ const ProductDetailTemplate = (props: ProductDetailTemplateProps) => {
             precision={0.5}
             readOnly
             size="small"
-            icon={<StarRounded sx={{ color: 'rating[900]' }} />}
+            icon={<StarRounded />}
             emptyIcon={<StarRounded />}
+            sx={{ ...styles.rating }}
           />
           k
         </Box>

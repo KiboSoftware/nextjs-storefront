@@ -182,15 +182,10 @@ const ProductCardListView = (props: ProductCardListViewProps) => {
                   precision={0.5}
                   readOnly
                   size="small"
-                  icon={
-                    <StarRounded
-                      sx={{ color: 'rating[900]' }}
-                      fontSize="small"
-                      data-testid="filled-rating"
-                    />
-                  }
+                  icon={<StarRounded fontSize="small" data-testid="filled-rating" />}
                   emptyIcon={<StarRounded data-testid="empty-rating" fontSize="small" />}
                   data-testid="product-rating"
+                  sx={{ ...ProductCardStyles.rating }}
                 />
                 <Box>
                   <Box
