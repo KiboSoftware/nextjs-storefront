@@ -58,12 +58,14 @@ const StyledToolbar = styled(Toolbar)(({ theme }) => ({
 const style = {
   listItem: {
     cursor: 'pointer',
-    borderBottom: '4px solid transparent',
+    borderTop: '1px solid transparent',
     pt: 1.5,
     pb: 1.5,
     '&.Mui-selected': {
-      borderBottom: '4px solid',
-      borderBottomColor: 'primary.main',
+      transitionDuration: '.4s',
+      borderTop: '1px solid',
+      borderTopColor: 'info.main',
+      borderTopColorOpacity: 0.5,
       background: 'transparent',
       '& .MuiTypography-root': {
         textShadow: '0.7px 0px',

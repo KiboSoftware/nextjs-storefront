@@ -182,7 +182,7 @@ const ProductCard = (props: ProductCardProps) => {
                   precision={0.5}
                   readOnly
                   size="small"
-                  icon={<StarRounded color="primary" data-testid="filled-rating" />}
+                  icon={<StarRounded sx={{ color: 'rating[900]' }} data-testid="filled-rating" />}
                   emptyIcon={<StarRounded data-testid="empty-rating" />}
                   data-testid="product-rating"
                   sx={{ ...ProductCardStyles.rating }}
@@ -196,7 +196,7 @@ const ProductCard = (props: ProductCardProps) => {
                 >
                   {showQuickViewButton && (
                     <Button
-                      sx={{ mr: 2 }}
+                      sx={{ mr: 2, p: 1 }}
                       variant="contained"
                       color="primary"
                       onClick={handleOpenProductQuickViewModal}
@@ -206,6 +206,7 @@ const ProductCard = (props: ProductCardProps) => {
                   )}
                   {isShowWishlistIcon && (
                     <LoadingButton
+                      sx={{ p: 1 }}
                       variant="contained"
                       color="primary"
                       onClick={handleAddToCart}

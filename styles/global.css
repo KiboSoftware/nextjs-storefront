@@ -1,4 +1,13 @@
 /* Make clicks pass-through */
+@font-face {
+  font-family: 'MetropolisRegular';
+  src: url('/fonts/metropolis.regular.otf');
+  format: ('otf');
+  font-weight: normal;
+  font-style: normal;
+  font-display: swap;
+}
+
 #nprogress {
   pointer-events: none;
   z-index: 2000;
@@ -117,13 +126,4 @@ body {
 .splide__track {
   padding-top: 20px;
   padding-bottom: 20px;
-}
-
-@font-face {
-  font-family: 'MetropolisRegular';
-  src: url('/fonts/metropolis.regular.otf');
-  format: ('otf');
-  font-weight: normal;
-  font-style: normal;
-  font-display: swap;
 }

@@ -412,9 +412,10 @@ const ProductDetailTemplate = (props: ProductDetailTemplateProps) => {
             precision={0.5}
             readOnly
             size="small"
-            icon={<StarRounded color="primary" />}
+            icon={<StarRounded sx={{ color: 'rating[900]' }} />}
             emptyIcon={<StarRounded />}
           />
+          k
         </Box>
 
         <Box paddingX={1} paddingY={3} display={optionsVisibility.color ? 'block' : 'none'}>

@@ -68,6 +68,7 @@ export const kiboHeaderStyles = {
       xs: 'none',
       md: 'flex',
     },
+    background: 'transparent',
   },
   megaMenuStyles: {
     margin: 'auto',
