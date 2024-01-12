@@ -75,7 +75,7 @@ const buttonStyleOverrides = {
 // Create a base theme instance and define the basic design options
 let theme = createTheme({
   typography: {
-    fontFamily: 'MetropolisRegular, sans-serif',
+    fontFamily: 'MetropolisRegular',
     h1: {
       fontSize: '1.75rem', // 28px
       fontWeight: 'bold',
@@ -118,8 +118,8 @@ let theme = createTheme({
   },
   palette: {
     primary: {
-      main: '#2ea195',
-      light: '#C0E3DF',
+      main: '#226987',
+      light: '#00496F',
     },
     secondary: {
       main: '#c0e3df',

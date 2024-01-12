@@ -131,7 +131,7 @@ const HeaderActionArea = (props: HeaderActionAreaProps) => {
           </Link>
         </Box>
 
-        <Box display="flex" gap={2}>
+        <Box display="flex" flex={1} justifyContent={'flex-end'} gap={2}>
           {shouldShowSearchIconInSmallHeader && (
             <HeaderAction
               icon={SearchIcon}

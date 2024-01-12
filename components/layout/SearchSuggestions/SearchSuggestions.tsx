@@ -116,17 +116,23 @@ const SearchSuggestions = (props: SearchSuggestionsProps) => {
   }, [searchTerm])
 
   return (
-    <Stack width="100%" gap={1} sx={{ maxWidth: { xs: '100%', md: '45%' } }}>
+    <Stack width="100%" position="relative" gap={1} sx={{ maxWidth: { xs: '100%', md: '65%' } }}>
       <Box sx={{ zIndex: 1400 }}>
         <SearchBar
           searchTerm={searchTerm}
           onSearch={handleSearch}
           onKeyEnter={handleEnterSearch}
           showClearButton
-          placeHolder={"Search Kirkland's Home"}
+          placeHolder={"Search Kibo Furniture's Home"}
         />
       </Box>
-      <Collapse in={isOpen} timeout="auto" unmountOnExit role="contentinfo">
+      <Collapse
+        in={isOpen}
+        timeout="auto"
+        unmountOnExit
+        role="contentinfo"
+        sx={{ position: 'absolute', top: '50px' }}
+      >
         <Paper sx={{ ...style.paper }}>
           <List sx={{ ...style.list }} role="group">
             <Title heading="suggestions" />

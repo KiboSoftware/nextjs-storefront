@@ -23,7 +23,7 @@ const styles = {
     position: 'relative',
   },
   smallLogo: {
-    width: 40,
+    width: 160,
     height: 40,
   },
 }

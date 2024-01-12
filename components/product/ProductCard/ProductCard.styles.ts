@@ -54,4 +54,9 @@ export const ProductCardStyles = {
     color: 'common.white',
     px: 2,
   },
+  rating: {
+    '& .MuiRating-iconFilled': {
+      color: '#e79667',
+    },
+  },
 }

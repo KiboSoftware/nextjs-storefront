@@ -35,7 +35,7 @@ const HeaderAction = (props: HeaderActionProps) => {
     onClick,
     isElementVisible,
     badgeContent,
-    mobileIconColor = 'white',
+    mobileIconColor = 'black',
     showTitleInMobile = false,
     iconFontSize = 'large',
   } = props

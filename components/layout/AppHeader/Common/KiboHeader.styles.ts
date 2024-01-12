@@ -28,7 +28,7 @@ export const headerActionAreaStyles = {
     maxWidth: '65%',
     flex: 1,
     display: { xs: 'none', md: 'inline-flex' },
-    alignItems: 'flex-start',
+    alignItems: 'center',
     height: '100%',
   },
   logoWrapper: {
@@ -58,14 +58,15 @@ export const kiboHeaderStyles = {
     textAlign: 'center',
     position: 'relative',
     margin: 'auto',
-    backgroundColor: 'common.white',
     minHeight: '70px',
-    width: '100%',
+    // width: '100%',
     justifyContent: 'center',
+    alignItems: 'center',
     flex: 1,
+    backgroundColor: 'transparent',
     display: {
       xs: 'none',
-      md: 'block',
+      md: 'flex',
     },
   },
   megaMenuStyles: {

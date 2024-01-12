@@ -66,28 +66,19 @@ const SearchBar = (props: SearchProps) => {
           }
         }}
         size="small"
-        sx={{ ...style.inputBase }}
+        sx={{ ...style.inputBase, '& .MuiInputBase-input': { textIndent: 14 } }}
         inputProps={{ 'aria-label': searchInputAriaLabel }}
         {...inputProps}
         autoComplete="off"
-        startAdornment={
-          <IconButton size="small" aria-label={SearchAriaLabel}>
+        endAdornment={
+          <IconButton
+            size="small"
+            aria-label={SearchAriaLabel}
+            onClick={() => onKeyEnter?.(searchTerm)}
+          >
             <Search fontSize="small" />
           </IconButton>
         }
-        {...(showClearButton && {
-          endAdornment: (
-            <IconButton
-              name="clearButton"
-              size="small"
-              onClick={handleClear}
-              disabled={searchTerm.length === 0}
-              aria-label={clearSearchAriaLabel}
-            >
-              <Clear fontSize="medium" />
-            </IconButton>
-          ),
-        })}
         {...rest}
       />
     </Paper>
