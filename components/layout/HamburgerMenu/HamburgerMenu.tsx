@@ -29,7 +29,7 @@ interface HamburgerMenuProps {
   marginTop?: number | string
   setIsDrawerOpen: (isDrawerOpen: boolean) => void
   onAccountIconClick: () => void
-  requestAccountIconComponent: React.ReactNode
+  requestAccountIconComponent?: React.ReactNode
 }
 
 const styles = {

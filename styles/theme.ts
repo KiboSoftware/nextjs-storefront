@@ -1,5 +1,7 @@
 import { createTheme, responsiveFontSizes } from '@mui/material/styles'
+
 import type {} from '@mui/lab/themeAugmentation'
+
 declare module '@mui/material/styles/createPalette' {
   interface PaletteOptions {
     red?: PaletteColorOptions
@@ -73,7 +75,7 @@ const buttonStyleOverrides = {
 // Create a base theme instance and define the basic design options
 let theme = createTheme({
   typography: {
-    fontFamily: 'Roboto, sans-serif',
+    fontFamily: 'MetropolisRegular, sans-serif',
     h1: {
       fontSize: '1.75rem', // 28px
       fontWeight: 'bold',

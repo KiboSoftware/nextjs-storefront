@@ -1,3 +1,10 @@
+@font-face {
+  font-family: MetropolisRegular;
+  src: url('/fonts/Metropolis-Regular.woff2');
+  format: ('woff2');
+  font-display: swap;
+}
+
 /* Make clicks pass-through */
 #nprogress {
   pointer-events: none;

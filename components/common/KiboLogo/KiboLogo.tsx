@@ -2,7 +2,7 @@ import { Box } from '@mui/system'
 import { StaticImageData } from 'next/image'
 
 import KiboImage from '../KiboImage/KiboImage'
-import Logo from '@/public/kibo_logo.png'
+import Logo from '@/public/KirklandsLogo.svg'
 
 interface KiboLogoProps {
   logo?: string | StaticImageData // URL or File
@@ -14,12 +14,13 @@ const styles = {
   logoContainer: {
     width: {
       xs: 33,
-      md: 78,
+      md: 200,
     },
     height: {
       xs: 33,
-      md: 78,
+      md: 50,
     },
+    position: 'relative',
   },
   smallLogo: {
     width: 40,

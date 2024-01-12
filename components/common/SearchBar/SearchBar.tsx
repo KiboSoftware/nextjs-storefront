@@ -21,7 +21,7 @@ const style = {
     p: '2px 4px',
     display: 'flex',
     alignItems: 'center',
-    borderRadius: 0,
+    borderRadius: '30px',
   },
   inputBase: {
     // ml: 1,

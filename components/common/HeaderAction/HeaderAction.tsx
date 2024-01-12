@@ -100,7 +100,7 @@ const HeaderAction = (props: HeaderActionProps) => {
             sx={{
               display: {
                 xs: showTitleInMobile ? 'block' : 'none',
-                md: 'block',
+                md: 'none',
               },
             }}
           >
