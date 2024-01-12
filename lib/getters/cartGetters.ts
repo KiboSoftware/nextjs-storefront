@@ -76,6 +76,19 @@ const getLineItemPrice = (item: GenericItem) => {
   }
 }
 
+const getRelatedProducts = (cartItems: CrCartItem[]): string => {
+  const upSells: string[] = []
+  cartItems.forEach((each) => {
+    each?.product?.properties?.forEach((prop) => {
+      if (prop?.attributeFQN === 'tenant~product-upsell') {
+        upSells.push(prop?.values?.[0]?.value)
+      }
+    })
+  })
+
+  return upSells.join(',')
+}
+
 export const cartGetters = {
   getCartItemCount,
   getCartItems,
@@ -83,4 +96,5 @@ export const cartGetters = {
   getProductFulfillmentOptions,
   getSubscriptionDetails,
   getLineItemPrice,
+  getRelatedProducts,
 }

@@ -22,11 +22,11 @@ export interface UseProductsResponse {
 }
 
 const fetchProductSearch = async (searchParams: CategorySearchParams) => {
-  const productSearchInput = buildProductSearchParams(searchParams)
+  // const productSearchInput = buildProductSearchParams(searchParams)
   const client = makeGraphQLClient()
   const response = await client.request({
     document: searchProductsQuery,
-    variables: productSearchInput,
+    variables: searchParams,
   })
   return response.products
 }
@@ -47,19 +47,26 @@ const fetchProductSearch = async (searchParams: CategorySearchParams) => {
  * @returns 'response?.products', which contains list of products based on search request.
  */
 
-export const useGetProducts = (productCodes: Array<string>): UseProductsResponse => {
+export const useGetProducts = ({
+  productCodes,
+  query,
+}: {
+  productCodes?: Array<string>
+  query?: string
+}): UseProductsResponse => {
   const productCodeFilter: Array<string> = []
   productCodes?.forEach((code) => {
     productCodeFilter.push(`productCode eq ${code}`)
   })
-  const searchParams = buildProductSearchParams({
+  const searchParams = {
     filter: productCodeFilter.join(' or '),
-    pageSize: productCodes?.length,
-  }) as CategorySearchParams
+    query: query,
+  }
+
   const { data, isLoading, isSuccess, isFetching } = useQuery({
     queryKey: productSearchResultKeys.searchParams(searchParams),
     queryFn: () => fetchProductSearch(searchParams),
-    enabled: !!searchParams.filter,
+    enabled: !!searchParams.filter || !!query,
   })
 
   return { data, isLoading, isSuccess, isFetching }

@@ -30,7 +30,7 @@ const B2BProductSearch = (props: B2BProductSearchProps) => {
   const { publicRuntimeConfig } = getConfig()
   const [searchTerm, setSearchTerm] = useState<string>('')
   const { data: productSearchResult, isLoading } = useGetSearchedProducts({
-    search: useDebounce(searchTerm, publicRuntimeConfig.debounceTimeout),
+    query: useDebounce(searchTerm, publicRuntimeConfig.debounceTimeout),
     pageSize: publicRuntimeConfig?.b2bProductSearchPageSize,
   })
 

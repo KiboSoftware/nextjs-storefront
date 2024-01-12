@@ -7,7 +7,7 @@ import { createQueryClientWrapper } from '@/__test__/utils/renderWithQueryClient
 describe('[hooks] useGetProducts', () => {
   it('should return product codes filter', async () => {
     const productCodes = ['SHOE12']
-    const { result } = renderHook(() => useGetProducts(productCodes), {
+    const { result } = renderHook(() => useGetProducts({ productCodes }), {
       wrapper: createQueryClientWrapper(),
     })
 

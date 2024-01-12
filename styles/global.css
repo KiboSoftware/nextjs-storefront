@@ -120,3 +120,8 @@ body {
 #__next {
   height: 100%;
 }
+
+.splide__track {
+  padding-top: 20px;
+  padding-bottom: 20px;
+}

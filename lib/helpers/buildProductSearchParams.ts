@@ -16,7 +16,7 @@ export const buildProductSearchParams = ({
   filters = [],
   startIndex = 0,
   sort = '',
-  search = '',
+  query = '',
   filter = '',
 }: CategorySearchParams): QueryProductSearchArgs => {
   let facetTemplate = ''
@@ -30,7 +30,7 @@ export const buildProductSearchParams = ({
 
   const facetValueFilter = getFacetValueFilter(categoryCode, filters)
   return {
-    query: search,
+    query: query,
     startIndex: Number(startIndex),
     pageSize: Number(pageSize),
     sortBy: sort,

@@ -18,6 +18,7 @@ import { useTranslation } from 'next-i18next'
 import { CartItemList } from '@/components/cart'
 import { PromoCodeBadge, OrderSummary } from '@/components/common'
 import { ConfirmationDialog, StoreLocatorDialog } from '@/components/dialogs'
+import { ProductRecommendations } from '@/components/product'
 import { useModalContext } from '@/context'
 import {
   useGetCart,
@@ -189,6 +190,12 @@ const CartTemplate = (props: CartTemplateProps) => {
               onProductPickupLocation={handleProductPickupLocation}
               onCartItemActionSelection={handleItemActions}
             />
+            <Box py={5}>
+              <ProductRecommendations
+                title="You may also like"
+                query={cartGetters.getRelatedProducts(cartItems as CrCartItem[])}
+              />
+            </Box>
             <Box py={5}>
               <Button
                 variant="contained"
