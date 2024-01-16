@@ -75,7 +75,11 @@ const ProductRecommendations = (props: ProductRecommendationsProps) => {
   return (
     <>
       {products?.length > 0 ? (
-        <Grid item xs={12} sx={{ backgroundColor: 'grey.100', mt: 2, height: '100%' }}>
+        <Grid
+          item
+          xs={12}
+          sx={{ backgroundColor: 'grey.100', mt: 2, height: '100%', borderRadius: '10px' }}
+        >
           <Box px={5} pt={4} pb={0}>
             <Typography variant="h2" gutterBottom>
               {title}
