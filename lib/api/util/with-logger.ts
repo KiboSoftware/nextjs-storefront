@@ -17,7 +17,7 @@ const getDecodeCookie = (req: NextApiRequest) => {
   const cookieName = config?.publicRuntimeConfig.userCookieKey.toLowerCase()
 
   const cookie = req.cookies?.[cookieName]?.split(';')[0] || ''
-  const decodedCookie = JSON.parse(Buffer.from(cookie, 'base64').toString('ascii'))
+  const decodedCookie = cookie ? JSON.parse(Buffer.from(cookie, 'base64').toString('ascii')) : null
 
   return decodedCookie
 }
