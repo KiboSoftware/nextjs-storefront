@@ -16,8 +16,7 @@ export const headerActionAreaStyles = {
   wrapper: {
     display: 'flex',
     backgroundColor: 'common.white',
-    pt: { xs: 0, md: 2 },
-    pb: { xs: 0, md: 1 },
+    paddingBlock: { xs: 0, md: 1 },
   },
   container: {
     display: 'flex',
@@ -29,7 +28,7 @@ export const headerActionAreaStyles = {
     flex: 1,
     display: { xs: 'none', md: 'inline-flex' },
     alignItems: 'center',
-    height: '100%',
+    // height: '100%',
   },
   logoWrapper: {
     order: 0,
@@ -58,7 +57,7 @@ export const kiboHeaderStyles = {
     textAlign: 'center',
     position: 'relative',
     margin: 'auto',
-    minHeight: '70px',
+    // minHeight: '70px',
     // width: '100%',
     justifyContent: 'center',
     alignItems: 'center',
@@ -74,7 +73,7 @@ export const kiboHeaderStyles = {
     margin: 'auto',
     color: 'common.black',
     width: '100%',
-    minHeight: '55px',
+    minHeight: '50px',
     backgroundColor: 'common.white',
     display: {
       xs: 'none',

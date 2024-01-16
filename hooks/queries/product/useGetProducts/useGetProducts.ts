@@ -26,7 +26,7 @@ const fetchProductSearch = async (searchParams: CategorySearchParams) => {
   const client = makeGraphQLClient()
   const response = await client.request({
     document: searchProductsQuery,
-    variables: searchParams,
+    variables: { ...searchParams, query: searchParams.search },
   })
   return response.products
 }
@@ -60,7 +60,7 @@ export const useGetProducts = ({
   })
   const searchParams = {
     filter: productCodeFilter.join(' or '),
-    query: query,
+    search: query,
   }
 
   const { data, isLoading, isSuccess, isFetching } = useQuery({

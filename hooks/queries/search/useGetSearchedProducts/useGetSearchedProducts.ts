@@ -58,7 +58,7 @@ export const useGetSearchedProducts = (
     queryFn: () => fetchProductSearch(searchParams),
     initialData,
     refetchOnWindowFocus: false,
-    enabled: searchParams.query !== '',
+    enabled: searchParams.search !== '',
   })
 
   return { data, isLoading, isSuccess, isFetching, isError }

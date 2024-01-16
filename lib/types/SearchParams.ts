@@ -6,7 +6,7 @@ export interface CategorySearchParams {
   filters?: Array<string>
   startIndex?: number
   sort?: string
-  query?: string
+  search?: string
   filter?: string
 }
 

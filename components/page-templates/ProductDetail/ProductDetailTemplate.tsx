@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react'
+import React, { useState, useEffect, useMemo } from 'react'
 
 import FavoriteBorderRoundedIcon from '@mui/icons-material/FavoriteBorderRounded'
 import FavoriteRoundedIcon from '@mui/icons-material/FavoriteRounded'
@@ -35,6 +35,7 @@ import {
   ProductOptionSelect,
   ProductOptionTextBox,
   ProductQuickViewDialog,
+  ProductRecommendations,
   ProductVariantSizeSelector,
 } from '@/components/product'
 import { useModalContext } from '@/context'
@@ -370,6 +371,8 @@ const ProductDetailTemplate = (props: ProductDetailTemplateProps) => {
     }
   }, [isB2B, isValidForAddToCart(), isValidForAddToWishlist, JSON.stringify(addToCartPayload)])
 
+  const xyz = useMemo(() => productGetters.getRelatedProductsFromOptions(product), [product])
+
   return (
     <Grid container>
       {!isQuickViewModal && (
@@ -421,7 +424,6 @@ const ProductDetailTemplate = (props: ProductDetailTemplateProps) => {
             emptyIcon={<StarRounded />}
             sx={{ ...styles.rating }}
           />
-          k
         </Box>
 
         <Box paddingX={1} paddingY={3} display={optionsVisibility.color ? 'block' : 'none'}>
@@ -612,6 +614,9 @@ const ProductDetailTemplate = (props: ProductDetailTemplateProps) => {
           {children}
         </>
       )}
+      <Grid item xs={12}>
+        <ProductRecommendations title={t('you-may-also-like')} productCodes={xyz} />
+      </Grid>
     </Grid>
   )
 }

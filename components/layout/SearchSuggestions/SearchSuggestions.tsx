@@ -131,7 +131,7 @@ const SearchSuggestions = (props: SearchSuggestionsProps) => {
         timeout="auto"
         unmountOnExit
         role="contentinfo"
-        sx={{ position: 'absolute', top: '50px' }}
+        sx={{ position: 'absolute', top: '50px', width: '100%' }}
       >
         <Paper sx={{ ...style.paper }}>
           <List sx={{ ...style.list }} role="group">

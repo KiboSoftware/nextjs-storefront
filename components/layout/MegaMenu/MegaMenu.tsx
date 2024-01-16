@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react'
 
+import { ExpandMore } from '@mui/icons-material'
 import {
   Box,
   Divider,
@@ -39,7 +40,7 @@ const StyledToolbar = styled(Toolbar)(({ theme }) => ({
   '&.MuiToolbar-root': {
     backgroundColor: 'inherit',
     position: 'relative',
-    minHeight: 55,
+    minHeight: 50,
     display: 'flex',
     borderBottomWidth: 1,
     borderBottomStyle: 'solid',
@@ -87,7 +88,8 @@ const style = {
 
 const StyledLink = styled(Link)(({ theme }: { theme: Theme }) => ({
   color: theme?.palette.text.primary,
-  fontSize: theme?.typography.body1.fontSize,
+  fontSize: '13px',
+  fontWeight: 800,
 }))
 
 const MegaMenuCategory = (props: MegaMenuCategoryProps) => {
@@ -125,7 +127,10 @@ const MegaMenuCategory = (props: MegaMenuCategoryProps) => {
           passHref
           onClick={closeBackDrop}
         >
-          {category?.content?.name}
+          <Box display={'flex'} alignItems={'center'} gap={0.5}>
+            {category?.content?.name}
+            {childrenCategories.length > 0 && <ExpandMore fontSize="small" color="disabled" />}
+          </Box>
         </StyledLink>
       </ListItem>
       {childrenCategories?.length > 0 && (

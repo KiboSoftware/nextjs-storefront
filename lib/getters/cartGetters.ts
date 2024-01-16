@@ -1,5 +1,6 @@
 import getConfig from 'next/config'
 
+import { productGetters } from './productGetters'
 import { subscriptionGetters } from './subscriptionGetters'
 import { FulfillmentOptions } from '../constants'
 
@@ -10,6 +11,7 @@ import type {
   Location,
   CrSubscriptionInfo,
   CrOrderItem,
+  CrProduct,
 } from '../gql/types'
 import type { FulfillmentOption } from '../types'
 
@@ -79,11 +81,12 @@ const getLineItemPrice = (item: GenericItem) => {
 const getRelatedProducts = (cartItems: CrCartItem[]): string => {
   const upSells: string[] = []
   cartItems.forEach((each) => {
-    each?.product?.properties?.forEach((prop) => {
-      if (prop?.attributeFQN === 'tenant~product-upsell') {
-        upSells.push(prop?.values?.[0]?.value)
-      }
-    })
+    upSells.push(productGetters.getRelatedProductsFromQuery(each?.product as CrProduct))
+    // each?.product?.properties?.forEach((prop) => {
+    //   if (prop?.attributeFQN === 'tenant~product-upsell') {
+    //     upSells.push(prop?.values?.[0]?.value)
+    //   }
+    // })
   })
 
   return upSells.join(',')

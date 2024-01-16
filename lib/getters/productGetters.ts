@@ -363,6 +363,33 @@ const getAvailableItemCount = (
   return qtyLeft.value
 }
 
+const getRelatedProductsFromQuery = (
+  product: Product | CrProduct,
+  upSells: string[] = []
+): string => {
+  product?.properties?.forEach((prop) => {
+    if (prop?.attributeFQN === 'tenant~product-upsell') {
+      upSells.push(prop?.values?.[0]?.value)
+    }
+  })
+
+  return upSells.join(',')
+}
+
+const getRelatedProductsFromOptions = (product: Product, productCodes: string[] = []): string[] => {
+  product.options?.map((option) => {
+    if (option?.attributeFQN?.includes('upsell') || option?.attributeFQN?.includes('crosssell')) {
+      option?.values?.map((value) => {
+        productCodes.push(value?.value)
+      })
+    }
+  })
+
+  console.log('productCodes', productCodes)
+
+  return productCodes
+}
+
 export const productGetters = {
   getName,
   getRating,
@@ -389,4 +416,6 @@ export const productGetters = {
   getCoverImageAlt,
   getSeoFriendlyUrl,
   getDescription,
+  getRelatedProductsFromQuery,
+  getRelatedProductsFromOptions,
 }

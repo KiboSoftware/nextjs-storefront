@@ -25,7 +25,7 @@ const ProductRecommendations = (props: ProductRecommendationsProps) => {
   const { getProductLink } = uiHelpers()
   const { data: productSearchResult } = useGetProducts({ productCodes, query: query as string })
   const products = productSearchResult?.items as Product[]
-
+  console.log('products', products)
   const {
     checkProductInWishlist,
     handleAddToCart,
@@ -84,7 +84,6 @@ const ProductRecommendations = (props: ProductRecommendationsProps) => {
           <Splide
             aria-label="My Favorite Images"
             options={{
-              type: 'loop',
               autoWidth: true,
               autoHeight: true,
               gap: 25,
