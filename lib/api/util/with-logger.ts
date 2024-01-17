@@ -1,8 +1,6 @@
 import getConfig from 'next/config'
 import { NextApiRequest, NextApiResponse } from 'next/types'
-import { pino } from 'pino'
 
-import getOperationDetails from './get-operation-details'
 import { NextApiRequestWithLogger } from '@/lib/types'
 import logger from '@/next-logger.config'
 
@@ -10,7 +8,6 @@ type ApiHandler = (
   req: NextApiRequest | NextApiRequestWithLogger,
   res: NextApiResponse
 ) => Promise<any>
-// const logger = pino()
 
 const getDecodeCookie = (req: NextApiRequest) => {
   const config = getConfig()
@@ -61,7 +58,6 @@ function requestMetaData(req: NextApiRequest) {
     site: getSite(req),
     userId: getUserId(req),
     'X-Forwarded-For': req.socket.remoteAddress,
-    // query: req.body.query,
     variables: req.body.variables,
   }
 }
@@ -79,10 +75,7 @@ export default function withLogger(handle: ApiHandler) {
     })
     ;(request as any).logger = requestLogger
 
-    // requestLogger.info('Request start')
-    const { query } = request.body
-    const gqlDetails = getOperationDetails(query)
-    requestLogger.info({ gql: gqlDetails }, 'Request start')
+    requestLogger.info('Request start')
 
     await handle(request, response)
     requestLogger.info(

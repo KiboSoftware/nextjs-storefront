@@ -56,7 +56,7 @@ export default async function graphQLHandler(req: NextApiRequestWithLogger, res:
   try {
     const { query, variables } = req.body
     const gqlDetails = getOperationDetails(query)
-    // req.logger.info({ gql: gqlDetails }, 'incoming graphql request')
+    req.logger.info({ gql: gqlDetails }, 'incoming graphql request')
 
     const headers = getAdditionalHeader(req)
     const userClaims = await getUserClaimsFromRequest(req, res)
