@@ -204,3 +204,7 @@ export const CountryCode = {
   US: 'US',
   CA: 'CA',
 }
+
+export const KIBO_HEADERS = {
+  CORRELATION_ID: 'x-vol-correlation',
+}

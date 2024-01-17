@@ -1,7 +1,9 @@
-import { NextApiRequest, NextApiResponse } from 'next'
+import { NextApiResponse } from 'next'
 import getConfig from 'next/config'
 
-export default async function Captcha(req: NextApiRequest, res: NextApiResponse) {
+import { NextApiRequestWithLogger } from '@/lib/types'
+
+export default async function Captcha(req: NextApiRequestWithLogger, res: NextApiResponse) {
   const { serverRuntimeConfig } = getConfig()
   const { reCaptchaSecret, reCaptchaThreshold } = serverRuntimeConfig.recaptcha
 
@@ -33,6 +35,8 @@ export default async function Captcha(req: NextApiRequest, res: NextApiResponse)
         status: 'failure',
         message: 'Error submitting the enquiry form',
       })
+
+      req.logger.error(err, 'Error in Captcha handler')
     }
   } else {
     res.status(405)

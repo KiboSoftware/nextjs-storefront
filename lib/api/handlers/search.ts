@@ -1,9 +1,11 @@
 import { productSearch } from '../operations'
-import type { CategorySearchParams } from '@/lib/types'
+// import getRequestDetails from '../util/get-request-details'
+import type { CategorySearchParams, NextApiRequestWithLogger } from '@/lib/types'
+// import logger from '@/next-logger.config'
 
-import type { NextApiRequest, NextApiResponse } from 'next'
+import type { NextApiResponse } from 'next'
 
-export default async function searchHandler(req: NextApiRequest, res: NextApiResponse) {
+export default async function searchHandler(req: NextApiRequestWithLogger, res: NextApiResponse) {
   try {
     // get variables
     const response = await productSearch(req.query as unknown as CategorySearchParams, req)
@@ -17,5 +19,6 @@ export default async function searchHandler(req: NextApiRequest, res: NextApiRes
     res.status(200).json({ results: response?.data?.products })
   } catch (error: any) {
     res.status(error?.code).json({ message: error?.message })
+    req.logger.error(error, 'Error in Search handler')
   }
 }
