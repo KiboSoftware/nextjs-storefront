@@ -49,24 +49,23 @@ const fetchProductSearch = async (searchParams: CategorySearchParams) => {
 
 export const useGetProducts = ({
   productCodes,
-  query,
 }: {
   productCodes?: Array<string>
-  query?: string
 }): UseProductsResponse => {
   const productCodeFilter: Array<string> = []
   productCodes?.forEach((code) => {
     productCodeFilter.push(`productCode eq ${code}`)
   })
-  const searchParams = {
+
+  const searchParams = buildProductSearchParams({
     filter: productCodeFilter.join(' or '),
-    search: query,
-  }
+    pageSize: productCodes?.length,
+  }) as CategorySearchParams
 
   const { data, isLoading, isSuccess, isFetching } = useQuery({
     queryKey: productSearchResultKeys.searchParams(searchParams),
     queryFn: () => fetchProductSearch(searchParams),
-    enabled: !!searchParams.filter || !!query,
+    enabled: !!searchParams.filter,
   })
 
   return { data, isLoading, isSuccess, isFetching }

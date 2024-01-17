@@ -20,10 +20,10 @@ export interface ProductRecommendationsProps {
 }
 
 const ProductRecommendations = (props: ProductRecommendationsProps) => {
-  const { title, productCodes = [], query } = props
+  const { title, productCodes = [] } = props
   const { t } = useTranslation('common')
   const { getProductLink } = uiHelpers()
-  const { data: productSearchResult } = useGetProducts({ productCodes, query: query as string })
+  const { data: productSearchResult } = useGetProducts({ productCodes })
   const products = productSearchResult?.items as Product[]
   console.log('products', products)
   const {

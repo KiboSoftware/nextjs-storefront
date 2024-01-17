@@ -371,8 +371,6 @@ const ProductDetailTemplate = (props: ProductDetailTemplateProps) => {
     }
   }, [isB2B, isValidForAddToCart(), isValidForAddToWishlist, JSON.stringify(addToCartPayload)])
 
-  const xyz = useMemo(() => productGetters.getRelatedProductsFromOptions(product), [product])
-
   return (
     <Grid container>
       {!isQuickViewModal && (
@@ -615,7 +613,10 @@ const ProductDetailTemplate = (props: ProductDetailTemplateProps) => {
         </>
       )}
       <Grid item xs={12}>
-        <ProductRecommendations title={t('you-may-also-like')} productCodes={xyz} />
+        <ProductRecommendations
+          title={t('you-may-also-like')}
+          productCodes={productGetters.getRelatedProductsFromProperties(product)}
+        />
       </Grid>
     </Grid>
   )

@@ -78,18 +78,16 @@ const getLineItemPrice = (item: GenericItem) => {
   }
 }
 
-const getRelatedProducts = (cartItems: CrCartItem[]): string => {
-  const upSells: string[] = []
+const getRelatedProducts = (cartItems: CrCartItem[]): string[] => {
+  let productCodes: string[] = []
   cartItems.forEach((each) => {
-    upSells.push(productGetters.getRelatedProductsFromQuery(each?.product as CrProduct))
-    // each?.product?.properties?.forEach((prop) => {
-    //   if (prop?.attributeFQN === 'tenant~product-upsell') {
-    //     upSells.push(prop?.values?.[0]?.value)
-    //   }
-    // })
+    const relatedProductCodes = productGetters.getRelatedProductsFromProperties(
+      each?.product as CrProduct
+    )
+    productCodes = [...productCodes, ...relatedProductCodes]
   })
 
-  return upSells.join(',')
+  return productCodes
 }
 
 export const cartGetters = {
