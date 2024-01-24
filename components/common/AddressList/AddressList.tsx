@@ -60,7 +60,7 @@ const AddressList = (props: AddressListProps) => {
           <KiboAddressList addresses={addresses} heading={heading} onAddressSelection={() => ''} />
         )
       ) : (
-        <Typography variant="h4" fontWeight={'bold'}>
+        <Typography variant="subtitle2" fontWeight={'bold'}>
           {t('no-saved-addresses-yet')}
         </Typography>
       )}
@@ -75,7 +75,7 @@ const KiboAddressList = (props: AddressListProps) => {
   return (
     <>
       {heading && (
-        <Typography variant="h4" fontWeight={'bold'}>
+        <Typography variant="subtitle2" fontWeight={'bold'}>
           {heading}
         </Typography>
       )}
@@ -117,7 +117,7 @@ const KiboRadioAddressList = (props: KiboAddressListProps) => {
   return (
     <Stack gap={1} width="100%">
       {heading && (
-        <Typography variant="h4" fontWeight={'bold'}>
+        <Typography variant="subtitle2" fontWeight={'bold'}>
           {heading}
         </Typography>
       )}
@@ -129,7 +129,7 @@ const KiboRadioAddressList = (props: KiboAddressListProps) => {
         />
       </Box>
       {subHeading && (
-        <Typography variant="h4" fontWeight={'bold'}>
+        <Typography variant="subtitle2" fontWeight={'bold'}>
           {subHeading}
         </Typography>
       )}

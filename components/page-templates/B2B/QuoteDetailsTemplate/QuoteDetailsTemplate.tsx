@@ -943,7 +943,7 @@ const QuoteDetailsTemplate = (props: QuoteDetailsTemplateProps) => {
                         <Stack gap={2} width="100%">
                           {defaultShippingAddress && (
                             <>
-                              <Typography variant="h4" fontWeight={'bold'}>
+                              <Typography variant="subtitle2" fontWeight={'bold'}>
                                 {t('your-default-shipping-address')}
                               </Typography>
                               <KiboRadio
@@ -988,7 +988,7 @@ const QuoteDetailsTemplate = (props: QuoteDetailsTemplateProps) => {
                           )}
                           {showPreviouslySavedAddress && (
                             <>
-                              <Typography variant="h4" fontWeight={'bold'}>
+                              <Typography variant="subtitle2" fontWeight={'bold'}>
                                 {t('previously-saved-shipping-addresses')}
                               </Typography>
                               <KiboRadio
@@ -1104,7 +1104,7 @@ const QuoteDetailsTemplate = (props: QuoteDetailsTemplateProps) => {
                     <Stack direction="row" justifyContent="space-between">
                       {quote?.fulfillmentInfo?.fulfillmentContact && (
                         <Box pb={1}>
-                          <Typography variant="h4" sx={{ fontWeight: 'bold' }}>
+                          <Typography variant="subtitle2" sx={{ fontWeight: 'bold' }}>
                             {t('address')}
                           </Typography>
                           <AddressCard
@@ -1144,7 +1144,7 @@ const QuoteDetailsTemplate = (props: QuoteDetailsTemplateProps) => {
                       )}
                       {quote?.fulfillmentInfo?.shippingMethodName && Boolean(quote?.subTotal) && (
                         <Box>
-                          <Typography variant="h4" sx={{ fontWeight: 'bold' }}>
+                          <Typography variant="subtitle2" sx={{ fontWeight: 'bold' }}>
                             {t('shipping-method')}
                           </Typography>
                           <Typography pt={1}>

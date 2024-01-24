@@ -105,7 +105,7 @@ const ProductItem = (props: ProductItemProps) => {
               },
             }}
           >
-            <Typography variant="h4" data-testid="productName" pb={0.375}>
+            <Typography variant="subtitle2" data-testid="productName" pb={0.375}>
               {name}
             </Typography>
             {isQuickOrder && productCode && (

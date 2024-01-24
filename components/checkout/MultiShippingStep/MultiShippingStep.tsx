@@ -362,7 +362,7 @@ const MultiShippingStep = (props: MultiShippingStepProps) => {
               <Stack gap={2} width="100%">
                 {multiShipAddresses?.length > 0 && (
                   <>
-                    <Typography variant="h4" fontWeight={'bold'}>
+                    <Typography variant="subtitle2" fontWeight={'bold'}>
                       {t('previously-saved-shipping-addresses')}
                     </Typography>
                     <KiboRadio

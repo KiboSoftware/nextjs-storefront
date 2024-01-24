@@ -358,10 +358,10 @@ const SubscriptionItem = (props: SubscriptionItemProps) => {
           justifyContent={'space-between'}
         >
           <Stack direction="column">
-            <Typography variant="h4" sx={{ fontWeight: 'bold' }}>
+            <Typography variant="subtitle2" sx={{ fontWeight: 'bold' }}>
               {subscriptionGetters.getSubscriberName(subscriptionDetailsData)}
             </Typography>
-            <Typography variant="h4">
+            <Typography variant="body1">
               {subscriptionGetters.getSubscriberAddress(subscriptionDetailsData)}
             </Typography>
           </Stack>
@@ -372,7 +372,7 @@ const SubscriptionItem = (props: SubscriptionItemProps) => {
                   name: t('subscription-number'),
                   value: subscriptionGetters.getSubscriptionNumber(subscriptionDetailsData),
                 }}
-                variant="h4"
+                variant="body1"
                 align="right"
               />
             </Stack>
@@ -382,7 +382,7 @@ const SubscriptionItem = (props: SubscriptionItemProps) => {
                   name: t('status'),
                   value: subscriptionGetters.getSubscriptionStatus(subscriptionDetailsData),
                 }}
-                variant="h4"
+                variant="body1"
                 align="right"
               />
             </Stack>

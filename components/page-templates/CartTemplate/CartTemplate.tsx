@@ -232,7 +232,7 @@ const CartTemplate = (props: CartTemplateProps) => {
       )}
       {!cart?.items?.length && (
         <Box data-testid="empty-cart">
-          <Typography variant="h4" fontWeight={'bold'}>
+          <Typography variant="subtitle2" fontWeight={'bold'}>
             {t('empty-cart-message')}
           </Typography>
           <Box maxWidth="23.5rem">
