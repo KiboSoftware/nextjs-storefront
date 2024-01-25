@@ -10,34 +10,49 @@ import {
   Container,
   useMediaQuery,
   useTheme,
-  Slide,
-  useScrollTrigger,
-  Theme,
-  styled,
 } from '@mui/material'
 import getConfig from 'next/config'
+import dynamic from 'next/dynamic'
 import Link from 'next/link'
 import { useRouter } from 'next/router'
 import { useTranslation } from 'next-i18next'
 
-import { HeaderAction, KiboLogo } from '@/components/common'
-import { AccountHierarchyFormDialog } from '@/components/dialogs'
-import {
-  MegaMenu,
-  SearchSuggestions,
-  MobileHeader,
-  StoreFinderIcon,
-  AccountIcon,
-  CartIcon,
-  HamburgerMenu,
-  LoginDialog,
-  CheckoutHeader,
-  AccountRequestIcon,
-} from '@/components/layout'
+import { headerActionAreaStyles, kiboHeaderStyles, topHeaderStyles } from './KiboHeader.styles'
+import { KiboLogo } from '@/components/common'
+import { AccountIcon, CartIcon, StoreFinderIcon } from '@/components/layout'
+const HeaderAction = dynamic(() => import('@/components/common').then((mod) => mod.HeaderAction), {
+  ssr: false,
+})
+const MegaMenu = dynamic(() => import('@/components/layout').then((mod) => mod.MegaMenu), {
+  ssr: false,
+})
+const HamburgerMenu = dynamic(
+  () => import('@/components/layout').then((mod) => mod.HamburgerMenu),
+  {
+    ssr: false,
+  }
+)
+const SearchSuggestions = dynamic(
+  () => import('@/components/layout').then((mod) => mod.SearchSuggestions),
+  {
+    ssr: false,
+  }
+)
+const MobileHeader = dynamic(() => import('@/components/layout').then((mod) => mod.MobileHeader), {
+  ssr: false,
+})
+const LoginDialog = dynamic(() => import('@/components/layout').then((mod) => mod.LoginDialog), {
+  ssr: false,
+})
+const CheckoutHeader = dynamic(
+  () => import('@/components/layout').then((mod) => mod.CheckoutHeader),
+  {
+    ssr: false,
+  }
+)
 import { useAuthContext, useHeaderContext, useModalContext } from '@/context'
-import { useCreateCustomerB2bAccountMutation, useGetCategoryTree } from '@/hooks'
-import { buildCreateCustomerB2bAccountParams } from '@/lib/helpers'
-import type { CreateCustomerB2bAccountParams, NavigationLink } from '@/lib/types'
+import { useGetCategoryTree } from '@/hooks'
+import type { NavigationLink } from '@/lib/types'
 
 import type { Maybe, PrCategory } from '@/lib/gql/types'
 
@@ -49,121 +64,26 @@ interface KiboHeaderProps {
 
 interface HeaderActionAreaProps {
   isHeaderSmall: boolean
+  isAuthenticated: boolean
   categoriesTree: Maybe<PrCategory>[]
-  isElementVisible?: boolean
   setIsBackdropOpen: Dispatch<SetStateAction<boolean>>
   onAccountIconClick: () => void
-  onAccountRequestClick: () => void
-}
-
-interface HideOnScrollProps {
-  trigger: boolean
-  children: React.ReactElement
-}
-
-const topHeaderStyles = {
-  wrapper: {
-    display: 'flex',
-    backgroundColor: 'common.black',
-    height: 56,
-    justifyContent: 'flex-end',
-    zIndex: (theme: any) => theme.zIndex.modal,
-  },
-  container: {
-    display: 'flex',
-    justifyContent: 'flex-end',
-    alignItems: 'center',
-  },
-}
-
-const headerActionAreaStyles = {
-  wrapper: {
-    display: 'flex',
-    backgroundColor: 'grey.300',
-    height: 56,
-  },
-  container: {
-    display: 'flex',
-    justifyContent: 'end',
-    alignItems: 'center',
-  },
-  searchSuggestionsWrapper: {
-    maxWidth: '65%',
-    flex: 1,
-    display: { xs: 'none', md: 'inline-flex' },
-    alignItems: 'flex-start',
-    height: '100%',
-    pl: 4,
-    pt: 1.3,
-  },
-  logoWrapper: {
-    order: 0,
-    top: '-27px',
-  },
-}
-
-const kiboHeaderStyles = {
-  appBarStyles: {
-    backgroundColor: 'grey.300',
-    zIndex: (theme: any) => theme.zIndex.modal,
-    scrollBehavior: 'smooth',
-  },
-  megaMenuStyles: {
-    backgroundColor: 'common.white',
-    borderWidth: '1px',
-    borderStyle: 'solid',
-    borderColor: 'grey.500',
-  },
-}
-
-const StyledLink = styled(Link)(({ theme }: { theme: Theme }) => ({
-  color: theme?.palette.common.white,
-  fontSize: theme?.typography.body2.fontSize,
-}))
-
-const TopHeader = ({
-  navLinks,
-  isElementVisible,
-}: {
-  navLinks: NavigationLink[]
-  isElementVisible: boolean
-}) => {
-  const { t } = useTranslation('common')
-
-  return (
-    <Box
-      sx={{ ...topHeaderStyles.wrapper, ...(!isElementVisible && { display: 'none' }) }}
-      data-testid="top-bar"
-    >
-      <Container maxWidth="xl" sx={{ ...topHeaderStyles.container }}>
-        <Box display="flex" justifyContent="flex-end" alignItems="center" gap={5}>
-          {navLinks?.map((nav, index) => {
-            return (
-              <Box key={index}>
-                <StyledLink href={nav.link} passHref>
-                  {t(`${nav.text}`)}
-                </StyledLink>
-              </Box>
-            )
-          })}
-        </Box>
-      </Container>
-    </Box>
-  )
 }
 
 const HeaderActionArea = (props: HeaderActionAreaProps) => {
-  const {
-    isHeaderSmall,
-    categoriesTree,
-    isElementVisible,
-    setIsBackdropOpen,
-    onAccountIconClick,
-    onAccountRequestClick,
-  } = props
+  const { isHeaderSmall, isAuthenticated, categoriesTree, setIsBackdropOpen, onAccountIconClick } =
+    props
   const { headerState, toggleSearchBar } = useHeaderContext()
   const { isMobileSearchPortalVisible, isSearchBarVisible } = headerState
   const { t } = useTranslation('common')
+
+  const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null)
+  const openMenu = (event: React.MouseEvent<HTMLElement>) => {
+    setAnchorEl(event.currentTarget)
+  }
+  const handleClose = () => {
+    setAnchorEl(null)
+  }
 
   const showSearchBarInLargeHeader = !isHeaderSmall || isSearchBarVisible
   const shouldShowSearchIconInSmallHeader = isHeaderSmall && !isSearchBarVisible
@@ -176,17 +96,6 @@ const HeaderActionArea = (props: HeaderActionAreaProps) => {
           justifyContent: 'space-between',
         }}
       >
-        <Box
-          position="relative"
-          sx={{
-            ...headerActionAreaStyles.logoWrapper,
-            ...(isHeaderSmall && { top: 0 }),
-          }}
-        >
-          <Link href="/" passHref>
-            <KiboLogo small={isHeaderSmall} />
-          </Link>
-        </Box>
         {showSearchBarInLargeHeader && (
           <Box sx={headerActionAreaStyles.searchSuggestionsWrapper} data-testid="Search-container">
             <SearchSuggestions
@@ -211,67 +120,50 @@ const HeaderActionArea = (props: HeaderActionAreaProps) => {
             <MegaMenu categoryTree={categoriesTree} onBackdropToggle={setIsBackdropOpen} />
           </Box>
         )}
-        <Box display="flex" gap={2}>
+        <Box
+          component={'section'}
+          sx={{
+            ...kiboHeaderStyles.logoStyles,
+          }}
+        >
+          <Link href="/">
+            <KiboLogo />
+          </Link>
+        </Box>
+
+        <Box display="flex" flex={1} justifyContent={'flex-end'} gap={2}>
           {shouldShowSearchIconInSmallHeader && (
             <HeaderAction
               icon={SearchIcon}
-              iconFontSize={isHeaderSmall ? 'medium' : 'large'}
+              iconFontSize={isHeaderSmall ? 'small' : 'medium'}
               onClick={() => toggleSearchBar(true)}
             />
           )}
-          <StoreFinderIcon
-            size={isHeaderSmall ? 'medium' : 'large'}
-            isElementVisible={isElementVisible}
-          />
+          <StoreFinderIcon size={isHeaderSmall ? 'small' : 'medium'} />
           <AccountIcon
-            size={isHeaderSmall ? 'medium' : 'large'}
-            isElementVisible={isElementVisible}
+            size={isHeaderSmall ? 'small' : 'medium'}
             onAccountIconClick={onAccountIconClick}
           />
-          <AccountRequestIcon
-            onClick={onAccountRequestClick}
-            isElementVisible={isElementVisible}
-            iconProps={{ fontSize: isHeaderSmall ? 'medium' : 'large' }}
-            buttonText={t('b2b-account-request')}
-          />
-          <CartIcon size={isHeaderSmall ? 'medium' : 'large'} isElementVisible={isElementVisible} />
+          <CartIcon size={isHeaderSmall ? 'small' : 'medium'} />
         </Box>
       </Container>
     </Box>
   )
 }
 
-function HideOnScroll(props: HideOnScrollProps) {
-  const { trigger, children } = props
-
-  return (
-    <Slide appear={false} direction="down" in={!trigger}>
-      <Box sx={{ ...(trigger && { height: 0 }) }}>{children}</Box>
-    </Slide>
-  )
-}
-
 const KiboHeader = (props: KiboHeaderProps) => {
-  const { navLinks, categoriesTree: initialCategoryTree, isSticky } = props
+  const { navLinks, categoriesTree: initialCategoryTree, isSticky = true } = props
   const { data: categoriesTree } = useGetCategoryTree(initialCategoryTree)
   const { headerState, toggleMobileSearchPortal, toggleHamburgerMenu } = useHeaderContext()
   const { isAuthenticated } = useAuthContext()
-  const { showModal, closeModal } = useModalContext()
-  const { t } = useTranslation('common')
+  const { showModal } = useModalContext()
   const router = useRouter()
   const theme = useTheme()
   const mdScreen = useMediaQuery(theme.breakpoints.up('md'))
-  const trigger = useScrollTrigger({
-    disableHysteresis: true,
-    threshold: 0,
-  })
-  const { createCustomerB2bAccount } = useCreateCustomerB2bAccountMutation()
-
   const [isBackdropOpen, setIsBackdropOpen] = useState<boolean>(false)
 
   const { isHamburgerMenuVisible, isMobileSearchPortalVisible } = headerState
   const isCheckoutPage = router.pathname.includes('checkout')
-  const isElementVisible = !isCheckoutPage && mdScreen && !trigger
   const { publicRuntimeConfig } = getConfig()
   const isMultiShipEnabled = publicRuntimeConfig.isMultiShipEnabled
 
@@ -284,26 +176,6 @@ const KiboHeader = (props: KiboHeaderProps) => {
     }
   }
 
-  const handleAccountRequest = async (formValues: CreateCustomerB2bAccountParams) => {
-    const variables = buildCreateCustomerB2bAccountParams(formValues)
-    await createCustomerB2bAccount.mutateAsync(variables)
-    closeModal()
-  }
-
-  const handleB2BAccountRequestClick = () => {
-    showModal({
-      Component: AccountHierarchyFormDialog,
-      props: {
-        isAddingAccountToChild: false,
-        isRequestAccount: true,
-        primaryButtonText: t('request-account'),
-        formTitle: t('b2b-account-request'),
-        onSave: (formValues: CreateCustomerB2bAccountParams) => handleAccountRequest(formValues),
-        onClose: () => closeModal(),
-      },
-    })
-  }
-
   const getSection = (): React.ReactNode => {
     if (isCheckoutPage) return <CheckoutHeader isMultiShipEnabled={isMultiShipEnabled} />
 
@@ -311,12 +183,11 @@ const KiboHeader = (props: KiboHeaderProps) => {
 
     return (
       <HeaderActionArea
-        isHeaderSmall={trigger}
+        isHeaderSmall={false}
+        isAuthenticated={isAuthenticated}
         categoriesTree={categoriesTree}
         setIsBackdropOpen={setIsBackdropOpen}
         onAccountIconClick={handleAccountIconClick}
-        onAccountRequestClick={handleB2BAccountRequestClick}
-        isElementVisible={isElementVisible}
       />
     )
   }
@@ -326,33 +197,28 @@ const KiboHeader = (props: KiboHeaderProps) => {
       <AppBar position={isSticky ? 'sticky' : 'static'} sx={kiboHeaderStyles.appBarStyles}>
         <Backdrop open={isBackdropOpen} data-testid="backdrop" />
 
-        <HideOnScroll trigger={trigger}>
-          <TopHeader navLinks={navLinks} isElementVisible={isElementVisible} />
-        </HideOnScroll>
-        <Box
-          component={'section'}
-          sx={{
-            zIndex: (theme) => theme.zIndex.modal,
-          }}
-        >
+        <Box component={'section'} sx={{ ...kiboHeaderStyles.topBarStyles }}>
           {getSection()}
         </Box>
 
-        <HideOnScroll trigger={trigger}>
-          <Box
-            component={'section'}
-            sx={{
-              ...kiboHeaderStyles.megaMenuStyles,
-              ...(!isElementVisible && { display: 'none' }),
-            }}
-            data-testid="mega-menu-container"
-          >
+        <Box
+          component={'section'}
+          sx={{
+            ...kiboHeaderStyles.megaMenuStyles,
+          }}
+          data-testid="mega-menu-container"
+        >
+          {!isCheckoutPage && (
             <MegaMenu categoryTree={categoriesTree} onBackdropToggle={setIsBackdropOpen} />
-          </Box>
-        </HideOnScroll>
+          )}
+        </Box>
 
         <Collapse in={isMobileSearchPortalVisible}>
-          <Box p={1} height={'55px'} sx={{ display: { xs: 'block', md: 'none' } }}>
+          <Box
+            height={'55px'}
+            minHeight={'55px'}
+            sx={{ display: { xs: 'block', md: 'none' }, px: { xs: 3, md: 1 }, mt: 1 }}
+          >
             <SearchSuggestions
               isViewSearchPortal={isMobileSearchPortalVisible}
               onEnterSearch={() => toggleMobileSearchPortal()}
@@ -367,15 +233,6 @@ const KiboHeader = (props: KiboHeaderProps) => {
         setIsDrawerOpen={() => toggleHamburgerMenu()}
         navLinks={navLinks}
         onAccountIconClick={handleAccountIconClick}
-        requestAccountIconComponent={
-          <AccountRequestIcon
-            onClick={handleB2BAccountRequestClick}
-            iconProps={{ fontSize: 'medium' }}
-            buttonText={t('b2b-account-request')}
-            isMobileView={true}
-            isElementVisible={true}
-          />
-        }
       />
     </>
   )

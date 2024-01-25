@@ -47,7 +47,7 @@ export const PLPStyles = {
     display: { md: 'block', xs: 'none' },
   } as SxProps<Theme> | undefined,
   navBarView: {
-    margin: '0 0 0 5rem',
+    margin: '0 0 0 1rem',
     order: 0,
     alignItems: 'center',
     display: {

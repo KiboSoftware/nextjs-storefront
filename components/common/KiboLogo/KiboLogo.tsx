@@ -18,7 +18,7 @@ const styles = {
     },
     height: {
       xs: 33,
-      md: 78,
+      md: 60,
     },
   },
   smallLogo: {

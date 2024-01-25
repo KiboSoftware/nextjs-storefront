@@ -1,8 +1,5 @@
 import React from 'react'
 
-import ArrowBackIosIcon from '@mui/icons-material/ArrowBackIos'
-import ArrowForwardIosIcon from '@mui/icons-material/ArrowForwardIos'
-import MinimizeIcon from '@mui/icons-material/Minimize'
 import {
   Button,
   useMediaQuery,
@@ -14,8 +11,8 @@ import {
   Skeleton,
 } from '@mui/material'
 import { styled } from '@mui/system'
+import { Splide, SplideSlide } from '@splidejs/react-splide'
 import { useRouter } from 'next/router'
-import Carousel from 'react-material-ui-carousel'
 
 import { heroCarouselStyles } from './KiboHeroCarousel.style'
 import { KiboImage } from '@/components/common'
@@ -45,21 +42,24 @@ const KiboHeroCarousel = ({ carouselItem }: HeroCarouselProps) => {
     <>
       {carouselItem?.length > 0 ? (
         <MainStyle>
-          <Carousel
-            navButtonsAlwaysVisible={true}
-            index={carouselItem?.length - 1}
-            autoPlay={false}
-            swipe={true}
-            sx={{ width: '100%' }}
-            height="600"
-            IndicatorIcon={<MinimizeIcon />}
-            NextIcon={<ArrowForwardIosIcon />}
-            PrevIcon={<ArrowBackIosIcon />}
+          <Splide
+            aria-label="My Favorite Images"
+            options={{
+              type: 'loop',
+              wheel: true,
+              wheelSleep: 1000,
+              perPage: 1,
+              width: '100%',
+            }}
           >
             {carouselItem?.map((item: ItemProps) => {
-              return <HeroItem {...item} key={item.imageUrl} />
+              return (
+                <SplideSlide key={item.imageUrl}>
+                  <HeroItem {...item} key={item.imageUrl} />{' '}
+                </SplideSlide>
+              )
             })}
-          </Carousel>
+          </Splide>
         </MainStyle>
       ) : (
         <HeroItemSkeleton />

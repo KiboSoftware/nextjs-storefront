@@ -1,7 +1,6 @@
 import * as React from 'react'
 
-import NoSsr from '@mui/base/NoSsr'
-import { Box, Button, Typography, useMediaQuery, useTheme } from '@mui/material'
+import { Box, Button, Typography, useMediaQuery, useTheme, NoSsr } from '@mui/material'
 import {
   SimpleTreeItemWrapper,
   SortableTree,

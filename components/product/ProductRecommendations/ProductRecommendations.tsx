@@ -1,6 +1,7 @@
 import React from 'react'
 
 import { Box, Grid, Typography } from '@mui/material'
+import { Splide, SplideSlide } from '@splidejs/react-splide'
 import { useTranslation } from 'next-i18next'
 
 import { ProductCard } from '@/components/product'
@@ -29,13 +30,21 @@ const ProductRecommendations = (props: ProductRecommendationsProps) => {
           <Typography variant="h2" gutterBottom>
             {title}
           </Typography>
-          <Box
-            display="flex"
-            sx={{ gap: { xs: 0, md: 4 }, maxWidth: { xs: '100vw', md: '100%' }, overflowX: 'auto' }}
+          <Splide
+            aria-label="My Favorite Images"
+            options={{
+              autoWidth: true,
+              autoHeight: true,
+              gap: 25,
+              pagination: false,
+              padding: 20,
+              wheel: true,
+              wheelSleep: 1000,
+            }}
           >
             {products?.map((product) => {
               return (
-                <Box key={product?.productCode} width="100%">
+                <SplideSlide key={product?.productCode}>
                   <ProductCard
                     imageUrl={
                       productGetters.getCoverImage(product) &&
@@ -55,10 +64,10 @@ const ProductRecommendations = (props: ProductRecommendationsProps) => {
                     title={productGetters.getName(product) as string}
                     rating={productGetters.getRating(product)}
                   />
-                </Box>
+                </SplideSlide>
               )
             })}
-          </Box>
+          </Splide>
         </Grid>
       )}
     </>
