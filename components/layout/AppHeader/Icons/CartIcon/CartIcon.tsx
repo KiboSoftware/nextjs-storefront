@@ -7,7 +7,7 @@ import { useGetCart } from '@/hooks'
 import { cartGetters } from '@/lib/getters'
 import type { IconProps } from '@/lib/types'
 
-const CartIcon = ({ size, isElementVisible }: IconProps) => {
+const CartIcon = ({ size, isElementVisible, mobileIconColor }: IconProps) => {
   const { t } = useTranslation('common')
 
   const { data: cart } = useGetCart()
@@ -27,6 +27,7 @@ const CartIcon = ({ size, isElementVisible }: IconProps) => {
       iconFontSize={size}
       onClick={gotoCart}
       isElementVisible={isElementVisible}
+      mobileIconColor={mobileIconColor}
     />
   )
 }

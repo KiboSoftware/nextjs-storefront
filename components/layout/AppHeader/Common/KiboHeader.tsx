@@ -10,6 +10,8 @@ import {
   Container,
   useMediaQuery,
   useTheme,
+  styled,
+  Theme,
 } from '@mui/material'
 import getConfig from 'next/config'
 import dynamic from 'next/dynamic'
@@ -19,7 +21,8 @@ import { useTranslation } from 'next-i18next'
 
 import { headerActionAreaStyles, kiboHeaderStyles, topHeaderStyles } from './KiboHeader.styles'
 import { KiboLogo } from '@/components/common'
-import { AccountIcon, CartIcon, StoreFinderIcon } from '@/components/layout'
+import { AccountHierarchyFormDialog } from '@/components/dialogs'
+import { AccountIcon, AccountRequestIcon, CartIcon, StoreFinderIcon } from '@/components/layout'
 const HeaderAction = dynamic(() => import('@/components/common').then((mod) => mod.HeaderAction), {
   ssr: false,
 })
@@ -51,8 +54,9 @@ const CheckoutHeader = dynamic(
   }
 )
 import { useAuthContext, useHeaderContext, useModalContext } from '@/context'
-import { useGetCategoryTree } from '@/hooks'
-import type { NavigationLink } from '@/lib/types'
+import { useCreateCustomerB2bAccountMutation, useGetCategoryTree } from '@/hooks'
+import { buildCreateCustomerB2bAccountParams } from '@/lib/helpers'
+import type { CreateCustomerB2bAccountParams, NavigationLink } from '@/lib/types'
 
 import type { Maybe, PrCategory } from '@/lib/gql/types'
 
@@ -64,26 +68,25 @@ interface KiboHeaderProps {
 
 interface HeaderActionAreaProps {
   isHeaderSmall: boolean
-  isAuthenticated: boolean
+  isElementVisible?: boolean
   categoriesTree: Maybe<PrCategory>[]
   setIsBackdropOpen: Dispatch<SetStateAction<boolean>>
   onAccountIconClick: () => void
+  onAccountRequestClick: () => void
 }
 
 const HeaderActionArea = (props: HeaderActionAreaProps) => {
-  const { isHeaderSmall, isAuthenticated, categoriesTree, setIsBackdropOpen, onAccountIconClick } =
-    props
+  const {
+    isHeaderSmall,
+    categoriesTree,
+    isElementVisible,
+    setIsBackdropOpen,
+    onAccountIconClick,
+    onAccountRequestClick,
+  } = props
   const { headerState, toggleSearchBar } = useHeaderContext()
   const { isMobileSearchPortalVisible, isSearchBarVisible } = headerState
   const { t } = useTranslation('common')
-
-  const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null)
-  const openMenu = (event: React.MouseEvent<HTMLElement>) => {
-    setAnchorEl(event.currentTarget)
-  }
-  const handleClose = () => {
-    setAnchorEl(null)
-  }
 
   const showSearchBarInLargeHeader = !isHeaderSmall || isSearchBarVisible
   const shouldShowSearchIconInSmallHeader = isHeaderSmall && !isSearchBarVisible
@@ -144,7 +147,49 @@ const HeaderActionArea = (props: HeaderActionAreaProps) => {
             size={isHeaderSmall ? 'small' : 'medium'}
             onAccountIconClick={onAccountIconClick}
           />
+          <AccountRequestIcon
+            onClick={onAccountRequestClick}
+            isElementVisible={false}
+            iconProps={{ fontSize: isHeaderSmall ? 'small' : 'medium' }}
+            buttonText={t('b2b-account-request')}
+          />
           <CartIcon size={isHeaderSmall ? 'small' : 'medium'} />
+        </Box>
+      </Container>
+    </Box>
+  )
+}
+
+const StyledLink = styled(Link)(({ theme }: { theme: Theme }) => ({
+  color: theme?.palette.common.black,
+  fontSize: theme?.typography.body1.fontSize,
+}))
+
+const TopHeader = ({
+  navLinks,
+  isElementVisible,
+}: {
+  navLinks: NavigationLink[]
+  isElementVisible: boolean
+}) => {
+  const { t } = useTranslation('common')
+
+  return (
+    <Box
+      sx={{ ...topHeaderStyles.wrapper, ...(!isElementVisible && { display: 'none' }) }}
+      data-testid="top-bar"
+    >
+      <Container maxWidth="xl" sx={{ ...topHeaderStyles.container }}>
+        <Box display="flex" justifyContent="flex-end" alignItems="center" gap={5}>
+          {navLinks?.map((nav, index) => {
+            return (
+              <Box key={index}>
+                <StyledLink href={nav.link} passHref>
+                  {t(`${nav.text}`)}
+                </StyledLink>
+              </Box>
+            )
+          })}
         </Box>
       </Container>
     </Box>
@@ -156,10 +201,14 @@ const KiboHeader = (props: KiboHeaderProps) => {
   const { data: categoriesTree } = useGetCategoryTree(initialCategoryTree)
   const { headerState, toggleMobileSearchPortal, toggleHamburgerMenu } = useHeaderContext()
   const { isAuthenticated } = useAuthContext()
-  const { showModal } = useModalContext()
+  const { showModal, closeModal } = useModalContext()
+  const { t } = useTranslation('common')
   const router = useRouter()
   const theme = useTheme()
   const mdScreen = useMediaQuery(theme.breakpoints.up('md'))
+
+  const { createCustomerB2bAccount } = useCreateCustomerB2bAccountMutation()
+
   const [isBackdropOpen, setIsBackdropOpen] = useState<boolean>(false)
 
   const { isHamburgerMenuVisible, isMobileSearchPortalVisible } = headerState
@@ -176,6 +225,26 @@ const KiboHeader = (props: KiboHeaderProps) => {
     }
   }
 
+  const handleAccountRequest = async (formValues: CreateCustomerB2bAccountParams) => {
+    const variables = buildCreateCustomerB2bAccountParams(formValues)
+    await createCustomerB2bAccount.mutateAsync(variables)
+    closeModal()
+  }
+
+  const handleB2BAccountRequestClick = () => {
+    showModal({
+      Component: AccountHierarchyFormDialog,
+      props: {
+        isAddingAccountToChild: false,
+        isRequestAccount: true,
+        primaryButtonText: t('request-account'),
+        formTitle: t('b2b-account-request'),
+        onSave: (formValues: CreateCustomerB2bAccountParams) => handleAccountRequest(formValues),
+        onClose: () => closeModal(),
+      },
+    })
+  }
+
   const getSection = (): React.ReactNode => {
     if (isCheckoutPage) return <CheckoutHeader isMultiShipEnabled={isMultiShipEnabled} />
 
@@ -184,18 +253,25 @@ const KiboHeader = (props: KiboHeaderProps) => {
     return (
       <HeaderActionArea
         isHeaderSmall={false}
-        isAuthenticated={isAuthenticated}
+        isElementVisible={true}
         categoriesTree={categoriesTree}
         setIsBackdropOpen={setIsBackdropOpen}
         onAccountIconClick={handleAccountIconClick}
+        onAccountRequestClick={handleB2BAccountRequestClick}
       />
     )
   }
 
   return (
     <>
-      <AppBar position={isSticky ? 'sticky' : 'static'} sx={kiboHeaderStyles.appBarStyles}>
+      <AppBar
+        position={isSticky ? 'sticky' : 'static'}
+        sx={kiboHeaderStyles.appBarStyles}
+        data-testid="header-container"
+      >
         <Backdrop open={isBackdropOpen} data-testid="backdrop" />
+
+        <TopHeader navLinks={navLinks} isElementVisible={true} />
 
         <Box component={'section'} sx={{ ...kiboHeaderStyles.topBarStyles }}>
           {getSection()}

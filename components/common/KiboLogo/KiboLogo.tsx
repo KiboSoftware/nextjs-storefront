@@ -30,7 +30,7 @@ const styles = {
 const KiboLogo = ({ logo = Logo, alt = 'kibo-logo', small }: KiboLogoProps) => {
   return (
     <Box width={'100%'} sx={small ? styles.smallLogo : styles.logoContainer}>
-      <KiboImage src={logo} alt={alt} layout="fill" objectFit="contain" loading="eager" />
+      <KiboImage src={logo} alt={alt} fill loading="eager" />
     </Box>
   )
 }

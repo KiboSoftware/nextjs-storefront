@@ -1,4 +1,5 @@
 export type IconProps = {
-  size: 'small' | 'medium' | 'large'
+  size?: 'small' | 'medium' | 'large'
   isElementVisible?: boolean
+  mobileIconColor?: string
 }

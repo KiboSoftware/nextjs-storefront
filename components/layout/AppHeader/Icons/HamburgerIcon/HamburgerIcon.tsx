@@ -5,15 +5,17 @@ import MenuIcon from '@mui/icons-material/Menu'
 
 import { HeaderAction } from '@/components/common'
 import { useHeaderContext } from '@/context'
+import { IconProps } from '@/lib/types'
 
-const HamburgerIcon = () => {
+const HamburgerIcon = ({ size = 'medium', mobileIconColor }: IconProps) => {
   const { headerState, toggleHamburgerMenu } = useHeaderContext()
 
   return (
     <HeaderAction
       icon={headerState?.isHamburgerMenuVisible ? CloseIcon : MenuIcon}
-      iconFontSize={'medium'}
+      iconFontSize={size}
       onClick={() => toggleHamburgerMenu()}
+      mobileIconColor={mobileIconColor}
     />
   )
 }

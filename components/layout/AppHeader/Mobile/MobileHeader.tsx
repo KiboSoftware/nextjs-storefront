@@ -10,7 +10,7 @@ import { useHeaderContext } from '@/context'
 
 const MobileHeaderStyles = {
   container: {
-    backgroundColor: 'common.black',
+    backgroundColor: 'common.white',
     height: '55px',
     display: 'flex',
     justifyContent: 'space-between',
@@ -24,12 +24,18 @@ const MobileHeader = () => {
   return (
     <>
       <Box sx={MobileHeaderStyles.container} data-testid="mobile-header">
-        <HamburgerIcon />
+        <HamburgerIcon
+          size="medium"
+          mobileIconColor="black"
+          data-testid="mobile-header-hamburger-icon"
+        />
 
         <HeaderAction
           icon={SearchIcon}
           iconFontSize={'medium'}
+          mobileIconColor="black"
           onClick={() => toggleMobileSearchPortal()}
+          data-testid="mobile-header-search-icon"
         />
 
         <Box position="relative">
@@ -38,8 +44,12 @@ const MobileHeader = () => {
           </Link>
         </Box>
 
-        <StoreFinderIcon size="medium" />
-        <CartIcon size="medium" />
+        <StoreFinderIcon
+          size="medium"
+          mobileIconColor="black"
+          data-testid="mobile-header-store-icon"
+        />
+        <CartIcon size="medium" mobileIconColor="black" data-testid="mobile-header-cart-icon" />
       </Box>
     </>
   )

@@ -19,7 +19,7 @@ describe('[component] KiboHeader component', () => {
     render(<Common {...Common.args} />)
 
     await waitFor(() => {
-      expect(screen.getByTestId(/top-bar/)).toBeVisible()
+      expect(screen.getByTestId(/header-container/)).toBeVisible()
     })
 
     expect(screen.getByTestId(/header-action-area/)).toBeVisible()
@@ -51,12 +51,8 @@ describe('[component] KiboHeader component', () => {
       expect(screen.getByTestId('FmdGoodIcon')).toBeVisible()
     })
 
-    expect(screen.getByText(/find-a-store/i)).toBeVisible()
-    expect(screen.getAllByTestId('AccountCircleIcon')[0]).toBeVisible()
-
     expect(screen.getByTestId('ShoppingCartIcon')).toBeVisible()
-    expect(screen.getByText(/cart/i)).toBeVisible()
-    expect(screen.getAllByText(/b2b-account-request/i)[0]).toBeVisible()
+    expect(screen.getByTestId(/PersonAddIcon/i)).toBeVisible()
   })
 
   it('should render the searchbox', async () => {
@@ -84,7 +80,7 @@ describe('[component] KiboHeader component', () => {
     render(<Common {...Common.args} />)
 
     const cartIcon = screen.getByTestId('ShoppingCartIcon')
-    user.click(cartIcon)
+    await user.click(cartIcon)
 
     await waitFor(() => {
       expect(mockRouter).toMatchObject({
@@ -99,8 +95,8 @@ describe('[component] KiboHeader component', () => {
     const user = userEvent.setup()
     render(<Common {...Common.args} />)
 
-    const requestAccountLink = screen.getAllByText(/b2b-account-request/i)
-    user.click(requestAccountLink[0])
+    const requestAccountLink = screen.getByTestId(/PersonAddIcon/i)
+    await user.click(requestAccountLink)
 
     await waitFor(() => {
       const accountHierarcyFormDialog = screen.getByRole('dialog')

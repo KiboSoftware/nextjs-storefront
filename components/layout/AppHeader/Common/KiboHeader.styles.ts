@@ -4,6 +4,8 @@ export const topHeaderStyles = {
     backgroundColor: 'common.white',
     justifyContent: 'flex-end',
     zIndex: (theme: any) => theme.zIndex.modal,
+    paddingBlock: 1,
+    paddingInline: 2,
   },
   container: {
     display: 'flex',
