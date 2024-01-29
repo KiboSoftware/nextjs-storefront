@@ -52,7 +52,6 @@ describe('Component - [KiboHeroCarousel]', () => {
   })
 
   it('should render mobileurl on mobile screen ', async () => {
-    // window.matchMedia = createMatchMedia(500)
     setup(500)
     const carouselValues = Common?.args?.carouselItem || []
 
@@ -63,7 +62,6 @@ describe('Component - [KiboHeroCarousel]', () => {
   })
 
   it('should render imageUrl on desktop screen', async () => {
-    // window.matchMedia = createMatchMedia(1000)
     setup(1000)
 
     const carouselValues = Common?.args?.carouselItem || []
