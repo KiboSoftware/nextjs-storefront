@@ -6,6 +6,7 @@ import '@testing-library/jest-dom'
 import mockRouter from 'next-router-mock'
 
 import * as stories from './KiboHeader.stories' // import all stories from the stories file
+import { AuthContext } from '@/context'
 
 const { Common } = composeStories(stories)
 
@@ -101,6 +102,37 @@ describe('[component] KiboHeader component', () => {
     await waitFor(() => {
       const accountHierarcyFormDialog = screen.getByRole('dialog')
       expect(accountHierarcyFormDialog).toBeVisible()
+    })
+  })
+
+  it('should open login dialog when user clicks on Account icon if guest user else redirect to my-account', async () => {
+    const user = userEvent.setup()
+    render(
+      <AuthContext.Provider
+        value={{
+          isAuthenticated: true,
+          user: {
+            id: 1234,
+            roleName: 'Admin',
+          },
+          login: jest.fn(),
+          createAccount: jest.fn(),
+          logout: jest.fn(),
+        }}
+      >
+        <Common {...Common.args} />
+      </AuthContext.Provider>
+    )
+
+    const myAccount = screen.getAllByTestId(/AccountCircleIcon/i)[0]
+    await user.click(myAccount)
+
+    await waitFor(() => {
+      expect(mockRouter).toMatchObject({
+        asPath: '/my-account',
+        pathname: '/my-account',
+        query: {},
+      })
     })
   })
 })

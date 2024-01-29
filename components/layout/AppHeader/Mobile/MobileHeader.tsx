@@ -3,6 +3,7 @@ import React from 'react'
 import SearchIcon from '@mui/icons-material/Search'
 import { Box } from '@mui/material'
 import Link from 'next/link'
+import { useTranslation } from 'next-i18next'
 
 import { HeaderAction, KiboLogo } from '@/components/common'
 import { HamburgerIcon, StoreFinderIcon, CartIcon } from '@/components/layout'
@@ -18,8 +19,9 @@ const MobileHeaderStyles = {
   },
 }
 
-const MobileHeader = () => {
+const MobileHeader = ({ children }: { children?: React.ReactNode }) => {
   const { toggleMobileSearchPortal } = useHeaderContext()
+  const { t } = useTranslation('common')
 
   return (
     <>
@@ -27,10 +29,12 @@ const MobileHeader = () => {
         <HamburgerIcon
           size="medium"
           mobileIconColor="black"
+          isElementVisible={true}
           data-testid="mobile-header-hamburger-icon"
         />
 
         <HeaderAction
+          title={t('search')}
           icon={SearchIcon}
           iconFontSize={'medium'}
           mobileIconColor="black"
@@ -51,6 +55,7 @@ const MobileHeader = () => {
         />
         <CartIcon size="medium" mobileIconColor="black" data-testid="mobile-header-cart-icon" />
       </Box>
+      {children}
     </>
   )
 }

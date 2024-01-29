@@ -1,6 +1,9 @@
 export const topHeaderStyles = {
   wrapper: {
-    display: 'flex',
+    display: {
+      xs: 'none',
+      md: 'flex',
+    },
     backgroundColor: 'common.white',
     justifyContent: 'flex-end',
     zIndex: (theme: any) => theme.zIndex.modal,
