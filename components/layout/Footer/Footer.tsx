@@ -40,7 +40,10 @@ export default function Footer(props: any) {
               alignContent="center"
               textAlign="center"
             >
-              <Typography variant="h4" sx={{ textTransform: 'uppercase', fontWeight: '600' }}>
+              <Typography
+                variant="subtitle2"
+                sx={{ textTransform: 'uppercase', fontWeight: '600' }}
+              >
                 {footerSection.title}
               </Typography>
               {footerSection.items.map((footerItem: any) => (
@@ -54,7 +57,7 @@ export default function Footer(props: any) {
       <Grid container spacing={{ xs: 2, md: 3 }} sx={{ color: 'common.white', paddingTop: 5 }}>
         <Grid item xs={12} md={mdColumnWidth} alignContent="center" textAlign="center">
           <Typography
-            variant="h4"
+            variant="subtitle2"
             sx={{ textTransform: 'uppercase', fontWeight: '600', marginBottom: 1 }}
           >
             {t('social')}

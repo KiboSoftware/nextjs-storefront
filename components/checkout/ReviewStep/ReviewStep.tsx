@@ -218,10 +218,15 @@ const ReviewStep = (props: ReviewStepProps) => {
                 : ''
               return (
                 <>
-                  <Typography variant="h4" component="h4" fontWeight={'bold'} color="text.primary">
+                  <Typography
+                    variant="subtitle2"
+                    component="h4"
+                    fontWeight={'bold'}
+                    color="text.primary"
+                  >
                     {t('ship-to')}
                     <Typography
-                      variant="h4"
+                      variant="subtitle2"
                       component="span"
                       color="text.primary"
                       sx={{ textTransform: 'capitalize' }}
@@ -231,7 +236,7 @@ const ReviewStep = (props: ReviewStepProps) => {
                   </Typography>
 
                   <Typography
-                    variant="h4"
+                    variant="subtitle2"
                     component="h4"
                     marginTop="0"
                     fontWeight="bold"

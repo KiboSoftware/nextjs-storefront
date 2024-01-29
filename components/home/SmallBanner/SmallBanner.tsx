@@ -65,8 +65,8 @@ const SmallBanner = ({ bannerProps }: ItemProps) => {
             <Typography sx={styles.titleStyle}>{title} &nbsp;</Typography>
 
             <Box sx={styles.boxStyle}>
-              <Typography variant="h5">{subtitle}&nbsp;</Typography>
-              <Typography variant="h5" data-testid="callToAction">
+              <Typography variant="body2">{subtitle}&nbsp;</Typography>
+              <Typography variant="body2" data-testid="callToAction">
                 <StyledLink href={callToAction?.url || ''} passHref>
                   {callToAction?.title}
                 </StyledLink>

@@ -129,7 +129,7 @@ const Facet = (props: FacetProps) => {
             },
           }}
         >
-          <Typography variant="h4" sx={{ fontWeight: 'bold' }}>
+          <Typography variant="subtitle2" sx={{ fontWeight: 'bold' }}>
             {label}
           </Typography>
         </AccordionSummary>

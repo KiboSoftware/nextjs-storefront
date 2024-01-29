@@ -23,7 +23,7 @@ const StoreDetails = (props: StoreDetailsProps) => {
 
   return (
     <Box py={1.5}>
-      <Typography variant="h5" fontWeight={600} pb={0.5}>
+      <Typography variant="body2" fontWeight={600} pb={0.5}>
         {location?.name}
       </Typography>
       <Typography variant="body2">{location?.streetAddress}</Typography>

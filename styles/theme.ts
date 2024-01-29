@@ -94,25 +94,18 @@ let theme = createTheme({
         fontSize: '1rem', // 16px
       },
     },
-    h4: {
-      fontSize: '1rem', // 16px
-    },
-    h5: {
-      fontSize: '0.875rem', // 14px
-    },
-
     subtitle1: {
       fontSize: '1.125rem', // 18px
     },
     subtitle2: {
       fontSize: '1rem', // 16px
     },
-    body1: {
-      fontSize: '1rem', // 16px
-    },
-    body2: {
-      fontSize: '0.875rem', // 14px
-    },
+    // body1: {
+    //   fontSize: '1rem', // 16px
+    // },
+    // body2: {
+    //   fontSize: '0.875rem', // 14px
+    // },
   },
   palette: {
     primary: {

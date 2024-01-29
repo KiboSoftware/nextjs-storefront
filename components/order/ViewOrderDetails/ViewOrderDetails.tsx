@@ -153,10 +153,10 @@ const ViewOrderDetails = (props: ViewOrderDetailsProps) => {
                   {t('shipment-details')}
                 </Typography>
                 <Box sx={{ ...styles.heading }}>
-                  <Typography variant="h4" fontWeight={700}>
+                  <Typography variant="subtitle2" fontWeight={700}>
                     {orderStatus}
                   </Typography>
-                  <Typography variant="h4" color="primary">
+                  <Typography variant="body1" color="primary">
                     {orderGetters.getExpectedDeliveryDate(shipItems)}
                   </Typography>
                 </Box>
@@ -175,10 +175,10 @@ const ViewOrderDetails = (props: ViewOrderDetailsProps) => {
                   {t('pickup-title')}
                 </Typography>
                 <Box sx={{ ...styles.heading }}>
-                  <Typography variant="h4" fontWeight={700}>
+                  <Typography variant="subtitle2" fontWeight={700}>
                     {t('pickup')}
                   </Typography>
-                  <Typography variant="h4" fontWeight={700} color="primary">
+                  <Typography variant="body1" fontWeight={700} color="primary">
                     {t('est-pickup')} {orderGetters.getExpectedDeliveryDate(pickupItems)}
                   </Typography>
                 </Box>

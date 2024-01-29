@@ -314,7 +314,7 @@ const StandardShippingStep = (props: ShippingProps) => {
   }, [checkout.email, isAllItemsDigital, shipItems.length])
 
   if (checkout.items?.every((item) => item?.fulfillmentMethod === FulfillmentOptions.DIGITAL)) {
-    return <Typography variant="h4">{t('digital-products-shipping-text')}</Typography>
+    return <Typography variant="subtitle2">{t('digital-products-shipping-text')}</Typography>
   }
 
   if (!shipItems.length) {
@@ -346,7 +346,7 @@ const StandardShippingStep = (props: ShippingProps) => {
           <Stack gap={2} width="100%">
             {defaultShippingAddress && (
               <>
-                <Typography variant="h4" fontWeight={'bold'}>
+                <Typography variant="subtitle2" fontWeight={'bold'}>
                   {t('your-default-shipping-address')}
                 </Typography>
                 <KiboRadio
@@ -384,7 +384,7 @@ const StandardShippingStep = (props: ShippingProps) => {
 
             {previouslySavedShippingAddress?.length > 0 && (
               <>
-                <Typography variant="h4" fontWeight={'bold'}>
+                <Typography variant="subtitle2" fontWeight={'bold'}>
                   {t('previously-saved-shipping-addresses')}
                 </Typography>
                 <KiboRadio

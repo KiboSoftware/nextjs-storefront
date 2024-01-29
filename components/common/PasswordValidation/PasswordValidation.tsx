@@ -22,7 +22,7 @@ const PasswordValidation = (props: PasswordValidationProps) => {
 
   return (
     <Stack gap={1} alignItems={'flex-start'}>
-      <Typography variant="h4" component="h4" sx={{ fontWeight: 'bold' }}>
+      <Typography variant="subtitle2" component="h4" sx={{ fontWeight: 'bold' }}>
         {t('password-requirements')}
       </Typography>
 

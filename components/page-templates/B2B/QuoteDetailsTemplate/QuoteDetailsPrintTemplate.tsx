@@ -77,7 +77,7 @@ const QuoteDetailsPrintTemplate: React.FC<QuoteDetailsPrintTemplateProps> = (pro
           </Stack>
           <Stack flex={1} gap={1}>
             <Box flex={1}>
-              <Typography variant="h4" sx={{ fontWeight: 'bold' }}>
+              <Typography variant="subtitle2" sx={{ fontWeight: 'bold' }}>
                 {t('shipping-address')}
               </Typography>
               <AddressCard
@@ -103,7 +103,7 @@ const QuoteDetailsPrintTemplate: React.FC<QuoteDetailsPrintTemplateProps> = (pro
             </Box>
 
             <Box flex={1}>
-              <Typography variant="h4" sx={{ fontWeight: 'bold' }}>
+              <Typography variant="subtitle2" sx={{ fontWeight: 'bold' }}>
                 {t('shipping-method')}
               </Typography>
               <Typography pt={1}>{quote?.fulfillmentInfo?.shippingMethodName}</Typography>

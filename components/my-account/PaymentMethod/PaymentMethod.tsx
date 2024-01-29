@@ -423,7 +423,7 @@ const PaymentMethod = (props: PaymentMethodProps) => {
             {!showBillingFormAddress && (
               <>
                 {billingAddresses?.length ? (
-                  <Typography variant="h4" fontWeight={'bold'}>
+                  <Typography variant="subtitle2" fontWeight={'bold'}>
                     {t('select-billing-address')}
                   </Typography>
                 ) : (

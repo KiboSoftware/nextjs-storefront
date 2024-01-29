@@ -147,7 +147,7 @@ const MyProfile = (props: MyProfileProps) => {
               justifyContent={'space-between'}
             >
               <Stack gap={1}>
-                <Typography variant="h4" sx={{ fontWeight: 'bold' }}>
+                <Typography variant="subtitle2" sx={{ fontWeight: 'bold' }}>
                   {each.label}
                 </Typography>
                 <Typography variant="body1" data-testid={each.label}>

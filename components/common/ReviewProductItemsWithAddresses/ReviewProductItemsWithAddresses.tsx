@@ -34,10 +34,10 @@ const ReviewProductItemsWithAddresses = (props: ReviewProductItemsWithAddressesP
         const formattedAddress = addressGetters.getFormattedAddress(userShippingAddresses[index])
         return (
           <>
-            <Typography variant="h4" component="h4" fontWeight={'bold'} color="text.primary">
+            <Typography variant="subtitle2" component="h4" fontWeight={'bold'} color="text.primary">
               {t('ship-to')}
               <Typography
-                variant="h4"
+                variant="body1"
                 component="span"
                 color="text.primary"
                 sx={{ textTransform: 'capitalize' }}
@@ -46,7 +46,13 @@ const ReviewProductItemsWithAddresses = (props: ReviewProductItemsWithAddressesP
               </Typography>
             </Typography>
 
-            <Typography variant="h4" component="h4" marginTop="0" fontWeight="bold" color="primary">
+            <Typography
+              variant="subtitle2"
+              component="h4"
+              marginTop="0"
+              fontWeight="bold"
+              color="primary"
+            >
               {t('est-arrival')} {checkoutGetters.getFormattedDate(item?.expectedDeliveryDate)}
             </Typography>
 

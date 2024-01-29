@@ -863,7 +863,7 @@ const PaymentStep = (props: PaymentStepProps) => {
                             />
                           </>
                         ) : (
-                          <Typography variant="h4">
+                          <Typography variant="subtitle2">
                             {t('no-previously-saved-payment-methods')}
                           </Typography>
                         )}
@@ -906,7 +906,7 @@ const PaymentStep = (props: PaymentStepProps) => {
                             />
                           </Box>
                         ) : (
-                          <Typography variant="h4">
+                          <Typography variant="subtitle2">
                             {t('no-previously-saved-payment-methods')}
                           </Typography>
                         )}

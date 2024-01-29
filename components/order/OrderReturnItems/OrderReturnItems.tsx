@@ -217,7 +217,7 @@ const OrderReturnItems = (props: OrderReturnItemsProps) => {
         <Grid item xs={12} md={5} sx={{ paddingX: { xs: 0, md: 2 } }}>
           <Box sx={{ bgcolor: 'grey.100', minHeight: '10.625rem' }}>
             <Box sx={{ pl: '1.438rem', pt: '1.75rem', pr: '1.813rem' }}>
-              <Typography variant="h4" fontWeight={'bold'}>
+              <Typography variant="subtitle2" fontWeight={'bold'}>
                 {t('items-you-are-returning')}
               </Typography>
               <Box sx={{ display: 'flex', flexWrap: 'wrap', mt: '1.25rem' }}>

@@ -91,7 +91,7 @@ const ViewOrderStatus = (props: ViewOrderStatusProps) => {
       )}
 
       <Stack gap={1}>
-        <Typography variant="h4" sx={{ fontWeight: 'bold' }}>
+        <Typography variant="subtitle2" sx={{ fontWeight: 'bold' }}>
           {t('check-order-status-fast-simple')}
         </Typography>
         <Typography>{t('check-order-status-instruction')}</Typography>

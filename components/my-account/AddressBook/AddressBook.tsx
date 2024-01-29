@@ -95,7 +95,7 @@ const AccountAddress = (props: AccountAddressProps) => {
             </Typography>
           )}
           {customerContact?.types?.[0]?.isPrimary && (
-            <Typography variant="h4" fontWeight="500">
+            <Typography variant="body1" fontWeight="500">
               {t('primary')}
             </Typography>
           )}
