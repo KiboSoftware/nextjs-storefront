@@ -35,7 +35,7 @@ const heroItems = [
     title: 'Save upto 70%',
     subtitle: 'Check Off Your List Event',
     description: 'Shop early to get your holiday gifts on time.',
-    buttonText: 'Shop Holiday Items on Sale',
+    buttonText: 'Shop Summer Items on Sale',
     contentPosition: 'right',
     buttonLink: 'https://',
   },

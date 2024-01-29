@@ -1,6 +1,6 @@
 import React from 'react'
 
-import { Box, Grid, Typography } from '@mui/material'
+import { Grid, Typography } from '@mui/material'
 import { Splide, SplideSlide } from '@splidejs/react-splide'
 import { useTranslation } from 'next-i18next'
 

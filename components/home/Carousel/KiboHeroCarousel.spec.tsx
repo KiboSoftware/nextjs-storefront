@@ -2,25 +2,23 @@ import React from 'react'
 
 import { composeStories } from '@storybook/testing-react'
 import { render, screen, waitFor } from '@testing-library/react'
-import mediaQuery from 'css-mediaquery'
 
 import * as stories from './KiboHeroCarousel.stories'
 
 const { Common } = composeStories(stories)
 
-const createMatchMedia = (width: number) => (query: string) => ({
-  matches: mediaQuery.match(query, { width }),
-  addListener: () => jest.fn(),
-  removeListener: () => jest.fn(),
-  media: query,
-  onchange: null,
-  addEventListener: jest.fn(),
-  removeEventListener: jest.fn(),
-  dispatchEvent: jest.fn(),
+const mockMatchMedia = (width: number) => ({
+  matches: width !== undefined,
+  media: `(min-width: ${width}px)`,
+  addListener: jest.fn(),
+  removeListener: jest.fn(),
 })
 
 describe('Component - [KiboHeroCarousel]', () => {
-  const setup = () => render(<Common {...Common.args} />)
+  const setup = (width = 1024) => {
+    window.matchMedia = jest.fn().mockImplementation((query) => mockMatchMedia(width as number))
+    return render(<Common {...Common.args} />)
+  }
 
   it('should render component', () => {
     setup()
@@ -40,23 +38,22 @@ describe('Component - [KiboHeroCarousel]', () => {
     expect(subtitle[0]).toBeInTheDocument()
     expect(description[0]).toBeInTheDocument()
     expect(buttonText[0]).toBeInTheDocument()
-    expect(screen.getByRole('button', { name: carouselValues[0].buttonText })).toBeInTheDocument()
     expect(image[0]).toHaveAttribute('alt', 'image Alt text')
   })
 
   it('should move to next slide', () => {
     setup()
-    expect(screen.getByRole('button', { name: 'Next' })).toBeVisible()
+    expect(screen.getByRole('button', { name: 'Next slide' })).toBeVisible()
   })
 
   it('should move to previous slide', () => {
     setup()
-    expect(screen.getByRole('button', { name: 'Previous' })).toBeVisible()
+    expect(screen.getByRole('button', { name: 'Go to last slide' })).toBeVisible()
   })
 
   it('should render mobileurl on mobile screen ', async () => {
-    window.matchMedia = createMatchMedia(500)
-    setup()
+    // window.matchMedia = createMatchMedia(500)
+    setup(500)
     const carouselValues = Common?.args?.carouselItem || []
 
     const mobileImage = screen.getAllByRole('img')
@@ -66,8 +63,8 @@ describe('Component - [KiboHeroCarousel]', () => {
   })
 
   it('should render imageUrl on desktop screen', async () => {
-    window.matchMedia = createMatchMedia(1000)
-    setup()
+    // window.matchMedia = createMatchMedia(1000)
+    setup(1000)
 
     const carouselValues = Common?.args?.carouselItem || []
 

@@ -8,14 +8,20 @@ import { productSearchResultMock } from '@/__mocks__/stories/productSearchResult
 
 const { Common } = composeStories(stories)
 
+jest.mock('@splidejs/react-splide', () => ({
+  ...jest.requireActual('@splidejs/react-splide'), // Use the actual implementation for any unmocked parts
+  Splide: jest.fn(({ children }) => <div>{children}</div>),
+  SplideSlide: jest.fn(({ children }) => <div>{children}</div>),
+}))
+
 const ProductCardMock = () => <div data-testid="product-card-mock" />
 jest.mock('../ProductCard/ProductCard', () => () => ProductCardMock())
 
-describe('[component] ProductOptionCheckbox component', () => {
+describe('[component] ProductRecommendations component', () => {
   it('should render the title', () => {
     render(<Common {...Common.args} />)
 
-    const title = screen.getByText(Common.args.title)
+    const title = screen.getByText(Common?.args?.title as string)
 
     expect(title).toBeVisible()
   })
