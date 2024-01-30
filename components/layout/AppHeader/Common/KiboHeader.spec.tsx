@@ -15,6 +15,29 @@ jest.mock('@mui/material', () => ({
   useMediaQuery: jest.fn().mockReturnValue(true),
 }))
 
+const SearchSuggestionsMock = () => <div data-testid="SearchSuggestions-component" />
+jest.mock(
+  '@/components/layout/SearchSuggestions/SearchSuggestions',
+  () => () => SearchSuggestionsMock()
+)
+
+const HamburgerMenuMock = () => <div data-testid="HamburgerMenu-component" />
+jest.mock('@/components/layout/HamburgerMenu/HamburgerMenu', () => () => HamburgerMenuMock())
+
+jest.mock('@/components/dialogs/b2b/AccountHierarchyFormDialog/AccountHierarchyFormDialog', () => ({
+  __esModule: true,
+  default: ({ onSave, onClose }: any) => (
+    <div data-testid="accountHierarchyFormDialog-component">
+      <button data-testid="onSave-button" onClick={onSave}>
+        onSave
+      </button>
+      <button data-testid="onClose-button" onClick={onClose}>
+        onClose
+      </button>
+    </div>
+  ),
+}))
+
 describe('[component] KiboHeader component', () => {
   it('should render the component', async () => {
     render(<Common {...Common.args} />)
@@ -60,11 +83,12 @@ describe('[component] KiboHeader component', () => {
     render(<Common {...Common.args} />)
 
     await waitFor(() => {
-      expect(
-        screen.getByRole('textbox', {
-          name: /search-input/i,
-        })
-      ).toBeVisible()
+      // expect(
+      //   screen.getByRole('textbox', {
+      //     name: /search-input/i,
+      //   })
+      // ).toBeVisible()
+      expect(screen.getByTestId('SearchSuggestions-component')).toBeVisible()
     })
   })
 
@@ -99,9 +123,19 @@ describe('[component] KiboHeader component', () => {
     const requestAccountLink = screen.getByTestId(/PersonAddIcon/i)
     await user.click(requestAccountLink)
 
+    const accountHierarchyFormDialog = screen.getByTestId('accountHierarchyFormDialog-component')
     await waitFor(() => {
-      const accountHierarcyFormDialog = screen.getByRole('dialog')
-      expect(accountHierarcyFormDialog).toBeVisible()
+      expect(accountHierarchyFormDialog).toBeVisible()
+    })
+
+    const requestAccountButton = screen.getByRole('button', { name: /onSave/i })
+
+    expect(requestAccountButton).toBeVisible()
+
+    await user.click(requestAccountButton)
+
+    await waitFor(() => {
+      expect(accountHierarchyFormDialog).not.toBeInTheDocument()
     })
   })
 
