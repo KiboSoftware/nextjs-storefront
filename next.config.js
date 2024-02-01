@@ -122,7 +122,7 @@ module.exports = {
     defaultWishlistName: DEFAULT_WISHLIST_NAME,
     pciHost: process.env.KIBO_PCI_HOST,
     apiHost: process.env.KIBO_API_HOST,
-    isMultiShipEnabled: false,
+    isMultiShipEnabled: true,
     shipOptions: [
       {
         value: 'ShipToHome',
