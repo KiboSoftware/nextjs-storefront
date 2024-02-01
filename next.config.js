@@ -183,7 +183,7 @@ module.exports = {
     pageSize: 1000,
     cacheKey: 'categoryTree',
     cacheTimeOut: 10000,
-    isMultiShipEnabled: false,
+    isMultiShipEnabled: true,
     pageConfig: {
       productDetail: {
         staticPathsMaxSize: 10,
