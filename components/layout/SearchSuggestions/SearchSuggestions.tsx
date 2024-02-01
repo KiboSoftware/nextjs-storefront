@@ -116,7 +116,7 @@ const SearchSuggestions = (props: SearchSuggestionsProps) => {
   }, [searchTerm])
 
   return (
-    <Stack width="100%" gap={1} sx={{ maxWidth: { xs: '100%', md: '65%' } }}>
+    <Stack width="100%" position="relative" gap={1} sx={{ maxWidth: { xs: '100%', md: '65%' } }}>
       <Box sx={{ zIndex: 1400 }}>
         <SearchBar
           searchTerm={searchTerm}
@@ -125,7 +125,13 @@ const SearchSuggestions = (props: SearchSuggestionsProps) => {
           showClearButton
         />
       </Box>
-      <Collapse in={isOpen} timeout="auto" unmountOnExit role="contentinfo">
+      <Collapse
+        in={isOpen}
+        timeout="auto"
+        unmountOnExit
+        role="contentinfo"
+        sx={{ position: 'absolute', top: '50px', width: '100%' }}
+      >
         <Paper sx={{ ...style.paper }}>
           <List sx={{ ...style.list }} role="group">
             <Title heading="suggestions" />

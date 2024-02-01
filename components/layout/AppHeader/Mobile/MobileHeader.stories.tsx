@@ -15,30 +15,10 @@ export default {
   },
 } as ComponentMeta<typeof MobileHeader>
 
-const Template: ComponentStory<typeof KiboHeader> = (args) => (
+const Template: ComponentStory<typeof KiboHeader> = () => (
   <ModalContextProvider>
     <HeaderContextProvider>
-      <KiboHeader
-        {...args}
-        navLinks={[
-          {
-            link: '#',
-            text: 'Order Status',
-          },
-          {
-            link: '#',
-            text: 'Wishlist',
-          },
-          {
-            link: '#',
-            text: 'Nav Link 2',
-          },
-          {
-            link: '#',
-            text: 'Nav Link 3',
-          },
-        ]}
-      />
+      <MobileHeader />
       <DialogRoot />
     </HeaderContextProvider>
   </ModalContextProvider>

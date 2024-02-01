@@ -6,6 +6,7 @@ import '@testing-library/jest-dom'
 import mockRouter from 'next-router-mock'
 
 import * as stories from './KiboHeader.stories' // import all stories from the stories file
+import { AuthContext } from '@/context'
 
 const { Common } = composeStories(stories)
 
@@ -14,12 +15,35 @@ jest.mock('@mui/material', () => ({
   useMediaQuery: jest.fn().mockReturnValue(true),
 }))
 
+const SearchSuggestionsMock = () => <div data-testid="SearchSuggestions-component" />
+jest.mock(
+  '@/components/layout/SearchSuggestions/SearchSuggestions',
+  () => () => SearchSuggestionsMock()
+)
+
+const HamburgerMenuMock = () => <div data-testid="HamburgerMenu-component" />
+jest.mock('@/components/layout/HamburgerMenu/HamburgerMenu', () => () => HamburgerMenuMock())
+
+jest.mock('@/components/dialogs/b2b/AccountHierarchyFormDialog/AccountHierarchyFormDialog', () => ({
+  __esModule: true,
+  default: ({ onSave, onClose }: any) => (
+    <div data-testid="accountHierarchyFormDialog-component">
+      <button data-testid="onSave-button" onClick={onSave}>
+        onSave
+      </button>
+      <button data-testid="onClose-button" onClick={onClose}>
+        onClose
+      </button>
+    </div>
+  ),
+}))
+
 describe('[component] KiboHeader component', () => {
   it('should render the component', async () => {
     render(<Common {...Common.args} />)
 
     await waitFor(() => {
-      expect(screen.getByTestId(/top-bar/)).toBeVisible()
+      expect(screen.getByTestId(/header-container/)).toBeVisible()
     })
 
     expect(screen.getByTestId(/header-action-area/)).toBeVisible()
@@ -51,23 +75,20 @@ describe('[component] KiboHeader component', () => {
       expect(screen.getByTestId('FmdGoodIcon')).toBeVisible()
     })
 
-    expect(screen.getByText(/find-a-store/i)).toBeVisible()
-    expect(screen.getAllByTestId('AccountCircleIcon')[0]).toBeVisible()
-
     expect(screen.getByTestId('ShoppingCartIcon')).toBeVisible()
-    expect(screen.getByText(/cart/i)).toBeVisible()
-    expect(screen.getAllByText(/b2b-account-request/i)[0]).toBeVisible()
+    expect(screen.getByTestId(/PersonAddIcon/i)).toBeVisible()
   })
 
   it('should render the searchbox', async () => {
     render(<Common {...Common.args} />)
 
     await waitFor(() => {
-      expect(
-        screen.getByRole('textbox', {
-          name: /search-input/i,
-        })
-      ).toBeVisible()
+      // expect(
+      //   screen.getByRole('textbox', {
+      //     name: /search-input/i,
+      //   })
+      // ).toBeVisible()
+      expect(screen.getByTestId('SearchSuggestions-component')).toBeVisible()
     })
   })
 
@@ -84,7 +105,7 @@ describe('[component] KiboHeader component', () => {
     render(<Common {...Common.args} />)
 
     const cartIcon = screen.getByTestId('ShoppingCartIcon')
-    user.click(cartIcon)
+    await user.click(cartIcon)
 
     await waitFor(() => {
       expect(mockRouter).toMatchObject({
@@ -99,12 +120,53 @@ describe('[component] KiboHeader component', () => {
     const user = userEvent.setup()
     render(<Common {...Common.args} />)
 
-    const requestAccountLink = screen.getAllByText(/b2b-account-request/i)
-    user.click(requestAccountLink[0])
+    const requestAccountLink = screen.getByTestId(/PersonAddIcon/i)
+    await user.click(requestAccountLink)
+
+    const accountHierarchyFormDialog = screen.getByTestId('accountHierarchyFormDialog-component')
+    await waitFor(() => {
+      expect(accountHierarchyFormDialog).toBeVisible()
+    })
+
+    const requestAccountButton = screen.getByRole('button', { name: /onSave/i })
+
+    expect(requestAccountButton).toBeVisible()
+
+    await user.click(requestAccountButton)
 
     await waitFor(() => {
-      const accountHierarcyFormDialog = screen.getByRole('dialog')
-      expect(accountHierarcyFormDialog).toBeVisible()
+      expect(accountHierarchyFormDialog).not.toBeInTheDocument()
+    })
+  })
+
+  it('should open login dialog when user clicks on Account icon if guest user else redirect to my-account', async () => {
+    const user = userEvent.setup()
+    render(
+      <AuthContext.Provider
+        value={{
+          isAuthenticated: true,
+          user: {
+            id: 1234,
+            roleName: 'Admin',
+          },
+          login: jest.fn(),
+          createAccount: jest.fn(),
+          logout: jest.fn(),
+        }}
+      >
+        <Common {...Common.args} />
+      </AuthContext.Provider>
+    )
+
+    const myAccount = screen.getAllByTestId(/AccountCircleIcon/i)[0]
+    await user.click(myAccount)
+
+    await waitFor(() => {
+      expect(mockRouter).toMatchObject({
+        asPath: '/my-account',
+        pathname: '/my-account',
+        query: {},
+      })
     })
   })
 })
