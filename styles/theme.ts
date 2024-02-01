@@ -109,7 +109,7 @@ let theme = createTheme({
   },
   palette: {
     primary: {
-      main: '#2ea195',
+      main: '#d64292',
       light: '#C0E3DF',
     },
     secondary: {
