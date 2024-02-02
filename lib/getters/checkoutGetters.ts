@@ -131,8 +131,17 @@ const isSingleShippingItem = (checkout: Checkout) => {
 }
 
 const getDiscountedSubtotal = (checkout: Checkout) => {
-  return checkout.itemLevelProductDiscountTotal + checkout?.orderLevelProductDiscountTotal
+  return checkout?.itemLevelProductDiscountTotal + checkout?.orderLevelProductDiscountTotal
 }
+
+const getOrderLevelHandlingDiscountTotal = (checkout: Checkout) =>
+  checkout?.orderLevelHandlingDiscountTotal
+const getOrderLevelProductDiscountTotal = (checkout: Checkout) =>
+  checkout?.orderLevelProductDiscountTotal
+const getOrderLevelShippingDiscountTotal = (checkout: Checkout) =>
+  checkout?.orderLevelShippingDiscountTotal
+
+const getSubtotal = (checkout: Checkout) => checkout?.subTotal || 0
 
 export const checkoutGetters = {
   buildItemsGroupFromCheckoutGroupings,
@@ -150,4 +159,8 @@ export const checkoutGetters = {
   getFormattedDate,
   isSingleShippingItem,
   getDiscountedSubtotal,
+  getOrderLevelHandlingDiscountTotal,
+  getOrderLevelProductDiscountTotal,
+  getOrderLevelShippingDiscountTotal,
+  getSubtotal,
 }

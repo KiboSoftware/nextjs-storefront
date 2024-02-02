@@ -51,7 +51,7 @@ const CheckoutUITemplate = <T extends CrOrder | Checkout>(props: CheckoutUITempl
 
   const orderSummaryArgs = {
     nameLabel: t('order-summary'),
-    subTotalLabel: `Cart Subtotal of (${checkout?.items?.length} items)`,
+    subTotalLabel: `Order Subtotal of (${checkout?.items?.length} items)`,
     shippingTotalLabel: t('standard-shipping'),
     taxLabel: t('tax'),
     totalLabel: t('order-total'),

@@ -34,7 +34,7 @@ const getTotal = (order: CrOrder | CrCart | Checkout): number => (order?.total a
 
 const getShippingSubTotal = (order: CrOrder | CrCart | Checkout) => order?.shippingSubTotal || 0
 
-const getShippingTotal = (order: CrOrder | CrCart) => order?.shippingTotal || 0
+const getShippingTotal = (order: CrOrder | CrCart | Checkout) => order?.shippingTotal || 0
 const getShippingTaxTotal = (order: CrOrder | CrCart | Checkout) => order?.shippingTaxTotal || 0
 const getShippingDiscounts = (order: CrOrder) =>
   order?.shippingDiscounts?.map((discount) => {
@@ -60,10 +60,7 @@ const getHandlingDiscounts = (order: CrOrder) =>
   })
 const getTaxTotal = (order: CrOrder | CrCart) => (order?.taxTotal as number) || 0
 
-const getSubtotal = (order: CrOrder | CrCart | Checkout): number =>
-  ((order as Checkout)?.subTotal as number) ||
-  ((order as CrOrder | CrCart)?.subtotal as number) ||
-  0
+const getSubtotal = (order: CrOrder | CrCart): number => (order.subtotal as number) || 0
 
 const getDiscountedSubtotal = (order: CrOrder | CrCart): number => {
   if (order?.discountedSubtotal && order?.discountedSubtotal != order?.subtotal)
@@ -71,7 +68,7 @@ const getDiscountedSubtotal = (order: CrOrder | CrCart): number => {
   else return 0
 }
 
-const getOrderDiscounts = (order: CrOrder) =>
+const getOrderDiscounts = (order: CrOrder | Checkout) =>
   order?.orderDiscounts?.map((discount) => {
     return {
       id: discount?.discount?.id,
@@ -82,7 +79,7 @@ const getOrderDiscounts = (order: CrOrder) =>
 const getLineItemSubtotal = (order: CrOrder | CrCart) =>
   (order?.lineItemSubtotalWithOrderAdjustments as number) || 0
 
-const getItemTaxTotal = (order: CrOrder | CrCart) => (order?.itemTaxTotal as number) || 0
+const getOrderTax = (order: CrOrder | Checkout) => (order?.itemTaxTotal as number) || 0
 
 const getItemsByFulfillment = (order: CrOrder, fulfillmentMethod: string): CrOrderItem[] => {
   return (
@@ -405,6 +402,6 @@ export const orderGetters = {
   getHandlingDiscounts,
   getLineItemSubtotal,
   getShippingDiscounts,
-  getItemTaxTotal,
+  getOrderTax,
   getDigitalItems,
 }

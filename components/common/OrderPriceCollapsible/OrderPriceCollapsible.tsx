@@ -22,7 +22,8 @@ interface OrderPriceCollapsibleProps {
   subTotal: number
   taxTotal: number
   discountedSubtotal?: number
-  discounts?: any[]
+  orderDiscounts?: any[]
+  checkoutDiscount?: number // for multiship storefronts
 }
 
 const styles = {
@@ -40,7 +41,8 @@ const styles = {
 }
 
 const OrderPriceCollapsible = (props: OrderPriceCollapsibleProps) => {
-  const { title, total, subTotal, taxTotal, discountedSubtotal, discounts } = props
+  const { title, total, subTotal, taxTotal, discountedSubtotal, orderDiscounts, checkoutDiscount } =
+    props
 
   const { t } = useTranslation('common')
 
@@ -94,11 +96,39 @@ const OrderPriceCollapsible = (props: OrderPriceCollapsibleProps) => {
               />
             }
           >
-            <ListItemText
-              primary={<Typography variant="body2">{t('subtotal', { title })}</Typography>}
-            />
+            <ListItemText primary={<Typography variant="body2">{t('subtotal')}</Typography>} />
           </ListItem>
-          {discounts?.map((discount) => {
+
+          {/* Multiship */}
+          {!!checkoutDiscount && (
+            <ListItem
+              slotProps={{
+                root: {
+                  'aria-label': 'discounts',
+                },
+              }}
+              sx={{ ...styles.detailedSummaryContainer }}
+              secondaryAction={
+                <Price
+                  fontWeight="normal"
+                  variant="body2"
+                  color="error.main"
+                  price={t('currency', { val: checkoutDiscount?.toString() })}
+                />
+              }
+            >
+              <ListItemText
+                primary={
+                  <Typography variant="body2" color={grey[600]}>
+                    {t('discounts')}
+                  </Typography>
+                }
+              />
+            </ListItem>
+          )}
+          {/* Multiship End */}
+
+          {orderDiscounts?.map((discount) => {
             return (
               <ListItem
                 key={discount?.name}
@@ -143,9 +173,7 @@ const OrderPriceCollapsible = (props: OrderPriceCollapsibleProps) => {
               />
             }
           >
-            <ListItemText
-              primary={<Typography variant="body2">{t('tax', { title })}</Typography>}
-            />
+            <ListItemText primary={<Typography variant="body2">{t('tax')}</Typography>} />
           </ListItem>
         </List>
       </Collapse>

@@ -333,5 +333,15 @@ export const baseMultiShipCheckoutFragment = /* GraphQL */ `
     amountRemainingForPayment
     itemLevelProductDiscountTotal
     orderLevelProductDiscountTotal
+    orderDiscounts {
+      impact
+      discount {
+        id
+        name
+        itemIds
+      }
+      couponCode
+      excluded
+    }
   }
 `

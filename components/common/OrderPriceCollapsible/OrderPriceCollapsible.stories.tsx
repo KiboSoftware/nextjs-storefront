@@ -27,7 +27,7 @@ export const WithDiscounts = Template.bind({})
 WithDiscounts.args = {
   ...Common.args,
   discountedSubtotal: 340,
-  discounts: [
+  orderDiscounts: [
     {
       id: 8,
       name: '30% OFF order level',

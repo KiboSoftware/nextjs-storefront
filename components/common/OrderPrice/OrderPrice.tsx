@@ -1,6 +1,7 @@
 import React, { ReactNode } from 'react'
 
 import { Typography, Box, Divider } from '@mui/material'
+import getConfig from 'next/config'
 import { useTranslation } from 'next-i18next'
 
 import OrderPriceCollapsible from '../OrderPriceCollapsible/OrderPriceCollapsible'
@@ -37,24 +38,47 @@ const OrderPrice = <T extends CrCart | CrOrder | Checkout>(props: OrderPriceProp
     orderDetails,
   } = props
 
+  const { publicRuntimeConfig } = getConfig()
+  const isMultiShipEnabled = publicRuntimeConfig.isMultiShipEnabled
+
   const total = orderGetters.getTotal(orderDetails)
-  const subTotal = orderGetters.getSubtotal(orderDetails)
-  const itemTaxTotal = orderGetters.getItemTaxTotal(orderDetails as CrOrder)
+
+  const subTotal = isMultiShipEnabled
+    ? checkoutGetters.getSubtotal(orderDetails as Checkout)
+    : orderGetters.getSubtotal(orderDetails as CrCart | CrOrder)
+
+  const orderTax = orderGetters.getOrderTax(orderDetails as CrOrder)
+
   const discountedSubtotal =
     orderGetters.getDiscountedSubtotal(orderDetails as CrOrder | CrCart) ||
     checkoutGetters.getDiscountedSubtotal(orderDetails as Checkout)
+
   const orderDiscounts = orderGetters.getOrderDiscounts(orderDetails as CrOrder)
-  const lineItemSubtotal = orderGetters.getLineItemSubtotal(orderDetails as CrOrder)
+  const lineItemSubtotal = isMultiShipEnabled
+    ? checkoutGetters.getSubtotal(orderDetails as Checkout)
+    : orderGetters.getLineItemSubtotal(orderDetails as CrOrder)
+  // multiship
+  const orderLevelProductDiscountTotal = checkoutGetters.getOrderLevelProductDiscountTotal(
+    orderDetails as Checkout
+  )
 
   const shippingTotal = orderGetters.getShippingTotal(orderDetails as CrOrder)
   const shippingSubTotal = orderGetters.getShippingSubTotal(orderDetails)
   const shippingTaxTotal = orderGetters.getShippingTaxTotal(orderDetails)
   const shippingDiscounts = orderGetters.getShippingDiscounts(orderDetails as CrOrder)
+  // multiship
+  const orderLevelShippingDiscountTotal = checkoutGetters.getOrderLevelShippingDiscountTotal(
+    orderDetails as Checkout
+  )
 
   const handlingTotal = orderGetters.getHandlingTotal(orderDetails)
   const handlingSubTotal = orderGetters.getHandlingSubTotal(orderDetails)
   const handlingTaxTotal = orderGetters.getHandlingTaxTotal(orderDetails)
   const handlingDiscounts = orderGetters.getHandlingDiscounts(orderDetails as CrOrder)
+  // multiship
+  const orderLevelHandlingDiscountTotal = checkoutGetters.getOrderLevelHandlingDiscountTotal(
+    orderDetails as Checkout
+  )
 
   const { t } = useTranslation('common')
 
@@ -65,25 +89,28 @@ const OrderPrice = <T extends CrCart | CrOrder | Checkout>(props: OrderPriceProp
           <>
             <OrderPriceCollapsible
               title={subTotalLabel as string}
-              total={lineItemSubtotal}
-              subTotal={subTotal}
-              taxTotal={itemTaxTotal}
+              total={subTotal}
+              subTotal={lineItemSubtotal}
+              taxTotal={orderTax}
               discountedSubtotal={discountedSubtotal}
-              discounts={orderDiscounts}
+              orderDiscounts={orderDiscounts}
+              checkoutDiscount={orderLevelProductDiscountTotal}
             />
             <OrderPriceCollapsible
               title={shippingTotalLabel as string}
               total={shippingTotal}
               subTotal={shippingSubTotal}
               taxTotal={shippingTaxTotal}
-              discounts={shippingDiscounts}
+              orderDiscounts={shippingDiscounts}
+              checkoutDiscount={orderLevelShippingDiscountTotal}
             />
             <OrderPriceCollapsible
               title={handlingLabel as string}
               total={handlingTotal}
               subTotal={handlingSubTotal}
               taxTotal={handlingTaxTotal}
-              discounts={handlingDiscounts}
+              orderDiscounts={handlingDiscounts}
+              checkoutDiscount={orderLevelHandlingDiscountTotal}
             />
           </>
         )}

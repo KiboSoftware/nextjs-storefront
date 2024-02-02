@@ -83,11 +83,6 @@ describe('[component] KiboHeader component', () => {
     render(<Common {...Common.args} />)
 
     await waitFor(() => {
-      // expect(
-      //   screen.getByRole('textbox', {
-      //     name: /search-input/i,
-      //   })
-      // ).toBeVisible()
       expect(screen.getByTestId('SearchSuggestions-component')).toBeVisible()
     })
   })
