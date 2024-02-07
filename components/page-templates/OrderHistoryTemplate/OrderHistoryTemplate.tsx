@@ -82,10 +82,11 @@ const OrderHistoryTemplate = (props: OrderHistoryProps) => {
   }
 
   const getOrderDetails = (order: CrOrder) => {
-    const { id, submittedDate, productNames, orderTotal, orderStatus } =
+    const { id, submittedDate, productNames, orderTotal, orderStatus, items } =
       orderGetters.getOrderHistoryDetails(order)
     return {
       id,
+      items,
       submittedDate,
       productNames,
       orderTotal,

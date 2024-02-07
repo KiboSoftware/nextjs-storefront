@@ -345,9 +345,11 @@ const getOrderHistoryDetails = (order: CrOrder) => {
   const orderPayments = getNewOrderPayments(order)
   const shipTo = getShippedTo(order)
   const shippingAddress = getShippingAddress(order)
+  const items = order?.items as CrOrderItem[]
 
   return {
     id,
+    items,
     orderNumber,
     submittedDate,
     productNames,

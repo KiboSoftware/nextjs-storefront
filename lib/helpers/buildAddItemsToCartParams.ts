@@ -1,8 +1,10 @@
 import { FulfillmentOptions } from '../constants'
 
-import type { CrCartItemInput, CrWishlistItem } from '../gql/types'
+import type { CrCartItemInput, CrOrderItem, CrWishlistItem } from '../gql/types'
 
-export const buildAddItemsToCartParams = (items: CrWishlistItem[]): CrCartItemInput[] => {
+export const buildAddItemsToCartParams = (
+  items: CrWishlistItem[] | CrOrderItem[]
+): CrCartItemInput[] => {
   const wishlistItemsProducts = [] as CrCartItemInput[]
   items.forEach((item) => {
     const product = item.product

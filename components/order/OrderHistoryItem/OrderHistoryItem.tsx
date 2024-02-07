@@ -1,13 +1,28 @@
 import React from 'react'
 
 import ArrowForwardIos from '@mui/icons-material/ArrowForwardIos'
-import { Box, Stack, Typography, useMediaQuery, useTheme, Divider } from '@mui/material'
+import {
+  Box,
+  Stack,
+  Typography,
+  useMediaQuery,
+  useTheme,
+  Divider,
+  Button,
+  IconButton,
+} from '@mui/material'
 import { useTranslation } from 'next-i18next'
 
 import { FullWidthDivider, Price } from '@/components/common'
+import { useSnackbarContext } from '@/context'
+import { useProductCardActions } from '@/hooks'
+import { useAddItemsToCurrentCart } from '@/hooks/mutations/cart/useAddItemsToCurrentCart/useAddItemsToCurrentCart'
+
+import { CrOrderItem } from '@/lib/gql/types'
 
 export interface OrderHistoryItemProps {
   id: string
+  items: CrOrderItem[]
   submittedDate: string
   productNames: string
   orderTotal: number
@@ -21,35 +36,53 @@ const styles = {
     pb: 3,
     display: 'flex',
     alignItems: 'center',
-    cursor: 'pointer',
   },
   box: {
-    width: '5%',
     height: '100%',
     display: 'flex',
     justifyContent: 'flex-end',
+    alignItems: 'center',
+    gap: 4,
   },
 }
 
 const OrderHistoryItem = (props: OrderHistoryItemProps) => {
-  const { id, submittedDate, productNames, orderTotal, orderStatus, onHistoryItemClick } = props
+  const { id, submittedDate, productNames, orderTotal, orderStatus, items, onHistoryItemClick } =
+    props
   const { t } = useTranslation('common')
+  const { showSnackbar } = useSnackbarContext()
 
   const theme = useTheme()
   const mdScreen = useMediaQuery(theme.breakpoints.up('md'))
+
+  const { addItemsToCurrentCart } = useAddItemsToCurrentCart()
+  const { handleDeleteCurrentCart } = useProductCardActions()
 
   const handleHistoryItemClick = () => {
     onHistoryItemClick(id)
   }
 
+  const handleAddListToCart = async () => {
+    try {
+      const response = await addItemsToCurrentCart.mutateAsync({
+        items: items,
+      })
+      if (response) {
+        showSnackbar(t('list-added-to-cart'), 'success')
+      }
+    } catch (e) {
+      console.error(e)
+    }
+  }
+
+  const handleReorder = () => {
+    handleDeleteCurrentCart()
+    handleAddListToCart()
+  }
+
   return (
     <Stack>
-      <Stack
-        sx={styles.stack}
-        direction="row"
-        data-testid="history-item"
-        onClick={handleHistoryItemClick}
-      >
+      <Stack sx={styles.stack} direction="row" data-testid="history-item">
         <Stack sx={{ width: '95%' }} gap={0.6}>
           <Typography variant="body1" fontWeight="bold">
             {submittedDate}
@@ -65,7 +98,13 @@ const OrderHistoryItem = (props: OrderHistoryItemProps) => {
           </Typography>
         </Stack>
         <Box sx={styles.box}>
-          <ArrowForwardIos fontSize="inherit" />
+          <Button variant="outlined" onClick={handleReorder}>
+            {' '}
+            Reorder
+          </Button>
+          <IconButton onClick={handleHistoryItemClick}>
+            <ArrowForwardIos fontSize="inherit" />
+          </IconButton>
         </Box>
       </Stack>
       <Stack>
