@@ -10,7 +10,7 @@ import {
 
 import MuiAlert, { AlertColor, AlertProps } from '@mui/material/Alert'
 import Snackbar from '@mui/material/Snackbar'
-import { QueryClientProvider } from '@tanstack/react-query'
+import { QueryClient, QueryClientProvider } from '@tanstack/react-query'
 
 import { generateQueryClient } from '@/lib/react-query/queryClient'
 
@@ -27,6 +27,7 @@ interface SnackbarStateType {
 }
 
 interface RQNotificationContextProviderProps {
+  client?: QueryClient
   children: ReactNode
 }
 
@@ -40,7 +41,10 @@ export const SnackbarContext = createContext({
   hideSnackbar: () => null,
 } as SnackbarContextType)
 
-export const RQNotificationContextProvider = ({ children }: RQNotificationContextProviderProps) => {
+export const RQNotificationContextProvider = ({
+  client,
+  children,
+}: RQNotificationContextProviderProps) => {
   const [snackbarInfo, setSnackbarInfo] = useState<SnackbarStateType>({
     visible: false,
     message: '',
@@ -77,7 +81,7 @@ export const RQNotificationContextProvider = ({ children }: RQNotificationContex
   }
   return (
     <SnackbarContext.Provider value={values}>
-      <QueryClientProvider client={queryClient}>{children}</QueryClientProvider>
+      <QueryClientProvider client={client || queryClient}>{children}</QueryClientProvider>
     </SnackbarContext.Provider>
   )
 }

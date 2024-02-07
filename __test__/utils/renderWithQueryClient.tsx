@@ -5,6 +5,7 @@ import { render, RenderResult } from '@testing-library/react'
 import { MemoryRouterProvider } from 'next-router-mock/MemoryRouterProvider'
 
 import { generateQueryClient } from '../../lib/react-query/queryClient'
+import { RQNotificationContextProvider } from '@/context'
 
 // setLogger({
 //   log: console.log,
@@ -26,9 +27,9 @@ const generateTestQueryClient = () => {
 export const renderWithQueryClient = (ui: ReactElement, client?: QueryClient): RenderResult => {
   const queryClient = client ?? generateTestQueryClient()
   return render(
-    <QueryClientProvider client={queryClient}>
+    <RQNotificationContextProvider client={queryClient}>
       <MemoryRouterProvider>{ui}</MemoryRouterProvider>
-    </QueryClientProvider>
+    </RQNotificationContextProvider>
   )
 }
 

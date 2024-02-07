@@ -102,7 +102,10 @@ const OrderHistoryItem = (props: OrderHistoryItemProps) => {
             {' '}
             Reorder
           </Button>
-          <IconButton onClick={handleHistoryItemClick}>
+          <IconButton
+            onClick={handleHistoryItemClick}
+            data-testid="order-history-details-navigator"
+          >
             <ArrowForwardIos fontSize="inherit" />
           </IconButton>
         </Box>

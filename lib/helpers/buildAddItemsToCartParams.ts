@@ -6,7 +6,7 @@ export const buildAddItemsToCartParams = (
   items: CrWishlistItem[] | CrOrderItem[]
 ): CrCartItemInput[] => {
   const wishlistItemsProducts = [] as CrCartItemInput[]
-  items.forEach((item) => {
+  items?.forEach((item) => {
     const product = item.product
     const quantity = item.quantity
     wishlistItemsProducts.push({

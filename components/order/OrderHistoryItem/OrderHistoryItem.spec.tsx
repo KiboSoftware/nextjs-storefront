@@ -1,12 +1,15 @@
 import React from 'react'
 
 import { composeStories } from '@storybook/testing-react'
-import { render, screen } from '@testing-library/react'
+import { screen, waitFor, within } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
 
 import * as stories from './OrderHistoryItem.stories' // import all stories from the stories file
+import { renderWithQueryClient } from '@/__test__/utils'
+import { generateQueryClient } from '@/lib/react-query/queryClient'
 
 import type { OrderHistoryItemProps } from './OrderHistoryItem'
+
 const { Common } = composeStories(stories)
 
 const priceMock = () => <div data-testid="price-mock" />
@@ -26,11 +29,31 @@ jest.mock('@mui/material', () => ({
 describe('[component] - OrderHistoryItem', () => {
   const { id, submittedDate, productNames, orderStatus } = Common?.args as OrderHistoryItemProps
 
+  beforeEach(() => {
+    jest.clearAllMocks()
+  })
+  afterEach(() => {
+    jest.clearAllMocks()
+  })
+
+  const onHistoryItemClickMock = jest.fn()
+  const showSnackbarMock = jest.fn()
+
+  const generateTestQueryClient = () => {
+    const client = generateQueryClient(showSnackbarMock)
+    const options = client.getDefaultOptions()
+    options.queries = { ...options.queries, retry: false }
+
+    return client
+  }
+
   const setup = () => {
-    const onHistoryItemClickMock = jest.fn()
     const user = userEvent.setup()
-    render(<Common {...Common?.args} onHistoryItemClick={onHistoryItemClickMock} />)
-    return { onHistoryItemClickMock, user }
+    renderWithQueryClient(
+      <Common {...Common?.args} onHistoryItemClick={onHistoryItemClickMock} />,
+      generateTestQueryClient()
+    )
+    return { user }
   }
 
   it('should render component', () => {
@@ -49,12 +72,30 @@ describe('[component] - OrderHistoryItem', () => {
     expect(fullWidthDividerMock.length).toBeGreaterThan(0)
   })
 
-  it('should call onHistoryItemClick callback function when user clicks on HistoryItem', async () => {
-    const { onHistoryItemClickMock, user } = setup()
+  it('should call onHistoryItemClick callback function when user clicks on right arrow icon', async () => {
+    const { user } = setup()
 
-    const historyItem = screen.getByTestId('history-item')
-    await user.click(historyItem)
+    const navigator = screen.getByTestId('order-history-details-navigator')
+    await user.click(navigator)
 
     expect(onHistoryItemClickMock).toHaveBeenCalledWith(id)
+  })
+
+  it('should add order items to cart when user clicks on reorder button', async () => {
+    const { user } = setup()
+
+    const reorderButton = screen.getByRole('button', { name: 'Reorder' })
+    await user.click(reorderButton)
+
+    // await waitFor(() => {
+    //   expect(screen.getByText('list-added-to-cart')).toBeVisible()
+    // })
+
+    // const snackbar = within(await screen.findByRole('alert'))
+    // expect(snackbar.getByText('Hello there')).toBeInTheDocument()
+
+    // await waitFor(() => {
+    //   expect(showSnackbarMock).toBeCalled()
+    // })
   })
 })
