@@ -75,9 +75,9 @@ const OrderHistoryItem = (props: OrderHistoryItemProps) => {
     }
   }
 
-  const handleReorder = () => {
-    handleDeleteCurrentCart()
-    handleAddListToCart()
+  const handleReorder = async () => {
+    await handleDeleteCurrentCart()
+    await handleAddListToCart()
   }
 
   return (
