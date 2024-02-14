@@ -8,13 +8,13 @@ import { addItemsToCurrentCartMutation } from '@/lib/gql/mutations'
 import { buildAddItemsToCartParams } from '@/lib/helpers'
 import { cartKeys } from '@/lib/react-query/queryKeys'
 
-import { CrWishlistItem } from '@/lib/gql/types'
+import { CrOrderItem, CrWishlistItem } from '@/lib/gql/types'
 
 /**
  * @hidden
  */
 
-const addItemsToCurrentCart = async ({ items }: { items: CrWishlistItem[] }) => {
+const addItemsToCurrentCart = async ({ items }: { items: CrWishlistItem[] | CrOrderItem[] }) => {
   const client = makeGraphQLClient()
 
   const variables = {

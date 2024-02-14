@@ -59,6 +59,7 @@ import type {
   CardCollection,
   CustomerContactCollection,
   CustomerPurchaseOrderAccount,
+  CheckoutGrouping,
 } from '@/lib/gql/types'
 
 interface PaymentStepProps {
@@ -691,6 +692,28 @@ const PaymentStep = (props: PaymentStepProps) => {
     }
   }
 
+  const showBillingSameAsShippingAddressCheckbox = () => {
+    if (isMultiShipEnabled) {
+      if (((checkout as Checkout)?.groupings as CheckoutGrouping[])?.length > 1) {
+        const destinations: string[] = []
+        return checkout.items?.some((item) => {
+          const isSameDestination = destinations?.includes(item?.destinationId as string)
+          if (!isSameDestination) {
+            destinations.push(item?.destinationId as string)
+          }
+          return isSameDestination
+        })
+      } else {
+        return true
+      }
+    } else {
+      return (
+        (checkout as CrOrder)?.fulfillmentInfo?.shippingMethodCode &&
+        (checkout as CrOrder)?.fulfillmentInfo?.shippingMethodName
+      )
+    }
+  }
+
   useEffect(() => {
     if (selectedPaymentTypeRadio === PaymentType.CREDITCARD) {
       handleInitialCardDetailsLoad()
@@ -952,21 +975,17 @@ const PaymentStep = (props: PaymentStepProps) => {
                         <StyledHeadings variant="h2" sx={{ paddingTop: '3.125rem' }}>
                           {t('billing-address')}
                         </StyledHeadings>
-                        {!isMultiShipEnabled &&
-                          (checkout as CrOrder)?.fulfillmentInfo?.shippingMethodCode &&
-                          (checkout as CrOrder)?.fulfillmentInfo?.shippingMethodName && (
-                            <FormControlLabel
-                              sx={{
-                                width: '100%',
-                                paddingLeft: '0.5rem',
-                              }}
-                              control={
-                                <Checkbox name={`${t('billing-address-same-as-shipping')}`} />
-                              }
-                              label={`${t('billing-address-same-as-shipping')}`}
-                              onChange={(_, value) => handleSameAsShippingAddressCheckbox(value)}
-                            />
-                          )}
+                        {showBillingSameAsShippingAddressCheckbox() && (
+                          <FormControlLabel
+                            sx={{
+                              width: '100%',
+                              paddingLeft: '0.5rem',
+                            }}
+                            control={<Checkbox name={`${t('billing-address-same-as-shipping')}`} />}
+                            label={`${t('billing-address-same-as-shipping')}`}
+                            onChange={(_, value) => handleSameAsShippingAddressCheckbox(value)}
+                          />
+                        )}
                         <AddressForm
                           key={selectedPaymentTypeRadio}
                           contact={billingFormAddress.contact}
