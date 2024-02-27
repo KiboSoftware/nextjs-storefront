@@ -15,8 +15,8 @@ describe('[helpers] buildProductSearchParams function', () => {
       facet: 'categoryCode',
       facetHierValue: 'categoryCode:30',
       facetTemplate: 'categoryCode:30',
-      facetValueFilter: 'categoryCode:30,tenant~brand:adidas,tenant~color:grey',
-      filter: '',
+      facetValueFilter: 'tenant~brand:adidas,tenant~color:grey',
+      filter: 'categoryCode req 30',
     }
     expect(buildProductSearchParams(searchParams)).toStrictEqual(buildProductSearchParamsMock)
   })
