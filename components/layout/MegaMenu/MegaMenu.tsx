@@ -194,15 +194,18 @@ const MegaMenu = (props: MegaMenuProps) => {
             },
           }}
         >
-          {categoryTree?.map((category) => (
-            <MegaMenuCategory
-              key={category?.categoryCode}
-              category={category}
-              onBackdropToggle={onBackdropToggle}
-              activeCategory={activeCategory}
-              setActiveCategory={setActiveCategory}
-            />
-          ))}
+          {categoryTree?.map(
+            (category) =>
+              category?.isDisplayed && (
+                <MegaMenuCategory
+                  key={category?.categoryCode}
+                  category={category}
+                  onBackdropToggle={onBackdropToggle}
+                  activeCategory={activeCategory}
+                  setActiveCategory={setActiveCategory}
+                />
+              )
+          )}
         </Tabs>
       </Container>
     </StyledToolbar>

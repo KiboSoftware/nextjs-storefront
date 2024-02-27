@@ -3,7 +3,7 @@ import type { GeoCoords } from './GeoCoords'
 export interface CategorySearchParams {
   categoryCode?: string
   pageSize?: number
-  filters?: Array<string>
+  filters?: string
   startIndex?: number
   sort?: string
   search?: string

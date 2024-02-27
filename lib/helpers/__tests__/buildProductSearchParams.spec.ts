@@ -3,7 +3,7 @@ import { buildProductSearchParams } from '../buildProductSearchParams'
 describe('[helpers] buildProductSearchParams function', () => {
   it('should return the product search input according to search params', () => {
     const searchParams = {
-      filters: ['tenant~brand:adidas,tenant~color:grey'],
+      filters: 'tenant~brand:adidas,tenant~color:grey',
       categoryCode: '30',
       pageSize: 16,
     }

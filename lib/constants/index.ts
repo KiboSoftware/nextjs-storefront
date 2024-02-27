@@ -123,6 +123,11 @@ export const ProductAttribute = {
   SUBSCRIPTION_Mode: 'system~subscription-mode',
 }
 
+export const SubscriptionMode = {
+  SUBSCRIPTION_Only: 'SO',
+  SUBSCRIPTION_AND_ONETIME_PURCHASE: 'SAOT',
+}
+
 export const CheckoutUpdateMode = { APPLY_TO_ORIGINAL: 'ApplyToOriginal' }
 
 export enum PurchaseTypes {

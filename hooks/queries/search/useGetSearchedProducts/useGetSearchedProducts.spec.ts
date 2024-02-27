@@ -9,7 +9,7 @@ describe('[hooks] useGetSearchedProducts', () => {
     const { result } = renderHook(
       () =>
         useGetSearchedProducts(
-          { categoryCode: '41', filters: ['Tenant~color:black,Tenant~color:blue'] },
+          { categoryCode: '41', filters: 'Tenant~color:black,Tenant~color:blue' },
           productSearchResultMock
         ),
       {

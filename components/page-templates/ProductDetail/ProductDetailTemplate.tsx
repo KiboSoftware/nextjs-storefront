@@ -128,6 +128,7 @@ const ProductDetailTemplate = (props: ProductDetailTemplateProps) => {
   const [isSubscriptionPricingSelected, setIsSubscriptionPricingSelected] = useState<boolean>(false)
 
   const isSubscriptionModeAvailable = subscriptionGetters.isSubscriptionModeAvailable(product)
+  const isSubscriptionOnly = subscriptionGetters.isSubscriptionOnly(product)
   const { data: productPriceResponse } = useGetProductPrice(
     product?.productCode as string,
     isSubscriptionPricingSelected
@@ -217,11 +218,13 @@ const ProductDetailTemplate = (props: ProductDetailTemplateProps) => {
       value: PurchaseTypes.SUBSCRIPTION,
       name: PurchaseTypes.SUBSCRIPTION,
       label: <Typography variant="body2">{PurchaseTypes.SUBSCRIPTION}</Typography>,
+      selected: isSubscriptionOnly,
     },
     {
       value: PurchaseTypes.ONETIMEPURCHASE,
       name: PurchaseTypes.ONETIMEPURCHASE,
       label: <Typography variant="body2">{PurchaseTypes.ONETIMEPURCHASE}</Typography>,
+      disabled: isSubscriptionOnly,
     },
   ]
 
@@ -364,6 +367,16 @@ const ProductDetailTemplate = (props: ProductDetailTemplateProps) => {
       )
     }
   }, [isB2B, isValidForAddToCart(), isValidForAddToWishlist, JSON.stringify(addToCartPayload)])
+
+  useEffect(() => {
+    if (isSubscriptionOnly) {
+      setPurchaseType(PurchaseTypes.SUBSCRIPTION)
+      setSelectedFulfillmentOption({
+        ...selectedFulfillmentOption,
+        method: FulfillmentOptionsConstant.SHIP,
+      })
+    }
+  })
 
   return (
     <Grid container>
