@@ -376,7 +376,7 @@ const ProductDetailTemplate = (props: ProductDetailTemplateProps) => {
         method: FulfillmentOptionsConstant.SHIP,
       })
     }
-  })
+  }, [])
 
   return (
     <Grid container>
