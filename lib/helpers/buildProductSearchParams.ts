@@ -2,18 +2,10 @@ import { CategorySearchParams } from '../types'
 
 import { QueryProductSearchArgs } from '@/lib/gql/types'
 
-function getFacetValueFilter(categoryCode: string, filters: Array<string> = []) {
-  let facetValueFilter = ''
-  if (categoryCode) {
-    facetValueFilter = `categoryCode:${categoryCode},`
-  }
-  return facetValueFilter + filters
-}
-
 export const buildProductSearchParams = ({
   categoryCode = '',
   pageSize,
-  filters = [],
+  filters = '',
   startIndex = 0,
   sort = '',
   search = '',
@@ -26,9 +18,10 @@ export const buildProductSearchParams = ({
   if (categoryCode) {
     facetHierValue = `categoryCode:${categoryCode}`
     facet = 'categoryCode'
+    filter = `categoryCode req ${categoryCode}`
   }
 
-  const facetValueFilter = getFacetValueFilter(categoryCode, filters)
+  const facetValueFilter = filters
   return {
     query: search,
     startIndex: Number(startIndex),

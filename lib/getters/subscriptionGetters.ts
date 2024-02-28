@@ -1,6 +1,6 @@
 import format from 'date-fns/format'
 
-import { ProductAttribute, DateFormat } from '../constants'
+import { ProductAttribute, DateFormat, SubscriptionMode } from '../constants'
 import { addressGetters } from '@/lib/getters'
 import type { ProductCustom, PaymentAndBilling } from '@/lib/types'
 
@@ -65,6 +65,17 @@ const isSubscriptionModeAvailable = (product: ProductCustom | null | undefined) 
     product?.properties?.some(
       (property) => property?.attributeFQN === ProductAttribute.SUBSCRIPTION_Mode
     ) || false
+  )
+}
+
+const isSubscriptionOnly = (product: ProductCustom | null | undefined) => {
+  if (!isSubscriptionModeAvailable(product)) return false
+
+  const subscriptionModeProp = product?.properties?.filter(
+    (property) => property?.attributeFQN === ProductAttribute.SUBSCRIPTION_Mode
+  )
+  return (
+    subscriptionModeProp?.[0]?.values?.[0]?.value === SubscriptionMode.SUBSCRIPTION_Only || false
   )
 }
 
@@ -157,4 +168,5 @@ export const subscriptionGetters = {
   getFormattedSubscriptionShippingAddress,
   getFormattedSavedCardBillingAddress,
   getFormattedSubscriptionBillingAddress,
+  isSubscriptionOnly,
 }
