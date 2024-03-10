@@ -20,3 +20,5 @@ export { default as StoreFinderIcon } from './AppHeader/Icons/StoreFinderIcon/St
 export { default as HamburgerIcon } from './AppHeader/Icons/HamburgerIcon/HamburgerIcon'
 export { default as MobileB2BLayout } from './MobileB2BLayout/MobileB2BLayout'
 export { default as AccountRequestIcon } from './AppHeader/Icons/AccountRequestIcon/AccountRequestIcon'
+
+export { default as Preview } from './Preview/Preview'
