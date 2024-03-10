@@ -1,16 +1,30 @@
 import { NextApiRequest } from 'next'
 
 const getAdditionalHeader = (req: NextApiRequest) => {
+  const { isPreview, mz_now, mz_pricelist } = req.cookies
+  let headers = {}
   const forwardedForHeader = req?.headers['x-forwarded-for']
-  if (!forwardedForHeader) {
+
+  if (isPreview === 'false' && !forwardedForHeader) {
     return {}
   }
 
-  const forwardedFor = forwardedForHeader.toString().split(',')[0]
+  if (isPreview === 'true') {
+    headers = {
+      'X-Vol-Dataview-Mode': 'Pending',
+      'X-Vol-Preview-Date': mz_now,
+      'X-Vol-Price-List': mz_pricelist,
+    }
+  }
 
-  // add additional headers here
-  const headers = {
-    'x-forwarded-for': forwardedFor,
+  if (forwardedForHeader) {
+    const forwardedFor = forwardedForHeader?.toString().split(',')[0]
+
+    // add additional headers here
+    headers = {
+      ...headers,
+      'x-forwarded-for': forwardedFor,
+    }
   }
 
   return headers

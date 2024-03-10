@@ -59,8 +59,21 @@ export const useUpdateRoutes = () => {
       changeFilters(filters.join(','))
     }
   }
+
+  const changeQueryParam = (queryParams: any) => {
+    router.push(
+      {
+        pathname: router?.pathname,
+        query: queryParams,
+      },
+      undefined,
+      { scroll: false, shallow: true }
+    )
+  }
+
   return {
     updateRoute,
     changeFilters,
+    changeQueryParam,
   }
 }
