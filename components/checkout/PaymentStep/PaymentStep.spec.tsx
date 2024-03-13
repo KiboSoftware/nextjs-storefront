@@ -217,6 +217,7 @@ const TestComponent = (param: any) => {
         }
         onAddPayment={onAddPaymentMock}
         onVoidPayment={onVoidPaymentMock}
+        merchantAccountId="93JVPWZMKZ2KQ"
       />
       <Button onClick={handleSubmit}>Review Order</Button>
     </>
