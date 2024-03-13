@@ -1,4 +1,4 @@
-#robots.txt for http://localhost:3000 updated 2023-12-27T10:33:07.743Z  
+#robots.txt for http://localhost:3000 updated 2024-03-13T05:32:31.388Z  
 
 # Googlebot
 User-agent: Googlebot

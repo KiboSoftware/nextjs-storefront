@@ -21,6 +21,7 @@ import { useReCaptcha } from 'next-recaptcha-v3'
 import { Controller, useForm } from 'react-hook-form'
 import * as yup from 'yup'
 
+import PayPalButton from './PayPalButton'
 import { CardDetailsForm, PurchaseOrderForm } from '@/components/checkout'
 import { AddressForm, KiboTextBox, KiboRadio, PaymentBillingCard } from '@/components/common'
 import { useCheckoutStepContext, STEP_STATUS, useAuthContext, useSnackbarContext } from '@/context'
@@ -70,6 +71,7 @@ interface PaymentStepProps {
   customerPurchaseOrderAccount?: CustomerPurchaseOrderAccount
   onVoidPayment: (id: string, paymentId: string, paymentAction: PaymentActionInput) => Promise<void>
   onAddPayment: (id: string, paymentAction: PaymentActionInput) => Promise<void>
+  merchantAccountId: string | null
 }
 
 interface PaymentsType {
@@ -151,6 +153,7 @@ const PaymentStep = (props: PaymentStepProps) => {
     customerPurchaseOrderAccount,
     onVoidPayment,
     onAddPayment,
+    merchantAccountId,
   } = props
 
   const { t } = useTranslation('common')
@@ -734,7 +737,12 @@ const PaymentStep = (props: PaymentStepProps) => {
       if (reCaptchaKey) {
         submitFormWithRecaptcha()
       } else {
-        handlePayment()
+        if (selectedPaymentTypeRadio === PaymentType.PAYPALEXPRESS2) {
+          setStepStatusComplete()
+          setStepNext()
+        } else {
+          handlePayment()
+        }
       }
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -754,6 +762,13 @@ const PaymentStep = (props: PaymentStepProps) => {
         {t('payment-method')}
       </Typography>
 
+      <PayPalButton
+        checkout={checkout || ''}
+        setSelectedPaymentTypeRadio={setSelectedPaymentTypeRadio}
+        onAddPayment={onAddPayment}
+        onVoidPayment={onVoidPayment}
+        merchantAccountId={merchantAccountId}
+      />
       <FormControl>
         <RadioGroup
           aria-labelledby="payment-types-radio"

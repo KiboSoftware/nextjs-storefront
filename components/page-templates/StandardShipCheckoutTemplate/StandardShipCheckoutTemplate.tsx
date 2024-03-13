@@ -21,6 +21,7 @@ import {
   useGetCustomerPurchaseOrderAccount,
   useCreateCustomerCard,
   useCreateCustomerAddress,
+  useCheckoutSettings,
 } from '@/hooks'
 import { AccountType, AddressType } from '@/lib/constants'
 import { orderGetters } from '@/lib/getters'
@@ -38,6 +39,7 @@ const StandardShipCheckoutTemplate = (props: StandardShipCheckoutProps) => {
   const { checkout: initialCheckout, isMultiShipEnabled } = props
   const router = useRouter()
   const [promoError, setPromoError] = useState<string>('')
+
   const { checkoutId } = router.query
 
   const { publicRuntimeConfig } = getConfig()
@@ -55,6 +57,7 @@ const StandardShipCheckoutTemplate = (props: StandardShipCheckoutProps) => {
   const { createCustomerAddress } = useCreateCustomerAddress()
   const { createCustomerCard } = useCreateCustomerCard()
   const isB2BUser = user?.accountType?.toLowerCase() === AccountType.B2B.toLowerCase()
+  const merchantAccountId = useCheckoutSettings()
 
   const { data: customerPurchaseOrderAccount } = useGetCustomerPurchaseOrderAccount(
     user?.id as number,
@@ -205,6 +208,7 @@ const StandardShipCheckoutTemplate = (props: StandardShipCheckoutProps) => {
           onVoidPayment={handleVoidPayment}
           onAddPayment={handleAddPayment}
           isMultiShipEnabled={false}
+          merchantAccountId={merchantAccountId}
         />
         <ReviewStep
           checkout={order as CrOrder}

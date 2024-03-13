@@ -18,6 +18,7 @@ import {
   useVoidCheckoutPayment,
   useAddCheckoutPayment,
   useCreateCheckout,
+  useCheckoutSettings,
 } from '@/hooks'
 import { FulfillmentOptions } from '@/lib/constants'
 import { checkoutGetters } from '@/lib/getters'
@@ -46,8 +47,10 @@ const MultiShipCheckoutTemplate = (props: MultiShipCheckoutProps) => {
 
   const router = useRouter()
   const checkoutId = router?.query?.checkoutId
+
   // States
   const [promoError, setPromoError] = useState<string>('')
+  const merchantAccountId = useCheckoutSettings()
 
   // Hooks
   const { data: checkout } = useGetCurrentCheckout({
@@ -207,6 +210,7 @@ const MultiShipCheckoutTemplate = (props: MultiShipCheckoutProps) => {
           isMultiShipEnabled={isMultiShipEnabled}
           onVoidPayment={handleVoidPayment}
           onAddPayment={handleAddPayment}
+          merchantAccountId={merchantAccountId}
         />
         <ReviewStep
           checkout={checkout as Checkout}

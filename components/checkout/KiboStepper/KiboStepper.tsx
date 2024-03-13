@@ -1,6 +1,7 @@
-import React, { ReactNode, Children } from 'react'
+import React, { ReactNode, Children, useEffect } from 'react'
 
 import { Box, Stack, Step, Stepper, Typography, Slider, StepButton } from '@mui/material'
+import { useRouter } from 'next/router'
 
 import { useCheckoutStepContext } from '@/context'
 
@@ -24,6 +25,7 @@ const KiboStepper = (props: StepperProps) => {
   const { children, isSticky = true } = props
 
   const { activeStep, steps, setActiveStep } = useCheckoutStepContext()
+  const router = useRouter()
 
   const totalSteps = () => {
     return steps.length
@@ -36,6 +38,14 @@ const KiboStepper = (props: StepperProps) => {
   const handleBack = (index: number) => {
     if (activeStep > index) setActiveStep(index)
   }
+
+  useEffect(() => {
+    const urlStep = router?.query?.step as string
+    if (!urlStep) return
+
+    const capitalizeUrlStep = urlStep.charAt(0).toUpperCase() + urlStep.slice(1)
+    if (steps.includes(capitalizeUrlStep)) setActiveStep(steps.indexOf(capitalizeUrlStep))
+  }, [])
 
   return (
     <Stack sx={{ maxWidth: '872px' }} gap={3}>
