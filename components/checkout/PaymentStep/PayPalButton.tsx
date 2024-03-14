@@ -81,7 +81,8 @@ const PayPalButton = (props: PayPalButtonProps) => {
 
   const isPayPalPaymentSuccessful = !!checkout?.id && !!externalTransactionId && !!payerId
 
-  const showPayPalButton = merchantAccountId && !isPayPalPaymentSuccessful
+  const showPayPalButton =
+    !isPayPalPaymentSuccessful || (isPayPalPaymentSuccessful && !isPaymentMethodAdded)
   const showRemovePayPalButton = isPayPalPaymentSuccessful && isPaymentMethodAdded
 
   const updateQueryParams = () => {

@@ -784,13 +784,17 @@ const PaymentStep = (props: PaymentStepProps) => {
       <Typography variant="h2" sx={{ paddingBottom: '1.625rem' }}>
         {t('payment-method')}
       </Typography>
-      <PayPalButton
-        checkout={checkout || ''}
-        setSelectedPaymentTypeRadio={setSelectedPaymentTypeRadio}
-        onAddPayment={onAddPayment}
-        onVoidPayment={onVoidPayment}
-        merchantAccountId={merchantAccountId}
-      />
+
+      {merchantAccountId && (
+        <PayPalButton
+          checkout={checkout || ''}
+          setSelectedPaymentTypeRadio={setSelectedPaymentTypeRadio}
+          onAddPayment={onAddPayment}
+          onVoidPayment={onVoidPayment}
+          merchantAccountId={merchantAccountId}
+        />
+      )}
+
       <FormControl>
         <RadioGroup
           aria-labelledby="payment-types-radio"
