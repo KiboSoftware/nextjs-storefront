@@ -6,7 +6,7 @@ export const useCheckoutSettings = () => {
   useEffect(() => {
     const fetchCheckoutSettings = async () => {
       try {
-        console.log('process.env.NEXT_PUBLIC_URL: ${process.env.NEXT_PUBLIC_URL}')
+        console.log(`process.env.NEXT_PUBLIC_URL: ${process.env.NEXT_PUBLIC_URL}`)
 
         const url = `${process.env.NEXT_PUBLIC_URL}/api/paypal-checkout-settings`
 
