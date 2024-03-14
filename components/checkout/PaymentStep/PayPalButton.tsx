@@ -66,7 +66,9 @@ const createParams = (params: Params): Response => {
 const ADD_PAYMENT_METHOD = 'addPaymentMethod'
 const MAKE_PAYMENT_METHOD_VOID = 'makePaymentMethodVoid'
 const ENVIRONMENT = process.env.NEXT_PUBLIC_PAYPAL_ENVIRONMENT
-const URL = `http://localhost:3000/api/paypal-token?isCart=false`
+const URL = `${
+  process.env.NEXT_PUBLIC_URL ? process.env.NEXT_PUBLIC_URL : ''
+}/api/paypal-token?isCart=false`
 
 const PayPalButton = (props: PayPalButtonProps) => {
   const { checkout, setSelectedPaymentTypeRadio, onAddPayment, merchantAccountId } = props
