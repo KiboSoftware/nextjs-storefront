@@ -247,12 +247,8 @@ const setExpressCheckoutPayment = async (order: any, returnUrl: any, cancelUrl: 
 }
 
 const getToken = async (order: Checkout | any) => {
-  const redirectUrl = `${process.env.NEXT_PUBLIC_URL ? process.env.NEXT_PUBLIC_URL : ''}/checkout/${
-    order.id
-  }?step=payment&isCart=false`
-  const cancelUrl = `${process.env.NEXT_PUBLIC_URL ? process.env.NEXT_PUBLIC_URL : ''}/checkout/${
-    order.id
-  }?step=payment`
+  const redirectUrl = `${process.env.NEXT_PUBLIC_URL}/checkout/${order.id}?step=payment&isCart=false`
+  const cancelUrl = `${process.env.NEXT_PUBLIC_URL}/checkout/${order.id}?step=payment`
 
   const isMultishipEnabled = false
   const orderObj = getOrderDetails(order, true, null, isMultishipEnabled)
