@@ -10,8 +10,6 @@ export const useCheckoutSettings = () => {
           process.env.NEXT_PUBLIC_URL ? process.env.NEXT_PUBLIC_URL : ''
         }/api/paypal-checkout-settings`
 
-        console.log(`url: ${url}`)
-
         const merchantIdData = await fetch(url, {
           headers: {
             Accept: 'application/json',
