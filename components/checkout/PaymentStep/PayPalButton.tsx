@@ -126,12 +126,14 @@ const PayPalButton = (props: PayPalButtonProps) => {
   }
 
   // eslint-disable-next-line
-  const handleLoad = () => {
+  const handleLoad = (source?: string) => {
+    source && console.log(`${source} loaded...`)
     const imgElement = document.getElementById('btn_xpressPaypal')
 
     if (!!imgElement) console.log('PayPal image button is not loaded...')
     if (!!window?.paypal) console.log('PayPal Checkout SDK not available...')
 
+    console.log('Call paypalCheckoutReady...')
     if (imgElement && window?.paypal) paypalCheckoutReady()
   }
 
@@ -195,14 +197,14 @@ const PayPalButton = (props: PayPalButtonProps) => {
             src="https://www.paypalobjects.com/webstatic/en_US/i/buttons/checkout-logo-medium.png"
             width="170px"
             height="32px"
-            onLoad={handleLoad}
+            onLoad={() => handleLoad('image')}
           />
 
           <Script
             id="paypal-sdk"
             async
             src="https://www.paypalobjects.com/api/checkout.js"
-            onLoad={handleLoad}
+            onLoad={() => handleLoad('script')}
           />
         </div>
       )}

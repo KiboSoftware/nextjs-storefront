@@ -155,7 +155,7 @@ function parseResponse(response: any) {
 }
 
 const request = async (params: any) => {
-  const sandbox = true
+  const sandbox = process.env.NEXT_PUBLIC_PAYPAL_ENVIRONMENT === 'sandbox'
   const url = 'https://' + (sandbox ? 'api-3t.sandbox.paypal.com' : 'api-3t.paypal.com') + '/nvp'
   const encodedParams = new URLSearchParams(params).toString()
 
@@ -232,7 +232,7 @@ const setExpressCheckoutPayment = async (order: any, returnUrl: any, cancelUrl: 
 
   const data = await request(params)
 
-  const sandbox = true
+  const sandbox = process.env.NEXT_PUBLIC_PAYPAL_ENVIRONMENT === 'sandbox'
   const redirect =
     'https://' +
     (sandbox ? 'www.sandbox.paypal.com/cgi-bin/webscr' : 'www.paypal.com/cgi-bin/webscr')
