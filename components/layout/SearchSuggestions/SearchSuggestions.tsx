@@ -20,7 +20,7 @@ import { useRouter } from 'next/router'
 import { useTranslation } from 'next-i18next'
 
 import { SearchBar } from '@/components/common'
-import { useDebounce, useGetSearchSuggestions } from '@/hooks'
+import { useDebounce, useGetSearchSuggestion2 } from '@/hooks'
 
 const style = {
   paper: {
@@ -100,7 +100,7 @@ const SearchSuggestions = (props: SearchSuggestionsProps) => {
     handleClose()
   }
 
-  const searchSuggestionResult = useGetSearchSuggestions(
+  const searchSuggestionResult = useGetSearchSuggestion2(
     useDebounce(searchTerm.trim(), publicRuntimeConfig.debounceTimeout)
   )
 
@@ -108,7 +108,7 @@ const SearchSuggestions = (props: SearchSuggestionsProps) => {
     searchSuggestionResult.data
       ? searchSuggestionResult.data?.suggestionGroups?.find((sg) => sg?.name === title)
       : null
-  const productSuggestionGroup = getSuggestionGroup('Pages')
+  const productSuggestionGroup = getSuggestionGroup('Products')
   const categorySuggestionGroup = getSuggestionGroup('Categories')
 
   useEffect(() => {
@@ -148,11 +148,11 @@ const SearchSuggestions = (props: SearchSuggestionsProps) => {
           <Divider />
           <List sx={{ ...style.list }} role="group">
             <Title heading="categories" />
-            {categorySuggestionGroup?.suggestions?.map((product) => (
+            {categorySuggestionGroup?.suggestions?.map((category) => (
               <Content
-                key={product?.suggestion?.categoryCode}
-                code={product?.suggestion?.categoryCode}
-                name={product?.suggestion?.content?.name}
+                key={category?.suggestion?.categoryCategoryCode}
+                code={category?.suggestion?.categoryCategoryCode}
+                name={category?.suggestion?.categoryName}
                 path={'/category/'}
                 onSearchSuggestionClose={handleClose}
               />
