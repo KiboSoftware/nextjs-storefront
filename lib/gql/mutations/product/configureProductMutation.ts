@@ -15,10 +15,12 @@ export const productConfigInventoryInfo = /* GraphQL */ `
 const configureProductMutation = /* GraphQL */ `
   mutation configureProduct(
     $productCode: String!
+    $quantity: Int!
     $selectedOptions: ProductOptionSelectionsInput!
   ) {
     configureProduct(
       productCode: $productCode
+      quantity: $quantity
       includeOptionDetails: true
       productOptionSelectionsInput: $selectedOptions
     ) {

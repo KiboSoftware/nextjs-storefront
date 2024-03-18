@@ -134,8 +134,8 @@ export const subscriptionKeys = {
 
 export const productKeys = {
   all: ['product'] as const,
-  productParams: (productCode: string, useSubscriptionPricing: boolean) =>
-    [productCode, useSubscriptionPricing] as const,
+  productParams: (productCode: string, useSubscriptionPricing?: boolean, isPreview?: boolean) =>
+    [productCode, useSubscriptionPricing, isPreview] as const,
 }
 
 export const addressKeys = {

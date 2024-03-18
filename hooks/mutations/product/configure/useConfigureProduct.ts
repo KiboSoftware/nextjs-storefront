@@ -12,17 +12,19 @@ import type { ProductOptionSelectionInput } from '@/lib/gql/types'
  * @hidden
  */
 export interface ConfigureProductDetails {
-  updatedOptions: ProductOptionSelectionInput[]
+  updatedOptions?: ProductOptionSelectionInput[]
   productCode: string
+  quantity?: number
 }
 
 const configureProduct = async (configureProductDetails: ConfigureProductDetails) => {
   const client = makeGraphQLClient()
 
-  const { productCode, updatedOptions: options } = configureProductDetails
+  const { productCode, quantity, updatedOptions: options } = configureProductDetails
 
   const variables = {
     productCode,
+    quantity,
     selectedOptions: {
       options,
     },
@@ -45,7 +47,7 @@ const configureProduct = async (configureProductDetails: ConfigureProductDetails
  *
  * Parameters passed to internal function configureProduct(params: ConfigureProductDetails) => expects object containing productCode and updatedOptions.
  *
- * @returns 'response?.configureProduct', which has product details like productCode, purchaseLocation, options, productImages etc.
+ * @returns 'response?.configureProduct', which has product details like productCode,  purchaseLocation, options, productImages etc.
  */
 
 export const useConfigureProduct = () => {

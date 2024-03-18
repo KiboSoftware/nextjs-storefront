@@ -47,15 +47,10 @@ export const useGetProductPrice = (
   productCode: string,
   useSubscriptionPricing: boolean
 ): useProductPriceResponse => {
-  const {
-    data = [],
-    isLoading,
-    isSuccess,
-    isFetching,
-  } = useQuery({
+  const { data, isLoading, isSuccess, isFetching } = useQuery({
     queryKey: productKeys.productParams(productCode, useSubscriptionPricing),
     queryFn: () => fetchProductPrice(productCode, useSubscriptionPricing),
-    enabled: !!productCode,
+    enabled: !!productCode && useSubscriptionPricing,
     refetchOnWindowFocus: true,
   })
 

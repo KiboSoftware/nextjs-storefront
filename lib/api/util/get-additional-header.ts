@@ -9,11 +9,17 @@ const getAdditionalHeader = (req: NextApiRequest) => {
     return {}
   }
 
-  if (isPreview === 'true') {
+  if (
+    isPreview === 'true' &&
+    req?.body?.operationName !== 'getUser' &&
+    req?.body?.operationName !== 'getCurrentCart' &&
+    req?.body?.operationName !== 'cart'
+  ) {
     headers = {
-      'X-Vol-Dataview-Mode': 'Pending',
+      ...headers,
       'X-Vol-Preview-Date': mz_now,
-      'X-Vol-Price-List': mz_pricelist,
+      'X-Vol-PriceList': mz_pricelist,
+      'X-Vol-Dataview-Mode': 'Pending',
     }
   }
 
