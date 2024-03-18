@@ -1,8 +1,10 @@
+import { getCookie } from 'cookies-next'
 import getConfig from 'next/config'
 import { useRouter } from 'next/router'
 import { serverSideTranslations } from 'next-i18next/serverSideTranslations'
 
 import { ProductDetailTemplate, ProductDetailSkeleton } from '@/components/page-templates'
+import { useGetProduct } from '@/hooks'
 import { getProduct, getCategoryTree, productSearch } from '@/lib/api/operations'
 import { productGetters } from '@/lib/getters'
 import { buildProductPath } from '@/lib/helpers'
@@ -21,6 +23,7 @@ const { serverRuntimeConfig } = getConfig()
 interface ProductPageType extends PageWithMetaData {
   categoriesTree?: PrCategory[]
   product?: Product
+  productWithPreview?: Product
 }
 function getMetaData(product: Product): MetaData {
   return {
@@ -37,6 +40,7 @@ export async function getStaticProps(
 ): Promise<GetStaticPropsResult<any>> {
   const { locale, params } = context
   const { productCode } = params as any
+
   const product = await getProduct(productCode)
   const categoriesTree = await getCategoryTree()
   if (!product) {
@@ -60,6 +64,7 @@ export async function getStaticPaths(): Promise<GetStaticPathsResult> {
     pageSize: parseInt(staticPathsMaxSize),
   } as CategorySearchParams)
   const items = searchResult?.data?.products?.items || []
+
   const paths: string[] = items.map(buildProductPath)
   return { paths, fallback: true }
 }
@@ -68,14 +73,24 @@ const ProductDetailPage: NextPage<ProductPageType> = (props) => {
   const { product } = props
   const router = useRouter()
   const { isFallback } = router
+  const isPreviewCookie = getCookie('isPreview') as boolean
+  const { data: productWithPreview } = useGetProduct(
+    product?.productCode as string,
+    isPreviewCookie,
+    product
+  )
 
   if (isFallback) {
     return <ProductDetailSkeleton />
   }
   const breadcrumbs = product ? productGetters.getBreadcrumbs(product) : []
+
   return (
     <>
-      <ProductDetailTemplate product={product as ProductCustom} breadcrumbs={breadcrumbs} />
+      <ProductDetailTemplate
+        product={productWithPreview as ProductCustom}
+        breadcrumbs={breadcrumbs}
+      />
     </>
   )
 }

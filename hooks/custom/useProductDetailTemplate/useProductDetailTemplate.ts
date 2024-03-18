@@ -126,6 +126,7 @@ export const useProductDetailTemplate = (props: UseProductDetailTemplateProps) =
         price,
       }: ConfiguredProduct = await configureProduct.mutateAsync({
         productCode,
+        quantity,
         updatedOptions: updatedOptions.map((option) => {
           return {
             attributeFQN: option.attributeFQN,
@@ -165,6 +166,20 @@ export const useProductDetailTemplate = (props: UseProductDetailTemplateProps) =
     }
   }
 
+  const handleQuantity = async (qty: number) => {
+    setQuantity(qty)
+    const { priceRange, price }: ConfiguredProduct = await configureProduct.mutateAsync({
+      productCode,
+      quantity: qty,
+    })
+    console.log(price)
+    setCurrentProduct({
+      ...currentProduct,
+      priceRange,
+      price,
+    })
+  }
+
   return {
     currentProduct,
     quantity,
@@ -173,5 +188,6 @@ export const useProductDetailTemplate = (props: UseProductDetailTemplateProps) =
     setQuantity,
     selectProductOption,
     setSelectedFulfillmentOption,
+    handleQuantity,
   }
 }

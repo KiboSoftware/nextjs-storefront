@@ -148,6 +148,7 @@ const ProductDetailTemplate = (props: ProductDetailTemplateProps) => {
     setQuantity,
     selectProductOption,
     setSelectedFulfillmentOption,
+    handleQuantity,
   } = useProductDetailTemplate({
     product,
     purchaseLocation,
@@ -504,8 +505,8 @@ const ProductDetailTemplate = (props: ProductDetailTemplateProps) => {
           <QuantitySelector
             label="Qty"
             quantity={quantity}
-            onIncrease={() => setQuantity((prevQuantity: number) => Number(prevQuantity) + 1)}
-            onDecrease={() => setQuantity((prevQuantity: number) => Number(prevQuantity) - 1)}
+            onIncrease={() => handleQuantity(quantity + 1)}
+            onDecrease={() => handleQuantity(quantity - 1)}
           />
         </Box>
         {isSubscriptionModeAvailable && (

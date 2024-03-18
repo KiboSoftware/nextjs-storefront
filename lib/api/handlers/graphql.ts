@@ -54,12 +54,15 @@ class GraphQLError extends Error {
 
 export default async function graphQLHandler(req: NextApiRequestWithLogger, res: NextApiResponse) {
   try {
-    const { query, variables } = req.body
+    const { query, variables, operationName } = req.body
     const gqlDetails = getOperationDetails(query)
     req.logger.info({ gql: gqlDetails }, 'incoming graphql request')
 
     const headers = getAdditionalHeader(req)
-    const userClaims = await getUserClaimsFromRequest(req, res)
+    const userClaims =
+      operationName !== 'getUser' && operationName !== 'getCurrentCart' && operationName !== 'cart'
+        ? ''
+        : await getUserClaimsFromRequest(req, res)
     const response = await fetcher({ query, variables }, { userClaims, headers })
 
     const correlationId = response.headers && response.headers.get(KIBO_HEADERS.CORRELATION_ID)
