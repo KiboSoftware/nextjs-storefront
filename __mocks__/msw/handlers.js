@@ -30,6 +30,7 @@ import { productPriceMock } from '../stories/productPriceMock'
 import { productSearchResultMock } from '../stories/productSearchResultMock'
 import { quoteMock } from '../stories/quoteMock'
 import { quotesMock } from '../stories/quotesMock'
+import { searchSuggestion2Mock } from '../stories/searchSuggestion2ResultMock'
 import { searchSuggestionMock } from '../stories/searchSuggestionResultMock'
 import { subscriptionCollectionMock } from '../stories/subscriptionCollectionMock'
 // import { updateCustomerAccountCardMock } from '../stories/updateCustomerAccountCardMock'
@@ -240,6 +241,11 @@ export const searchSuggestionHandlers = [
   // useSearchSuggestions
   graphql.query('getSearchSuggestions', (_req, res, ctx) => {
     return res(ctx.data(searchSuggestionMock))
+  }),
+
+  // useSearchSuggestion2
+  graphql.query('getSearchSuggestion2', (_req, res, ctx) => {
+    return res(ctx.data(searchSuggestion2Mock))
   }),
 ]
 

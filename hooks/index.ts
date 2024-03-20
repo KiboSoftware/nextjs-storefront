@@ -32,6 +32,7 @@ export * from './queries/returns/useGetReturnReasons/useGetReturnReasons'
 export * from './queries/returns/useGetReturns/useGetReturns'
 
 // search
+export * from './queries/search/useGetSearchSuggestion2/useGetSearchSuggestion2'
 export * from './queries/search/useGetSearchSuggestions/useGetSearchSuggestions'
 export * from './queries/search/useGetSearchedProducts/useGetSearchedProducts'
 
