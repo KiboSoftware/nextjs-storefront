@@ -1,4 +1,5 @@
 import AccountCircleIcon from '@mui/icons-material/AccountCircle'
+import AccountCircleOutlined from '@mui/icons-material/AccountCircleOutlined'
 import { useTranslation } from 'next-i18next'
 
 import { HeaderAction } from '@/components/common'
@@ -15,9 +16,11 @@ const AccountIcon = ({ size, isElementVisible, onAccountIconClick }: AccountIcon
 
   return (
     <HeaderAction
-      title={isAuthenticated && user?.firstName ? `${t('hi')}, ${user?.firstName}` : ''}
+      title={
+        isAuthenticated && user?.firstName ? `${t('hi')}, ${user?.firstName}` : t('my-account')
+      }
       subtitle={isAuthenticated ? t('go-to-my-account') : t('log-in')}
-      icon={AccountCircleIcon}
+      icon={isAuthenticated ? AccountCircleIcon : AccountCircleOutlined}
       iconFontSize={size}
       isElementVisible={isElementVisible}
       onClick={onAccountIconClick}
