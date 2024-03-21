@@ -24,6 +24,7 @@ interface ProductPageType extends PageWithMetaData {
   categoriesTree?: PrCategory[]
   product?: Product
   productWithPreview?: Product
+  isPreview?: boolean
 }
 function getMetaData(product: Product): MetaData {
   return {
@@ -42,7 +43,7 @@ export async function getStaticProps(
   const { productCode } = params as any
 
   const product = await getProduct(productCode)
-  const categoriesTree = await getCategoryTree()
+  const categoriesTree = await getCategoryTree({})
   if (!product) {
     return { notFound: true }
   }
@@ -51,6 +52,7 @@ export async function getStaticProps(
       product,
       categoriesTree,
       metaData: getMetaData(product),
+      isPreview: context.preview || false,
       ...(await serverSideTranslations(locale as string, ['common'])),
     },
     revalidate: parseInt(serverRuntimeConfig.revalidate),
@@ -70,13 +72,13 @@ export async function getStaticPaths(): Promise<GetStaticPathsResult> {
 }
 
 const ProductDetailPage: NextPage<ProductPageType> = (props) => {
-  const { product } = props
+  const { product, isPreview = false } = props
   const router = useRouter()
   const { isFallback } = router
-  const isPreviewCookie = getCookie('isPreview') as boolean
+
   const { data: productWithPreview } = useGetProduct(
     product?.productCode as string,
-    isPreviewCookie,
+    isPreview,
     product
   )
 

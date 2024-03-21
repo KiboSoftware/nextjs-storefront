@@ -1,9 +1,8 @@
 import { NextApiRequest, NextApiResponse } from 'next'
-import getConfig from 'next/config'
 
 import { fetcher, getAdditionalHeader, getUserClaimsFromRequest } from '@/lib/api/util'
 import { getUserAddressesQuery as query } from '@/lib/gql/queries'
-import { decodeParseCookieValue } from '@/lib/helpers'
+import { decodeParseCookieValue, getAuthCookieName } from '@/lib/helpers'
 
 import { CustomerContactCollection } from '@/lib/gql/types'
 
@@ -11,9 +10,7 @@ export default async function getCustomerAddresses(
   req: NextApiRequest,
   res: NextApiResponse
 ): Promise<CustomerContactCollection | null> {
-  const { publicRuntimeConfig } = getConfig()
-
-  const authCookieName = publicRuntimeConfig.userCookieKey.toLowerCase()
+  const authCookieName = getAuthCookieName()
 
   const cookies = req?.cookies
 

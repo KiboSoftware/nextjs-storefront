@@ -1,9 +1,8 @@
 import { NextApiRequest, NextApiResponse } from 'next'
-import getConfig from 'next/config'
 
 import { fetcher, getAdditionalHeader, getUserClaimsFromRequest } from '@/lib/api/util'
 import { getB2BAccountHierarchyQuery as query } from '@/lib/gql/queries'
-import { buildAccountHierarchy, decodeParseCookieValue } from '@/lib/helpers'
+import { buildAccountHierarchy, decodeParseCookieValue, getAuthCookieName } from '@/lib/helpers'
 import { B2BAccountHierarchyResult, HierarchyTree } from '@/lib/types'
 
 import { B2BAccount } from '@/lib/gql/types'
@@ -12,9 +11,7 @@ export default async function getB2BAccountHierarchy(
   req: NextApiRequest,
   res: NextApiResponse
 ): Promise<B2BAccountHierarchyResult | null> {
-  const { publicRuntimeConfig } = getConfig()
-
-  const authCookieName = publicRuntimeConfig.userCookieKey.toLowerCase()
+  const authCookieName = getAuthCookieName()
 
   const cookies = req?.cookies
 

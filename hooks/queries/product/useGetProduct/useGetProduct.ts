@@ -34,13 +34,13 @@ const fetchProduct = async (productCode: string) => {
 
 export const useGetProduct = (
   productCode: string,
-  isPreviewCookie?: boolean,
+  isPreview?: boolean,
   initialData?: any
 ): UseProductResponse => {
   const { data, isLoading, isSuccess, isFetching, isError } = useQuery({
-    queryKey: productKeys.productParams(productCode, false, isPreviewCookie),
+    queryKey: productKeys.productParams(productCode, false, isPreview),
     queryFn: () => fetchProduct(productCode),
-    enabled: !!productCode && isPreviewCookie,
+    enabled: !!productCode && isPreview,
     initialData,
   })
 

@@ -1,16 +1,18 @@
 import { ServerResponse } from 'http'
 import getConfig from 'next/config'
 
-import { shopperAuthClient } from './api-auth-client'
+import { shopperAuthClient, getAuthClientBySiteId } from './api-auth-client'
 import { isShopperAuthExpired } from './config-helpers'
-import { decodeParseCookieValue, prepareSetCookieValue } from '@/lib/helpers/cookieHelper'
+import {
+  decodeParseCookieValue,
+  getAuthCookieName,
+  prepareSetCookieValue,
+} from '@/lib/helpers/cookieHelper'
 import type { KiboRequest } from '@/lib/types'
 
 import type { NextApiRequest, NextApiResponse } from 'next'
 
 const { publicRuntimeConfig } = getConfig()
-
-const authCookieName = publicRuntimeConfig.userCookieKey.toLowerCase()
 
 const getUserClaimsFromRequest = async (
   req: NextApiRequest | KiboRequest,
@@ -19,29 +21,48 @@ const getUserClaimsFromRequest = async (
   if (req.headers['x-vol-exclude-user-claims']) {
     return
   }
+
+  const siteId =
+    (req as NextApiRequest).preview && ((req as NextApiRequest).previewData as any).siteId
+
+  console.log('=========================siteId', siteId)
+
   try {
     const cookies = req?.cookies
-    let authTicket = decodeParseCookieValue(cookies[authCookieName])
+    let authTicket = decodeParseCookieValue(cookies[getAuthCookieName(siteId)])
 
     if (authTicket && isShopperAuthExpired(authTicket) === false) {
       return authTicket.accessToken
     }
 
     const accountId = authTicket?.accountId
+
     // shopper is anonymous
     // else logged in user ticket needs to be refreshed
     if (!authTicket) {
-      authTicket = await shopperAuthClient.anonymousAuth()
+      authTicket = siteId
+        ? await getAuthClientBySiteId(siteId).newShopperAuthClient.anonymousAuth()
+        : await shopperAuthClient.anonymousAuth()
     } else {
-      const response = await shopperAuthClient.refreshUserAuth(authTicket)
+      const response = siteId
+        ? await getAuthClientBySiteId(siteId).newShopperAuthClient.refreshUserAuth(authTicket)
+        : await shopperAuthClient.refreshUserAuth(authTicket)
       if (response.accessToken) {
         authTicket = response
       }
     }
+
+    console.log('getAuthCookieName(siteId)', siteId, getAuthCookieName(siteId))
+
     res.setHeader(
       'Set-Cookie',
-      authCookieName + '=' + prepareSetCookieValue({ ...authTicket, accountId }) + ';path=/'
+      getAuthCookieName(siteId) +
+        '=' +
+        prepareSetCookieValue({ ...authTicket, accountId }) +
+        ';path=/'
     )
+
+    console.log('====================================setting cookie', siteId)
 
     return authTicket.accessToken
   } catch (err) {
