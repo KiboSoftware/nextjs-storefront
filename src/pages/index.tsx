@@ -11,8 +11,8 @@ interface HomePageProps {
   carouselItem: any
 }
 export async function getStaticProps(context: GetStaticPropsContext) {
-  const { locale } = context
-  const categoriesTree: CategoryTreeResponse = (await getCategoryTree()) || null
+  const { previewData, locale } = context
+  const categoriesTree: CategoryTreeResponse = (await getCategoryTree({ previewData })) || null
 
   return {
     props: {

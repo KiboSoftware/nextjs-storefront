@@ -1,9 +1,8 @@
 import { NextApiRequest, NextApiResponse } from 'next'
-import getConfig from 'next/config'
 
 import { fetcher, getAdditionalHeader, getUserClaimsFromRequest } from '@/lib/api/util'
 import { getB2BAccount as query } from '@/lib/gql/queries'
-import { decodeParseCookieValue } from '@/lib/helpers'
+import { decodeParseCookieValue, getAuthCookieName } from '@/lib/helpers'
 
 import { B2BAccount } from '@/lib/gql/types'
 
@@ -12,9 +11,7 @@ export default async function getB2BAccount(
   res: NextApiResponse,
   accountId: number
 ): Promise<B2BAccount | null> {
-  const { publicRuntimeConfig } = getConfig()
-
-  const authCookieName = publicRuntimeConfig.userCookieKey.toLowerCase()
+  const authCookieName = getAuthCookieName()
 
   const cookies = req?.cookies
 

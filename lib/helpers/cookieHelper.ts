@@ -52,6 +52,8 @@ export const getPreviewDateCookie = () => {
   return getCookie('mz_now') as string
 }
 
-export const getIsPreviewCookie = () => {
-  return getCookie('isPreview') as string
+const authCookieName = config?.publicRuntimeConfig.userCookieKey.toLowerCase()
+
+export const getAuthCookieName = (siteId?: string) => {
+  return siteId ? `${authCookieName}_${siteId}` : authCookieName
 }

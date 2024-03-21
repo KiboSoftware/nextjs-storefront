@@ -1,12 +1,20 @@
 import vercelFetch from '@vercel/fetch'
 
-import { apiAuthClient } from './api-auth-client'
+import { apiAuthClient, getAuthClientBySiteId } from './api-auth-client'
 import { getGraphqlUrl } from './config-helpers'
 
 const fetch = vercelFetch()
 
 const fetcher = async ({ query, variables }: any, options: any) => {
-  const authToken = await apiAuthClient.getAccessToken()
+  let authToken
+
+  if (options.headers['X-Vol-Site']) {
+    const client = getAuthClientBySiteId(options.headers['X-Vol-Site']).newApiAuthClient
+    authToken = await client.getAccessToken()
+  } else {
+    authToken = await apiAuthClient.getAccessToken()
+  }
+
   const response = await fetch(getGraphqlUrl(), {
     method: 'POST',
     headers: {

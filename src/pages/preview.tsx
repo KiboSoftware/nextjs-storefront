@@ -2,20 +2,15 @@ import { setCookie } from 'cookies-next'
 
 import type { GetServerSidePropsContext } from 'next'
 
-export const getServerSideProps = (context: GetServerSidePropsContext) => {
-  const { req, res, query } = context
-  if (query.isPreview === 'true') {
-    setCookie('isPreview', true, { req, res, maxAge: 60 * 60 * 24 * 365, path: '/' })
-    return {
-      redirect: {
-        destination: `/`,
-        permanent: true,
-      },
-    }
-  }
+export const getServerSideProps = async (context: GetServerSidePropsContext) => {
+  const { params } = context
+  await fetch(`http://localhost:3000/api/preview?siteId=${params?.siteId}`)
 
   return {
-    notFound: true,
+    redirect: {
+      destination: '/',
+      permanent: true,
+    },
   }
 }
 

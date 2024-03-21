@@ -9,7 +9,7 @@ export default async function categoryTreeHandler(
 ) {
   try {
     res.setHeader('Cache-Control', 'public, s-maxage=10, stale-while-revalidate=59')
-    const response = await getCategoryTree(req)
+    const response = await getCategoryTree({ req })
     if (response?.errors) {
       throw {
         message: response?.errors[0]?.extensions?.response?.body?.message,
