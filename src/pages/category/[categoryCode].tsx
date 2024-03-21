@@ -44,7 +44,7 @@ function getMetaData(category: PrCategory): MetaData {
   }
 }
 export async function getStaticPaths(): Promise<GetStaticPathsResult> {
-  const categoriesTree = (await getCategoryTree({})) || []
+  const categoriesTree = (await getCategoryTree()) || []
   const getCategoryPaths = (category: Maybe<PrCategory>, categoryPaths: any[] = []) => {
     if (category?.isDisplayed) {
       categoryPaths.push(buildCategoryPath(category))
@@ -70,10 +70,10 @@ export async function getStaticPaths(): Promise<GetStaticPathsResult> {
 export async function getStaticProps(
   context: GetStaticPropsContext
 ): Promise<GetStaticPropsResult<CategoryPageType>> {
-  const { locale, params, previewData } = context
+  const { locale, params } = context
   const { publicRuntimeConfig } = getConfig()
   const { categoryCode } = params as { categoryCode: string }
-  const categoriesTree = await getCategoryTree({ previewData })
+  const categoriesTree = await getCategoryTree()
   const category = (await categoryTreeSearchByCode({ categoryCode }, categoriesTree)) as PrCategory
   if (!category) {
     return { notFound: true }

@@ -43,7 +43,7 @@ export async function getStaticProps(
   const { productCode } = params as any
 
   const product = await getProduct(productCode)
-  const categoriesTree = await getCategoryTree({})
+  const categoriesTree = await getCategoryTree()
   if (!product) {
     return { notFound: true }
   }

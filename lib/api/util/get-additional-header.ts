@@ -23,9 +23,6 @@ const getAdditionalHeader = (req: NextApiRequest) => {
         'X-Vol-PriceList': mz_pricelist,
         'X-Vol-Dataview-Mode': 'Pending',
       }),
-      ...((req.previewData as any)?.siteId && {
-        'X-Vol-Site': (req.previewData as any)?.siteId,
-      }),
     }
   }
 
