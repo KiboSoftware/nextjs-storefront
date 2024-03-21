@@ -54,6 +54,6 @@ export const getPreviewDateCookie = () => {
 
 const authCookieName = config?.publicRuntimeConfig.userCookieKey.toLowerCase()
 
-export const getAuthCookieName = (siteId?: string) => {
-  return siteId ? `${authCookieName}_${siteId}` : authCookieName
+export const getAuthCookieName = () => {
+  return authCookieName
 }

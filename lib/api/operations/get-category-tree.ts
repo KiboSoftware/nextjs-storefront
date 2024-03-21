@@ -10,23 +10,12 @@ const { serverRuntimeConfig } = getConfig()
 const cacheKey = serverRuntimeConfig.cacheKey
 const cacheTimeOut = serverRuntimeConfig.cacheTimeOut
 
-export default async function getCategoryTree({
-  req,
-  previewData,
-}: {
-  req?: NextApiRequest
-  previewData?: PreviewData
-}) {
+export default async function getCategoryTree(req?: NextApiRequest) {
   try {
-    // const cachedItems = cache.get(cacheKey)
-    // console.log("cached Items", cachedItems, !(previewData as any)?.siteId )
-    // if (cachedItems && !(previewData as any)?.siteId) return cachedItems // if preview is true, data should not be cached
+    const cachedItems = cache.get(cacheKey)
+    if (cachedItems) return cachedItems
 
-    const headers = req
-      ? getAdditionalHeader(req)
-      : previewData
-      ? { 'X-Vol-Site': (previewData as any)?.siteId }
-      : {}
+    const headers = req ? getAdditionalHeader(req) : {}
 
     const response = await fetcher({ query: getCategoryTreeQuery, variables: {} }, { headers })
     const items = response?.data?.categoriesTree?.items
