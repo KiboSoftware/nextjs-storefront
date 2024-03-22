@@ -36,7 +36,7 @@ export default async function Captcha(req: NextApiRequestWithLogger, res: NextAp
         message: 'Error submitting the enquiry form',
       })
 
-      req.logger.error(err, 'Error in Captcha handler')
+      req.logger.error('Error in Captcha handler', err)
     }
   } else {
     res.status(405)

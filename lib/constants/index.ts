@@ -212,4 +212,6 @@ export const CountryCode = {
 
 export const KIBO_HEADERS = {
   CORRELATION_ID: 'x-vol-correlation',
+  TENANT: 'x-vol-tenant',
+  SITE: 'x-vol-site',
 }
