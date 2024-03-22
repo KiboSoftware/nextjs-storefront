@@ -301,10 +301,7 @@ const StandardShippingStep = (props: ShippingProps) => {
     setStepStatusValid()
   }
 
-  console.log('checkoutttt', checkout.email)
-
   useEffect(() => {
-    console.log('checkoutttt useeffect', checkout.email)
     if (isAllItemsDigital || !shipItems.length)
       if (isAllItemsDigital) {
         handleDigitalProductShipping()

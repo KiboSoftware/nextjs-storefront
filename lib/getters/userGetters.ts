@@ -23,11 +23,20 @@ const getAddresses = (addresses: CustomerContact[], addressType: string): Custom
     return []
   }
   return addresses
-    ?.filter(
-      (item: CustomerContact) =>
-        item?.types && item.types[0]?.name?.toLowerCase() === addressType.toLowerCase()
-    )
-    ?.sort((a: any, b: any) => b?.types[0]?.isPrimary - a?.types[0]?.isPrimary)
+    ?.filter((item: CustomerContact) => {
+      if (item?.types?.some((type) => type?.name?.toLowerCase() === addressType.toLowerCase())) {
+        return item
+      }
+    })
+    ?.sort((a: any, b: any) => {
+      const itemA = a?.types?.find(
+        (type: any) => type?.name?.toLowerCase() === addressType?.toLowerCase()
+      )
+      const itemB = b?.types?.find(
+        (type: any) => type?.name?.toLowerCase() === addressType?.toLowerCase()
+      )
+      return itemB?.isPrimary - itemA?.isPrimary
+    })
 }
 
 const getUserShippingAddress = (addresses: CustomerContact[]): CustomerContact[] | undefined =>
