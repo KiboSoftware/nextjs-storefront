@@ -7,7 +7,7 @@
   "scripts": {
     "dev": "NODE_OPTIONS='-r next-logger' next dev",
     "build": "next build",
-    "start": "NODE_OPTIONS='-r next-logger' && next start",
+    "start": "NODE_OPTIONS='-r next-logger' next start",
     "lint": "next lint",
     "fixlint": "next lint --fix",
     "generate-types": "graphql-codegen",
