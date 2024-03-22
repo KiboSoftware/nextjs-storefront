@@ -2,7 +2,7 @@ import getConfig from 'next/config'
 import { NextApiRequest, NextApiResponse } from 'next/types'
 
 import { NextApiRequestWithLogger } from '@/lib/types'
-import logger from '@/next-logger.config'
+import { logger } from '@/next-logger.config'
 
 type ApiHandler = (
   req: NextApiRequest | NextApiRequestWithLogger,
@@ -78,9 +78,9 @@ export default function withLogger(handle: ApiHandler) {
     requestLogger.info('Request start')
 
     await handle(request, response)
-    requestLogger.info(
-      { duration: Date.now() - start, response: responseMetaData(response) },
-      'Request end'
-    )
+    requestLogger.info('Request end', {
+      duration: Date.now() - start,
+      response: responseMetaData(response),
+    })
   }
 }
