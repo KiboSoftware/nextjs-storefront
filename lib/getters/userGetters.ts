@@ -29,13 +29,13 @@ const getAddresses = (addresses: CustomerContact[], addressType: string): Custom
       }
     })
     ?.sort((a: any, b: any) => {
-      const primaryTypeA = a?.types?.find(
+      const itemA = a?.types?.find(
         (type: any) => type?.name?.toLowerCase() === addressType?.toLowerCase()
       )
-      const primaryTypeB = b?.types?.find(
+      const itemB = b?.types?.find(
         (type: any) => type?.name?.toLowerCase() === addressType?.toLowerCase()
       )
-      return primaryTypeB?.isPrimary - primaryTypeA?.isPrimary
+      return itemB?.isPrimary - itemA?.isPrimary
     })
 }
 
