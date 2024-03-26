@@ -18,6 +18,7 @@ import {
   useVoidCheckoutPayment,
   useAddCheckoutPayment,
   useCreateCheckout,
+  useCheckoutSettings,
 } from '@/hooks'
 import { FulfillmentOptions } from '@/lib/constants'
 import { checkoutGetters } from '@/lib/getters'
@@ -69,6 +70,7 @@ const MultiShipCheckoutTemplate = (props: MultiShipCheckoutProps) => {
   const { createCheckoutShippingMethod } = useCreateCheckoutShippingMethod()
   const { updateCheckoutCoupon } = useUpdateCheckoutCoupon()
   const { deleteCheckoutCoupon } = useDeleteCheckoutCoupon()
+  const merchantAccountId = useCheckoutSettings()
 
   const updateCheckoutPersonalInfo = async (formData: PersonalDetails) => {
     const { email } = formData
@@ -207,6 +209,7 @@ const MultiShipCheckoutTemplate = (props: MultiShipCheckoutProps) => {
           isMultiShipEnabled={isMultiShipEnabled}
           onVoidPayment={handleVoidPayment}
           onAddPayment={handleAddPayment}
+          merchantAccountId={merchantAccountId}
         />
         <ReviewStep
           checkout={checkout as Checkout}

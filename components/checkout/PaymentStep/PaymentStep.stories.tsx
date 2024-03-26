@@ -64,6 +64,7 @@ Common.args = {
   addressCollection: userAddressMock.customerAccountContacts,
   customerPurchaseOrderAccount: customerPurchaseOrderAccountMock.customerPurchaseOrderAccount,
   isMultiShipEnabled: false,
+  merchantAccountId: '93JVPWZMKZ2KQ',
 }
 
 export const WithoutSavedPayment = LoggedInNoData.bind({})

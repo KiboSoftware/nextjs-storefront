@@ -39,6 +39,7 @@ export * from './queries/search/useGetSearchedProducts/useGetSearchedProducts'
 // standardCheckout
 export * from './queries/standardCheckout/useGetCurrentOrder/useGetCurrentOrder'
 export * from './queries/standardCheckout/useGetShippingMethods/useGetShippingMethods'
+export * from './custom/useCheckoutSettings/useCheckoutSettings'
 
 // myAccount
 export * from './queries/myAccount/useGetCustomerOrders/useGetCustomerOrders'

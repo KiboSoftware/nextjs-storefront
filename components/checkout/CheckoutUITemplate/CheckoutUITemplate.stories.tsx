@@ -51,6 +51,7 @@ const Template: ComponentStory<typeof CheckoutUITemplate> = (args) => (
         checkout={orderMock.checkout}
         onVoidPayment={handleVoidPayment}
         onAddPayment={handleAddPayment}
+        merchantAccountId="93JVPWZMKZ2KQ"
       />
       <ReviewStep
         checkout={orderMock.checkout}
@@ -92,6 +93,7 @@ const MultiShipTemplate: ComponentStory<typeof CheckoutUITemplate> = (args) => (
         checkout={orderMock.checkout}
         onVoidPayment={handleVoidPayment}
         onAddPayment={handleAddPayment}
+        merchantAccountId="93JVPWZMKZ2KQ"
       />
       {/* <ReviewStep checkout={checkoutMock.checkout} onBackButtonClick={() => null} /> */}
     </CheckoutUITemplate>

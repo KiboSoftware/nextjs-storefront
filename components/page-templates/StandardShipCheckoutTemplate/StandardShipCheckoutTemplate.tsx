@@ -21,6 +21,7 @@ import {
   useGetCustomerPurchaseOrderAccount,
   useCreateCustomerCard,
   useCreateCustomerAddress,
+  useCheckoutSettings,
 } from '@/hooks'
 import { AccountType, AddressType } from '@/lib/constants'
 import { orderGetters } from '@/lib/getters'
@@ -54,6 +55,8 @@ const StandardShipCheckoutTemplate = (props: StandardShipCheckoutProps) => {
   const { data: cardCollection } = useGetCards(user?.id as number)
   const { createCustomerAddress } = useCreateCustomerAddress()
   const { createCustomerCard } = useCreateCustomerCard()
+  const merchantAccountId = useCheckoutSettings()
+
   const isB2BUser = user?.accountType?.toLowerCase() === AccountType.B2B.toLowerCase()
 
   const { data: customerPurchaseOrderAccount } = useGetCustomerPurchaseOrderAccount(
@@ -205,6 +208,7 @@ const StandardShipCheckoutTemplate = (props: StandardShipCheckoutProps) => {
           onVoidPayment={handleVoidPayment}
           onAddPayment={handleAddPayment}
           isMultiShipEnabled={false}
+          merchantAccountId={merchantAccountId}
         />
         <ReviewStep
           checkout={order as CrOrder}
