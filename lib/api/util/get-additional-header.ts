@@ -1,6 +1,6 @@
 import { NextApiRequest } from 'next'
 
-const getAdditionalHeader = (req: NextApiRequest) => {
+const getAdditionalHeader = (req: NextApiRequest, userClaims?: string) => {
   const { mz_now, mz_pricelist } = req.cookies
   let headers = {}
   const forwardedForHeader = req?.headers['x-forwarded-for']
@@ -9,20 +9,24 @@ const getAdditionalHeader = (req: NextApiRequest) => {
     return {}
   }
 
-  const noUserClaimsRequired =
-    req?.body?.operationName !== 'getUser' &&
-    req?.body?.operationName !== 'getCurrentCart' &&
-    req?.body?.operationName !== 'cart' &&
-    req?.body?.operationName !== 'addToCart'
+  // const noUserClaimsRequired =
+  //   req?.body?.operationName === 'getUser' &&
+  //   req?.body?.operationName === 'getCurrentCart' &&
+  //   req?.body?.operationName === 'cart' &&
+  //   req?.body?.operationName === 'addToCart'
 
   if (req.preview === true) {
     headers = {
       ...headers,
-      ...(noUserClaimsRequired && {
-        'X-Vol-Preview-Date': mz_now,
-        'X-Vol-PriceList': mz_pricelist,
-        'X-Vol-Dataview-Mode': 'Pending',
-      }),
+      // ...(noUserClaimsRequired && {
+      'X-Vol-Preview-Date': mz_now,
+      'X-Vol-PriceList': mz_pricelist,
+      // ...(noUserClaimsRequired && {
+      'X-Vol-Dataview-Mode': 'Pending',
+      // }),
+
+      // 'cookie': `sb-sf-at-prod=at=${userClaims}`,
+      // }),
     }
   }
 

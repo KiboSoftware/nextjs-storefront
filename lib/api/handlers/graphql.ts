@@ -58,11 +58,8 @@ export default async function graphQLHandler(req: NextApiRequestWithLogger, res:
     const gqlDetails = getOperationDetails(query)
     req.logger.info('incoming graphql request', { gql: gqlDetails })
 
-    const headers = getAdditionalHeader(req)
-    const userClaims =
-      operationName !== 'getUser' && operationName !== 'getCurrentCart' && operationName !== 'cart'
-        ? ''
-        : await getUserClaimsFromRequest(req, res)
+    const userClaims = await getUserClaimsFromRequest(req, res)
+    const headers = getAdditionalHeader(req, userClaims)
     const response = await fetcher({ query, variables }, { userClaims, headers })
 
     const correlationId = response.headers && response.headers.get(KIBO_HEADERS.CORRELATION_ID)

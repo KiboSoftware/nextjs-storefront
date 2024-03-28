@@ -1,11 +1,17 @@
 import * as React from 'react'
 import { useState } from 'react'
 
-import { Global } from '@emotion/react'
 import PreviewIcon from '@mui/icons-material/Preview'
-import { Fab, InputLabel, TextField, FormControl, Stack } from '@mui/material'
-import CssBaseline from '@mui/material/CssBaseline'
-import SwipeableDrawer from '@mui/material/SwipeableDrawer'
+import {
+  Fab,
+  InputLabel,
+  TextField,
+  FormControl,
+  ClickAwayListener,
+  Paper,
+  Box,
+  Button,
+} from '@mui/material'
 import { DateTimePicker, LocalizationProvider } from '@mui/x-date-pickers'
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs'
 import dayjs, { Dayjs } from 'dayjs'
@@ -20,8 +26,6 @@ import {
   getPreviewDateCookie,
 } from '@/lib/helpers'
 
-const drawerBleeding = 56
-
 export default function Preview() {
   const [open, setOpen] = useState(false)
   const [enteredPriceList, setEnteredPriceList] = useState<string>(
@@ -32,8 +36,12 @@ export default function Preview() {
   )
   const { changeQueryParam } = useUpdateRoutes()
 
-  const toggleDrawer = (newOpen: boolean) => () => {
-    setOpen(newOpen)
+  const handleClick = () => {
+    setOpen((prev) => !prev)
+  }
+
+  const handleClickAway = () => {
+    setOpen(false)
   }
 
   const handleChange = () => {
@@ -50,75 +58,82 @@ export default function Preview() {
     }
   }
 
+  const handleClosePreview = async () => {
+    await fetch('/api/clear-preview-mode-cookies')
+  }
+
   return (
-    <>
-      <CssBaseline />
-      <Global
-        styles={{
-          '.MuiDrawer-root > .MuiPaper-root': {
-            height: `calc(30% - ${drawerBleeding}px)`,
-            overflow: 'visible',
-          },
-        }}
-      />
-      <Fab color="primary" aria-label="add" sx={{ position: 'fixed', bottom: '5rem', right: 0 }}>
-        <PreviewIcon onClick={toggleDrawer(true)} />
-      </Fab>
-      <SwipeableDrawer
-        anchor="bottom"
-        open={open}
-        onClose={toggleDrawer(false)}
-        onOpen={toggleDrawer(true)}
-        disableBackdropTransition={false}
-      >
-        <Stack
-          sx={{
-            p: 2,
-            m: 'auto',
-            flexDirection: 'row',
-            gap: 3,
-          }}
+    <ClickAwayListener onClickAway={handleClickAway}>
+      <>
+        <Fab
+          color="primary"
+          aria-label="add"
+          sx={{ position: 'fixed', bottom: '7rem', right: '1rem' }}
         >
-          <LocalizationProvider dateAdapter={AdapterDayjs}>
-            <FormControl variant="standard" fullWidth>
-              <InputLabel shrink htmlFor="previewDate">
-                Preview Date
-              </InputLabel>
-              <DateTimePicker
-                disablePast
-                openTo="day"
-                value={selectedOrderDate || null}
-                onChange={(_, value) => {
-                  setSelectedOrderDate(dayjs(value))
-                  handleChange()
-                }}
-                renderInput={(params) => (
-                  <TextField
-                    {...params}
-                    size="small"
-                    sx={{
-                      'label + &': {
-                        marginTop: 3,
-                      },
-                      '& .MuiOutlinedInput-root': {
-                        fontSize: '0.8rem',
-                      },
-                    }}
-                  />
-                )}
-              />
-            </FormControl>
-          </LocalizationProvider>
-          <KiboTextBox
-            label={'Price List'}
-            value={enteredPriceList}
-            onChange={(_, value) => setEnteredPriceList(value)}
-            onBlur={() => {
-              handleChange()
+          <PreviewIcon onClick={handleClick} />
+        </Fab>
+        {open ? (
+          <Paper
+            elevation={2}
+            sx={{
+              p: 4,
+              position: 'sticky',
+              bottom: 0,
+              boxShadow: '-2px -5px 24px 7px rgba(0,0,0,0.17)',
             }}
-          />
-        </Stack>
-      </SwipeableDrawer>
-    </>
+          >
+            <Box display="flex" gap={3} m="auto" justifyContent={'center'}>
+              <FormControl variant="standard">
+                <LocalizationProvider dateAdapter={AdapterDayjs}>
+                  <InputLabel shrink htmlFor="previewDate">
+                    Preview Date
+                  </InputLabel>
+                  <DateTimePicker
+                    disablePast
+                    openTo="day"
+                    toolbarPlaceholder="Now"
+                    value={selectedOrderDate || null}
+                    onChange={(_, value) => {
+                      setSelectedOrderDate(dayjs(value))
+                      handleChange()
+                    }}
+                    renderInput={(params) => (
+                      <TextField
+                        {...params}
+                        size="small"
+                        sx={{
+                          'label + &': {
+                            marginTop: 3,
+                          },
+                          '& .MuiOutlinedInput-root': {
+                            fontSize: '0.8rem',
+                          },
+                        }}
+                      />
+                    )}
+                  />
+                </LocalizationProvider>
+              </FormControl>
+              <Box>
+                <KiboTextBox
+                  label={'Price List'}
+                  value={enteredPriceList}
+                  onChange={(_, value) => setEnteredPriceList(value)}
+                  onBlur={() => {
+                    handleChange()
+                  }}
+                />
+              </Box>
+              <Box display={'flex'} gap={3} alignItems={'center'}>
+                <Button variant="contained">Apply</Button>
+                <Button variant="contained" color="secondary" onClick={handleClosePreview}>
+                  Close Preview
+                </Button>
+              </Box>
+            </Box>
+          </Paper>
+        ) : null}
+      </>
+    </ClickAwayListener>
   )
 }
