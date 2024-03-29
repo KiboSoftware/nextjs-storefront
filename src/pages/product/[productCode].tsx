@@ -52,7 +52,6 @@ export async function getStaticProps(
       product,
       categoriesTree,
       metaData: getMetaData(product),
-      isPreview: context.preview || false,
       ...(await serverSideTranslations(locale as string, ['common'])),
     },
     revalidate: parseInt(serverRuntimeConfig.revalidate),
@@ -72,11 +71,11 @@ export async function getStaticPaths(): Promise<GetStaticPathsResult> {
 }
 
 const ProductDetailPage: NextPage<ProductPageType> = (props) => {
-  const { product, isPreview = false } = props
+  const { product } = props
   const router = useRouter()
   const { isFallback } = router
 
-  const { data: productWithPreview } = useGetProduct(product?.productCode as string, isPreview)
+  const { data: productWithPreview } = useGetProduct(product?.productCode as string)
 
   if (isFallback) {
     return <ProductDetailSkeleton />
