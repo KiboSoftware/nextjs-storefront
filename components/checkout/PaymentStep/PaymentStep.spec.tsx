@@ -184,6 +184,7 @@ afterEach(() => cleanup())
 
 const onAddPaymentMock = jest.fn()
 const onVoidPaymentMock = jest.fn()
+const onSetPaypalDetailsMock = jest.fn()
 const userContextValues = (isAuthenticated: boolean, userId: number) => ({
   isAuthenticated: isAuthenticated,
   user: {
@@ -217,6 +218,9 @@ const TestComponent = (param: any) => {
         }
         onAddPayment={onAddPaymentMock}
         onVoidPayment={onVoidPaymentMock}
+        paypalBearerToken=""
+        paypalDetails={{ orderId: '', payerId: '' }}
+        setPaypalDetails={onSetPaypalDetailsMock}
       />
       <Button onClick={handleSubmit}>Review Order</Button>
     </>

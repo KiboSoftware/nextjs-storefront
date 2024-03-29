@@ -21,6 +21,7 @@ import { useReCaptcha } from 'next-recaptcha-v3'
 import { Controller, useForm } from 'react-hook-form'
 import * as yup from 'yup'
 
+import PayPalButton from './PayPalButton'
 import { CardDetailsForm, PurchaseOrderForm } from '@/components/checkout'
 import { AddressForm, KiboTextBox, KiboRadio, PaymentBillingCard } from '@/components/common'
 import { useCheckoutStepContext, STEP_STATUS, useAuthContext, useSnackbarContext } from '@/context'
@@ -71,6 +72,9 @@ interface PaymentStepProps {
   customerPurchaseOrderAccount?: CustomerPurchaseOrderAccount
   onVoidPayment: (id: string, paymentId: string, paymentAction: PaymentActionInput) => Promise<void>
   onAddPayment: (id: string, paymentAction: PaymentActionInput) => Promise<void>
+  paypalBearerToken: string
+  paypalDetails: undefined | { orderId: string; payerId: string }
+  setPaypalDetails: (details: { orderId: string; payerId: string } | undefined) => void
 }
 
 interface PaymentsType {
@@ -152,6 +156,9 @@ const PaymentStep = (props: PaymentStepProps) => {
     customerPurchaseOrderAccount,
     onVoidPayment,
     onAddPayment,
+    paypalBearerToken,
+    paypalDetails,
+    setPaypalDetails,
   } = props
 
   const { t } = useTranslation('common')
@@ -776,6 +783,18 @@ const PaymentStep = (props: PaymentStepProps) => {
       <Typography variant="h2" sx={{ paddingBottom: '1.625rem' }}>
         {t('payment-method')}
       </Typography>
+
+      {paypalBearerToken && (
+        <PayPalButton
+          checkout={checkout as CrOrder}
+          setSelectedPaymentTypeRadio={setSelectedPaymentTypeRadio}
+          onAddPayment={onAddPayment}
+          onVoidPayment={onVoidPayment}
+          paypalBearerToken={paypalBearerToken as string}
+          paypalDetails={paypalDetails}
+          setPaypalDetails={setPaypalDetails}
+        />
+      )}
 
       <FormControl>
         <RadioGroup

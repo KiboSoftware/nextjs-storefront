@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useState, useEffect } from 'react'
 
 import getConfig from 'next/config'
 import { useRouter } from 'next/router'
@@ -22,6 +22,7 @@ import {
   useCreateCustomerCard,
   useCreateCustomerAddress,
 } from '@/hooks'
+import { useGetPayPalBearerToken } from '@/hooks'
 import { AccountType, AddressType } from '@/lib/constants'
 import { orderGetters } from '@/lib/getters'
 import { buildCreateCustomerCardParam, buildAddressParams } from '@/lib/helpers'
@@ -39,6 +40,14 @@ const StandardShipCheckoutTemplate = (props: StandardShipCheckoutProps) => {
   const router = useRouter()
   const [promoError, setPromoError] = useState<string>('')
   const { checkoutId } = router.query
+  const paypalBearerToken = useGetPayPalBearerToken()
+  const [paypalDetails, setPaypalDetails] = useState<
+    | undefined
+    | {
+        orderId: string
+        payerId: string
+      }
+  >()
 
   const { publicRuntimeConfig } = getConfig()
   const allowInvalidAddresses = publicRuntimeConfig.allowInvalidAddresses
@@ -205,6 +214,9 @@ const StandardShipCheckoutTemplate = (props: StandardShipCheckoutProps) => {
           onVoidPayment={handleVoidPayment}
           onAddPayment={handleAddPayment}
           isMultiShipEnabled={false}
+          paypalBearerToken={paypalBearerToken}
+          paypalDetails={paypalDetails}
+          setPaypalDetails={setPaypalDetails}
         />
         <ReviewStep
           checkout={order as CrOrder}

@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useState, useEffect } from 'react'
 
 import { useRouter } from 'next/router'
 
@@ -19,6 +19,7 @@ import {
   useAddCheckoutPayment,
   useCreateCheckout,
 } from '@/hooks'
+import { useGetPayPalBearerToken } from '@/hooks'
 import { FulfillmentOptions } from '@/lib/constants'
 import { checkoutGetters } from '@/lib/getters'
 import type { PersonalDetails } from '@/lib/types'
@@ -48,6 +49,14 @@ const MultiShipCheckoutTemplate = (props: MultiShipCheckoutProps) => {
   const checkoutId = router?.query?.checkoutId
   // States
   const [promoError, setPromoError] = useState<string>('')
+  const paypalBearerToken = useGetPayPalBearerToken()
+  const [paypalDetails, setPaypalDetails] = useState<
+    | undefined
+    | {
+        orderId: string
+        payerId: string
+      }
+  >()
 
   // Hooks
   const { data: checkout } = useGetCurrentCheckout({
@@ -207,6 +216,9 @@ const MultiShipCheckoutTemplate = (props: MultiShipCheckoutProps) => {
           isMultiShipEnabled={isMultiShipEnabled}
           onVoidPayment={handleVoidPayment}
           onAddPayment={handleAddPayment}
+          paypalBearerToken={paypalBearerToken}
+          paypalDetails={paypalDetails}
+          setPaypalDetails={setPaypalDetails}
         />
         <ReviewStep
           checkout={checkout as Checkout}

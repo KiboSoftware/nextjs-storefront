@@ -34,6 +34,7 @@ const handleCreateOrder = async () => undefined
 const handleUpdateCheckoutPersonalInfo = async () => undefined
 const handleVoidPayment = async () => undefined
 const handleAddPayment = async () => undefined
+const setPaypalDetails = () => undefined
 
 const Template: ComponentStory<typeof CheckoutUITemplate> = (args) => (
   <CheckoutStepProvider steps={['details', 'shipping', 'payment', 'review']} initialActiveStep={1}>
@@ -51,6 +52,9 @@ const Template: ComponentStory<typeof CheckoutUITemplate> = (args) => (
         checkout={orderMock.checkout}
         onVoidPayment={handleVoidPayment}
         onAddPayment={handleAddPayment}
+        paypalBearerToken=""
+        paypalDetails={{ orderId: '', payerId: '' }}
+        setPaypalDetails={setPaypalDetails}
       />
       <ReviewStep
         checkout={orderMock.checkout}
@@ -72,6 +76,7 @@ Common.args = {
 
 const handleUpdateCheckoutShippingMethod = async () => undefined
 const handleCreateCheckoutDestination = () => undefined
+
 const MultiShipTemplate: ComponentStory<typeof CheckoutUITemplate> = (args) => (
   <CheckoutStepProvider steps={['details', 'shipping', 'payment', 'review']} initialActiveStep={1}>
     <CheckoutUITemplate {...args}>
@@ -92,6 +97,9 @@ const MultiShipTemplate: ComponentStory<typeof CheckoutUITemplate> = (args) => (
         checkout={orderMock.checkout}
         onVoidPayment={handleVoidPayment}
         onAddPayment={handleAddPayment}
+        paypalBearerToken=""
+        paypalDetails={{ orderId: '', payerId: '' }}
+        setPaypalDetails={setPaypalDetails}
       />
       {/* <ReviewStep checkout={checkoutMock.checkout} onBackButtonClick={() => null} /> */}
     </CheckoutUITemplate>
