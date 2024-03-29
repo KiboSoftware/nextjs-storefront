@@ -76,11 +76,7 @@ const ProductDetailPage: NextPage<ProductPageType> = (props) => {
   const router = useRouter()
   const { isFallback } = router
 
-  const { data: productWithPreview } = useGetProduct(
-    product?.productCode as string,
-    isPreview,
-    product
-  )
+  const { data: productWithPreview } = useGetProduct(product?.productCode as string, isPreview)
 
   if (isFallback) {
     return <ProductDetailSkeleton />

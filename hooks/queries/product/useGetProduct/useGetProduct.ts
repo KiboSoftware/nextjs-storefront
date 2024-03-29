@@ -38,7 +38,7 @@ export const useGetProduct = (
   initialData?: any
 ): UseProductResponse => {
   const { data, isLoading, isSuccess, isFetching, isError } = useQuery({
-    queryKey: productKeys.productParams(productCode, false, isPreview),
+    queryKey: productKeys.productParams(productCode, false),
     queryFn: () => fetchProduct(productCode),
     enabled: !!productCode && isPreview,
     initialData,

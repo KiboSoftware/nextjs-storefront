@@ -119,7 +119,7 @@ const ProductDetailTemplate = (props: ProductDetailTemplateProps) => {
   } = props
   const { t } = useTranslation('common')
 
-  const isDigitalFulfillment = product.fulfillmentTypesSupported?.some(
+  const isDigitalFulfillment = product?.fulfillmentTypesSupported?.some(
     (type) => type === FulfillmentOptionsConstant.DIGITAL
   )
 
