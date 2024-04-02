@@ -1,7 +1,7 @@
 /**
  * @module useConfigureProduct
  */
-import { useMutation } from '@tanstack/react-query'
+import { useMutation, useQueryClient } from '@tanstack/react-query'
 
 import { makeGraphQLClient } from '@/lib/gql/client'
 import { configureProductMutation } from '@/lib/gql/mutations'
@@ -52,6 +52,8 @@ const configureProduct = async (configureProductDetails: ConfigureProductDetails
 
 export const useConfigureProduct = () => {
   return {
-    configureProduct: useMutation({ mutationFn: configureProduct }),
+    configureProduct: useMutation({
+      mutationFn: configureProduct,
+    }),
   }
 }

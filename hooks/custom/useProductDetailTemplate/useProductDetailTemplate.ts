@@ -3,7 +3,7 @@
  */
 import { useEffect, useState } from 'react'
 
-import { useConfigureProduct } from '@/hooks'
+import { useConfigureProduct, useGetProductPrice } from '@/hooks'
 import { productGetters } from '@/lib/getters'
 import type { LocationCustom, ProductCustom } from '@/lib/types'
 
@@ -45,9 +45,17 @@ export const useProductDetailTemplate = (props: UseProductDetailTemplateProps) =
     location: {},
   })
 
+  const [isSubscriptionPricingSelected, setIsSubscriptionPricingSelected] = useState<boolean>(false)
+
+  const { data: productPriceResponse, isLoading: isPriceLoading } = useGetProductPrice(
+    currentProduct?.productCode as string,
+    isSubscriptionPricingSelected,
+    quantity
+  )
+
   useEffect(() => {
-    setCurrentProduct(product)
-  }, [product?.productCode])
+    setCurrentProduct({ ...product, ...productPriceResponse })
+  }, [product?.productCode, productPriceResponse?.priceRange, productPriceResponse?.price])
 
   useEffect(() => {
     if (purchaseLocation?.name || selectedFulfillmentOption?.location?.name) {
@@ -172,7 +180,6 @@ export const useProductDetailTemplate = (props: UseProductDetailTemplateProps) =
       productCode,
       quantity: qty,
     })
-    console.log(price)
     setCurrentProduct({
       ...currentProduct,
       priceRange,
@@ -189,5 +196,7 @@ export const useProductDetailTemplate = (props: UseProductDetailTemplateProps) =
     selectProductOption,
     setSelectedFulfillmentOption,
     handleQuantity,
+    setIsSubscriptionPricingSelected,
+    isPriceLoading,
   }
 }

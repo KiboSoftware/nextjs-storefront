@@ -46,7 +46,6 @@ import {
   useWishlist,
   useGetProductInventory,
   usePriceRangeFormatter,
-  useGetProductPrice,
 } from '@/hooks'
 import { FulfillmentOptions as FulfillmentOptionsConstant, PurchaseTypes } from '@/lib/constants'
 import { productGetters, subscriptionGetters, wishlistGetters } from '@/lib/getters'
@@ -59,7 +58,6 @@ import type {
   ProductOption,
   ProductOptionValue,
   CrProduct,
-  ProductPrice,
 } from '@/lib/gql/types'
 
 interface ProductDetailTemplateProps {
@@ -127,7 +125,6 @@ const ProductDetailTemplate = (props: ProductDetailTemplateProps) => {
 
   const [purchaseType, setPurchaseType] = useState<string>(PurchaseTypes.ONETIMEPURCHASE)
   const [selectedFrequency, setSelectedFrequency] = useState<string>('')
-  const [isSubscriptionPricingSelected, setIsSubscriptionPricingSelected] = useState<boolean>(false)
 
   const isSubscriptionModeAvailable = subscriptionGetters.isSubscriptionModeAvailable(product)
   const isSubscriptionOnly = subscriptionGetters.isSubscriptionOnly(product)
@@ -143,19 +140,15 @@ const ProductDetailTemplate = (props: ProductDetailTemplateProps) => {
     quantity,
     updatedShopperEnteredValues,
     selectedFulfillmentOption,
+    isPriceLoading,
     selectProductOption,
     setSelectedFulfillmentOption,
     handleQuantity,
+    setIsSubscriptionPricingSelected,
   } = useProductDetailTemplate({
     product,
     purchaseLocation,
   })
-
-  const { data: productPriceResponse, isLoading: isPriceLoading } = useGetProductPrice(
-    product?.productCode as string,
-    isSubscriptionPricingSelected,
-    quantity
-  )
 
   // Getters
   const {
@@ -175,7 +168,6 @@ const ProductDetailTemplate = (props: ProductDetailTemplateProps) => {
     isValidForOneTime,
   } = productGetters.getProductDetails({
     ...currentProduct,
-    price: productPriceResponse?.price,
     fulfillmentMethod: isDigitalFulfillment
       ? FulfillmentOptionsConstant.DIGITAL
       : selectedFulfillmentOption?.method,

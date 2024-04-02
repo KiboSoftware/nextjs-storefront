@@ -1,7 +1,7 @@
 import { MenuItem } from '@mui/material'
 import { useTranslation } from 'next-i18next'
 
-import { KiboSelect } from '@/components/common'
+import { KiboSelect, Price } from '@/components/common'
 
 import type { Maybe, ProductOptionValue } from '@/lib/gql/types'
 
@@ -32,6 +32,15 @@ const ProductOptionSelect = (props: ProductOptionSelectProps) => {
     onDropdownChange,
   } = props
 
+  const getValueText = (optionVal: ProductOptionValue) => {
+    if (optionVal.deltaPrice)
+      return `${optionVal.stringValue || optionVal.value} (${t<string>('currency', {
+        val: optionVal.deltaPrice,
+      })})`
+
+    return optionVal.stringValue || optionVal.value
+  }
+
   return (
     <KiboSelect
       name={name as string}
@@ -43,8 +52,8 @@ const ProductOptionSelect = (props: ProductOptionSelectProps) => {
       placeholder={placeholder}
     >
       {optionValues.map((optionVal) => (
-        <MenuItem key={optionVal?.value} value={optionVal?.value}>
-          {optionVal.stringValue || optionVal.value}
+        <MenuItem key={optionVal?.value} value={optionVal?.value} disabled={!optionVal?.isEnabled}>
+          {getValueText(optionVal)}
         </MenuItem>
       ))}
     </KiboSelect>
