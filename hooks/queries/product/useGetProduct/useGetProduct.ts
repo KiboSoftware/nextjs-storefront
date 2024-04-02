@@ -32,12 +32,11 @@ const fetchProduct = async (productCode: string) => {
   return response?.product
 }
 
-export const useGetProduct = (productCode: string, initialData?: any): UseProductResponse => {
+export const useGetProduct = (query?: any): UseProductResponse => {
   const { data, isLoading, isSuccess, isFetching, isError } = useQuery({
-    queryKey: productKeys.productParams(productCode, false),
-    queryFn: () => fetchProduct(productCode),
-    enabled: !!productCode,
-    initialData,
+    queryKey: productKeys.productParams({ ...query }),
+    queryFn: () => fetchProduct(query?.productCode),
+    enabled: !!query?.productCode,
   })
 
   return { data, isLoading, isSuccess, isFetching, isError }

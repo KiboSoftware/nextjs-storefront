@@ -123,13 +123,11 @@ fragment productInfo on Product {
             value
           }
         }
-        ...productPrices
         ...productAttributes
         ...productContent
         ...productOptions
         ...productInventoryInfo
 }
-${productPrices}
 ${productAttributes}
 ${productContent}
 ${productOptions}

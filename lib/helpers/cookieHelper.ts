@@ -1,4 +1,4 @@
-import { getCookie, setCookie } from 'cookies-next'
+import { deleteCookie, getCookie, setCookie } from 'cookies-next'
 import getConfig from 'next/config'
 
 import type { UserAuthTicket } from '@kibocommerce/graphql-client'
@@ -38,6 +38,10 @@ export const setPurchaseLocationCookie = (cookieValue: string) => {
 
 export const setPreviewPriceListCookie = (cookieValue: string) => {
   setCookie('mz_pricelist', cookieValue)
+}
+
+export const deletePreviewPriceListCookie = () => {
+  deleteCookie('mz_pricelist')
 }
 
 export const setPreviewDateCookie = (cookieValue: any) => {

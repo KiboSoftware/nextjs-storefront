@@ -1,3 +1,5 @@
+import { useState } from 'react'
+
 import { getCookie } from 'cookies-next'
 import getConfig from 'next/config'
 import { useRouter } from 'next/router'
@@ -73,13 +75,15 @@ export async function getStaticPaths(): Promise<GetStaticPathsResult> {
 const ProductDetailPage: NextPage<ProductPageType> = (props) => {
   const { product } = props
   const router = useRouter()
-  const { isFallback } = router
 
-  const { data: productWithPreview } = useGetProduct(product?.productCode as string)
+  const { isFallback, query } = router
+
+  const { data: productWithPreview } = useGetProduct(query)
 
   if (isFallback) {
     return <ProductDetailSkeleton />
   }
+
   const breadcrumbs = product ? productGetters.getBreadcrumbs(product) : []
 
   return (

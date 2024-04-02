@@ -15,6 +15,7 @@ import {
   styled,
   Theme,
   MenuItem,
+  Skeleton,
 } from '@mui/material'
 import Link from 'next/link'
 import { useTranslation } from 'next-i18next'
@@ -26,6 +27,7 @@ import {
   Price,
   QuantitySelector,
 } from '@/components/common'
+import SkeletonWrapper from '@/components/common/SkeletonWrapper/SkeletonWrapper'
 import { KiboBreadcrumbs, ImageGallery } from '@/components/core'
 import { AddToCartDialog, StoreLocatorDialog } from '@/components/dialogs'
 import {
@@ -129,10 +131,6 @@ const ProductDetailTemplate = (props: ProductDetailTemplateProps) => {
 
   const isSubscriptionModeAvailable = subscriptionGetters.isSubscriptionModeAvailable(product)
   const isSubscriptionOnly = subscriptionGetters.isSubscriptionOnly(product)
-  const { data: productPriceResponse } = useGetProductPrice(
-    product?.productCode as string,
-    isSubscriptionPricingSelected
-  )
 
   const { showModal, closeModal } = useModalContext()
   const { addToCart } = useAddCartItem()
@@ -145,7 +143,6 @@ const ProductDetailTemplate = (props: ProductDetailTemplateProps) => {
     quantity,
     updatedShopperEnteredValues,
     selectedFulfillmentOption,
-    setQuantity,
     selectProductOption,
     setSelectedFulfillmentOption,
     handleQuantity,
@@ -153,6 +150,12 @@ const ProductDetailTemplate = (props: ProductDetailTemplateProps) => {
     product,
     purchaseLocation,
   })
+
+  const { data: productPriceResponse, isLoading } = useGetProductPrice(
+    product?.productCode as string,
+    isSubscriptionPricingSelected,
+    quantity
+  )
 
   // Getters
   const {
@@ -170,16 +173,14 @@ const ProductDetailTemplate = (props: ProductDetailTemplateProps) => {
     optionsVisibility,
     properties,
     isValidForOneTime,
-  } = productGetters.getProductDetails(
-    {
-      ...currentProduct,
-      fulfillmentMethod: isDigitalFulfillment
-        ? FulfillmentOptionsConstant.DIGITAL
-        : selectedFulfillmentOption?.method,
-      purchaseLocationCode: selectedFulfillmentOption?.location?.code as string,
-    },
-    productPriceResponse?.price as ProductPrice
-  )
+  } = productGetters.getProductDetails({
+    ...currentProduct,
+    price: productPriceResponse?.price,
+    fulfillmentMethod: isDigitalFulfillment
+      ? FulfillmentOptionsConstant.DIGITAL
+      : selectedFulfillmentOption?.method,
+    purchaseLocationCode: selectedFulfillmentOption?.location?.code as string,
+  })
   const { data: locationInventory } = useGetProductInventory(
     (variationProductCode || productCode) as string,
     selectedFulfillmentOption?.location?.code as string
@@ -393,13 +394,19 @@ const ProductDetailTemplate = (props: ProductDetailTemplateProps) => {
         <Typography variant="h1" gutterBottom>
           {productName}
         </Typography>
-        <Price
-          price={t<string>('currency', { val: productPrice.regular })}
-          {...(productPrice.special && {
-            salePrice: t<string>('currency', { val: productPrice.special }),
-          })}
-          priceRange={usePriceRangeFormatter(productPriceRange)}
-        />
+        <SkeletonWrapper
+          isLoading={isLoading}
+          skeletonProps={{ variant: 'text', width: 60, animation: 'wave' }}
+        >
+          <Price
+            price={t<string>('currency', { val: productPrice.regular })}
+            {...(productPrice.special && {
+              salePrice: t<string>('currency', { val: productPrice.special }),
+            })}
+            priceRange={usePriceRangeFormatter(productPriceRange)}
+          />
+        </SkeletonWrapper>
+
         <Box paddingY={1} display={shortDescription ? 'block' : 'none'}>
           <Box
             data-testid="short-description"

@@ -6,7 +6,7 @@ import { createQueryClientWrapper } from '@/__test__/utils/renderWithQueryClient
 
 describe('[hooks] useGetProductPrice', () => {
   it('should return product price', async () => {
-    const { result } = renderHook(() => useGetProductPrice('Bot-123', true), {
+    const { result } = renderHook(() => useGetProductPrice('Bot-123', true, 1), {
       wrapper: createQueryClientWrapper(),
     })
 

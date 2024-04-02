@@ -15,7 +15,7 @@ import {
 import { DateTimePicker, LocalizationProvider } from '@mui/x-date-pickers'
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs'
 import dayjs, { Dayjs } from 'dayjs'
-import router from 'next/router'
+import { useRouter } from 'next/router'
 
 import { KiboTextBox } from '@/components/common'
 import { useUpdateRoutes } from '@/hooks'
@@ -24,9 +24,11 @@ import {
   setPreviewPriceListCookie,
   getPreviewPriceListCookie,
   getPreviewDateCookie,
+  deletePreviewPriceListCookie,
 } from '@/lib/helpers'
 
 export default function Preview() {
+  const router = useRouter()
   const [open, setOpen] = useState(false)
   const [enteredPriceList, setEnteredPriceList] = useState<string>(
     getPreviewPriceListCookie() || ''
@@ -45,21 +47,25 @@ export default function Preview() {
   }
 
   const handleChange = () => {
-    setPreviewPriceListCookie(enteredPriceList)
-    setPreviewDateCookie(dayjs(selectedOrderDate))
+    enteredPriceList ? setPreviewPriceListCookie(enteredPriceList) : deletePreviewPriceListCookie()
+    selectedOrderDate && setPreviewDateCookie(dayjs(selectedOrderDate))
 
-    if (enteredPriceList && selectedOrderDate) {
-      const updatedQueryParams = {
-        ...router?.query,
+    // if (enteredPriceList && selectedOrderDate) {
+    const updatedQueryParams = {
+      ...router?.query,
+      ...(enteredPriceList && {
         mz_pricelist: enteredPriceList,
-        mz_now: selectedOrderDate?.format('YYYY-MM-DD') + 'T00:00:00Z',
-      }
-      changeQueryParam(updatedQueryParams)
+      }),
+      mz_now: selectedOrderDate?.format('YYYY-MM-DD') + 'T00:00:00Z',
     }
+    changeQueryParam(updatedQueryParams)
+    // }
   }
 
   const handleClosePreview = async () => {
     await fetch('/api/clear-preview-mode-cookies')
+
+    router.reload()
   }
 
   return (
@@ -119,13 +125,12 @@ export default function Preview() {
                   label={'Price List'}
                   value={enteredPriceList}
                   onChange={(_, value) => setEnteredPriceList(value)}
-                  onBlur={() => {
-                    handleChange()
-                  }}
                 />
               </Box>
               <Box display={'flex'} gap={3} alignItems={'center'}>
-                <Button variant="contained">Apply</Button>
+                <Button variant="contained" onClick={handleChange}>
+                  Apply
+                </Button>
                 <Button variant="contained" color="secondary" onClick={handleClosePreview}>
                   Close Preview
                 </Button>

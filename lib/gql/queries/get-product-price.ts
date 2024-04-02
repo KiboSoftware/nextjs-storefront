@@ -5,8 +5,12 @@ import { productPrices } from '../fragments'
 const getProductPriceQuery = /* GraphQL */ `
   ${productPrices}
 
-  query getProductPrice($productCode: String!, $useSubscriptionPricing: Boolean) {
-    product(productCode: $productCode, useSubscriptionPricing: $useSubscriptionPricing) {
+  query getProductPrice($productCode: String!, $useSubscriptionPricing: Boolean, $quantity: Int) {
+    product(
+      productCode: $productCode
+      useSubscriptionPricing: $useSubscriptionPricing
+      quantity: $quantity
+    ) {
       ...productPrices
     }
   }

@@ -16,7 +16,7 @@ const nonFilters = ['page', 'sort', 'search', 'itemsPerPage']
 export const useUpdateRoutes = () => {
   const router = useRouter()
 
-  const reduceFilters = (query: Record<string, string>) => (prev: {}, curr: string) => {
+  const reduceFilters = (query: Record<string, string>) => (prev: any, curr: string) => {
     const makeArray = Array.isArray(query[curr]) || nonFilters.includes(curr)
     return {
       ...prev,

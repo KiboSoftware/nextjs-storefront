@@ -18,12 +18,18 @@ export interface useProductPriceResponse {
   isFetching: boolean
 }
 
-const fetchProductPrice = async (productCode: string, useSubscriptionPricing?: boolean) => {
+const fetchProductPrice = async (
+  productCode: string,
+  useSubscriptionPricing: boolean,
+  quantity: number
+) => {
   const client = makeGraphQLClient()
   const response = await client.request({
     document: getProductPriceQuery,
-    variables: { productCode, useSubscriptionPricing },
+    variables: { productCode, useSubscriptionPricing, quantity: quantity },
   })
+
+  console.log('response', response)
 
   return response.product
 }
@@ -33,26 +39,29 @@ const fetchProductPrice = async (productCode: string, useSubscriptionPricing?: b
  *
  * Description : Fetches the price details based on product code and useSubscriptionPricing.
  *
- * Parameters passed to function fetchProductPrice( productCode: String, useSubscriptionPricing: Boolean)
+ * Parameters passed to function fetchProductPrice( productCode: string, useSubscriptionPricing: boolean, quantity: number)
  *
  * On success, returns the product list with 'refetchOnWindowFocus' set to false for this react query
  *
  * @param productCode unique product code for which inventory needed to be fetched
  * @param useSubscriptionPricing used to check if the product has subscription price or not
+ * @param quantity selected quantity of product
  *
  * @returns 'response?.product', which contains list of product price.
  */
 
 export const useGetProductPrice = (
   productCode: string,
-  useSubscriptionPricing: boolean
+  useSubscriptionPricing: boolean,
+  quantity: number
 ): useProductPriceResponse => {
   const { data, isLoading, isSuccess, isFetching } = useQuery({
-    queryKey: productKeys.productParams(productCode, useSubscriptionPricing),
-    queryFn: () => fetchProductPrice(productCode, useSubscriptionPricing),
-    enabled: !!productCode && useSubscriptionPricing,
-    refetchOnWindowFocus: true,
+    queryKey: productKeys.productPriceParams(productCode, useSubscriptionPricing, quantity),
+    queryFn: () => fetchProductPrice(productCode, useSubscriptionPricing, quantity),
+    enabled: !!productCode,
   })
+
+  console.log('data', data)
 
   return { data, isLoading, isSuccess, isFetching }
 }
