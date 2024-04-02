@@ -29,8 +29,6 @@ const fetchProductPrice = async (
     variables: { productCode, useSubscriptionPricing, quantity: quantity },
   })
 
-  console.log('response', response)
-
   return response.product
 }
 
@@ -60,8 +58,6 @@ export const useGetProductPrice = (
     queryFn: () => fetchProductPrice(productCode, useSubscriptionPricing, quantity),
     enabled: !!productCode,
   })
-
-  console.log('data', data)
 
   return { data, isLoading, isSuccess, isFetching }
 }

@@ -14,7 +14,8 @@ const LoginDialogMock = () => <div data-testid="loginDialog-mock" />
 jest.mock('@/components/layout/Login/LoginDialog/LoginDialog.tsx', () => () => LoginDialogMock())
 
 jest.mock('@/lib/helpers/cookieHelper', () => ({
-  decodeParseCookieValue: jest.fn(() => 'kibo_at'),
+  decodeParseCookieValue: jest.fn(() => 'authTicket'),
+  getAuthCookieName: jest.fn(() => 'kibo_at'),
 }))
 
 let mockIsAuthenticated = true

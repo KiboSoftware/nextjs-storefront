@@ -21,11 +21,15 @@ jest.mock('@/hooks', () => ({
       isSuccess: true,
     },
   }),
+  useGetProductPrice: jest.fn(() => ({
+    data: { price: { price: 100, salePrice: null }, priceRange: null },
+    isLoading: false,
+  })),
 }))
 
 const setup = () => {
   const product = ProductCustomMock
-  const { result } = renderHook(() => useProductDetailTemplate({ product }))
+  const { result } = renderHook(() => useProductDetailTemplate({ product, purchaseLocation: {} }))
 
   return {
     result,
@@ -37,7 +41,10 @@ describe('[component] Product Detail Template data: useProductDetailTemplate', (
   it('should return currentProduct', () => {
     const { result, product } = setup()
 
-    expect(result.current.currentProduct).toStrictEqual(product)
+    expect(result.current.currentProduct).toStrictEqual({
+      ...product,
+      price: { price: 100, salePrice: null },
+    })
   })
 
   // it('should run selectProductOption function successfully and return configured product details', async () => {
@@ -70,9 +77,9 @@ describe('[component] Product Detail Template data: useProductDetailTemplate', (
     const { result } = setup()
 
     act(() => {
-      result.current.setQuantity('3')
+      result.current.setQuantity(3)
     })
 
-    expect(result.current.quantity).toBe('3')
+    expect(result.current.quantity).toBe(3)
   })
 })

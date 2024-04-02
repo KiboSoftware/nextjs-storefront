@@ -54,8 +54,18 @@ export const useProductDetailTemplate = (props: UseProductDetailTemplateProps) =
   )
 
   useEffect(() => {
-    setCurrentProduct({ ...product, ...productPriceResponse })
-  }, [product?.productCode, productPriceResponse?.priceRange, productPriceResponse?.price])
+    setCurrentProduct(product)
+  }, [])
+
+  useEffect(() => {
+    if (
+      JSON.stringify(currentProduct?.price) !== JSON.stringify(productPriceResponse?.price) ||
+      JSON.stringify(currentProduct?.priceRange) !==
+        JSON.stringify(productPriceResponse?.priceRange)
+    ) {
+      setCurrentProduct({ ...currentProduct, ...productPriceResponse })
+    }
+  }, [productPriceResponse])
 
   useEffect(() => {
     if (purchaseLocation?.name || selectedFulfillmentOption?.location?.name) {
