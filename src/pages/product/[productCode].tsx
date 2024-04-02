@@ -89,6 +89,7 @@ const ProductDetailPage: NextPage<ProductPageType> = (props) => {
   return (
     <>
       <ProductDetailTemplate
+        key={productWithPreview?.productCode}
         product={productWithPreview as ProductCustom}
         breadcrumbs={breadcrumbs}
       />

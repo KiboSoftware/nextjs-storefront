@@ -15,7 +15,6 @@ import {
   styled,
   Theme,
   MenuItem,
-  Skeleton,
 } from '@mui/material'
 import Link from 'next/link'
 import { useTranslation } from 'next-i18next'
@@ -104,6 +103,7 @@ const StyledLink = styled(Link)(({ theme }: { theme: Theme }) => ({
 }))
 
 const ProductDetailTemplate = (props: ProductDetailTemplateProps) => {
+  console.log('template rendered')
   const { getProductLink } = uiHelpers()
   const {
     product,
@@ -151,7 +151,7 @@ const ProductDetailTemplate = (props: ProductDetailTemplateProps) => {
     purchaseLocation,
   })
 
-  const { data: productPriceResponse, isLoading } = useGetProductPrice(
+  const { data: productPriceResponse, isLoading: isPriceLoading } = useGetProductPrice(
     product?.productCode as string,
     isSubscriptionPricingSelected,
     quantity
@@ -391,11 +391,16 @@ const ProductDetailTemplate = (props: ProductDetailTemplateProps) => {
         <ImageGallery images={productGallery as ProductImage[]} title={''} />
       </Grid>
       <Grid item xs={12} md={6} sx={{ width: '100%', pl: { xs: 0, md: 5 } }}>
-        <Typography variant="h1" gutterBottom>
-          {productName}
-        </Typography>
         <SkeletonWrapper
-          isLoading={isLoading}
+          isLoading={!productName}
+          skeletonProps={{ variant: 'text', width: 150, height: 40, animation: 'wave' }}
+        >
+          <Typography variant="h1" gutterBottom>
+            {productName}
+          </Typography>
+        </SkeletonWrapper>
+        <SkeletonWrapper
+          isLoading={isPriceLoading || !productPrice}
           skeletonProps={{ variant: 'text', width: 60, animation: 'wave' }}
         >
           <Price

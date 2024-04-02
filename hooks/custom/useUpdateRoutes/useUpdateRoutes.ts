@@ -60,8 +60,8 @@ export const useUpdateRoutes = () => {
     }
   }
 
-  const changeQueryParam = (queryParams: any) => {
-    router.push(
+  const changeQueryParam = async (queryParams: any) => {
+    await router.push(
       {
         pathname: router?.pathname,
         query: queryParams,

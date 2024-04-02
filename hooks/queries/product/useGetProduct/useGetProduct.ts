@@ -7,11 +7,13 @@ import { makeGraphQLClient } from '@/lib/gql/client'
 import { getProductQuery } from '@/lib/gql/queries'
 import { productKeys } from '@/lib/react-query/queryKeys'
 
+import { Product } from '@/lib/gql/types'
+
 /**
  * @hidden
  */
 export interface UseProductResponse {
-  data: any
+  data: Product
   isLoading: boolean
   isSuccess: boolean
   isFetching: boolean

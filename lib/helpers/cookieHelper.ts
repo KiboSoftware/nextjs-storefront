@@ -48,6 +48,10 @@ export const setPreviewDateCookie = (cookieValue: any) => {
   setCookie('mz_now', cookieValue)
 }
 
+export const deletePreviewDateCookie = () => {
+  deleteCookie('mz_now')
+}
+
 export const getPreviewPriceListCookie = () => {
   return getCookie('mz_pricelist') as string
 }
