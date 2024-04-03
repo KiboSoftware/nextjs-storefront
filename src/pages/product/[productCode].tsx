@@ -1,6 +1,3 @@
-import { useState } from 'react'
-
-import { getCookie } from 'cookies-next'
 import getConfig from 'next/config'
 import { useRouter } from 'next/router'
 import { serverSideTranslations } from 'next-i18next/serverSideTranslations'

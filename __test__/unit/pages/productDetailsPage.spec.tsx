@@ -1,14 +1,12 @@
 import '@testing-library/jest-dom'
-import { render, screen } from '@testing-library/react'
+import { screen } from '@testing-library/react'
 import { NextApiRequest } from 'next'
 
 import { categoryTreeDataMock, productSearchResultMock } from '@/__mocks__/stories'
-import ProductDetailPage, {
-  getStaticPaths,
-  getStaticProps,
-} from '@/src/pages/product/[productCode]'
+import ProductDetailPage from '@/src/pages/product/[productCode]'
 
 import { Product } from '@/lib/gql/types'
+import { renderWithQueryClient } from '@/__test__/utils'
 
 const mockCategoryTreeData = categoryTreeDataMock
 const mockProduct = productSearchResultMock.items?.[0]
@@ -137,7 +135,7 @@ describe('[page] Product Details Page', () => {
 
   it('should render the Fallback page if isFallback is true', () => {
     isFallback = true
-    render(<ProductDetailPage product={undefined} />)
+    renderWithQueryClient(<ProductDetailPage product={undefined} />)
 
     expect(screen.getByTestId(/productDetailSkeleton-mock/)).toBeVisible()
   })
@@ -145,7 +143,7 @@ describe('[page] Product Details Page', () => {
   it('should render the ProductDetail page template if isFallback is false', () => {
     isFallback = false
     ProductDetailPage.defaultProps = { product: mockProduct as Product }
-    render(<ProductDetailPage />)
+    renderWithQueryClient(<ProductDetailPage />)
 
     const productDetailTemplate = screen.getByTestId('productDetailTemplate-mock')
     expect(productDetailTemplate).toBeVisible()

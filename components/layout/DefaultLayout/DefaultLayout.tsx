@@ -16,7 +16,6 @@ import {
   HeaderContextProvider,
   SnackbarRoot,
 } from '@/context'
-import { getPreviewPriceListCookie } from '@/lib/helpers'
 import theme from '@/styles/theme'
 
 creditCardType.updateCard('mastercard', {
@@ -29,7 +28,7 @@ creditCardType.updateCard('american-express', {
 
 const DefaultLayout = ({ pageProps, children }: { pageProps: any; children: ReactElement }) => {
   const router = useRouter()
-  console.log('getPreviewPriceListCookie() layout', getPreviewPriceListCookie())
+
   useEffect(() => {
     const handleRouteChange = (url: any) => {
       const isMyAccountPage = url.includes('/my-account')
