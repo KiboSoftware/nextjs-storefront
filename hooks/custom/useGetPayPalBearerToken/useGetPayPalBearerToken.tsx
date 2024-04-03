@@ -8,7 +8,7 @@ export const useGetPayPalBearerToken = () => {
       try {
         const url = `${
           process.env.NEXT_PUBLIC_URL ? process.env.NEXT_PUBLIC_URL : ''
-        }/api/paypal-token`
+        }/api/paypal-bearer-token`
 
         const response = await fetch(url)
         const data = await response.json()

@@ -764,7 +764,12 @@ const PaymentStep = (props: PaymentStepProps) => {
       if (reCaptchaKey) {
         submitFormWithRecaptcha()
       } else {
-        handlePayment()
+        if (checkoutPaymentType === PaymentType.PAYPALEXPRESS2) {
+          setStepStatusComplete()
+          setStepNext()
+        } else {
+          handlePayment()
+        }
       }
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -793,9 +798,9 @@ const PaymentStep = (props: PaymentStepProps) => {
           paypalBearerToken={paypalBearerToken as string}
           paypalDetails={paypalDetails}
           setPaypalDetails={setPaypalDetails}
+          checkoutPaymentType={checkoutPaymentType as PaymentType}
         />
       )}
-
       <FormControl>
         <RadioGroup
           aria-labelledby="payment-types-radio"

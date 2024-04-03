@@ -366,7 +366,18 @@ const getShippingMethodCode = (checkout: CrOrder): string =>
 
 const getLocationCode = (order: CrOrder) => order?.locationCode
 
+const isPayPalPaymentMethodActive = (order: CrOrder) => {
+  if (!order) return false
+
+  const activePayment = getSelectedPaymentType(order)
+  if (!activePayment) return false
+
+  const { id, paymentType, status } = activePayment
+  return id && paymentType === PaymentType.PAYPALEXPRESS2 && status === 'New'
+}
+
 export const orderGetters = {
+  isPayPalPaymentMethodActive,
   getCheckoutItemCount,
   getSubmittedDate,
   getProductNames,
