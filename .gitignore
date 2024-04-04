@@ -48,3 +48,8 @@ test-report.xml
 /test-results/
 /playwright-report/
 /playwright/.cache/
+
+# sitemap
+robots.txt
+sitemap*.xml
+
