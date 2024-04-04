@@ -178,6 +178,7 @@ module.exports = {
     ],
   },
   serverRuntimeConfig: {
+    userCookieKey: process.env.KIBO_USER_COOKIE_KEY || 'kibo_at',
     currentUrl: process.env.CURRENT_DOMAIN,
     revalidate: process.env.GLOBAL_PAGE_REVALIDATE || 30,
     pageSize: 1000,
