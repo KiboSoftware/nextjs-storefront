@@ -21,9 +21,11 @@ import { useReCaptcha } from 'next-recaptcha-v3'
 import { Controller, useForm } from 'react-hook-form'
 import * as yup from 'yup'
 
+import PayPalButton from './PayPalButton'
 import { CardDetailsForm, PurchaseOrderForm } from '@/components/checkout'
 import { AddressForm, KiboTextBox, KiboRadio, PaymentBillingCard } from '@/components/common'
 import { useCheckoutStepContext, STEP_STATUS, useAuthContext, useSnackbarContext } from '@/context'
+import { usePayPalBearerToken } from '@/hooks'
 import { usePaymentTypes, useValidateCustomerAddress } from '@/hooks'
 import { CountryCode, CurrencyCode, PaymentType, PaymentWorkflow } from '@/lib/constants'
 import { addressGetters, cardGetters, orderGetters, userGetters } from '@/lib/getters'
@@ -159,6 +161,7 @@ const PaymentStep = (props: PaymentStepProps) => {
   const { loadPaymentTypes } = usePaymentTypes()
   const paymentTypes = loadPaymentTypes()
   const { validateCustomerAddress } = useValidateCustomerAddress()
+  const paypalBearerToken = usePayPalBearerToken()
 
   const newPaymentTypes = paymentTypes
     .map((paymentType: any) =>
@@ -757,7 +760,12 @@ const PaymentStep = (props: PaymentStepProps) => {
       if (reCaptchaKey) {
         submitFormWithRecaptcha()
       } else {
-        handlePayment()
+        if (checkoutPaymentType === PaymentType.PAYPALEXPRESS2) {
+          setStepStatusComplete()
+          setStepNext()
+        } else {
+          handlePayment()
+        }
       }
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -776,6 +784,16 @@ const PaymentStep = (props: PaymentStepProps) => {
       <Typography variant="h2" sx={{ paddingBottom: '1.625rem' }}>
         {t('payment-method')}
       </Typography>
+
+      {paypalBearerToken && (
+        <PayPalButton
+          checkout={checkout as CrOrder}
+          setSelectedPaymentTypeRadio={setSelectedPaymentTypeRadio}
+          onAddPayment={onAddPayment}
+          onVoidPayment={onVoidPayment}
+          paypalBearerToken={paypalBearerToken as string}
+        />
+      )}
 
       <FormControl>
         <RadioGroup
