@@ -7,7 +7,12 @@ import { useConfigureProduct, useGetProductPrice } from '@/hooks'
 import { productGetters } from '@/lib/getters'
 import type { LocationCustom, ProductCustom } from '@/lib/types'
 
-import type { ConfiguredProduct, Location, ProductOptionSelectionInput } from '@/lib/gql/types'
+import type {
+  ConfiguredProduct,
+  Location,
+  ProductOption,
+  ProductOptionSelectionInput,
+} from '@/lib/gql/types'
 
 interface UseProductDetailTemplateProps {
   product: ProductCustom
@@ -49,23 +54,14 @@ export const useProductDetailTemplate = (props: UseProductDetailTemplateProps) =
 
   const { data: productPriceResponse, isLoading: isPriceLoading } = useGetProductPrice(
     currentProduct?.productCode as string,
-    isSubscriptionPricingSelected,
-    quantity
+    isSubscriptionPricingSelected
   )
 
   useEffect(() => {
-    setCurrentProduct(product)
-  }, [])
-
-  useEffect(() => {
-    if (
-      JSON.stringify(currentProduct?.price) !== JSON.stringify(productPriceResponse?.price) ||
-      JSON.stringify(currentProduct?.priceRange) !==
-        JSON.stringify(productPriceResponse?.priceRange)
-    ) {
-      setCurrentProduct({ ...currentProduct, ...productPriceResponse })
-    }
-  }, [productPriceResponse])
+    console.log('product=============', product)
+    console.log('productPriceResponse=============', productPriceResponse)
+    setCurrentProduct({ ...product, ...productPriceResponse })
+  }, [product, productPriceResponse])
 
   useEffect(() => {
     if (purchaseLocation?.name || selectedFulfillmentOption?.location?.name) {
@@ -186,14 +182,44 @@ export const useProductDetailTemplate = (props: UseProductDetailTemplateProps) =
 
   const handleQuantity = async (qty: number) => {
     setQuantity(qty)
-    const { priceRange, price }: ConfiguredProduct = await configureProduct.mutateAsync({
+    const {
+      options,
+      variationProductCode,
+      purchasableState,
+      productImages,
+      inventoryInfo,
+      priceRange,
+      price,
+    }: ConfiguredProduct = await configureProduct.mutateAsync({
       productCode,
       quantity: qty,
+      updatedOptions: currentProduct.options
+        ?.filter((option) => {
+          return option?.values?.find((value) => {
+            return value?.isSelected
+          })
+        })
+        .map((each) => {
+          const selected = each?.values?.find((value) => value?.isSelected)
+          return {
+            attributeFQN: each?.attributeFQN,
+            shopperEnteredValue: selected?.shopperEnteredValue,
+            value: selected?.value,
+          }
+        }) as ProductOption[],
     })
     setCurrentProduct({
       ...currentProduct,
       priceRange,
       price,
+      variationProductCode: variationProductCode,
+      options: options,
+      purchasableState: purchasableState,
+      inventoryInfo,
+      content: {
+        ...currentProduct.content,
+        productImages: productImages,
+      },
     })
   }
 

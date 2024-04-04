@@ -6,14 +6,13 @@ import { useQuery } from '@tanstack/react-query'
 import { makeGraphQLClient } from '@/lib/gql/client'
 import { getProductQuery } from '@/lib/gql/queries'
 import { productKeys } from '@/lib/react-query/queryKeys'
-
-import { Product } from '@/lib/gql/types'
+import { ProductCustom } from '@/lib/types'
 
 /**
  * @hidden
  */
 export interface UseProductResponse {
-  data: Product
+  data: ProductCustom
   isLoading: boolean
   isSuccess: boolean
   isFetching: boolean

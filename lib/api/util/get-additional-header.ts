@@ -9,24 +9,12 @@ const getAdditionalHeader = (req: NextApiRequest, userClaims?: string) => {
     return {}
   }
 
-  // const noUserClaimsRequired =
-  //   req?.body?.operationName === 'getUser' &&
-  //   req?.body?.operationName === 'getCurrentCart' &&
-  //   req?.body?.operationName === 'cart' &&
-  //   req?.body?.operationName === 'addToCart'
-
   if (req.preview === true) {
     headers = {
       ...headers,
-      // ...(noUserClaimsRequired && {
       'X-Vol-Preview-Date': mz_now,
       'X-Vol-PriceList': mz_pricelist,
-      // ...(noUserClaimsRequired && {
       'X-Vol-Dataview-Mode': 'Pending',
-      // }),
-
-      // 'cookie': `sb-sf-at-prod=at=${userClaims}`,
-      // }),
     }
   }
 

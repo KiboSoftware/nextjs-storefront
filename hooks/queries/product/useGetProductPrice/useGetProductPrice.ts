@@ -18,15 +18,11 @@ export interface useProductPriceResponse {
   isFetching: boolean
 }
 
-const fetchProductPrice = async (
-  productCode: string,
-  useSubscriptionPricing: boolean,
-  quantity: number
-) => {
+const fetchProductPrice = async (productCode: string, useSubscriptionPricing: boolean) => {
   const client = makeGraphQLClient()
   const response = await client.request({
     document: getProductPriceQuery,
-    variables: { productCode, useSubscriptionPricing, quantity: quantity },
+    variables: { productCode, useSubscriptionPricing },
   })
 
   return response.product
@@ -50,12 +46,11 @@ const fetchProductPrice = async (
 
 export const useGetProductPrice = (
   productCode: string,
-  useSubscriptionPricing: boolean,
-  quantity: number
+  useSubscriptionPricing: boolean
 ): useProductPriceResponse => {
   const { data, isLoading, isSuccess, isFetching } = useQuery({
-    queryKey: productKeys.productPriceParams(productCode, useSubscriptionPricing, quantity),
-    queryFn: () => fetchProductPrice(productCode, useSubscriptionPricing, quantity),
+    queryKey: productKeys.productPriceParams(productCode, useSubscriptionPricing),
+    queryFn: () => fetchProductPrice(productCode, useSubscriptionPricing),
     enabled: !!productCode,
   })
 

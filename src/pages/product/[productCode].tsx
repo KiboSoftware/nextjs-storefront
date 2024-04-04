@@ -75,7 +75,7 @@ const ProductDetailPage: NextPage<ProductPageType> = (props) => {
 
   const { isFallback, query } = router
 
-  const { data: productWithPreview } = useGetProduct(query)
+  const { data: productResponse } = useGetProduct(query)
 
   if (isFallback) {
     return <ProductDetailSkeleton />
@@ -86,8 +86,8 @@ const ProductDetailPage: NextPage<ProductPageType> = (props) => {
   return (
     <>
       <ProductDetailTemplate
-        key={productWithPreview?.productCode}
-        product={productWithPreview as ProductCustom}
+        key={productResponse?.productCode}
+        product={{ ...product, ...productResponse }}
         breadcrumbs={breadcrumbs}
       />
     </>

@@ -101,7 +101,6 @@ const StyledLink = styled(Link)(({ theme }: { theme: Theme }) => ({
 }))
 
 const ProductDetailTemplate = (props: ProductDetailTemplateProps) => {
-  console.log('template rendered')
   const { getProductLink } = uiHelpers()
   const {
     product,

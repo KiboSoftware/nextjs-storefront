@@ -19,14 +19,7 @@ import { useRouter } from 'next/router'
 
 import { KiboTextBox } from '@/components/common'
 import { useUpdateRoutes } from '@/hooks'
-import {
-  setPreviewDateCookie,
-  setPreviewPriceListCookie,
-  getPreviewPriceListCookie,
-  getPreviewDateCookie,
-  deletePreviewPriceListCookie,
-  deletePreviewDateCookie,
-} from '@/lib/helpers'
+import { getPreviewDateCookie } from '@/lib/helpers'
 
 export default function Preview() {
   const router = useRouter()
@@ -34,9 +27,7 @@ export default function Preview() {
     ...router?.query,
   }
   const [open, setOpen] = useState(false)
-  const [enteredPriceList, setEnteredPriceList] = useState<string>(
-    getPreviewPriceListCookie() || ''
-  )
+  const [enteredPriceList, setEnteredPriceList] = useState<string>('')
   const [selectedOrderDate, setSelectedOrderDate] = useState<Dayjs | null>(
     dayjs(getPreviewDateCookie()) || dayjs(Date.now())
   )
@@ -50,39 +41,49 @@ export default function Preview() {
     setOpen(false)
   }
 
-  const handleChange = () => {
+  const handleChange = async () => {
     if (enteredPriceList) {
       updatedQueryParams['mz_pricelist'] = enteredPriceList
-      setPreviewPriceListCookie(enteredPriceList)
+      await fetch(`/api/set-preview-cookie?mz_pricelist=${enteredPriceList}`)
     }
 
     if (!enteredPriceList) {
       delete updatedQueryParams['mz_pricelist']
-      deletePreviewPriceListCookie()
+      await fetch(`/api/delete-preview-cookie?name=mz_pricelist`)
     }
 
     if (selectedOrderDate) {
       updatedQueryParams['mz_now'] = selectedOrderDate?.format('YYYY-MM-DD') + 'T00:00:00Z'
-      setPreviewDateCookie(dayjs(selectedOrderDate))
+      await fetch(`/api/set-preview-cookie?mz_now=${selectedOrderDate}`)
     }
 
     if (!selectedOrderDate) {
       delete updatedQueryParams['mz_now']
-      deletePreviewDateCookie()
+      await fetch(`/api/delete-preview-cookie?name=mz_now`)
     }
 
     changeQueryParam(updatedQueryParams)
   }
 
   const handleClosePreview = async () => {
-    deletePreviewPriceListCookie()
-    deletePreviewDateCookie()
     await fetch('/api/clear-preview-mode-cookies')
+
     delete updatedQueryParams['mz_pricelist']
     delete updatedQueryParams['mz_now']
     await changeQueryParam(updatedQueryParams)
     router.reload()
   }
+
+  React.useEffect(() => {
+    fetch('/api/get-preview-cookies')
+      .then((res) => res.json())
+      .then((data) => {
+        if (data) {
+          data?.mz_pricelist && setEnteredPriceList(data.mz_pricelist)
+          data?.mz_now && setSelectedOrderDate(dayjs(data.mz_now))
+        }
+      })
+  }, [])
 
   return (
     <ClickAwayListener onClickAway={handleClickAway}>

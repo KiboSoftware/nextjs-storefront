@@ -1,7 +1,4 @@
-import { NextApiRequest, NextApiResponse } from 'next'
+import { clearPreviewModeHandler } from '@/lib/api/handlers'
+import withLogger from '@/lib/api/util/with-logger'
 
-export default function handler(req: NextApiRequest, res: NextApiResponse) {
-  res.clearPreviewData({})
-
-  res.end()
-}
+export default withLogger(clearPreviewModeHandler as any)

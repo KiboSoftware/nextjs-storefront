@@ -36,22 +36,6 @@ export const setPurchaseLocationCookie = (cookieValue: string) => {
   setCookie(purchaseLocationCookieName, prepareSetCookieValue(cookieValue))
 }
 
-export const setPreviewPriceListCookie = (cookieValue: string) => {
-  setCookie('mz_pricelist', cookieValue)
-}
-
-export const deletePreviewPriceListCookie = () => {
-  deleteCookie('mz_pricelist')
-}
-
-export const setPreviewDateCookie = (cookieValue: any) => {
-  setCookie('mz_now', cookieValue)
-}
-
-export const deletePreviewDateCookie = () => {
-  deleteCookie('mz_now')
-}
-
 export const getPreviewPriceListCookie = () => {
   return getCookie('mz_pricelist') as string
 }
@@ -61,6 +45,6 @@ export const getPreviewDateCookie = () => {
 }
 
 export const getAuthCookieName = () => {
-  const authCookieName = config?.publicRuntimeConfig.userCookieKey.toLowerCase()
+  const authCookieName = config?.serverRuntimeConfig.userCookieKey.toLowerCase()
   return authCookieName
 }

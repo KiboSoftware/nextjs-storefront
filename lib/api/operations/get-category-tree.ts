@@ -1,4 +1,4 @@
-import { NextApiRequest, PreviewData } from 'next'
+import { NextApiRequest } from 'next'
 import getConfig from 'next/config'
 
 import { getAdditionalHeader } from '../util'
