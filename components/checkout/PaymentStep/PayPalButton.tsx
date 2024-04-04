@@ -79,8 +79,8 @@ const PayPalButton = (props: PayPalButtonProps) => {
   const address = {
     address_line_1: checkout?.fulfillmentInfo?.fulfillmentContact?.address?.address1,
     address_line_2: checkout?.fulfillmentInfo?.fulfillmentContact?.address?.address2,
-    admin_area_2: checkout?.fulfillmentInfo?.fulfillmentContact?.address?.addressType,
     admin_area_1: checkout?.fulfillmentInfo?.fulfillmentContact?.address?.cityOrTown,
+    admin_area_2: checkout?.fulfillmentInfo?.fulfillmentContact?.address?.stateOrProvince,
     postal_code: checkout?.fulfillmentInfo?.fulfillmentContact?.address?.postalOrZipCode,
     country_code: checkout?.fulfillmentInfo?.fulfillmentContact?.address?.countryCode,
   }
