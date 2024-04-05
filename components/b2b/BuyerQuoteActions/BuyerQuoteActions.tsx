@@ -77,7 +77,7 @@ export default function BuyerQuoteActions({
               {t('print-quote')}
             </LoadingButton>
           </Box>
-          {mode === 'edit' && (
+          {(mode === 'create' || mode === 'edit') && (
             <Box>
               <LoadingButton
                 variant="contained"
