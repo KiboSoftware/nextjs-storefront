@@ -1,7 +1,13 @@
 import getPaypalCheckoutSettings from './get-paypal-checkout-settings'
 
+let bearerToken: undefined | string
+
 const getPaypalBearerToken = async () => {
   try {
+    if (bearerToken) {
+      return bearerToken
+    }
+
     const checkoutSettings = await getPaypalCheckoutSettings()
     const PAYPAL_CLIENT_ID = checkoutSettings?.userName
     const PAYPAL_CLIENT_SECRET = checkoutSettings?.password
@@ -18,7 +24,9 @@ const getPaypalBearerToken = async () => {
     })
 
     const data = await response.json()
-    return data.access_token
+    bearerToken = data.access_token
+
+    return bearerToken
   } catch (error: any) {
     throw error
   }

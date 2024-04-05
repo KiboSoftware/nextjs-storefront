@@ -2,7 +2,6 @@ import React, { useEffect, useState } from 'react'
 
 import { Button } from '@mui/material'
 import { PayPalScriptProvider, PayPalButtons } from '@paypal/react-paypal-js'
-import { v4 as uuidv4 } from 'uuid'
 
 import { useCheckoutStepContext } from '@/context'
 import { CurrencyCode, PaymentType } from '@/lib/constants'
@@ -66,21 +65,20 @@ const PayPalButton = (props: PayPalButtonProps) => {
 
   const [isScriptLoaded, setIsScriptLoaded] = useState(true)
   const { setStepStatusValid, setStepStatusIncomplete } = useCheckoutStepContext()
-  const paypalRequestId = uuidv4()
   const currency = process.env.NEXT_PUBLIC_PAYPAL_CURRENCY || 'USD'
 
-  const paypalUrl = process.env.NEXT_PUBLIC_PAYPAL_URL || 'https://api-m.sandbox.paypal.com'
-  const returnUrl = `${process.env.NEXT_PUBLIC_URL}/checkout/${checkout.id}?step=payment`
-  const cancelUrl = `${process.env.NEXT_PUBLIC_URL}/checkout/${checkout.id}?step=payment`
+  const url = process.env.NEXT_PUBLIC_URL || ''
+  const returnUrl = `${url}/checkout/${checkout.id}`
+  const cancelUrl = `${url}/checkout/${checkout.id}`
 
   const activePaymentId = orderGetters.getSelectedPaymentType(checkout)?.id as string
   const isPayPalPaymentMethodAdded = orderGetters.isPayPalPaymentMethodActive(checkout)
 
   const address = {
-    address_line_1: checkout?.fulfillmentInfo?.fulfillmentContact?.address?.address1,
-    address_line_2: checkout?.fulfillmentInfo?.fulfillmentContact?.address?.address2,
-    admin_area_1: checkout?.fulfillmentInfo?.fulfillmentContact?.address?.cityOrTown,
-    admin_area_2: checkout?.fulfillmentInfo?.fulfillmentContact?.address?.stateOrProvince,
+    address_line_1: checkout?.fulfillmentInfo?.fulfillmentContact?.address?.address1 || '',
+    address_line_2: checkout?.fulfillmentInfo?.fulfillmentContact?.address?.address2 || '',
+    admin_area_1: checkout?.fulfillmentInfo?.fulfillmentContact?.address?.cityOrTown || '',
+    admin_area_2: checkout?.fulfillmentInfo?.fulfillmentContact?.address?.stateOrProvince || '',
     postal_code: checkout?.fulfillmentInfo?.fulfillmentContact?.address?.postalOrZipCode,
     country_code: checkout?.fulfillmentInfo?.fulfillmentContact?.address?.countryCode,
   }
@@ -116,12 +114,10 @@ const PayPalButton = (props: PayPalButtonProps) => {
     }
 
     try {
-      const response = await fetch(`${paypalUrl}/v2/checkout/orders`, {
+      const response = await fetch(`${url}/api/paypal-create-order`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
-          'PayPal-Request-Id': paypalRequestId,
-          Authorization: `Bearer ${paypalBearerToken}`,
         },
         body: JSON.stringify(body),
       })
@@ -144,17 +140,13 @@ const PayPalButton = (props: PayPalButtonProps) => {
     }
 
     try {
-      const response = await fetch(
-        `${paypalUrl}/v2/checkout/orders/${orderID}/confirm-payment-source`,
-        {
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/json',
-            Authorization: `Bearer ${paypalBearerToken}`,
-          },
-          body: JSON.stringify(body),
-        }
-      )
+      const response = await fetch(`${url}/api/paypal-approve-order?orderID=${orderID}`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(body),
+      })
       await response.json()
 
       console.log(`Paypal order: ${orderID}, payerID:${payerID} confirmed successfully...`)

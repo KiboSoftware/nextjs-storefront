@@ -12,3 +12,5 @@ export { default as deletePreviewCookieHandler } from './deletePreviewCookieHand
 export { default as getPreviewCookiesHandler } from './getPreviewCookiesHandler'
 export { default as setPreviewCookieHandler } from './setPreviewCookieHandler'
 export { default as paypalBearerTokenHandler } from './paypal-bearer-token'
+export { default as paypalCreateOrderHandler } from './paypal-create-order'
+export { default as paypalApproveOrderHandler } from './paypal-approve-order'
