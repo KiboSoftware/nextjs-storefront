@@ -1,4 +1,4 @@
-import getPaypalCheckoutSettings from '../operations/get-paypal-checkout-settings'
+import getPaypalCheckoutSettings from '../util/get-paypal-checkout-settings'
 import { NextApiRequestWithLogger } from '@/lib/types'
 
 import type { NextApiResponse } from 'next'
