@@ -3,3 +3,5 @@ export { default as generateCurrentDomainUrl } from './generate-current-domain-u
 export { default as getAdditionalHeader } from './get-additional-header'
 export { default as getUserClaimsFromRequest } from './getUserClaimsFromRequest'
 export { default as getOperationDetails } from './get-operation-details'
+export { default as getPaypalCheckoutSettings } from './get-paypal-checkout-settings'
+export { default as getPaypalBearerToken } from './get-paypal-bearer-token'

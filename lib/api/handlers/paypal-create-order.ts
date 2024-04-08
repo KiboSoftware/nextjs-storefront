@@ -1,6 +1,6 @@
 import { v4 as uuidv4 } from 'uuid'
 
-import getPaypalBearerToken from '../operations/get-paypal-bearer-token'
+import getPaypalBearerToken from '../util/get-paypal-bearer-token'
 import { NextApiRequestWithLogger } from '@/lib/types'
 
 import type { NextApiResponse } from 'next'
