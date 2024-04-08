@@ -13,6 +13,16 @@ jest.mock('@/lib/api/util', () => ({
       data: mockQuickOrderCart,
     })
   }),
+  getPaypalBearerToken: jest.fn(() => {
+    return Promise.resolve('bearerToken')
+  }),
+  getPaypalCheckoutSettings: jest.fn(() => {
+    return Promise.resolve({
+      userName: 'userName',
+      password: 'password',
+      orderProcessing: 'orderProcessing',
+    })
+  }),
 }))
 
 jest.mock('next-i18next/serverSideTranslations', () => ({

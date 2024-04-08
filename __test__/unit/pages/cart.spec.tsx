@@ -13,6 +13,16 @@ jest.mock('@/lib/api/util', () => ({
       data: mockCart,
     })
   }),
+  getPaypalBearerToken: jest.fn(() => {
+    return Promise.resolve('bearerToken')
+  }),
+  getPaypalCheckoutSettings: jest.fn(() => {
+    return Promise.resolve({
+      userName: 'userName',
+      password: 'password',
+      orderProcessing: 'orderProcessing',
+    })
+  }),
 }))
 
 jest.mock('@/lib/api/util/getUserClaimsFromRequest.ts', () => jest.fn(() => null))
