@@ -58,8 +58,6 @@ export const useProductDetailTemplate = (props: UseProductDetailTemplateProps) =
   )
 
   useEffect(() => {
-    console.log('product=============', product)
-    console.log('productPriceResponse=============', productPriceResponse)
     setCurrentProduct({ ...product, ...productPriceResponse })
   }, [product, productPriceResponse])
 

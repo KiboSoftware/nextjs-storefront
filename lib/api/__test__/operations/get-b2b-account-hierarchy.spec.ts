@@ -19,6 +19,9 @@ jest.mock('next/config', () => {
       publicRuntimeConfig: {
         userCookieKey: 'kibo_at',
       },
+      serverRuntimeConfig: {
+        userCookieKey: 'kibo_at',
+      },
     }
   }
 })

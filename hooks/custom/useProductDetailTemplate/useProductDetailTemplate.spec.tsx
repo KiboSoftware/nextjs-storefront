@@ -21,10 +21,10 @@ jest.mock('@/hooks', () => ({
       isSuccess: true,
     },
   }),
-  useGetProductPrice: jest.fn(() => ({
+  useGetProductPrice: jest.fn().mockReturnValue({
     data: { price: { price: 100, salePrice: null }, priceRange: null },
     isLoading: false,
-  })),
+  }),
 }))
 
 const setup = () => {
@@ -38,6 +38,10 @@ const setup = () => {
 }
 
 describe('[component] Product Detail Template data: useProductDetailTemplate', () => {
+  beforeEach(() => {
+    // Reset the mock implementation before each test
+    jest.clearAllMocks()
+  })
   it('should return currentProduct', () => {
     const { result, product } = setup()
 
