@@ -1,4 +1,4 @@
-import { apiAuthClient } from '../util/api-auth-client'
+import { apiAuthClient } from './api-auth-client'
 
 type CheckoutSettingsResponse = {
   userName: string
