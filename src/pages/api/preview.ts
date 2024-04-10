@@ -10,17 +10,19 @@ function previewHandler(req: NextApiRequestWithLogger, res: NextApiResponse) {
     if (process.env.DISALLOW_KIBO_PREVIEW) {
       return res.status(403).json({ error: 'Preview mode is disabled' })
     }
-
-    const decodedRedirect = 'redirect=' + decodeURIComponent(req?.query?.redirect as string)
-
-    // Parse the decoded string to extract query parameters
     const queryParams: any = {}
-    decodedRedirect.split('&').forEach((pair, i) => {
-      const [key, value] = pair.split('=')
-      queryParams[key] = value || ''
-    })
 
-    const url = new URL(process.env.NEXT_PUBLIC_URL + queryParams['redirect'])
+    if (req?.query?.redirect) {
+      const decodedRedirect = 'redirect=' + decodeURIComponent(req?.query?.redirect as string)
+
+      // Parse the decoded string to extract query parameters
+      decodedRedirect.split('&').forEach((pair, i) => {
+        const [key, value] = pair.split('=')
+        queryParams[key] = value || ''
+      })
+    }
+
+    const url = new URL(process.env.NEXT_PUBLIC_URL + (queryParams['redirect'] || '/'))
 
     const mz_pricelist = queryParams['mz_pricelist'] as string
     const mz_now = queryParams['mz_now'] as string
