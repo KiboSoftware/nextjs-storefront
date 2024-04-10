@@ -19,18 +19,16 @@ import { useRouter } from 'next/router'
 
 import { KiboTextBox } from '@/components/common'
 import { useUpdateRoutes } from '@/hooks'
-import { getPreviewDateCookie } from '@/lib/helpers'
 
 export default function Preview() {
   const router = useRouter()
   const updatedQueryParams = {
     ...router?.query,
   }
-  const [open, setOpen] = useState(false)
+  const [open, setOpen] = useState(true)
   const [enteredPriceList, setEnteredPriceList] = useState<string>('')
-  const [selectedOrderDate, setSelectedOrderDate] = useState<Dayjs | null>(
-    dayjs(getPreviewDateCookie()) || dayjs(Date.now())
-  )
+  const [selectedOrderDate, setSelectedOrderDate] = useState<Dayjs | null>(dayjs(Date.now()))
+
   const { changeQueryParam } = useUpdateRoutes()
 
   const handleClick = () => {
@@ -53,7 +51,7 @@ export default function Preview() {
     }
 
     if (selectedOrderDate) {
-      updatedQueryParams['mz_now'] = selectedOrderDate?.format('YYYY-MM-DD') + 'T00:00:00Z'
+      updatedQueryParams['mz_now'] = selectedOrderDate?.format()
       await fetch(`/api/set-preview-cookie?mz_now=${selectedOrderDate}`)
     }
 
@@ -74,15 +72,23 @@ export default function Preview() {
     router.reload()
   }
 
+  async function fetchPreviewCookies() {
+    try {
+      const response = await fetch('/api/get-preview-cookies')
+      const data = await response.json()
+
+      if (data) {
+        data?.mz_pricelist && setEnteredPriceList(data.mz_pricelist)
+        data?.mz_now && setSelectedOrderDate(dayjs(data.mz_now))
+      }
+    } catch (error) {
+      console.error('Error fetching preview cookies:', error)
+      // Handle the error gracefully, e.g., display an error message to the user
+    }
+  }
+
   React.useEffect(() => {
-    fetch('/api/get-preview-cookies')
-      .then((res) => res.json())
-      .then((data) => {
-        if (data) {
-          data?.mz_pricelist && setEnteredPriceList(data.mz_pricelist)
-          data?.mz_now && setSelectedOrderDate(dayjs(data.mz_now))
-        }
-      })
+    fetchPreviewCookies()
   }, [])
 
   return (
@@ -112,13 +118,12 @@ export default function Preview() {
                     Preview Date
                   </InputLabel>
                   <DateTimePicker
+                    label="Preview Date"
                     disablePast
                     openTo="day"
-                    toolbarPlaceholder="Now"
                     value={selectedOrderDate || null}
-                    onChange={(_, value) => {
-                      setSelectedOrderDate(dayjs(value))
-                      handleChange()
+                    onChange={(value) => {
+                      setSelectedOrderDate(value)
                     }}
                     renderInput={(params) => (
                       <TextField
