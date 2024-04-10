@@ -11,11 +11,19 @@ function previewHandler(req: NextApiRequestWithLogger, res: NextApiResponse) {
       return res.status(403).json({ error: 'Preview mode is disabled' })
     }
 
-    const redirectTo = (req?.query?.redirect as string) || '/'
-    const url = new URL(process.env.NEXT_PUBLIC_URL + redirectTo)
+    const decodedRedirect = 'redirect=' + decodeURIComponent(req?.query?.redirect as string)
 
-    const mz_pricelist = req?.query?.mz_pricelist as string
-    const mz_now = req?.query?.mz_now as string
+    // Parse the decoded string to extract query parameters
+    const queryParams: any = {}
+    decodedRedirect.split('&').forEach((pair, i) => {
+      const [key, value] = pair.split('=')
+      queryParams[key] = value || ''
+    })
+
+    const url = new URL(process.env.NEXT_PUBLIC_URL + queryParams['redirect'])
+
+    const mz_pricelist = queryParams['mz_pricelist'] as string
+    const mz_now = queryParams['mz_now'] as string
 
     const options = {
       httpOnly: true,
