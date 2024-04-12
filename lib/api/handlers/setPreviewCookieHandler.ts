@@ -1,4 +1,5 @@
 import { setCookie } from 'cookies-next'
+import { OptionsType } from 'cookies-next/lib/types'
 import { NextApiResponse } from 'next'
 
 import { NextApiRequestWithLogger } from '@/lib/types'
@@ -9,8 +10,9 @@ export default function setPreviewCookieHandler(
 ) {
   try {
     if (req.query.mz_pricelist) {
-      const options = {
+      const options: OptionsType = {
         httpOnly: true,
+        path: '/',
         ...(req && res && { req, res }),
       }
       setCookie('mz_pricelist', req.query.mz_pricelist, options)
@@ -19,6 +21,7 @@ export default function setPreviewCookieHandler(
     if (req.query.mz_now) {
       const options = {
         httpOnly: true,
+        path: '/',
         ...(req && res && { req, res }),
       }
       setCookie('mz_now', req.query.mz_now, options)

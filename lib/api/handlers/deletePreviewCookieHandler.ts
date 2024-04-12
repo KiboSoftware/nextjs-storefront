@@ -9,11 +9,13 @@ export default function deletePreviewCookieHandler(
 ) {
   try {
     if (req.query.name) {
-      deleteCookie(req.query.name as string, {
-        req,
-        res,
+      const options = {
         httpOnly: true,
-      })
+        path: '/',
+        ...(req && res && { req, res }),
+      }
+
+      deleteCookie(req.query.name as string, options)
     }
 
     res.status(200).json({ message: 'Cookie deleted' })

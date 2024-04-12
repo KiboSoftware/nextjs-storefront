@@ -8,8 +8,14 @@ export default function getPreviewCookiesHandler(
   res: NextApiResponse
 ) {
   try {
-    const mz_pricelist = getCookie('mz_pricelist', { req, res })
-    const mz_now = getCookie('mz_now', { req, res })
+    const options = {
+      httpOnly: true,
+      path: '/',
+      ...(req && res && { req, res }),
+    }
+
+    const mz_pricelist = getCookie('mz_pricelist', options)
+    const mz_now = getCookie('mz_now', options)
 
     const response = {
       ...(mz_pricelist && { mz_pricelist }),

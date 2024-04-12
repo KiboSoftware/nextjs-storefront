@@ -8,17 +8,15 @@ export default function clearPreviewModeHandler(
   res: NextApiResponse
 ) {
   try {
-    deleteCookie('mz_pricelist', {
-      req,
-      res,
+    const options = {
       httpOnly: true,
-    })
+      path: '/',
+      ...(req && res && { req, res }),
+    }
 
-    deleteCookie('mz_now', {
-      req,
-      res,
-      httpOnly: true,
-    })
+    deleteCookie('mz_pricelist', options)
+
+    deleteCookie('mz_now', options)
 
     res.clearPreviewData({})
 
