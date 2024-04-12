@@ -1,4 +1,4 @@
-import { productInfo } from './product'
+import { productInfo, productPrices } from './product'
 
 export const searchFacets = /* GraphQL */ `
   fragment searchFacets on Facet {
@@ -32,6 +32,7 @@ export const searchResults = /* GraphQL */ `
     startIndex
     items {
       ...productInfo
+      ...productPrices
     }
     facets {
       ...searchFacets
@@ -39,4 +40,5 @@ export const searchResults = /* GraphQL */ `
   }
   ${searchFacets}
   ${productInfo}
+  ${productPrices}
 `

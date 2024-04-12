@@ -118,7 +118,6 @@ export default function Preview() {
                     Preview Date
                   </InputLabel>
                   <DateTimePicker
-                    label="Preview Date"
                     disablePast
                     openTo="day"
                     value={selectedOrderDate || null}

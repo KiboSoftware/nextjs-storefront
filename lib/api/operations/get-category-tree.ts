@@ -20,7 +20,7 @@ export default async function getCategoryTree(req?: NextApiRequest) {
     const response = await fetcher({ query: getCategoryTreeQuery, variables: {} }, { headers })
     const items = response?.data?.categoriesTree?.items
     if (items.length) {
-      cache.set(cacheKey, items, cacheTimeOut)
+      cache.set(cacheKey, items, req?.preview ? 1 : cacheTimeOut) // if preview mode is on, cache for 1 sec
     }
 
     return items

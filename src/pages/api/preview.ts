@@ -29,8 +29,7 @@ function previewHandler(req: NextApiRequestWithLogger, res: NextApiResponse) {
 
     const options = {
       httpOnly: true,
-      req,
-      res,
+      ...(req && res && { req, res }),
     }
 
     if (mz_pricelist) {
