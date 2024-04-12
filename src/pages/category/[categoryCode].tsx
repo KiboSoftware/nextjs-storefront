@@ -74,7 +74,7 @@ export async function getStaticProps(
   const { publicRuntimeConfig } = getConfig()
   const { categoryCode } = params as { categoryCode: string }
   const categoriesTree = await getCategoryTree()
-  const category = (await categoryTreeSearchByCode({ categoryCode }, categoriesTree)) as PrCategory
+  const category = categoryTreeSearchByCode({ categoryCode }, categoriesTree)
   if (!category) {
     return { notFound: true }
   }
@@ -134,6 +134,7 @@ const CategoryPage: NextPage<CategoryPageType> = (props) => {
     productSearchResult,
     props.categoryCode
   )
+
   const appliedFilters = facetGetters.getSelectedFacets(productSearchResult?.facets as Facet[])
 
   const categoryPageHeading = categoryFacet.header

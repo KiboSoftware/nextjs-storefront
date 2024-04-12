@@ -13,7 +13,7 @@ const getCategoryFacet = (
   categoryCode?: string | string[]
 ) => {
   let header: string, childrenCategories: FacetValue[]
-  const facetName = 'CategoryCode'
+  const facetName = 'categoryCode'
 
   // Searching categories by facetName i.e. : CategoryCode
   const facet = getFacetByName(productSearchResult, facetName)
