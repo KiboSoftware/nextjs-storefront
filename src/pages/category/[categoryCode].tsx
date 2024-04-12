@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState } from 'react'
+import { useEffect, useState } from 'react'
 
 import getConfig from 'next/config'
 import ErrorPage from 'next/error'
@@ -128,7 +128,13 @@ const CategoryPage: NextPage<CategoryPageType> = (props) => {
     return <ErrorPage statusCode={404} />
   }
 
-  const breadcrumbs = facetGetters.getBreadcrumbs(props.category)
+  const category = {
+    categories: [
+      categoryTreeSearchByCode({ code }, props.categoriesTree as PrCategory[]),
+    ] as PrCategory[],
+  }
+
+  const breadcrumbs = facetGetters.getBreadcrumbs(category)
 
   const facetList = productSearchResult?.facets as Facet[]
   const products = productSearchResult?.items as Product[]

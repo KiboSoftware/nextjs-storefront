@@ -34,10 +34,10 @@ export const selectCategoryFromTree = (
   return targetCategory
 }
 
-export async function categoryTreeSearchByCode(
+export function categoryTreeSearchByCode(
   searchParams: any,
   categoryTree: PrCategory[]
-): Promise<PrCategory | undefined> {
+): PrCategory | undefined {
   try {
     const { categoryCode } = searchParams
     if (!categoryCode) {
