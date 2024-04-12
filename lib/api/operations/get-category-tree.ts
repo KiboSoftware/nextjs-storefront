@@ -13,14 +13,14 @@ const cacheTimeOut = serverRuntimeConfig.cacheTimeOut
 export default async function getCategoryTree(req?: NextApiRequest) {
   try {
     const cachedItems = cache.get(cacheKey)
-    if (cachedItems) return cachedItems
+    if (!req?.preview && cachedItems) return cachedItems
 
     const headers = req ? getAdditionalHeader(req) : {}
 
     const response = await fetcher({ query: getCategoryTreeQuery, variables: {} }, { headers })
     const items = response?.data?.categoriesTree?.items
     if (items.length) {
-      cache.set(cacheKey, items, req?.preview ? 1 : cacheTimeOut) // if preview mode is on, cache for 1 sec
+      cache.set(cacheKey, items, cacheTimeOut) // if preview mode is on, cache for 1 sec
     }
 
     return items
