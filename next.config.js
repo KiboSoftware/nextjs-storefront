@@ -115,6 +115,16 @@ module.exports = {
         isRequired: false,
         shortName: 'Pickup',
       },
+      {
+        value: 'Delivery',
+        name: 'Instant Delivery',
+        code: 'ID',
+        label: 'Instant Delivery',
+        isRequired: false,
+        shortName: 'Delivery',
+        disabled: false,
+        details: '',
+      },
     ],
     storeLocator: {
       defaultRange: '160934',

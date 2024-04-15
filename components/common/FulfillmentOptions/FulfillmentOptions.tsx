@@ -59,7 +59,12 @@ const FulfillmentOptions = (props: FulfillmentOptionsProps) => {
           onStoreSelection={onStoreSetOrUpdate}
           {...(!option?.disabled &&
             option.shortName !== FulfillmentOptionsConstant.SHIP && {
-              storeActionLabel: option?.details ? t('change-store') : t('select-store'),
+              storeActionLabel:
+                option.shortName === FulfillmentOptionsConstant.DELIVERY
+                  ? t('select-time-slot')
+                  : option?.details
+                  ? t('change-store')
+                  : t('select-store'),
             })}
         />
       ),
