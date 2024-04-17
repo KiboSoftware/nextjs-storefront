@@ -2,6 +2,8 @@ import React, { useEffect, useState } from 'react'
 
 import { Button } from '@mui/material'
 import { PayPalScriptProvider, PayPalButtons } from '@paypal/react-paypal-js'
+import getConfig from 'next/config'
+import { useTranslation } from 'next-i18next'
 
 import { useCheckoutStepContext } from '@/context'
 import { CurrencyCode, PaymentType } from '@/lib/constants'
@@ -26,12 +28,6 @@ type Params = {
 type Response = {
   paymentActionToBeAdded: any
   paymentActionToBeVoided: any
-}
-
-const initialOptions = {
-  clientId: 'test',
-  currency: 'USD',
-  intent: 'authorize',
 }
 
 // Create params object to add payment method or to void it
@@ -71,7 +67,7 @@ const getShippingAddress = (checkout: CrOrder) => {
 }
 
 // Create breakdown object to pass to PayPal API
-type ArrOfDiscounts = { id: number | undefined; name?: string | undefined; impact: number }[]
+type ArrOfDiscounts = { id?: number; name?: string; impact: number }[]
 const calculateDiscount = (arrOfDiscounts: ArrOfDiscounts) => {
   if (!arrOfDiscounts) {
     return 0
@@ -152,11 +148,14 @@ const getBreakdown = (checkout: CrOrder, currency: string) => {
 
 // Component
 const PayPalButton = (props: PayPalButtonProps) => {
+  const { publicRuntimeConfig } = getConfig()
+  const { clientId, currency, intent } = publicRuntimeConfig.paypal
+
+  const { t } = useTranslation('common')
   const { checkout, setSelectedPaymentTypeRadio, onAddPayment, onVoidPayment } = props
 
   const [isScriptLoaded, setIsScriptLoaded] = useState(true)
   const { setStepStatusValid, setStepStatusIncomplete } = useCheckoutStepContext()
-  const currency = process.env.NEXT_PUBLIC_PAYPAL_CURRENCY || 'USD'
 
   const activePaymentId = orderGetters.getSelectedPaymentType(checkout)?.id as string
   const isPayPalPaymentMethodAdded = orderGetters.isPayPalPaymentMethodActive(checkout)
@@ -165,6 +164,12 @@ const PayPalButton = (props: PayPalButtonProps) => {
   const breakdown = getBreakdown(checkout, currency)
 
   const url = process.env.NEXT_PUBLIC_URL || ''
+
+  const initialOptions = {
+    clientId,
+    currency,
+    intent,
+  }
 
   const createOrder = async () => {
     const body = {
@@ -194,7 +199,6 @@ const PayPalButton = (props: PayPalButtonProps) => {
       })
 
       const order = await response.json()
-      console.log(`Paypal order: ${order.id} created successfully...`)
 
       return order.id
     } catch (error) {
@@ -228,8 +232,6 @@ const PayPalButton = (props: PayPalButtonProps) => {
 
     await onAddPayment(checkout.id as string, paymentActionToBeAdded)
 
-    console.log(`Payment method added successfully...`)
-
     setSelectedPaymentTypeRadio(PaymentType.PAYPALEXPRESS2)
     setStepStatusValid()
   }
@@ -246,7 +248,6 @@ const PayPalButton = (props: PayPalButtonProps) => {
     // void payment
     if (activePaymentId) {
       await onVoidPayment(checkoutId, activePaymentId, paymentActionToBeVoided)
-      console.log(`Payment method voided successfully...`)
     }
 
     setSelectedPaymentTypeRadio(PaymentType.PAYPALEXPRESS2)
@@ -272,7 +273,7 @@ const PayPalButton = (props: PayPalButtonProps) => {
     <div style={{ width: '200px', paddingBottom: '20px' }}>
       {isPayPalPaymentMethodAdded && (
         <Button variant="contained" color="primary" onClick={voidActivePayment}>
-          Remove PayPal
+          {t('remove-payPal')}
         </Button>
       )}
 
@@ -285,7 +286,7 @@ const PayPalButton = (props: PayPalButtonProps) => {
               onApprove={onApprove}
             />
           ) : (
-            <p>Loading PayPal...</p>
+            <p>{t('loading-paypal')}</p>
           )}
         </PayPalScriptProvider>
       )}

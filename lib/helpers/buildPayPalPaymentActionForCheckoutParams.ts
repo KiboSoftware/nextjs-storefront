@@ -12,7 +12,6 @@ export const buildPayPalPaymentActionForCheckoutParams = (
   currencyCode: string,
   checkout: CrOrder | Checkout,
   billingAddress: CrContact | undefined,
-  // isBillingAddressAsShipping: boolean,
   externalTransactionId: string,
   payerId: string
 ): PaymentActionInput => {
@@ -21,7 +20,6 @@ export const buildPayPalPaymentActionForCheckoutParams = (
     card: null,
     paymentType: 'PayPalExpress2',
     paymentWorkflow: 'PayPalExpress2',
-    // isSameBillingShippingAddress: isBillingAddressAsShipping,
     externalTransactionId: externalTransactionId,
     data: {
       paypal: {

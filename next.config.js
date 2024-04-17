@@ -203,6 +203,11 @@ module.exports = {
     B2BQuotes: {
       pageSize: 5,
     },
+    paypal: {
+      clientId: 'Kibo Commerce',
+      currency: process.env.NEXT_PUBLIC_PAYPAL_CURRENCY || 'USD',
+      intent: 'authorize',
+    },
   },
   staticPageGenerationTimeout: 1000,
   experimental: {

@@ -528,5 +528,7 @@
   "add-list-name-to-search-products": "Add list name to Search/View products in list",
   "digital-products-shipping-text": "No shipping information is required since all items will be picked up in the store or digitally fulfilled.",
   "digital-products": "Digital Products",
-  "menu": "Menu"
+  "menu": "Menu",
+  "remove-payPal": "Remove PayPal",
+  "loading-paypal": "Loading PayPal..."
 }

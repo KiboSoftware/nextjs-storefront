@@ -19,7 +19,7 @@ jest.mock('@/lib/api/util', () => ({
   getPaypalCheckoutSettings: jest.fn(() => {
     return Promise.resolve({
       userName: 'userName',
-      password: 'password',
+      password: 'testPwd',
       orderProcessing: 'orderProcessing',
     })
   }),

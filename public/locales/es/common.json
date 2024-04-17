@@ -25,5 +25,7 @@
   "size": "",
   "sort-by": "",
   "total": "",
-  "use-current-location": ""
+  "use-current-location": "",
+  "remove-payPal": "Remove PayPal",
+  "loading-paypal": "Loading PayPal..."
 }
