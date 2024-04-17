@@ -1,7 +1,7 @@
 import { ProductCustom } from '@/lib/types'
 
 export const ProductCustomMock: ProductCustom = {
-  fulfillmentTypesSupported: ['DirectShip', 'InStorePickup'],
+  fulfillmentTypesSupported: ['DirectShip', 'InStorePickup', 'Delivery'],
   fulfillmentMethod: 'Ship',
   fulfillmentMethodShortName: '',
   purchaseLocationCode: 'kw1',
