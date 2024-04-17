@@ -1,5 +1,17 @@
+/**
+ * @module usePayPalBearerToken
+ */
+
 import { useEffect, useState } from 'react'
 
+/**
+ * [Custom Hook]
+ *
+ * Use usePayPalBearerToken to get PayPal bearer token.
+ *
+ * @returns PayPal bearer token.
+ *
+ */
 export const usePayPalBearerToken = () => {
   const [bearerToken, setBearerToken] = useState(null)
 
