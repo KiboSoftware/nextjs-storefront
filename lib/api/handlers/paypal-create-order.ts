@@ -1,5 +1,3 @@
-import { v4 as uuidv4 } from 'uuid'
-
 import getPaypalBearerToken from '../util/get-paypal-bearer-token'
 import { NextApiRequestWithLogger } from '@/lib/types'
 
@@ -10,7 +8,6 @@ export default async function paypalCreateOrderHandler(
   res: NextApiResponse
 ) {
   try {
-    const payPalRequestId = uuidv4()
     const paypalBearerToken = await getPaypalBearerToken()
     const body = req.body
 
@@ -20,7 +17,6 @@ export default async function paypalCreateOrderHandler(
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
-        'PayPal-Request-Id': payPalRequestId,
         Authorization: `Bearer ${paypalBearerToken}`,
       },
       body: JSON.stringify(body),

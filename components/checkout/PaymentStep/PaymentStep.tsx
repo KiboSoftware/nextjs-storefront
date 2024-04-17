@@ -791,7 +791,6 @@ const PaymentStep = (props: PaymentStepProps) => {
           setSelectedPaymentTypeRadio={setSelectedPaymentTypeRadio}
           onAddPayment={onAddPayment}
           onVoidPayment={onVoidPayment}
-          paypalBearerToken={paypalBearerToken as string}
         />
       )}
 

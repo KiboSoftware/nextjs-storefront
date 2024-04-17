@@ -15,7 +15,6 @@ interface PayPalButtonProps {
   setSelectedPaymentTypeRadio: (paymentType: PaymentType) => void
   onAddPayment: (checkoutId: string, paymentAction: any) => void
   onVoidPayment: (checkoutId: string, paymentId: string, paymentAction: any) => void
-  paypalBearerToken: string
 }
 
 type Params = {
@@ -35,14 +34,14 @@ const initialOptions = {
   intent: 'authorize',
 }
 
+// Create params object to add payment method or to void it
 const createParams = (params: Params): Response => {
   const { checkout, orderId, payerId } = params
 
   const variables = buildPayPalPaymentActionForCheckoutParams(
     CurrencyCode.US,
     checkout,
-    undefined, // selectedPaymentMethod?.billingAddressInfo?.contact as CrContact,
-    // true, // isSameAsShipping,
+    undefined,
     orderId as string,
     payerId as string
   )
@@ -59,22 +58,9 @@ const createParams = (params: Params): Response => {
   }
 }
 
-const PayPalButton = (props: PayPalButtonProps) => {
-  const { checkout, setSelectedPaymentTypeRadio, onAddPayment, onVoidPayment, paypalBearerToken } =
-    props
-
-  const [isScriptLoaded, setIsScriptLoaded] = useState(true)
-  const { setStepStatusValid, setStepStatusIncomplete } = useCheckoutStepContext()
-  const currency = process.env.NEXT_PUBLIC_PAYPAL_CURRENCY || 'USD'
-
-  const url = process.env.NEXT_PUBLIC_URL || ''
-  const returnUrl = `${url}/checkout/${checkout.id}`
-  const cancelUrl = `${url}/checkout/${checkout.id}`
-
-  const activePaymentId = orderGetters.getSelectedPaymentType(checkout)?.id as string
-  const isPayPalPaymentMethodAdded = orderGetters.isPayPalPaymentMethodActive(checkout)
-
-  const address = {
+// Create shipping address
+const getShippingAddress = (checkout: CrOrder) => {
+  return {
     address_line_1: checkout?.fulfillmentInfo?.fulfillmentContact?.address?.address1 || '',
     address_line_2: checkout?.fulfillmentInfo?.fulfillmentContact?.address?.address2 || '',
     admin_area_1: checkout?.fulfillmentInfo?.fulfillmentContact?.address?.cityOrTown || '',
@@ -82,8 +68,32 @@ const PayPalButton = (props: PayPalButtonProps) => {
     postal_code: checkout?.fulfillmentInfo?.fulfillmentContact?.address?.postalOrZipCode,
     country_code: checkout?.fulfillmentInfo?.fulfillmentContact?.address?.countryCode,
   }
+}
 
-  const payment_source = {
+// Create breakdown object to pass to PayPal API
+type ArrOfDiscounts = { id: number | undefined; name?: string | undefined; impact: number }[]
+const calculateDiscount = (arrOfDiscounts: ArrOfDiscounts) => {
+  if (!arrOfDiscounts) {
+    return 0
+  }
+
+  const discount = arrOfDiscounts.reduce((sum, discount) => {
+    if (!discount.impact) {
+      return sum
+    }
+    return sum + discount.impact
+  }, 0)
+
+  return discount
+}
+
+// Create payment_source to pass to PayPal API
+const getPaymentSource = (checkout: CrOrder) => {
+  const url = process.env.NEXT_PUBLIC_URL || ''
+  const returnUrl = `${url}/checkout/${checkout.id}`
+  const cancelUrl = `${url}/checkout/${checkout.id}`
+
+  return {
     paypal: {
       experience_context: {
         payment_method_preference: 'IMMEDIATE_PAYMENT_REQUIRED',
@@ -97,16 +107,77 @@ const PayPalButton = (props: PayPalButtonProps) => {
       },
     },
   }
+}
+
+const getBreakdown = (checkout: CrOrder, currency: string) => {
+  const allShippingDiscounts = orderGetters.getShippingDiscounts(
+    checkout as CrOrder
+  ) as ArrOfDiscounts
+  const shippingDiscounts = calculateDiscount(allShippingDiscounts)
+
+  const allOrderDiscounts = orderGetters.getOrderDiscounts(checkout as CrOrder) as ArrOfDiscounts
+  const orderDiscounts = calculateDiscount(allOrderDiscounts)
+
+  return {
+    item_total: {
+      currency_code: currency,
+      value: checkout.items?.length,
+    },
+    shipping: {
+      currency_code: currency,
+      value: checkout.shippingTotal,
+    },
+    handling: {
+      currency_code: currency,
+      value: checkout.handlingTotal,
+    },
+    tax_total: {
+      currency_code: currency,
+      value: checkout.taxTotal,
+    },
+    insurance: {
+      currency_code: currency,
+      value: 0,
+    },
+    shipping_discount: {
+      currency_code: currency,
+      value: shippingDiscounts,
+    },
+    discount: {
+      currency_code: currency,
+      value: orderDiscounts,
+    },
+  }
+}
+
+// Component
+const PayPalButton = (props: PayPalButtonProps) => {
+  const { checkout, setSelectedPaymentTypeRadio, onAddPayment, onVoidPayment } = props
+
+  const [isScriptLoaded, setIsScriptLoaded] = useState(true)
+  const { setStepStatusValid, setStepStatusIncomplete } = useCheckoutStepContext()
+  const currency = process.env.NEXT_PUBLIC_PAYPAL_CURRENCY || 'USD'
+
+  const activePaymentId = orderGetters.getSelectedPaymentType(checkout)?.id as string
+  const isPayPalPaymentMethodAdded = orderGetters.isPayPalPaymentMethodActive(checkout)
+
+  const payment_source = getPaymentSource(checkout)
+  const breakdown = getBreakdown(checkout, currency)
+
+  const url = process.env.NEXT_PUBLIC_URL || ''
 
   const createOrder = async () => {
     const body = {
       intent: 'AUTHORIZE',
       purchase_units: [
         {
-          reference_id: checkout.id,
-          amount: { currency_code: currency, value: checkout.total },
+          amount: {
+            currency_code: currency,
+            value: checkout.total,
+            beakdown: breakdown,
+          },
           shipping: {
-            address: address,
+            address: getShippingAddress(checkout),
           },
         },
       ],
@@ -140,17 +211,6 @@ const PayPalButton = (props: PayPalButtonProps) => {
     }
 
     try {
-      const response = await fetch(`${url}/api/paypal-approve-order?orderID=${orderID}`, {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify(body),
-      })
-      await response.json()
-
-      console.log(`Paypal order: ${orderID}, payerID:${payerID} confirmed successfully...`)
-
       await voidActivePayment()
       await addPaymentMethod(orderID, payerID)
     } catch (error) {
