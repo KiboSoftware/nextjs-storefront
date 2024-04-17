@@ -144,7 +144,7 @@ describe('[getters] productGetters', () => {
       {
         code: 'ID',
         details: '',
-        disabled: false,
+        disabled: true,
         fulfillmentLocation: '',
         label: 'Instant Delivery',
         name: 'Instant Delivery',
