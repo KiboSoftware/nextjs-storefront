@@ -318,6 +318,7 @@ const getProductFulfillmentOptions = (
         return product?.inventoryInfo?.onlineStockAvailable
           ? option.details
           : option.unavailableDetails // checking if Directship
+      if (option.shortName === FulfillmentOptions.DELIVERY) return ''
       if (purchaseLocation?.name)
         return `${
           productLocationInventoryData && productLocationInventoryData[0]?.stockAvailable
