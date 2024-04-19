@@ -141,6 +141,17 @@ describe('[getters] productGetters', () => {
         shortName: 'Pickup',
         disabled: false,
       },
+      {
+        code: 'ID',
+        details: '',
+        disabled: true,
+        fulfillmentLocation: '',
+        label: 'Instant Delivery',
+        name: 'Instant Delivery',
+        required: false,
+        shortName: 'Delivery',
+        value: 'Delivery',
+      },
     ])
   })
 })

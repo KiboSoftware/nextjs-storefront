@@ -303,15 +303,22 @@ const getProductFulfillmentOptions = (
     fulfillmentLocation: purchaseLocation?.name,
     required: option.isRequired,
     shortName: option.shortName,
-    disabled:
-      product?.fulfillmentTypesSupported?.filter(
-        (type) => type.toLowerCase() === option?.value?.toLowerCase()
-      ).length === 0,
+    disabled: (() => {
+      if (option.shortName === FulfillmentOptions.DELIVERY) {
+        return true
+      }
+      return (
+        product?.fulfillmentTypesSupported?.filter(
+          (type) => type.toLowerCase() === option?.value?.toLowerCase()
+        ).length === 0
+      )
+    })(),
     details: (() => {
       if (option.shortName === FulfillmentOptions.SHIP)
         return product?.inventoryInfo?.onlineStockAvailable
           ? option.details
           : option.unavailableDetails // checking if Directship
+      if (option.shortName === FulfillmentOptions.DELIVERY) return ''
       if (purchaseLocation?.name)
         return `${
           productLocationInventoryData && productLocationInventoryData[0]?.stockAvailable

@@ -29,6 +29,7 @@
   "search": "Search",
   "select-store": "Select Store",
   "check-nearby-store": "Check Nearby Store",
+  "select-time-slot": "Select Timeslot",
   "set-store": "Set Store",
   "showing-results-for": "results for {{query}}",
   "sign-in": "Sign In",

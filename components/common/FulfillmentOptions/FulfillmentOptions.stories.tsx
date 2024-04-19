@@ -20,7 +20,14 @@ const Template: ComponentStory<typeof FulfillmentOptions> = ({ ...args }) => (
 
 export const Common = Template.bind({})
 
+export const InstantDeliveryFulfillmentOptions = Template.bind({})
+
 Common.args = {
   fulfillmentOptions: fulfillmentOptionsMock,
   selected: 'Pickup',
+}
+
+InstantDeliveryFulfillmentOptions.args = {
+  fulfillmentOptions: fulfillmentOptionsMock,
+  selected: 'Delivery',
 }

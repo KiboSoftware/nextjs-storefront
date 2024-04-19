@@ -47,6 +47,18 @@ const FulfillmentOptions = (props: FulfillmentOptionsProps) => {
   const { title, fulfillmentOptions, selected, onFulfillmentOptionChange, onStoreSetOrUpdate } =
     props
 
+  const getStoreActionLabel = (option: FulfillmentOption) => {
+    if (!option?.disabled && option.shortName !== FulfillmentOptionsConstant.SHIP) {
+      if (option.shortName === FulfillmentOptionsConstant.DELIVERY) {
+        return t('select-time-slot')
+      } else if (option?.details) {
+        return t('change-store')
+      } else {
+        return t('select-store')
+      }
+    }
+    return ''
+  }
   const radioOptions = fulfillmentOptions?.map((option) => {
     return {
       value: option.shortName as string,
@@ -57,10 +69,7 @@ const FulfillmentOptions = (props: FulfillmentOptionsProps) => {
           label={option?.label as string}
           details={option?.details}
           onStoreSelection={onStoreSetOrUpdate}
-          {...(!option?.disabled &&
-            option.shortName !== FulfillmentOptionsConstant.SHIP && {
-              storeActionLabel: option?.details ? t('change-store') : t('select-store'),
-            })}
+          storeActionLabel={getStoreActionLabel(option)}
         />
       ),
     }
