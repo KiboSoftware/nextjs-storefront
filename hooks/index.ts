@@ -186,3 +186,6 @@ export * from './mutations/b2b/quotes/useUpdateQuote/useUpdateQuote'
 export * from './mutations/b2b/quotes/useAddQuoteComment/useAddQuoteComment'
 export * from './mutations/b2b/quotes/useUpdateQuoteCoupon/useUpdateQuoteCoupon'
 export * from './mutations/b2b/quotes/useDeleteQuoteCoupon/useDeleteQuoteCoupon'
+
+// Delivery Solutions
+export * from './instant-delivery/useGetStoreServiceBoundary/useGetStoreServiceBoundary'

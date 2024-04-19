@@ -27,5 +27,12 @@
   "total": "",
   "use-current-location": "",
   "remove-payPal": "Remove PayPal",
-  "loading-paypal": "Loading PayPal..."
+  "loading-paypal": "Loading PayPal...",
+  "confirm-address": "Confirm Address",
+  "delivery-solutions-street": "Street",
+  "delivery-solutions-country": "Country",
+  "delivery-solutions-city": "City",
+  "delivery-solutions-state": "State",
+  "delivery-solutions-zipcode": "ZIP Code",
+  "delivery-window": "Delivery Window"
 }
