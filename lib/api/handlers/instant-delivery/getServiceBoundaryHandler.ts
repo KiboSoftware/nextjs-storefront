@@ -27,12 +27,17 @@ export default async function getServiceBoundaryHandler(
       body,
     })
 
-    if (!response.ok) throw new Error(`Request failed with status: ${response.status}`)
+    let data
+    if (response.ok) {
+      const res = await response.json()
+      data = res['store-boundary-dsp']?.value
+    } else {
+      data = null
+    }
 
-    const data = await response.json()
-    res.status(200).json(data['store-boundary-dsp'])
+    res.status(200).json(data)
   } catch (error: any) {
-    res.status(error?.code).json({ message: error?.message })
-    req.logger.error(error, 'Error in Search handler')
+    res.status(200).json(null)
+    req.logger.error(error, 'Error in Sercie Boundary Handler')
   }
 }

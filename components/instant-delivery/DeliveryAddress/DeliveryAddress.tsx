@@ -7,7 +7,7 @@ import { useForm, Controller } from 'react-hook-form'
 import * as yup from 'yup'
 
 import { KiboTextBox } from '@/components/common'
-import { useGetStoreServiceBoundary, DeliveryLocation, StoreBoundary } from '@/hooks'
+import { useGetStoreServiceBoundary, DeliveryLocation } from '@/hooks'
 
 export const useFormSchema = () => {
   const { t } = useTranslation('common')
@@ -35,15 +35,11 @@ const DeliveryAddress = ({
 }: Props) => {
   const { t } = useTranslation('common')
   const addressSchema = useFormSchema()
-  const [isAddressSubmitted, setIsAddresSubmitted] = useState<boolean>(false)
 
-  const { data } = useGetStoreServiceBoundary(deliveryAddress)
-  const response = data as StoreBoundary
-
-  const showErrorMessage = isAddressSubmitted && storeBoundary === null
-
-  const newStoreBoundary = response?.value ? response?.value[0] : null
+  const { data: newStoreBoundary } = useGetStoreServiceBoundary(deliveryAddress)
   setStoreBoundary(newStoreBoundary)
+
+  const showErrorMessage = storeBoundary === null
 
   const {
     control,
@@ -60,7 +56,6 @@ const DeliveryAddress = ({
 
   const onSubmit = (data: DeliveryLocation) => {
     setDeliveryAddress({ ...data })
-    setIsAddresSubmitted(true)
   }
 
   // clear storeBoundary when address is changed
@@ -75,7 +70,6 @@ const DeliveryAddress = ({
   return (
     <div>
       <Box sx={{ display: 'flex', justifyContent: 'center' }}>
-        isAddressSubmitted: {isAddressSubmitted}, storeBoundary: {storeBoundary}
         {showErrorMessage && (
           <Typography variant="caption" component="h2">
             {t('delivery-address-error-message')}

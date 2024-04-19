@@ -32,9 +32,7 @@ type Fulfillment = {
 
 const getStoreServiceBoundary = async (
   deliveryAddress: DeliveryLocation | undefined
-): Promise<StoreBoundary | undefined> => {
-  if (!deliveryAddress) return undefined
-
+): Promise<string | null> => {
   const body = {
     services: ['store-boundary-dsp'],
     deliveryAddress: deliveryAddress,
@@ -43,25 +41,30 @@ const getStoreServiceBoundary = async (
     showFulfillmentOptions: true,
   }
 
-  const res = await fetch(`/api/instant-delivery/get-service-boundary`, {
-    method: 'POST',
-    body: JSON.stringify(body),
-  })
+  try {
+    const res = await fetch(`/api/instant-delivery/get-service-boundary`, {
+      method: 'POST',
+      body: JSON.stringify(body),
+    })
 
-  if (!res.ok) throw new Error(`Request failed with status: ${res.status}`)
+    if (!res.ok) {
+      return null
+    }
 
-  return await res.json()
+    const data = await res.json()
+
+    return data[0]
+  } catch (err) {
+    return null
+  }
 }
 
 export const useGetStoreServiceBoundary = (deliveryAddress: DeliveryLocation | undefined) => {
-  const {
-    data = [],
-    isLoading,
-    isSuccess,
-  } = useQuery({
+  const { data, isLoading, isSuccess } = useQuery({
     queryKey: deliverySolutionsKeys.serviceBoundary(deliveryAddress),
     queryFn: () => getStoreServiceBoundary(deliveryAddress),
     refetchOnWindowFocus: false,
+    enabled: !!deliveryAddress,
   })
 
   return { data, isLoading, isSuccess }

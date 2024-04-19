@@ -12,29 +12,6 @@ jest.mock('@/hooks', () => ({
 const setDeliveryAddressMock = jest.fn()
 const setStoreBoundaryMock = jest.fn()
 
-const response = {
-  data: {
-    'store-boundary-dsp': {
-      value: ['003', '002'],
-      errors: [],
-      distances: [
-        {
-          storeExternalId: '003',
-          distance: 3.54,
-          unit: 'miles',
-        },
-        {
-          storeExternalId: '002',
-          distance: 4.88,
-          unit: 'miles',
-        },
-      ],
-    },
-  },
-  isLoading: false,
-  isSuccess: true,
-}
-
 const setup = () => {
   renderWithQueryClient(
     <DeliveryAddress
@@ -49,7 +26,7 @@ const setup = () => {
 describe('[component] - DeliveryAddress', () => {
   it('should render component', () => {
     const useGetStoreServiceBoundaryMock = useGetStoreServiceBoundary as jest.Mock
-    useGetStoreServiceBoundaryMock.mockReturnValue(response)
+    useGetStoreServiceBoundaryMock.mockReturnValue(['003', '002'])
 
     setup()
 
@@ -70,7 +47,7 @@ describe('[component] - DeliveryAddress', () => {
 
   it('should show validation messages', async () => {
     const useGetStoreServiceBoundaryMock = useGetStoreServiceBoundary as jest.Mock
-    useGetStoreServiceBoundaryMock.mockReturnValue(response)
+    useGetStoreServiceBoundaryMock.mockReturnValue(['003', '002'])
 
     setup()
 
@@ -84,7 +61,7 @@ describe('[component] - DeliveryAddress', () => {
 
   it('should call callback function if address validation is successfull', async () => {
     const useGetStoreServiceBoundaryMock = useGetStoreServiceBoundary as jest.Mock
-    useGetStoreServiceBoundaryMock.mockReturnValue(response)
+    useGetStoreServiceBoundaryMock.mockReturnValue(['003', '002'])
 
     setup()
 
