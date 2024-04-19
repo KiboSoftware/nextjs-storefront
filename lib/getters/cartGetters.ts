@@ -59,6 +59,7 @@ const getProductFulfillmentOptions = (
     })(),
     details: (() => {
       if (option.shortName === FulfillmentOptions.SHIP) return option.details // checking if Directship
+      if (option.shortName === FulfillmentOptions.DELIVERY) return ''
       if (location?.name) return `${option.details}: ${location.name}`
       return ''
     })(),

@@ -297,23 +297,25 @@ const ProductDetailTemplate = (props: ProductDetailTemplateProps) => {
           },
           quoteDetails,
         },
-        onNestedDialogClose: {
-          Component: ProductQuickViewDialog,
-          props: {
-            product: currentProduct,
-            isQuickViewModal: true,
-            shouldFetchShippingMethods,
-            dialogProps: {
-              title: props.title,
-              cancel,
-              addItemToList: addItemToList,
-              addItemToQuote: addItemToQuote,
-              addItemToCart,
-              isB2B,
-            },
-            quoteDetails,
-          },
-        },
+        onNestedDialogClose: isQuickViewModal
+          ? {
+              Component: ProductQuickViewDialog,
+              props: {
+                product: currentProduct,
+                isQuickViewModal: true,
+                shouldFetchShippingMethods,
+                dialogProps: {
+                  title: props.title,
+                  cancel,
+                  addItemToList: addItemToList,
+                  addItemToQuote: addItemToQuote,
+                  addItemToCart,
+                  isB2B,
+                },
+                quoteDetails,
+              },
+            }
+          : null,
         handleSetStore: async (selectedStore: LocationCustom) => {
           setSelectedFulfillmentOption({
             method: FulfillmentOptionsConstant.PICKUP,

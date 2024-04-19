@@ -1,4 +1,4 @@
-import { StoreLocatorDialog } from '@/components/dialogs'
+import { InstantDeliveryDialog, StoreLocatorDialog } from '@/components/dialogs'
 import { useModalContext } from '@/context'
 import { useUpdateCartItem, useUpdateCartItemQuantity } from '@/hooks'
 import { FulfillmentOptions } from '@/lib/constants'
@@ -28,6 +28,12 @@ export const useCartActions = ({ cartItems, purchaseLocation }: UseCartActionsPr
     })
   }
 
+  const handleInstantDelivery = () => {
+    showModal({
+      Component: InstantDeliveryDialog,
+    })
+  }
+
   const mutateCartItem = async (
     cartItemId: string,
     fulfillmentMethod: string,
@@ -53,6 +59,8 @@ export const useCartActions = ({ cartItems, purchaseLocation }: UseCartActionsPr
       fulfillmentMethod === FulfillmentOptions.PICKUP ? (purchaseLocation.code as string) : ''
     if (fulfillmentMethod === FulfillmentOptions.PICKUP && !locationCode) {
       handleProductPickupLocation(cartItemId)
+    } else if (fulfillmentMethod === FulfillmentOptions.DELIVERY) {
+      handleInstantDelivery()
     } else {
       mutateCartItem(cartItemId, fulfillmentMethod, locationCode)
     }
@@ -70,5 +78,6 @@ export const useCartActions = ({ cartItems, purchaseLocation }: UseCartActionsPr
     onFulfillmentOptionChange,
     handleQuantityUpdate,
     handleProductPickupLocation,
+    handleInstantDelivery,
   }
 }
