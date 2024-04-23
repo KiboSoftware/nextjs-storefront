@@ -55,6 +55,7 @@ const DeliveryAddress = ({
   })
 
   const onSubmit = (data: DeliveryLocation) => {
+    setStoreBoundary(undefined)
     setDeliveryAddress({ ...data })
   }
 
