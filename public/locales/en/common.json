@@ -531,5 +531,13 @@
   "digital-products": "Digital Products",
   "menu": "Menu",
   "remove-payPal": "Remove PayPal",
-  "loading-paypal": "Loading PayPal..."
+  "loading-paypal": "Loading PayPal...",
+  "confirm-address": "Confirm Address",
+  "delivery-solutions-street": "Street",
+  "delivery-solutions-country": "Country",
+  "delivery-solutions-city": "City",
+  "delivery-solutions-state": "State",
+  "delivery-solutions-zipcode": "ZIP Code",
+  "delivery-window": "Delivery Window",
+  "delivery-address-error-message": "The address is not recognized. Double check that address was entered correctly."
 }
