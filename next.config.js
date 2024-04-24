@@ -218,6 +218,14 @@ module.exports = {
       currency: process.env.NEXT_PUBLIC_PAYPAL_CURRENCY || 'USD',
       intent: 'authorize',
     },
+    deliverySolutions: {
+      url: 'https://sandbox.api.deliverysolutions.co/api/v2/deliveryAssurance',
+      x_api_key: process.env.DELIVERYSOLUTIONS_X_API_KEY,
+      tenantId: process.env.DELIVERYSOLUTIONS_TENANTID || 'kibo',
+      store_external_id: process.env.DELIVERYSOLUTIONS_STORE_EXTERNAL_ID || '002',
+      window_type: process.env.DELIVERYSOLUTIONS_WINDOW_TYPE || 'delivery',
+      order_external_id: process.env.DELIVERYSOLUTIONS_ORDER_EXTERNAL_ID || '',
+    },
   },
   staticPageGenerationTimeout: 1000,
   experimental: {

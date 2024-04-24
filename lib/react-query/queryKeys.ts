@@ -156,3 +156,8 @@ export const customerWishlistKeys = {
   all: ['customerWishlist'] as const,
   detail: (id: string) => [...customerWishlistKeys.all, id] as const,
 }
+
+export const deliverySolutionsKeys = {
+  all: ['deliverySolutions'] as const,
+  serviceBoundary: (payload: any) => [...deliverySolutionsKeys.all, payload] as const,
+}
