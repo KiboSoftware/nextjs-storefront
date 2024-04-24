@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react'
+import { useEffect } from 'react'
 
 import { yupResolver } from '@hookform/resolvers/yup'
 import { Box, Grid, Button, Typography } from '@mui/material'
@@ -64,7 +64,6 @@ const DeliveryAddress = ({
     if (storeBoundary && isDirty) {
       setStoreBoundary(undefined)
       setDeliveryAddress(undefined)
-      console.log(`clear storeBoundary`)
     }
   }, [isDirty])
 
