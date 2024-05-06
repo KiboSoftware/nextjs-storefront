@@ -10,18 +10,19 @@ interface FulfillmentOptionsProps {
   fulfillmentOptions: FulfillmentOption[]
   selected: string
   onFulfillmentOptionChange: (value: string) => void
-  onStoreSetOrUpdate: () => void
+  onStoreSetOrUpdate: (value: string) => void
 }
 
 interface FulfillmentOptionLabelProps {
   label: string
   details?: string
   storeActionLabel?: string
-  onStoreSelection: () => void
+  optionValue?: string
+  onStoreSelection: (value: string) => void
 }
 
 const FulfillmentOptionLabel = (props: FulfillmentOptionLabelProps) => {
-  const { storeActionLabel, label, details, onStoreSelection } = props
+  const { storeActionLabel, label, details, optionValue, onStoreSelection } = props
   return (
     <Stack sx={{ pt: storeActionLabel ? 2 : 0 }}>
       <Box display="flex" gap={2} justifyContent="flex-start">
@@ -31,7 +32,7 @@ const FulfillmentOptionLabel = (props: FulfillmentOptionLabelProps) => {
       {
         <Typography
           variant="caption"
-          onClick={() => onStoreSelection()}
+          onClick={() => onStoreSelection(optionValue as string)}
           sx={{ textDecoration: 'underline' }}
         >
           {storeActionLabel}
@@ -68,8 +69,9 @@ const FulfillmentOptions = (props: FulfillmentOptionsProps) => {
         <FulfillmentOptionLabel
           label={option?.label as string}
           details={option?.details}
-          onStoreSelection={onStoreSetOrUpdate}
+          onStoreSelection={() => onStoreSetOrUpdate(option?.value as string)}
           storeActionLabel={getStoreActionLabel(option)}
+          optionValue={option?.value as string}
         />
       ),
     }

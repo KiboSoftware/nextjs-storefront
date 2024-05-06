@@ -1,10 +1,12 @@
 /** @format */
 import { ReactNode } from 'react'
 
-import { Card, Typography, Box, CardContent, Divider } from '@mui/material'
+import { Card, Typography, Box, CardContent, Divider, Button, Stack } from '@mui/material'
 
 import { OrderPriceProps } from '../OrderPrice/OrderPrice'
-import { OrderPrice } from '@/components/common'
+import DeliveryImage from '@/assets/delivery.svg'
+import { KiboImage, OrderPrice } from '@/components/common'
+import { AddressCard } from '@/components/common'
 
 import type { Checkout, CrCart, CrOrder } from '@/lib/gql/types'
 
@@ -14,6 +16,8 @@ interface OrderSummaryProps<T extends CrCart | CrOrder | Checkout> extends Order
   checkoutLabel?: string
   shippingLabel?: string
   children?: ReactNode
+  deliveryAddress?: any
+  onHandleInstantDelivery?: () => void
 }
 
 const styles = {
@@ -39,6 +43,8 @@ const OrderSummary = <T extends CrCart | CrOrder | Checkout>(props: OrderSummary
 
     isShippingTaxIncluded,
     promoComponent,
+    deliveryAddress,
+    onHandleInstantDelivery,
   } = props
 
   const orderPriceProps: OrderPriceProps<T> = {
@@ -62,6 +68,49 @@ const OrderSummary = <T extends CrCart | CrOrder | Checkout>(props: OrderSummary
       </CardContent>
       <Divider />
       <CardContent>
+        {deliveryAddress && (
+          <Stack
+            direction="row"
+            sx={{
+              display: 'flex',
+              justifyContent: 'space-between',
+              alignItems: 'center',
+            }}
+          >
+            <Box
+              sx={{
+                border: '1px solid #B4BAC1',
+                borderRadius: '50%',
+                display: 'block',
+                width: '40px',
+                height: '40px',
+                position: 'relative',
+              }}
+            >
+              <Box sx={{ top: '20%', left: '20%', position: 'relative' }}>
+                <KiboImage src={DeliveryImage} alt={'delivery'} width={24} height={24} />
+              </Box>
+            </Box>
+            <Box>
+              <Typography>Delivery to</Typography>
+              <AddressCard
+                address1={deliveryAddress?.street as string}
+                cityOrTown={deliveryAddress?.city as string}
+                stateOrProvince={deliveryAddress?.state as string}
+                postalOrZipCode={deliveryAddress?.zipcode as string}
+              />
+            </Box>
+            <Box>
+              <Button
+                data-testid="change-address-button"
+                variant="contained"
+                onClick={onHandleInstantDelivery}
+              >
+                Change
+              </Button>
+            </Box>
+          </Stack>
+        )}
         <OrderPrice {...orderPriceProps} />
       </CardContent>
       <CardContent>

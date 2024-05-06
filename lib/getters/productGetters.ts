@@ -232,7 +232,10 @@ const validateAddToCartForOneTime = (product: ProductCustom): boolean => {
   ) {
     return Boolean(product?.purchasableState?.isPurchasable)
   }
-  if (product.fulfillmentMethod === FulfillmentOptions.PICKUP) {
+  if (
+    product.fulfillmentMethod === FulfillmentOptions.PICKUP ||
+    product.fulfillmentMethod === FulfillmentOptions.DELIVERY
+  ) {
     return (
       Boolean(product?.purchasableState?.isPurchasable) &&
       Boolean(product.fulfillmentMethod) &&
@@ -303,16 +306,10 @@ const getProductFulfillmentOptions = (
     fulfillmentLocation: purchaseLocation?.name,
     required: option.isRequired,
     shortName: option.shortName,
-    disabled: (() => {
-      if (option.shortName === FulfillmentOptions.DELIVERY) {
-        return true
-      }
-      return (
-        product?.fulfillmentTypesSupported?.filter(
-          (type) => type.toLowerCase() === option?.value?.toLowerCase()
-        ).length === 0
-      )
-    })(),
+    disabled:
+      product?.fulfillmentTypesSupported?.filter(
+        (type) => type.toLowerCase() === option?.value?.toLowerCase()
+      ).length === 0,
     details: (() => {
       if (option.shortName === FulfillmentOptions.SHIP)
         return product?.inventoryInfo?.onlineStockAvailable
@@ -357,7 +354,10 @@ const getAvailableItemCount = (
   const allVariantSelected = isProductVariationsSelected(product)
   const qtyLeft = { value: 0 }
   if (allVariantSelected) {
-    if (fulfillmentOptionValue === FulfillmentOptions.PICKUP) {
+    if (
+      fulfillmentOptionValue === FulfillmentOptions.PICKUP ||
+      fulfillmentOptionValue === FulfillmentOptions.DELIVERY
+    ) {
       qtyLeft.value = productLocationInventoryData[0]?.stockAvailable
         ? productLocationInventoryData[0]?.stockAvailable
         : 0

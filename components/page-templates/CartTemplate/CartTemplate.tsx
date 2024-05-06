@@ -116,6 +116,18 @@ const CartTemplate = (props: CartTemplateProps) => {
       setShowLoadingButton(false)
     }
   }
+  const {
+    onFulfillmentOptionChange,
+    handleQuantityUpdate,
+    handleProductPickupLocation,
+    handleInstantDelivery,
+  } = useCartActions({
+    cartItems: cartItems as CrCartItem[],
+    purchaseLocation,
+  })
+  const deliveryAddress =
+    typeof localStorage !== 'undefined' &&
+    JSON.parse(localStorage.getItem('delivery-address') as string)
 
   const orderSummaryArgs = {
     nameLabel: t('cart-summary'),
@@ -123,6 +135,8 @@ const CartTemplate = (props: CartTemplateProps) => {
     totalLabel: t('estimated-order-total'),
     orderDetails: cart,
     isShippingTaxIncluded: false,
+    deliveryAddress,
+    onHandleInstantDelivery: handleInstantDelivery,
     promoComponent: (
       <PromoCodeBadge
         onApplyCouponCode={handleApplyPromoCode}
@@ -137,12 +151,6 @@ const CartTemplate = (props: CartTemplateProps) => {
   const handleContinueShopping = () => {
     router.back()
   }
-
-  const { onFulfillmentOptionChange, handleQuantityUpdate, handleProductPickupLocation } =
-    useCartActions({
-      cartItems: cartItems as CrCartItem[],
-      purchaseLocation,
-    })
 
   const openClearCartConfirmation = () => {
     showModal({
@@ -188,6 +196,7 @@ const CartTemplate = (props: CartTemplateProps) => {
               onFulfillmentOptionChange={onFulfillmentOptionChange}
               onProductPickupLocation={handleProductPickupLocation}
               onCartItemActionSelection={handleItemActions}
+              onInstantDelivery={handleInstantDelivery}
             />
             <Box py={5}>
               <Button
