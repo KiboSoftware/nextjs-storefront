@@ -28,7 +28,7 @@ import {
 } from '@/components/common'
 import SkeletonWrapper from '@/components/common/SkeletonWrapper/SkeletonWrapper'
 import { KiboBreadcrumbs, ImageGallery } from '@/components/core'
-import { AddToCartDialog, StoreLocatorDialog } from '@/components/dialogs'
+import { AddToCartDialog, InstantDeliveryDialog, StoreLocatorDialog } from '@/components/dialogs'
 import {
   ColorSelector,
   ProductInformation,
@@ -245,6 +245,12 @@ const ProductDetailTemplate = (props: ProductDetailTemplateProps) => {
       const cartResponse = await addToCart.mutateAsync(addToCartPayload)
 
       if (cartResponse.id && !isB2B) {
+        if (addToCartPayload?.product?.fulfillmentMethod === FulfillmentOptionsConstant.DELIVERY) {
+          localStorage.setItem(
+            'delivery-address',
+            JSON.stringify(selectedFulfillmentOption?.location?.address)
+          )
+        }
         showModal({
           Component: AddToCartDialog,
           props: {
@@ -257,6 +263,23 @@ const ProductDetailTemplate = (props: ProductDetailTemplateProps) => {
     }
   }
 
+  const handleInstantDelivery = () => {
+    showModal({
+      Component: InstantDeliveryDialog,
+      props: {
+        handleInstantDelivery: async (selectedAddress: any) => {
+          setSelectedFulfillmentOption({
+            location: {
+              code: selectedAddress.storeBoundary,
+              address: selectedAddress?.deliveryAddress,
+            },
+            method: FulfillmentOptionsConstant.DELIVERY,
+          })
+          closeModal()
+        },
+      },
+    })
+  }
   const handleFulfillmentOptionChange = (value: string) => {
     if (
       value === FulfillmentOptionsConstant.SHIP ||
@@ -267,10 +290,14 @@ const ProductDetailTemplate = (props: ProductDetailTemplateProps) => {
         ...selectedFulfillmentOption,
         method: value,
       })
+      localStorage.removeItem('delivery-address')
+    } else if (value === FulfillmentOptionsConstant.DELIVERY) {
+      handleInstantDelivery()
     } else {
       handleProductPickupLocation()
     }
   }
+  console.log('selectedfulfillemtnoption', selectedFulfillmentOption)
 
   const handleProductPickupLocation = (title?: string) => {
     showModal({
@@ -321,6 +348,7 @@ const ProductDetailTemplate = (props: ProductDetailTemplateProps) => {
             method: FulfillmentOptionsConstant.PICKUP,
             location: selectedStore,
           })
+          localStorage.removeItem('delivery-address')
         },
       },
     })

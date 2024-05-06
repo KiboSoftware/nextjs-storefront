@@ -1,3 +1,5 @@
+import React from 'react'
+
 import { InstantDeliveryDialog, StoreLocatorDialog } from '@/components/dialogs'
 import { useModalContext } from '@/context'
 import { useUpdateCartItem, useUpdateCartItemQuantity } from '@/hooks'
@@ -16,21 +18,43 @@ export const useCartActions = ({ cartItems, purchaseLocation }: UseCartActionsPr
   const { updateCartItem } = useUpdateCartItem()
   const { updateCartItemQuantity } = useUpdateCartItemQuantity()
 
+  const [deliveryAddress, setDeliveryAddress] = React.useState<Maybe<any>>(null)
+
   const handleProductPickupLocation = (cartItemId: string) => {
     showModal({
       Component: StoreLocatorDialog,
       props: {
         handleSetStore: async (selectedStore: LocationCustom) => {
           mutateCartItem(cartItemId, FulfillmentOptions.PICKUP, selectedStore?.code)
+          localStorage.removeItem('delivery-address')
           closeModal()
         },
       },
     })
   }
 
-  const handleInstantDelivery = () => {
+  const handleInstantDelivery = (cartItemId?: string) => {
+    console.log('handleinstantnn', cartItemId)
     showModal({
       Component: InstantDeliveryDialog,
+      props: {
+        handleInstantDelivery: async (selectedAddress: any) => {
+          console.log('selectedAddress', selectedAddress)
+          const response = await mutateCartItem(
+            cartItemId as string,
+            FulfillmentOptions.DELIVERY,
+            selectedAddress?.storeBoundary
+          )
+          if (response?.id) {
+            localStorage.setItem(
+              'delivery-address',
+              JSON.stringify(selectedAddress.deliveryAddress)
+            )
+          }
+          console.log('response', response)
+          closeModal()
+        },
+      },
     })
   }
 
@@ -41,7 +65,7 @@ export const useCartActions = ({ cartItems, purchaseLocation }: UseCartActionsPr
   ) => {
     try {
       const cartItem = cartItems.find((item: Maybe<CrCartItem>) => item?.id === cartItemId)
-      await updateCartItem.mutateAsync({
+      const response = await updateCartItem.mutateAsync({
         cartItemInput: {
           ...(cartItem as CrCartItemInput),
           fulfillmentMethod,
@@ -49,6 +73,7 @@ export const useCartActions = ({ cartItems, purchaseLocation }: UseCartActionsPr
         },
         cartItemId: cartItemId,
       })
+      return response
     } catch (err) {
       console.log(err)
     }
@@ -60,9 +85,10 @@ export const useCartActions = ({ cartItems, purchaseLocation }: UseCartActionsPr
     if (fulfillmentMethod === FulfillmentOptions.PICKUP && !locationCode) {
       handleProductPickupLocation(cartItemId)
     } else if (fulfillmentMethod === FulfillmentOptions.DELIVERY) {
-      handleInstantDelivery()
+      handleInstantDelivery(cartItemId)
     } else {
       mutateCartItem(cartItemId, fulfillmentMethod, locationCode)
+      localStorage.removeItem('delivery-address')
     }
   }
 
@@ -75,6 +101,7 @@ export const useCartActions = ({ cartItems, purchaseLocation }: UseCartActionsPr
   }
 
   return {
+    deliveryAddress,
     onFulfillmentOptionChange,
     handleQuantityUpdate,
     handleProductPickupLocation,

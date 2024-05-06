@@ -35,6 +35,7 @@ interface CartItemProps {
   onCartItemActionSelection: () => void
   onFulfillmentOptionChange: (fulfillmentMethod: string, cartItemId: string) => void
   onProductPickupLocation: (cartItemId: string) => void
+  onInstantDelivery?: (cartItemId: string) => void
 }
 
 const styles = {
@@ -109,6 +110,7 @@ const CartItem = (props: CartItemProps) => {
     onCartItemActionSelection,
     onFulfillmentOptionChange,
     onProductPickupLocation,
+    onInstantDelivery,
   } = props
 
   const theme = useTheme()
@@ -124,6 +126,14 @@ const CartItem = (props: CartItemProps) => {
   const handleFulfillmentOptionChange = (fulfillmentMethod: string, cartItemId: string) =>
     onFulfillmentOptionChange(fulfillmentMethod, cartItemId)
   const handleProductPickupLocation = (cartItemId: string) => onProductPickupLocation(cartItemId)
+  const handleLinkAction = (cartItemId: string, fulfillmentMethod: string) => {
+    console.log('handleLinkAction', cartItemId, fulfillmentMethod)
+    if (fulfillmentMethod === 'PICKUP') {
+      onProductPickupLocation(cartItemId)
+    } else if (fulfillmentMethod === 'DELIVERY') {
+      onInstantDelivery && onInstantDelivery(cartItemId)
+    }
+  }
   const subscriptionDetails = cartGetters.getSubscriptionDetails(cartItem)
 
   return (
@@ -210,7 +220,9 @@ const CartItem = (props: CartItemProps) => {
                   onFulfillmentOptionChange={(fulfillmentMethod: string) =>
                     handleFulfillmentOptionChange(fulfillmentMethod, cartItem?.id as string)
                   }
-                  onStoreSetOrUpdate={() => handleProductPickupLocation(cartItem?.id as string)} // change store: Open storelocator modal. Should not change global store.
+                  onStoreSetOrUpdate={(fulfillmentMethod: string) =>
+                    handleLinkAction(cartItem?.id as string, fulfillmentMethod as string)
+                  } // change store: Open storelocator modal. Should not change global store.
                 />
               )}
             </Box>

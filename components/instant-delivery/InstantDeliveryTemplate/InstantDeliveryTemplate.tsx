@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react'
 
-import { Box, Stack, Step, Stepper, Typography, Slider, StepButton } from '@mui/material'
+import { Box, Stack, Step, Stepper, Typography, Slider, StepButton, Button } from '@mui/material'
 import { useTranslation } from 'next-i18next'
 
 import { type DeliveryDateAndWindow, DeliveryWindow } from '../DeliveryWindow/DeliveryWindow'
@@ -25,6 +25,7 @@ type InstantDeliveryStepperProps = {
 
 type InstantDeliveryTemplateProps = {
   initialDeliveryAddress?: DeliveryLocation
+  onInstantDelivery: (selectedAddress: any) => void
 }
 
 const InstantDeliveryStepper = ({ storeBoundary, children }: InstantDeliveryStepperProps) => {
@@ -80,7 +81,10 @@ const InstantDeliveryStepper = ({ storeBoundary, children }: InstantDeliveryStep
   )
 }
 
-const InstantDeliveryTemplate = ({ initialDeliveryAddress }: InstantDeliveryTemplateProps) => {
+const InstantDeliveryTemplate = ({
+  initialDeliveryAddress,
+  onInstantDelivery,
+}: InstantDeliveryTemplateProps) => {
   const [storeBoundary, setStoreBoundary] = useState<string[] | undefined | null>(undefined)
   const [deliveryAddress, setDeliveryAddress] = useState<DeliveryLocation | undefined>(
     initialDeliveryAddress
@@ -95,6 +99,9 @@ const InstantDeliveryTemplate = ({ initialDeliveryAddress }: InstantDeliveryTemp
     }
   }, [deliveryDateAndWindow])
 
+  const handleOnSubmit = () => {
+    onInstantDelivery({ storeBoundary, deliveryAddress })
+  }
   return (
     <div>
       <InstantDeliveryStepper storeBoundary={storeBoundary}>
