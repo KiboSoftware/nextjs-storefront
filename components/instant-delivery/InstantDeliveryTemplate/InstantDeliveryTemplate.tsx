@@ -18,12 +18,16 @@ const stepperStyles = {
   },
 }
 
-type Props = {
+type InstantDeliveryStepperProps = {
   storeBoundary?: string[] | null
   children: any
 }
 
-const InstantDeliveryStepper = ({ storeBoundary, children }: Props) => {
+type InstantDeliveryTemplateProps = {
+  initialDeliveryAddress?: DeliveryLocation
+}
+
+const InstantDeliveryStepper = ({ storeBoundary, children }: InstantDeliveryStepperProps) => {
   const { t } = useTranslation('common')
   const isAddressValid = !!storeBoundary
 
@@ -76,9 +80,11 @@ const InstantDeliveryStepper = ({ storeBoundary, children }: Props) => {
   )
 }
 
-const InstantDeliveryTemplate = () => {
+const InstantDeliveryTemplate = ({ initialDeliveryAddress }: InstantDeliveryTemplateProps) => {
   const [storeBoundary, setStoreBoundary] = useState<string[] | undefined | null>(undefined)
-  const [deliveryAddress, setDeliveryAddress] = useState<DeliveryLocation | undefined>()
+  const [deliveryAddress, setDeliveryAddress] = useState<DeliveryLocation | undefined>(
+    initialDeliveryAddress
+  )
   const [deliveryDateAndWindow, setDeliveryDateAndWindow] = useState<DeliveryDateAndWindow>()
 
   useEffect(() => {

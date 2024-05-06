@@ -45,6 +45,7 @@ export type DeliveryDateAndWindow =
   | {
       confirmedDate: string
       confirmedWindow: string
+      confirmedStoreId: string
     }
   | undefined
 
@@ -143,7 +144,7 @@ export const DeliveryWindow = ({ storeBoundary, setDeliveryDateAndWindow }: Prop
   const isOtherDay = !isToday && !isTomorrow
 
   // Remove this line later
-  const storeBoundaryList = storeBoundary //&& [...storeBoundary, '001']
+  const storeBoundaryList = storeBoundary // && [...storeBoundary, '001']
 
   // Today and Tomorrow
   const { data: dwResponse, isLoading: dwIsLoading } = useGetDeliveryWindow(storeBoundaryList)
@@ -176,6 +177,7 @@ export const DeliveryWindow = ({ storeBoundary, setDeliveryDateAndWindow }: Prop
       setDeliveryDateAndWindow({
         confirmedDate: selectedDate as string,
         confirmedWindow: selectedWindow,
+        confirmedStoreId: stores?.storeId as string,
       })
     }
   }
