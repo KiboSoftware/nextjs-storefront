@@ -32,7 +32,7 @@ type Fulfillment = {
 
 const getStoreServiceBoundary = async (
   deliveryAddress: DeliveryLocation | undefined
-): Promise<string | null> => {
+): Promise<string[] | null> => {
   const body = {
     services: ['store-boundary-dsp'],
     deliveryAddress: deliveryAddress,
@@ -53,7 +53,7 @@ const getStoreServiceBoundary = async (
 
     const data = await res.json()
 
-    return data[0]
+    return data
   } catch (err) {
     return null
   }

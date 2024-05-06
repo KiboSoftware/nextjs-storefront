@@ -3,6 +3,7 @@ import { useEffect, useState } from 'react'
 import { Box, Stack, Step, Stepper, Typography, Slider, StepButton } from '@mui/material'
 import { useTranslation } from 'next-i18next'
 
+import { type DeliveryDateAndWindow, DeliveryWindow } from '../DeliveryWindow/DeliveryWindow'
 import DeliveryAddress from '@/components/instant-delivery/DeliveryAddress/DeliveryAddress'
 import { DeliveryLocation } from '@/hooks'
 
@@ -17,12 +18,16 @@ const stepperStyles = {
   },
 }
 
-type Props = {
-  storeBoundary?: string | null
+type InstantDeliveryStepperProps = {
+  storeBoundary?: string[] | null
   children: any
 }
 
-const InstantDeliveryStepper = ({ storeBoundary, children }: Props) => {
+type InstantDeliveryTemplateProps = {
+  initialDeliveryAddress?: DeliveryLocation
+}
+
+const InstantDeliveryStepper = ({ storeBoundary, children }: InstantDeliveryStepperProps) => {
   const { t } = useTranslation('common')
   const isAddressValid = !!storeBoundary
 
@@ -75,9 +80,20 @@ const InstantDeliveryStepper = ({ storeBoundary, children }: Props) => {
   )
 }
 
-const InstantDeliveryTemplate = () => {
-  const [storeBoundary, setStoreBoundary] = useState<string | undefined | null>(undefined)
-  const [deliveryAddress, setDeliveryAddress] = useState<DeliveryLocation | undefined>()
+const InstantDeliveryTemplate = ({ initialDeliveryAddress }: InstantDeliveryTemplateProps) => {
+  const [storeBoundary, setStoreBoundary] = useState<string[] | undefined | null>(undefined)
+  const [deliveryAddress, setDeliveryAddress] = useState<DeliveryLocation | undefined>(
+    initialDeliveryAddress
+  )
+  const [deliveryDateAndWindow, setDeliveryDateAndWindow] = useState<DeliveryDateAndWindow>()
+
+  useEffect(() => {
+    if (deliveryDateAndWindow) {
+      console.log(`-------`)
+      console.log(`confirmed Address: ${JSON.stringify(deliveryAddress)}`)
+      console.log(`confirmed Date: ${JSON.stringify(deliveryDateAndWindow)}`)
+    }
+  }, [deliveryDateAndWindow])
 
   return (
     <div>
@@ -91,8 +107,10 @@ const InstantDeliveryTemplate = () => {
           />
         </div>
         <div>
-          <h1>Delivery Window </h1>
-          <p> storeBoundary: {storeBoundary}</p>
+          <DeliveryWindow
+            storeBoundary={storeBoundary}
+            setDeliveryDateAndWindow={setDeliveryDateAndWindow}
+          />
         </div>
       </InstantDeliveryStepper>
     </div>

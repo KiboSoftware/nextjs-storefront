@@ -220,6 +220,7 @@ module.exports = {
     },
     deliverySolutions: {
       url: 'https://sandbox.api.deliverysolutions.co/api/v2/deliveryAssurance',
+      baseUrl: ' https://sandbox.api.deliverysolutions.co/api/v2',
       x_api_key: process.env.DELIVERYSOLUTIONS_X_API_KEY,
       tenantId: process.env.DELIVERYSOLUTIONS_TENANTID || 'kibo',
       store_external_id: process.env.DELIVERYSOLUTIONS_STORE_EXTERNAL_ID || '002',
