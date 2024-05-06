@@ -539,5 +539,16 @@
   "delivery-solutions-state": "State",
   "delivery-solutions-zipcode": "ZIP Code",
   "delivery-window": "Delivery Window",
-  "delivery-address-error-message": "The address is not recognized. Double check that address was entered correctly."
+  "delivery-address-error-message": "The address is not recognized. Double check that address was entered correctly.",
+  "selected-delivery-day": "Selected delivery day",
+  "selected-delivery-window": "Selected delivery window: {{selectedWindow}}",
+  "select-delivery-window": "Select delivery window",
+  "today": "Today",
+  "tomorrow": "Tomorrow",
+  "pickup-another-date": "Pickup another date",
+  "instant-delivery-warning-message": "An adult (21 or over-ID required) must sign for the items when delivered.",
+  "confirm-delivery-window": "Confirm Delivery Window",
+  "no-delivery-available": "No delivery available",
+  "loading": "Loading...",
+  "select-a-future-date": "Select a future date"
 }

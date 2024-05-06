@@ -21,8 +21,8 @@ export const useFormSchema = () => {
 }
 
 type Props = {
-  storeBoundary: string | undefined | null
-  setStoreBoundary: (storeBoundary: string | undefined | null) => void
+  storeBoundary: string[] | undefined | null
+  setStoreBoundary: (storeBoundary: string[] | undefined | null) => void
   deliveryAddress: DeliveryLocation | undefined
   setDeliveryAddress: (address: DeliveryLocation | undefined) => void
 }
