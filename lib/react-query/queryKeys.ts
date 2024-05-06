@@ -160,4 +160,6 @@ export const customerWishlistKeys = {
 export const deliverySolutionsKeys = {
   all: ['deliverySolutions'] as const,
   serviceBoundary: (payload: any) => [...deliverySolutionsKeys.all, payload] as const,
+  deliveryWindow: (storeExternalIds: string[] | undefined | null, futureDate?: string) =>
+    [...deliverySolutionsKeys.all, storeExternalIds, futureDate] as const,
 }

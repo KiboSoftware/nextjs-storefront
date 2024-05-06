@@ -2,18 +2,20 @@ import React from 'react'
 
 import { ComponentStory, ComponentMeta } from '@storybook/react'
 
-import DeliveryWindow from './DeliveryWindow'
+import { DeliveryWindow } from './DeliveryWindow'
 
 export default {
   title: 'Cart/DeliveryWindow',
   component: DeliveryWindow,
-  argTypes: { setStoreBoundary: { action: 'clicked' }, setDeliveryAddress: { action: 'clicked' } },
+  argTypes: { setDeliveryDateAndWindow: { action: 'clicked' } },
   parameters: {
     layout: 'fullscreen',
   },
 } as ComponentMeta<typeof DeliveryWindow>
 
-const Template: ComponentStory<typeof DeliveryWindow> = (args) => <DeliveryWindow />
+const Template: ComponentStory<typeof DeliveryWindow> = (args) => <DeliveryWindow {...args} />
 
 export const Common = Template.bind({})
-Common.args = {}
+Common.args = {
+  storeBoundary: ['003', '002', '001'],
+}
