@@ -49,9 +49,10 @@ const getRating = (product: Product | ProductCustom) => {
 }
 
 const getPrice = (product: GenericProduct): { regular: number; special: number } => {
+  const override = (product as any)?.price?.tenantOverridePrice
   return {
     regular: product?.price?.price as number,
-    special: product?.price?.salePrice as number,
+    special: override || (product?.price?.salePrice as number),
   }
 }
 

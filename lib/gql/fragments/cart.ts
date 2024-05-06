@@ -49,6 +49,7 @@ export const cartItemDetails = /* GraphQL */ `
       price {
         price
         salePrice
+        tenantOverridePrice
       }
       categories {
         id

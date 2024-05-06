@@ -5,7 +5,7 @@ import { useTranslation } from 'next-i18next'
 
 import { OrderPrice, ProductItem } from '@/components/common'
 import type { OrderPriceProps } from '@/components/common/OrderPrice/OrderPrice'
-import { cartGetters } from '@/lib/getters'
+import { cartGetters, productGetters } from '@/lib/getters'
 
 import type { CrCart, CrCartItem, CrProductOption } from '@/lib/gql/types'
 interface CartContentProps {
@@ -28,7 +28,7 @@ const Content = (props: CartContentProps) => {
     } as CrCart,
   }
   const subscriptionDetails = cartGetters.getSubscriptionDetails(cartItem)
-
+  const price = productGetters.getPrice(cartItem.product as any)
   return (
     <Box sx={{ width: '100%' }} data-testid="content-component">
       <Box>
@@ -36,12 +36,8 @@ const Content = (props: CartContentProps) => {
           image={cartItem?.product?.imageUrl || ''}
           name={cartItem?.product?.name || ''}
           options={cartItem?.product?.options as Array<CrProductOption>}
-          price={(cartItem?.product?.price?.price || 0).toString()}
-          salePrice={
-            (cartItem?.product?.price?.salePrice &&
-              (cartItem?.product?.price?.salePrice).toString()) ||
-            undefined
-          }
+          price={price.regular.toString()}
+          salePrice={(price.special && price.special.toString()) || undefined}
           subscriptionFrequency={subscriptionDetails as string}
           discounts={cartItem?.productDiscounts}
         />

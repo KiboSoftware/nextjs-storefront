@@ -28,13 +28,40 @@ export interface AddCartItemParams {
 }
 
 const addToCart = async (props: AddCartItemParams) => {
+  const tenantOverrideProducts = {
+    'acc2-1': 10,
+    'acc3-1': 11,
+    'bike2-1': 12,
+    'bike1-3': 13,
+  } as any
   const client = makeGraphQLClient()
   const { product, quantity, subscription } = props
-
   const variables = {
     productToAdd: buildAddToCartParams(product, quantity, subscription),
   }
-
+  const key = (
+    variables.productToAdd.product?.variationProductCode ||
+    variables.productToAdd.product?.productCode
+  )?.toLowerCase() as string
+  let overridePrice = false
+  if (Object.keys(tenantOverrideProducts).includes(key as any)) {
+    overridePrice = true
+    const price = tenantOverrideProducts[key] as any
+    ;(variables.productToAdd.product as any).price = {
+      tenantOverridePrice: price,
+    }
+  }
+  if (overridePrice) {
+    const response = await fetch('/api/add-to-cart', {
+      method: 'POST',
+      headers: {
+        Accept: 'application/json, text/plain, */*',
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify(variables),
+    })
+    return await response.json()
+  }
   const response = await client.request({
     document: addToCartMutation,
     variables,
@@ -66,3 +93,10 @@ export const useAddCartItem = () => {
     }),
   }
 }
+
+/*
+    Storefront SSO for users, TrustedSite
+    Cart Takeover
+
+    Surflive
+*/
