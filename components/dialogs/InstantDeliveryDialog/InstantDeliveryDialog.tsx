@@ -4,10 +4,15 @@ import { KiboDialog } from '@/components/common'
 import { InstantDeliveryTemplate } from '@/components/instant-delivery'
 
 const InstantDeliveryDialog = (props: any) => {
-  const { closeModal, isOpen, handleInstantDelivery } = props
+  const { closeModal, isOpen, handleInstantDelivery, deliveryAddress } = props
   const DialogArgs = {
     isOpen: isOpen,
-    Content: <InstantDeliveryTemplate onInstantDelivery={handleInstantDelivery} />,
+    Content: (
+      <InstantDeliveryTemplate
+        initialDeliveryAddress={deliveryAddress}
+        onInstantDelivery={handleInstantDelivery}
+      />
+    ),
     showContentTopDivider: false,
     showContentBottomDivider: false,
 

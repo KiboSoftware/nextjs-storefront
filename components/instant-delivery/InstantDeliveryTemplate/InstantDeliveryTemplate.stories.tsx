@@ -14,8 +14,11 @@ export default {
 } as ComponentMeta<typeof InstantDeliveryTemplate>
 
 const Template: ComponentStory<typeof InstantDeliveryTemplate> = (args) => (
-  <InstantDeliveryTemplate />
+  <InstantDeliveryTemplate {...args} />
 )
 
 export const Common = Template.bind({})
-Common.args = {}
+Common.args = {
+  initialDeliveryAddress: undefined,
+  onInstantDelivery: undefined,
+}

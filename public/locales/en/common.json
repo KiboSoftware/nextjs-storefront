@@ -550,5 +550,10 @@
   "confirm-delivery-window": "Confirm Delivery Window",
   "no-delivery-available": "No delivery available",
   "loading": "Loading...",
-  "select-a-future-date": "Select a future date"
+  "select-a-future-date": "Select a future date",
+
+  "delivery-to": "Delivery to",
+  "change": "Change",
+  "delivery-time": "Delivery Time:",
+  "change-delivery-time": "Change Delivery Time"
 }
