@@ -189,6 +189,9 @@ const ProductDetailTemplate = (props: ProductDetailTemplateProps) => {
     },
     locationInventory
   )
+  const deliveryAddressDateAndWindow =
+    typeof localStorage !== 'undefined' &&
+    JSON.parse(localStorage.getItem('delivery-address-date-and-window') as string)
 
   const isValidForAddToCart = () => {
     if (purchaseType === PurchaseTypes.SUBSCRIPTION) {
@@ -246,9 +249,21 @@ const ProductDetailTemplate = (props: ProductDetailTemplateProps) => {
 
       if (cartResponse.id && !isB2B) {
         if (addToCartPayload?.product?.fulfillmentMethod === FulfillmentOptionsConstant.DELIVERY) {
+          if (!deliveryAddressDateAndWindow) {
+            await addToCart.mutateAsync({
+              product: {
+                productCode: 'InstantDeliveryProduct',
+                variationProductCode: 'InstantDeliveryProduct',
+                fulfillmentMethod,
+                options: [],
+                purchaseLocationCode: selectedFulfillmentOption?.location?.code as string,
+              },
+              quantity: 1,
+            })
+          }
           localStorage.setItem(
-            'delivery-address',
-            JSON.stringify(selectedFulfillmentOption?.location?.address)
+            'delivery-address-date-and-window',
+            JSON.stringify(selectedFulfillmentOption?.location?.deliveryAddressDateAndWindow)
           )
         }
         showModal({
@@ -267,11 +282,11 @@ const ProductDetailTemplate = (props: ProductDetailTemplateProps) => {
     showModal({
       Component: InstantDeliveryDialog,
       props: {
-        handleInstantDelivery: async (selectedAddress: any) => {
+        handleInstantDelivery: async (deliveryAddressDateAndWindow: any) => {
           setSelectedFulfillmentOption({
             location: {
-              code: selectedAddress.storeBoundary,
-              address: selectedAddress?.deliveryAddress,
+              code: deliveryAddressDateAndWindow?.deliveryDateAndWindow?.confirmedStoreId,
+              deliveryAddressDateAndWindow,
             },
             method: FulfillmentOptionsConstant.DELIVERY,
           })
@@ -288,9 +303,10 @@ const ProductDetailTemplate = (props: ProductDetailTemplateProps) => {
     ) {
       setSelectedFulfillmentOption({
         ...selectedFulfillmentOption,
+        location: {},
         method: value,
       })
-      localStorage.removeItem('delivery-address')
+      localStorage.removeItem('delivery-address-date-and-window')
     } else if (value === FulfillmentOptionsConstant.DELIVERY) {
       handleInstantDelivery()
     } else {
@@ -348,7 +364,7 @@ const ProductDetailTemplate = (props: ProductDetailTemplateProps) => {
             method: FulfillmentOptionsConstant.PICKUP,
             location: selectedStore,
           })
-          localStorage.removeItem('delivery-address')
+          localStorage.removeItem('delivery-address-date-and-window')
         },
       },
     })

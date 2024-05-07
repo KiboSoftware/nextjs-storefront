@@ -96,12 +96,10 @@ const InstantDeliveryTemplate = ({
       console.log(`-------`)
       console.log(`confirmed Address: ${JSON.stringify(deliveryAddress)}`)
       console.log(`confirmed Date: ${JSON.stringify(deliveryDateAndWindow)}`)
+      onInstantDelivery({ deliveryAddress, deliveryDateAndWindow })
     }
   }, [deliveryDateAndWindow])
 
-  const handleOnSubmit = () => {
-    onInstantDelivery({ storeBoundary, deliveryAddress })
-  }
   return (
     <div>
       <InstantDeliveryStepper storeBoundary={storeBoundary}>

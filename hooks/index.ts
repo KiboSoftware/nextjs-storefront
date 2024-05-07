@@ -104,6 +104,7 @@ export * from './mutations/cart/useUpdateCartItem/useUpdateCartItem'
 export * from './mutations/cart/useUpdateCartItemQuantity/useUpdateCartItemQuantity'
 export * from './mutations/cart/useUpdateCartCoupon/useUpdateCartCoupon'
 export * from './mutations/cart/useDeleteCartCoupon/useDeleteCartCoupon'
+export * from './mutations/cart/useUpdateCurrentCart/useUpdateCurrentCart'
 
 // Multiship
 // Destinations

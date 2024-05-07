@@ -57,8 +57,12 @@ const CartTemplate = (props: CartTemplateProps) => {
 
   const cartItemCount = cartGetters.getCartItemCount(cart)
   const cartItems = cartGetters.getCartItems(cart)
+  console.log('cartITems', cartItems)
 
   const locationCodes = orderGetters.getFulfillmentLocationCodes(cartItems as CrCartItem[])
+  const filterCartItems = cartItems.filter(
+    (cartItem) => cartItem?.product?.productType !== 'InstantDeliveryProductType'
+  )
 
   const { data: locations } = useGetStoreLocations({ filter: locationCodes })
   const { data: purchaseLocation } = useGetPurchaseLocation()
@@ -125,9 +129,9 @@ const CartTemplate = (props: CartTemplateProps) => {
     cartItems: cartItems as CrCartItem[],
     purchaseLocation,
   })
-  const deliveryAddress =
+  const deliveryAddressDateAndWindow =
     typeof localStorage !== 'undefined' &&
-    JSON.parse(localStorage.getItem('delivery-address') as string)
+    JSON.parse(localStorage.getItem('delivery-address-date-and-window') as string)
 
   const orderSummaryArgs = {
     nameLabel: t('cart-summary'),
@@ -135,7 +139,7 @@ const CartTemplate = (props: CartTemplateProps) => {
     totalLabel: t('estimated-order-total'),
     orderDetails: cart,
     isShippingTaxIncluded: false,
-    deliveryAddress,
+    deliveryAddressDateAndWindow,
     onHandleInstantDelivery: handleInstantDelivery,
     promoComponent: (
       <PromoCodeBadge
@@ -186,7 +190,7 @@ const CartTemplate = (props: CartTemplateProps) => {
         <>
           <Grid item xs={12} md={8} sx={{ paddingRight: { md: 2 } }}>
             <CartItemList
-              cartItems={cartItems}
+              cartItems={filterCartItems}
               fulfillmentLocations={
                 locations && Object.keys(locations).length ? (locations as Location[]) : []
               }

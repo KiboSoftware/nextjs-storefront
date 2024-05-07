@@ -28,6 +28,7 @@ export const cartItemDetails = /* GraphQL */ `
     total
     product {
       productCode
+      productType
       variationProductCode
       fulfillmentTypesSupported
       name
