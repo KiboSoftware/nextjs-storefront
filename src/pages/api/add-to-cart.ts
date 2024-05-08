@@ -2,6 +2,7 @@ import { NextApiRequest, NextApiResponse } from 'next'
 
 import { getCart } from '@/lib/api/operations/'
 import { fetcher, getAdditionalHeader } from '@/lib/api/util'
+import { gqlFetch } from '@/lib/api/util/fetch-gql'
 
 // Configure your GraphQL endpoint
 
@@ -9,6 +10,7 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
   if (req.method !== 'POST') {
     return res.status(405).json({ message: 'Method Not Allowed' })
   }
+  let correlationId:any = ''
   try {
     // Extract the body from the incoming POST request
     const { productToAdd } = req.body
@@ -64,7 +66,7 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
       }
     `
     const headers = req ? getAdditionalHeader(req) : {}
-    const addToCartResponse = await fetcher(
+    const addToCartResponse: Response = await gqlFetch(
       {
         query: addToCartMutation,
         variables: {
@@ -75,9 +77,18 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
       { headers }
     )
     // Execute the mutation
-
+    correlationId = addToCartResponse.headers.get('X-Vol-Correlation') || addToCartResponse.headers.get('x-vol-correlation')
+    res.setHeader('x-vol-correlation', correlationId)
     // Send the GraphQL response back to the client
-    res.status(200).json(addToCartResponse.data.addItemToCart)
+    if(addToCartResponse.status > 499){
+      throw new Error('Internal Server Error')
+    }
+    const result = await addToCartResponse.json()
+    if(addToCartResponse.ok){ 
+      return res.status(200).json(result.data.addItemToCart)
+    } else {
+      return res.status(addToCartResponse.status).json(result)
+    }
   } catch (error) {
     console.error('Error handling request:', error)
     res.status(500).json({ message: 'Internal Server Error' })
