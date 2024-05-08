@@ -11,7 +11,15 @@ const CartIcon = ({ size, isElementVisible, mobileIconColor }: IconProps) => {
   const { t } = useTranslation('common')
 
   const { data: cart } = useGetCart()
-  const itemCount = cartGetters.getCartItemCount(cart)
+  const deliveryAddressDateAndWindow =
+    typeof localStorage !== 'undefined' &&
+    JSON.parse(localStorage.getItem('delivery-address-date-and-window') as string)
+  const filterCartItemsTotal = cart?.items?.filter(
+    (cartItem) => cartItem?.product?.productType !== 'InstantDeliveryProductType'
+  )?.length
+  const itemCount = !deliveryAddressDateAndWindow
+    ? cartGetters.getCartItemCount(cart)
+    : filterCartItemsTotal
 
   const router = useRouter()
 

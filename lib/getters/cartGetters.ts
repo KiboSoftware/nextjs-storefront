@@ -76,6 +76,31 @@ const getLineItemPrice = (item: GenericItem) => {
     special: item.discountTotal ? item?.discountedTotal : undefined,
   }
 }
+const normalizeProduct = (product: any) => {
+  return {
+    quantity: product?.quantity,
+    size: {
+      height: null,
+      width: null,
+      length: null,
+    },
+    sku: product?.product?.productCode,
+    weight: null,
+    price: product?.product?.price?.price,
+    image: product?.product?.imageUrl,
+    title: product?.product?.name,
+    description: product.product.description ? product.product.description : '',
+  }
+}
+
+const getNormalizedDataForRates = (cartItems: any, deliveryWindowDateAndTime: any) => {
+  return {
+    storeExternalIds: [deliveryWindowDateAndTime?.deliveryDateAndWindow?.confirmedStoreId],
+    type: 'delivery',
+    deliveryAddress: deliveryWindowDateAndTime?.deliveryAddress,
+    itemList: cartItems.map(normalizeProduct),
+  }
+}
 
 export const cartGetters = {
   getCartItemCount,
@@ -84,4 +109,5 @@ export const cartGetters = {
   getProductFulfillmentOptions,
   getSubscriptionDetails,
   getLineItemPrice,
+  getNormalizedDataForRates,
 }

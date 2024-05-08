@@ -2,9 +2,10 @@ import React from 'react'
 
 import { KiboDialog } from '@/components/common'
 import { InstantDeliveryTemplate } from '@/components/instant-delivery'
-
+import { useModalContext } from '@/context'
 const InstantDeliveryDialog = (props: any) => {
-  const { closeModal, isOpen, handleInstantDelivery, deliveryAddress } = props
+  const { isOpen, handleInstantDelivery, deliveryAddress } = props
+  const { closeModal } = useModalContext()
   const DialogArgs = {
     isOpen: isOpen,
     Content: (

@@ -31,10 +31,11 @@ import {
   useInitiateCheckout,
   useCartActions,
   useProductCardActions,
+  useUpdateCartItem,
 } from '@/hooks'
 import { orderGetters, cartGetters } from '@/lib/getters'
 
-import type { CrCart, Location, CrCartItem } from '@/lib/gql/types'
+import type { CrCart, Location, CrCartItem, CrCartItemInput } from '@/lib/gql/types'
 
 export interface CartTemplateProps {
   isMultiShipEnabled: boolean
@@ -54,15 +55,21 @@ const CartTemplate = (props: CartTemplateProps) => {
   const { updateCartItemQuantity } = useUpdateCartItemQuantity()
   const { deleteCartItem } = useDeleteCartItem()
   const { showModal, closeModal } = useModalContext()
-
-  const cartItemCount = cartGetters.getCartItemCount(cart)
+  const { updateCartItem } = useUpdateCartItem()
   const cartItems = cartGetters.getCartItems(cart)
+  const deliveryAddressDateAndWindow =
+    typeof localStorage !== 'undefined' &&
+    JSON.parse(localStorage.getItem('delivery-address-date-and-window') as string)
+  const filterCartItems = cartItems?.filter(
+    (cartItem) => cartItem?.product?.productType !== 'InstantDeliveryProductType'
+  )
+  const cartItemCount = !deliveryAddressDateAndWindow
+    ? cartGetters.getCartItemCount(cart)
+    : filterCartItems?.length
+
   console.log('cartITems', cartItems)
 
   const locationCodes = orderGetters.getFulfillmentLocationCodes(cartItems as CrCartItem[])
-  const filterCartItems = cartItems.filter(
-    (cartItem) => cartItem?.product?.productType !== 'InstantDeliveryProductType'
-  )
 
   const { data: locations } = useGetStoreLocations({ filter: locationCodes })
   const { data: purchaseLocation } = useGetPurchaseLocation()
@@ -108,13 +115,38 @@ const CartTemplate = (props: CartTemplateProps) => {
   const handleGotoCheckout = async () => {
     setShowLoadingButton(true)
     try {
-      const initiateOrderResponse = isMultiShipEnabled
-        ? await initiateCheckout.mutateAsync(cart?.id)
-        : await initiateOrder.mutateAsync({ cartId: cart?.id as string })
+      if (deliveryAddressDateAndWindow) {
+        console.log(
+          cartGetters.getNormalizedDataForRates(filterCartItems, deliveryAddressDateAndWindow)
+        )
+        const instantDeliveryItem = cartItems.find(
+          (item) => item?.product?.productType === 'InstantDeliveryProductType'
+        )
 
-      if (initiateOrderResponse?.id) {
-        router.push(`/checkout/${initiateOrderResponse.id}`)
+        await updateCartItem.mutateAsync({
+          cartItemInput: {
+            ...(instantDeliveryItem as CrCartItemInput),
+            total: 10,
+            subtotal: 10,
+            discountedTotal: 10,
+            quantity: instantDeliveryItem?.quantity as number,
+            unitPrice: {
+              saleAmount: 10,
+              listAmount: 10,
+              extendedAmount: 10,
+              overrideAmount: 10,
+            },
+          },
+          cartItemId: instantDeliveryItem?.id as string,
+        })
       }
+      // const initiateOrderResponse = isMultiShipEnabled
+      //   ? await initiateCheckout.mutateAsync(cart?.id)
+      //   : await initiateOrder.mutateAsync({ cartId: cart?.id as string })
+
+      // if (initiateOrderResponse?.id) {
+      //   router.push(`/checkout/${initiateOrderResponse.id}`)
+      // }
     } catch (err) {
       console.error(err)
       setShowLoadingButton(false)
@@ -125,13 +157,11 @@ const CartTemplate = (props: CartTemplateProps) => {
     handleQuantityUpdate,
     handleProductPickupLocation,
     handleInstantDelivery,
+    handChangeDeliveryAddressDateAndTime,
   } = useCartActions({
     cartItems: cartItems as CrCartItem[],
     purchaseLocation,
   })
-  const deliveryAddressDateAndWindow =
-    typeof localStorage !== 'undefined' &&
-    JSON.parse(localStorage.getItem('delivery-address-date-and-window') as string)
 
   const orderSummaryArgs = {
     nameLabel: t('cart-summary'),
@@ -140,7 +170,7 @@ const CartTemplate = (props: CartTemplateProps) => {
     orderDetails: cart,
     isShippingTaxIncluded: false,
     deliveryAddressDateAndWindow,
-    onHandleInstantDelivery: handleInstantDelivery,
+    onHandleInstantDelivery: handChangeDeliveryAddressDateAndTime,
     promoComponent: (
       <PromoCodeBadge
         onApplyCouponCode={handleApplyPromoCode}
