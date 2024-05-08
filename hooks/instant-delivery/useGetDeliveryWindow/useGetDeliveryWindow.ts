@@ -1,5 +1,5 @@
 import { useQuery } from '@tanstack/react-query'
-import { NextMiddlewareResult } from 'next/dist/server/web/types'
+import dayjs from 'dayjs'
 
 import { deliverySolutionsKeys } from '@/lib/react-query/queryKeys'
 
@@ -30,6 +30,9 @@ type DeliveryWindow = {
   provider: null | string
 }
 
+const today = dayjs()
+const todayYYYYMMDD = dayjs(today).format('YYYY-MM-DD')
+
 const getDeliveryWindow = async (
   storeExternalIds: string[] | undefined | null,
   futureDate?: string
@@ -40,7 +43,7 @@ const getDeliveryWindow = async (
     storeExternalIds: storeExternalIds,
     types: ['delivery'],
     dspCheck: false,
-    ...(futureDate ? { startDate: futureDate } : { numberOfDays: 2 }),
+    ...(futureDate ? { startDate: futureDate } : { startDate: todayYYYYMMDD, numberOfDays: 2 }),
   }
 
   try {
