@@ -58,8 +58,8 @@ const CartTemplate = (props: CartTemplateProps) => {
   const { deleteCartItem } = useDeleteCartItem()
   const { showModal, closeModal } = useModalContext()
   const { updateCartItem } = useUpdateCartItem()
-  const { data, isLoading } = useGetDeliveryRates(deliveryRatesPayload)
-  console.log('cart template data', data)
+  const { data: deliveryFee, isLoading } = useGetDeliveryRates(deliveryRatesPayload)
+  console.log('delivery fee', deliveryFee)
   const cartItems = cartGetters.getCartItems(cart)
   const deliveryAddressDateAndWindow =
     typeof localStorage !== 'undefined' &&
@@ -70,8 +70,6 @@ const CartTemplate = (props: CartTemplateProps) => {
   const cartItemCount = !deliveryAddressDateAndWindow
     ? cartGetters.getCartItemCount(cart)
     : filterCartItems?.length
-
-  console.log('cartITems', cartItems)
 
   const locationCodes = orderGetters.getFulfillmentLocationCodes(cartItems as CrCartItem[])
 
@@ -123,13 +121,10 @@ const CartTemplate = (props: CartTemplateProps) => {
         setDeliveryRatesPayload(
           cartGetters.getNormalizedDataForRates(filterCartItems, deliveryAddressDateAndWindow)
         )
-        console.log(
-          cartGetters.getNormalizedDataForRates(filterCartItems, deliveryAddressDateAndWindow)
-        )
         const instantDeliveryItem = cartItems.find(
           (item) => item?.product?.productType === 'InstantDeliveryProductType'
         )
-
+        // if (deliveryFee) {
         await updateCartItem.mutateAsync({
           cartItemInput: {
             ...(instantDeliveryItem as CrCartItemInput),
@@ -147,13 +142,14 @@ const CartTemplate = (props: CartTemplateProps) => {
           cartItemId: instantDeliveryItem?.id as string,
         })
       }
-      // const initiateOrderResponse = isMultiShipEnabled
-      //   ? await initiateCheckout.mutateAsync(cart?.id)
-      //   : await initiateOrder.mutateAsync({ cartId: cart?.id as string })
-
-      // if (initiateOrderResponse?.id) {
-      //   router.push(`/checkout/${initiateOrderResponse.id}`)
       // }
+      const initiateOrderResponse = isMultiShipEnabled
+        ? await initiateCheckout.mutateAsync(cart?.id)
+        : await initiateOrder.mutateAsync({ cartId: cart?.id as string })
+
+      if (initiateOrderResponse?.id) {
+        router.push(`/checkout/${initiateOrderResponse.id}`)
+      }
     } catch (err) {
       console.error(err)
       setShowLoadingButton(false)
