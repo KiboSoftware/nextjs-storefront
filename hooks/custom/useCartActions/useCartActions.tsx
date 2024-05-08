@@ -125,14 +125,26 @@ export const useCartActions = ({ cartItems, purchaseLocation }: UseCartActionsPr
     }
   }
 
-  const handleUpdateDeliveryAddress = async (
-    deliveryAddressDateAndWindow: any,
-    locationCode: string
-  ) => {
+  const handChangeDeliveryAddressDateAndTime = (deliveryAddressDateAndWindow: any) => {
+    console.log('handChangeDeliveryAddressDateAndTime', deliveryAddressDateAndWindow)
+    showModal({
+      Component: InstantDeliveryDialog,
+      props: {
+        deliveryAddress: deliveryAddressDateAndWindow?.deliveryAddress,
+        handleInstantDelivery: async (deliveryAddressDateAndWindow: any) => {
+          handleUpdateCartItems(deliveryAddressDateAndWindow)
+          closeModal()
+        },
+      },
+    })
+  }
+
+  const handleUpdateCartItems = async (deliveryAddressDateAndWindow: any) => {
     const newCartItems = [...cartItems]
     newCartItems.forEach((item: CrCartItem) => {
       if (item?.fulfillmentMethod && item?.fulfillmentMethod === FulfillmentOptions.DELIVERY) {
-        item.fulfillmentLocationCode = locationCode
+        item.fulfillmentLocationCode =
+          deliveryAddressDateAndWindow?.deliveryDateAndWindow?.confirmedStoreId
       }
     })
     try {
@@ -156,5 +168,6 @@ export const useCartActions = ({ cartItems, purchaseLocation }: UseCartActionsPr
     handleQuantityUpdate,
     handleProductPickupLocation,
     handleInstantDelivery,
+    handChangeDeliveryAddressDateAndTime,
   }
 }

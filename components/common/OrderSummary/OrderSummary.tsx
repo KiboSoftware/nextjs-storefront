@@ -19,7 +19,7 @@ interface OrderSummaryProps<T extends CrCart | CrOrder | Checkout> extends Order
   shippingLabel?: string
   children?: ReactNode
   deliveryAddressDateAndWindow?: any
-  onHandleInstantDelivery?: () => void
+  onHandleInstantDelivery?: (deliveryAddressDateAndWindow: any) => void
 }
 
 const styles = {
@@ -109,7 +109,9 @@ const OrderSummary = <T extends CrCart | CrOrder | Checkout>(props: OrderSummary
               <Button
                 data-testid="change-address-button"
                 variant="contained"
-                onClick={onHandleInstantDelivery}
+                onClick={() =>
+                  onHandleInstantDelivery && onHandleInstantDelivery(deliveryAddressDateAndWindow)
+                }
               >
                 {t('change')}
               </Button>
@@ -134,7 +136,9 @@ const OrderSummary = <T extends CrCart | CrOrder | Checkout>(props: OrderSummary
               </Typography>
               <Typography
                 variant="caption"
-                onClick={() => undefined}
+                onClick={() =>
+                  onHandleInstantDelivery && onHandleInstantDelivery(deliveryAddressDateAndWindow)
+                }
                 sx={{ textDecoration: 'underline', cursor: 'pointer' }}
               >
                 {t('change-delivery-time')}
