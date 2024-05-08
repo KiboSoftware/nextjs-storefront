@@ -32,6 +32,7 @@ import {
   useCartActions,
   useProductCardActions,
   useUpdateCartItem,
+  useGetDeliveryRates,
 } from '@/hooks'
 import { orderGetters, cartGetters } from '@/lib/getters'
 
@@ -45,6 +46,7 @@ export interface CartTemplateProps {
 const CartTemplate = (props: CartTemplateProps) => {
   const { isMultiShipEnabled } = props
   const { data: cart } = useGetCart(props?.cart)
+  const [deliveryRatesPayload, setDeliveryRatesPayload] = useState<any>()
 
   const { t } = useTranslation('common')
   const theme = useTheme()
@@ -56,6 +58,8 @@ const CartTemplate = (props: CartTemplateProps) => {
   const { deleteCartItem } = useDeleteCartItem()
   const { showModal, closeModal } = useModalContext()
   const { updateCartItem } = useUpdateCartItem()
+  const { data, isLoading } = useGetDeliveryRates(deliveryRatesPayload)
+  console.log('cart template data', data)
   const cartItems = cartGetters.getCartItems(cart)
   const deliveryAddressDateAndWindow =
     typeof localStorage !== 'undefined' &&
@@ -116,6 +120,9 @@ const CartTemplate = (props: CartTemplateProps) => {
     setShowLoadingButton(true)
     try {
       if (deliveryAddressDateAndWindow) {
+        setDeliveryRatesPayload(
+          cartGetters.getNormalizedDataForRates(filterCartItems, deliveryAddressDateAndWindow)
+        )
         console.log(
           cartGetters.getNormalizedDataForRates(filterCartItems, deliveryAddressDateAndWindow)
         )

@@ -191,3 +191,4 @@ export * from './mutations/b2b/quotes/useDeleteQuoteCoupon/useDeleteQuoteCoupon'
 // Delivery Solutions
 export * from './instant-delivery/useGetStoreServiceBoundary/useGetStoreServiceBoundary'
 export * from './instant-delivery/useGetDeliveryWindow/useGetDeliveryWindow'
+export * from './instant-delivery/useGetDeliveryRates/useGetDeliveryRates'
