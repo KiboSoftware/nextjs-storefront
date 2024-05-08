@@ -7,6 +7,7 @@ import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider'
 import dayjs from 'dayjs'
 import { useTranslation } from 'next-i18next'
 
+import { KiboRadio } from '@/components/common'
 import { useGetDeliveryWindow } from '@/hooks'
 
 interface DeliveryWindow {
@@ -64,6 +65,8 @@ type Props = {
   setDeliveryDateAndWindow: (selectedDateAndWindow: DeliveryDateAndWindow) => void
 }
 
+type DropOffTimeByDate = [] | { original: DeliveryWindow; readable: string }[] | null
+
 function formatDropoffTime(dropoffTime: DeliveryWindow): string {
   const startTime = new Date(dropoffTime.pickupTime.startsAt)
   const endTime = new Date(dropoffTime.dropoffTime.endsAt)
@@ -89,7 +92,8 @@ function getDropoffTimesByDate(deliveries: Delivery[], date: string) {
   deliveries.forEach((delivery: Delivery) => {
     if (delivery.date === date) {
       delivery.windows.forEach((window: DeliveryWindow) => {
-        dropoffTimes.push(formatDropoffTime(window))
+        const readable = formatDropoffTime(window)
+        dropoffTimes.push(readable)
       })
     }
   })
@@ -144,7 +148,7 @@ export const DeliveryWindow = ({ storeBoundary, setDeliveryDateAndWindow }: Prop
   const isOtherDay = !isToday && !isTomorrow
 
   // Remove this line later
-  const storeBoundaryList = storeBoundary // && [...storeBoundary, '001']
+  const storeBoundaryList = storeBoundary && [...storeBoundary, '001']
 
   // Today and Tomorrow
   const { data: dwResponse, isLoading: dwIsLoading } = useGetDeliveryWindow(storeBoundaryList)
@@ -208,6 +212,7 @@ export const DeliveryWindow = ({ storeBoundary, setDeliveryDateAndWindow }: Prop
           sx={{
             ...commonTabStyles,
             backgroundColor: isToday ? 'lightgray' : 'white',
+            padding: 1,
           }}
         >
           <Typography>{t('today')}</Typography>
@@ -217,6 +222,7 @@ export const DeliveryWindow = ({ storeBoundary, setDeliveryDateAndWindow }: Prop
           sx={{
             ...commonTabStyles,
             backgroundColor: isTomorrow ? 'lightgray' : 'white',
+            padding: 1,
           }}
         >
           <Typography>{t('tomorrow')}</Typography>
@@ -226,13 +232,14 @@ export const DeliveryWindow = ({ storeBoundary, setDeliveryDateAndWindow }: Prop
           sx={{
             ...commonTabStyles,
             backgroundColor: isOtherDay ? 'lightgray' : 'white',
+            padding: 1,
           }}
         >
           <Typography>{t('pickup-another-date')}</Typography>
         </Box>
       </Stack>
       {isToday && (
-        <Stack gap={1}>
+        <Stack>
           {todayDropoffs?.map((dropoffTime) => (
             <Box
               key={dropoffTime}
@@ -252,7 +259,7 @@ export const DeliveryWindow = ({ storeBoundary, setDeliveryDateAndWindow }: Prop
         </Stack>
       )}
       {isTomorrow && (
-        <Stack gap={1}>
+        <Stack>
           {tomorrowDropoffs?.map((dropoffTime) => (
             <Box
               key={dropoffTime}
@@ -274,7 +281,7 @@ export const DeliveryWindow = ({ storeBoundary, setDeliveryDateAndWindow }: Prop
         </Stack>
       )}
       {isOtherDay && (
-        <Stack gap={1}>
+        <Stack>
           <LocalizationProvider dateAdapter={AdapterDayjs}>
             <DatePicker
               label={t('select-a-future-date')}
