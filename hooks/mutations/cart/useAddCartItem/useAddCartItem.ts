@@ -29,11 +29,10 @@ export interface AddCartItemParams {
 
 const addToCart = async (props: AddCartItemParams) => {
   const tenantOverrideProducts = {
-    'acc2-1': { tenantOverridePrice: 10 },
-    'acc2-2': { tenantOverridePrice: 10, isOverRidePriceSalePrice: true },
-    'acc3-1': { tenantOverridePrice: 11 },
-    'bike2-1': { tenantOverridePrice: 12 },
-    'bike1-3': { tenantOverridePrice: 13 },
+    'acc2-1': 10,
+    'acc3-1': 11,
+    'bike2-1': 12,
+    'bike1-3': 13,
   } as any
   const client = makeGraphQLClient()
   const { product, quantity, subscription } = props
@@ -48,7 +47,9 @@ const addToCart = async (props: AddCartItemParams) => {
   if (Object.keys(tenantOverrideProducts).includes(key as any)) {
     overridePrice = true
     const price = tenantOverrideProducts[key] as any
-    ;(variables.productToAdd.product as any).price = { ...price }
+    ;(variables.productToAdd.product as any).price = {
+      tenantOverridePrice: price,
+    }
   }
   if (overridePrice) {
     const response = await fetch('/api/add-to-cart', {
