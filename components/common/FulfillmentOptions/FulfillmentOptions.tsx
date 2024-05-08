@@ -51,7 +51,7 @@ const FulfillmentOptions = (props: FulfillmentOptionsProps) => {
   const getStoreActionLabel = (option: FulfillmentOption) => {
     if (!option?.disabled && option.shortName !== FulfillmentOptionsConstant.SHIP) {
       if (option.shortName === FulfillmentOptionsConstant.DELIVERY) {
-        return t('select-time-slot')
+        return ''
       } else if (option?.details) {
         return t('change-store')
       } else {

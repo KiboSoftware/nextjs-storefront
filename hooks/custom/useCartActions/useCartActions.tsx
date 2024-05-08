@@ -27,10 +27,6 @@ export const useCartActions = ({ cartItems, purchaseLocation }: UseCartActionsPr
   const deliveryAddressDateAndWindowFromLocalStorage =
     typeof localStorage !== 'undefined' &&
     JSON.parse(localStorage.getItem('delivery-address-date-and-window') as string)
-  console.log(
-    'deliveryAddressDateAndWindowFromLocalStorage',
-    deliveryAddressDateAndWindowFromLocalStorage
-  )
 
   const handleProductPickupLocation = (cartItemId: string) => {
     showModal({
@@ -46,12 +42,10 @@ export const useCartActions = ({ cartItems, purchaseLocation }: UseCartActionsPr
   }
 
   const handleInstantDelivery = (cartItemId?: string) => {
-    console.log('handleinstantnn', cartItemId)
     showModal({
       Component: InstantDeliveryDialog,
       props: {
         handleInstantDelivery: async (deliveryAddressDateAndWindow: any) => {
-          console.log('selectedAddress', deliveryAddressDateAndWindow)
           const response = await mutateCartItem(
             cartItemId as string,
             FulfillmentOptions.DELIVERY,
@@ -76,7 +70,6 @@ export const useCartActions = ({ cartItems, purchaseLocation }: UseCartActionsPr
               JSON.stringify(deliveryAddressDateAndWindow)
             )
           }
-          console.log('response', response)
           closeModal()
         },
       },
@@ -126,7 +119,6 @@ export const useCartActions = ({ cartItems, purchaseLocation }: UseCartActionsPr
   }
 
   const handChangeDeliveryAddressDateAndTime = (deliveryAddressDateAndWindow: any) => {
-    console.log('handChangeDeliveryAddressDateAndTime', deliveryAddressDateAndWindow)
     showModal({
       Component: InstantDeliveryDialog,
       props: {
@@ -153,7 +145,6 @@ export const useCartActions = ({ cartItems, purchaseLocation }: UseCartActionsPr
           items: newCartItems,
         },
       })
-      console.log('response', response)
     } catch (err) {
       console.error(err)
     }

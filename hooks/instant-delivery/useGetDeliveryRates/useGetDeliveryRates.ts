@@ -81,11 +81,13 @@ export type Payload = {
 }
 
 const computeDeliveryFee = (rate: Rate): number => {
+  let fee
   if (rate.fee > rate.amount) {
-    return rate.fee - rate.amount
+    fee = rate.fee - rate.amount
   } else {
-    return rate.fee
+    fee = rate.fee
   }
+  return fee / 100
 }
 
 const getDeliveryRates = async (payload: Payload): Promise<number | null> => {

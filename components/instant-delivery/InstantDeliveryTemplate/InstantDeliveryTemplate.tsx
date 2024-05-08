@@ -93,9 +93,6 @@ const InstantDeliveryTemplate = ({
 
   useEffect(() => {
     if (deliveryDateAndWindow) {
-      console.log(`-------`)
-      console.log(`confirmed Address: ${JSON.stringify(deliveryAddress)}`)
-      console.log(`confirmed Date: ${JSON.stringify(deliveryDateAndWindow)}`)
       onInstantDelivery({ deliveryAddress, deliveryDateAndWindow })
     }
   }, [deliveryDateAndWindow])
