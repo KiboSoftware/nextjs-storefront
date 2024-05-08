@@ -66,7 +66,7 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
       }
     `
     const headers = req ? getAdditionalHeader(req) : {}
-    const addToCartResponse: Response = await gqlFetch(
+    const addToCartResponse:any = await gqlFetch(
       {
         query: addToCartMutation,
         variables: {
