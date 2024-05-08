@@ -80,14 +80,14 @@ const normalizeProduct = (product: any) => {
   return {
     quantity: product?.quantity,
     size: {
-      height: null,
-      width: null,
-      length: null,
+      height: 1,
+      width: 1,
+      length: 1,
     },
     sku: product?.product?.productCode,
-    weight: null,
+    weight: 1,
     price: product?.product?.price?.price,
-    image: product?.product?.imageUrl,
+    image: `https:${product?.product?.imageUrl}`,
     title: product?.product?.name,
     description: product.product.description ? product.product.description : '',
   }
