@@ -97,6 +97,9 @@ const getPickupItems = (order: CrOrder): CrOrderItem[] => {
 const getShipItems = (order: CrOrder): CrOrderItem[] =>
   getItemsByFulfillment(order, FulfillmentOptions.SHIP)
 
+const getDeliveryItems = (order: CrOrder): CrOrderItem[] =>
+  getItemsByFulfillment(order, FulfillmentOptions.DELIVERY)
+
 const getDigitalItems = (order: CrOrder): CrOrderItem[] =>
   getItemsByFulfillment(order, FulfillmentOptions.DIGITAL)
 
@@ -217,6 +220,7 @@ const getOrderSummary = (order: CrOrder): OrderSummary => {
 const getCheckoutDetails = (order: CrOrder): CheckoutDetails => {
   return {
     shipItems: getShipItems(order),
+    deliveryItems: getDeliveryItems(order),
     pickupItems: getPickupItems(order),
     digitalItems: getDigitalItems(order),
     orderSummary: getOrderSummary(order),
@@ -420,4 +424,5 @@ export const orderGetters = {
   getShippingDiscounts,
   getItemTaxTotal,
   getDigitalItems,
+  getDeliveryItems,
 }

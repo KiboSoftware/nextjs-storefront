@@ -26,7 +26,7 @@ import {
 import { DefaultId, AddressType, CountryCode, FulfillmentOptions } from '@/lib/constants'
 import { orderGetters, userGetters } from '@/lib/getters'
 import { actions, buildAddressParams, hasPermission } from '@/lib/helpers'
-import { Address } from '@/lib/types'
+import type { ContactForm, Address } from '@/lib/types'
 
 import type {
   CrOrder,
@@ -41,6 +41,26 @@ interface ShippingProps {
   checkout: CrOrder
   savedUserAddressData?: CustomerContactCollection
   isAuthenticated: boolean
+}
+type Contact = { street: string; city: string; country: string; state: string; zipcode: string }
+
+const convertToContactForm = (contact: Contact): ContactForm => {
+  return {
+    firstName: '',
+    lastNameOrSurname: '',
+    address: {
+      address1: contact.street,
+      address2: '',
+      cityOrTown: contact.city,
+      countryCode: contact.country,
+      isValidated: false,
+      postalOrZipCode: contact.zipcode,
+      stateOrProvince: contact.state,
+    },
+    phoneNumbers: {
+      home: '',
+    },
+  }
 }
 
 const StandardShippingStep = (props: ShippingProps) => {
@@ -65,6 +85,7 @@ const StandardShippingStep = (props: ShippingProps) => {
   const shipItems = orderGetters.getShipItems(checkout)
   const pickupItems = orderGetters.getPickupItems(checkout)
   const digitalItems = orderGetters.getDigitalItems(checkout)
+  const deliveryItems = orderGetters.getDeliveryItems(checkout)
 
   const [isAddressSavedToAccount, setIsAddressSavedToAccount] = useState<boolean>(false)
   const [validateForm, setValidateForm] = useState<boolean>(false)
@@ -156,7 +177,8 @@ const StandardShippingStep = (props: ShippingProps) => {
       setShouldShowAddAddressButton(true)
       setValidateForm(false)
       setIsNewAddressAdded(true)
-      setStepStatusIncomplete()
+
+      setStepStatusValid()
     } catch (error: any) {
       setValidateForm(false)
       console.error(error)
@@ -266,10 +288,19 @@ const StandardShippingStep = (props: ShippingProps) => {
 
   useEffect(() => {
     // eslint-disable-next-line @typescript-eslint/no-extra-semi
-    ;(selectedShippingAddressId && checkoutShippingMethodCode && shouldShowAddAddressButton) ||
-    (!shipItems.length && (pickupItems.length || digitalItems.length))
-      ? setStepStatusValid()
-      : setStepStatusIncomplete()
+    if (
+      (selectedShippingAddressId && checkoutShippingMethodCode && shouldShowAddAddressButton) ||
+      (!shipItems.length && (pickupItems.length || digitalItems.length))
+    ) {
+      setStepStatusValid()
+    } else {
+      if (checkout?.fulfillmentInfo?.fulfillmentContact) {
+        setStepStatusValid()
+      } else {
+        setStepStatusIncomplete()
+      }
+    }
+
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [selectedShippingAddressId, checkout, shouldShowAddAddressButton])
 
@@ -314,7 +345,7 @@ const StandardShippingStep = (props: ShippingProps) => {
     return <Typography variant="subtitle2">{t('digital-products-shipping-text')}</Typography>
   }
 
-  if (!shipItems.length) {
+  if (!shipItems.length && pickupItems.length) {
     return (
       <>
         <Typography variant="h2" component="h2" sx={{ fontWeight: 'bold' }}>
@@ -332,6 +363,12 @@ const StandardShippingStep = (props: ShippingProps) => {
       </>
     )
   }
+
+  // Instant Delivery
+  const instantDelivery = localStorage.getItem('delivery-address-date-and-window') as string
+  const instantDeliveryObj = JSON.parse(instantDelivery)
+  const deliveryAddress = instantDeliveryObj.deliveryAddress
+  const contact = convertToContactForm(deliveryAddress)
 
   return (
     <Stack data-testid="checkout-shipping" gap={2} ref={shippingAddressRef}>
@@ -422,21 +459,22 @@ const StandardShippingStep = (props: ShippingProps) => {
               )}
             </NoSsr>
           </Stack>
-          {shippingMethods.length > 0 && (
-            <ShippingMethod
-              shipItems={shipItems}
-              pickupItems={pickupItems}
-              orderShipmentMethods={[...shippingMethods]}
-              selectedShippingMethodCode={checkoutShippingMethodCode}
-              onShippingMethodChange={handleSaveShippingMethod}
-              onStoreLocatorClick={handleStoreLocatorClick}
-            />
-          )}
+
+          <ShippingMethod
+            shipItems={shipItems}
+            pickupItems={pickupItems}
+            deliveryItems={deliveryItems}
+            orderShipmentMethods={[...shippingMethods]}
+            selectedShippingMethodCode={checkoutShippingMethodCode}
+            onShippingMethodChange={handleSaveShippingMethod}
+            onStoreLocatorClick={handleStoreLocatorClick}
+          />
         </>
       )}
       {!shouldShowAddAddressButton && (
         <>
           <AddressForm
+            contact={contact}
             isUserLoggedIn={false}
             saveAddressLabel={t('save-shipping-address')}
             setAutoFocus={true}

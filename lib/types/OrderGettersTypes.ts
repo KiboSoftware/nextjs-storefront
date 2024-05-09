@@ -34,6 +34,7 @@ export interface PaymentMethod {
 }
 export interface CheckoutDetails {
   shipItems: Maybe<CrOrderItem>[]
+  deliveryItems: Maybe<CrOrderItem>[]
   pickupItems: Maybe<CrOrderItem>[]
   digitalItems: Maybe<CrOrderItem>[]
   orderSummary: OrderSummary

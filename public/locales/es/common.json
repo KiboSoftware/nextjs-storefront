@@ -46,5 +46,6 @@
   "confirm-delivery-window": "Confirm Delivery Window",
   "no-delivery-available": "No delivery available",
   "loading": "Loading...",
-  "select-a-future-date": "Select a future date"
+  "select-a-future-date": "Select a future date",
+  "instant-delivery": "Instant Delivery"
 }

@@ -56,6 +56,7 @@ export const useFormSchema = () => {
 // Component
 const AddressForm = (props: AddressFormProps) => {
   const { publicRuntimeConfig } = getConfig()
+  const isInstantDelivery = true
 
   const {
     contact,
@@ -107,11 +108,6 @@ const AddressForm = (props: AddressFormProps) => {
     if (validateForm) handleSubmit(onValid)()
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [isValid, validateForm])
-
-  useEffect(() => {
-    reset(contact)
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [contact])
 
   return (
     <Box
@@ -184,6 +180,7 @@ const AddressForm = (props: AddressFormProps) => {
                 onChange={(_name: string, value: string) => field.onChange(value)}
                 onBlur={field.onBlur}
                 required={true}
+                disabled={isInstantDelivery ? true : false}
               />
             )}
           />
@@ -204,6 +201,7 @@ const AddressForm = (props: AddressFormProps) => {
                 helperText={errors?.address?.address2?.message}
                 onChange={(_name: string, value: string) => field.onChange(value)}
                 onBlur={field.onBlur}
+                disabled={isInstantDelivery ? true : false}
               />
             )}
           />
@@ -225,6 +223,7 @@ const AddressForm = (props: AddressFormProps) => {
                 onChange={(_name: string, value: string) => field.onChange(value)}
                 onBlur={field.onBlur}
                 required={true}
+                disabled={isInstantDelivery ? true : false}
               />
             )}
           />
@@ -246,6 +245,7 @@ const AddressForm = (props: AddressFormProps) => {
                 onChange={(_name: string, value: string) => field.onChange(value)}
                 onBlur={field.onBlur}
                 required={true}
+                disabled={isInstantDelivery ? true : false}
               />
             )}
           />
@@ -267,6 +267,7 @@ const AddressForm = (props: AddressFormProps) => {
                 onChange={(_name: string, value: string) => field.onChange(value)}
                 onBlur={field.onBlur}
                 required={true}
+                disabled={isInstantDelivery ? true : false}
               />
             )}
           />
@@ -290,6 +291,7 @@ const AddressForm = (props: AddressFormProps) => {
                   onChange={(_name, value) => field.onChange(value)}
                   onBlur={field.onBlur}
                   required={true}
+                  disabled={isInstantDelivery ? true : false}
                 >
                   {generateSelectOptions()}
                 </KiboSelect>
