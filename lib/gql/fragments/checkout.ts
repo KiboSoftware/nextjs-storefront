@@ -3,6 +3,7 @@ export const checkoutItemProductFragment = /* GraphQL */ `
     productCode
     name
     description
+    productType
     imageUrl
     options {
       attributeFQN
@@ -20,6 +21,7 @@ export const checkoutItemProductFragment = /* GraphQL */ `
     price {
       price
       salePrice
+      tenantOverridePrice
     }
     categories {
       id

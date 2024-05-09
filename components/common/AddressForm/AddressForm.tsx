@@ -56,7 +56,7 @@ export const useFormSchema = () => {
 // Component
 const AddressForm = (props: AddressFormProps) => {
   const { publicRuntimeConfig } = getConfig()
-  const isInstantDelivery = true
+  const isInstantDelivery = false
 
   const {
     contact,

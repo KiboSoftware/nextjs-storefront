@@ -245,6 +245,7 @@ const CartTemplate = (props: CartTemplateProps) => {
         helpText={promoError}
       />
     ),
+    isCart: true,
   }
 
   const handleContinueShopping = () => {

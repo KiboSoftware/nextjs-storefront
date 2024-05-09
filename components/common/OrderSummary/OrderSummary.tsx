@@ -19,6 +19,7 @@ interface OrderSummaryProps<T extends CrCart | CrOrder | Checkout> extends Order
   shippingLabel?: string
   children?: ReactNode
   deliveryAddressDateAndWindow?: any
+  isCart?: boolean
   onHandleInstantDelivery?: (deliveryAddressDateAndWindow: any) => void
 }
 
@@ -46,6 +47,7 @@ const OrderSummary = <T extends CrCart | CrOrder | Checkout>(props: OrderSummary
     isShippingTaxIncluded,
     promoComponent,
     deliveryAddressDateAndWindow,
+    isCart,
     onHandleInstantDelivery,
   } = props
   const { t } = useTranslation('common')
@@ -59,6 +61,7 @@ const OrderSummary = <T extends CrCart | CrOrder | Checkout>(props: OrderSummary
     promoComponent,
     isShippingTaxIncluded,
     orderDetails,
+    isCart,
   }
   return (
     <Card sx={{ bgcolor: 'grey.100' }}>

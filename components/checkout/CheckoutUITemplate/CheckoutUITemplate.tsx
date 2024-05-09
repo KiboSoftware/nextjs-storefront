@@ -48,10 +48,12 @@ const CheckoutUITemplate = <T extends CrOrder | Checkout>(props: CheckoutUITempl
   )
   const handleBack = () => setStepBack()
   const handleSubmit = useCallback(() => setStepStatusSubmit(), [])
-
+  const filterCheckoutItems = checkout?.items?.filter(
+    (checkoutItem) => checkoutItem?.product?.productType !== 'InstantDeliveryProductType'
+  )
   const orderSummaryArgs = {
     nameLabel: t('order-summary'),
-    subTotalLabel: `Cart Subtotal of (${checkout?.items?.length} items)`,
+    subTotalLabel: `Cart Subtotal of (${filterCheckoutItems?.length} items)`,
     shippingTotalLabel: t('standard-shipping'),
     taxLabel: t('tax'),
     totalLabel: t('order-total'),

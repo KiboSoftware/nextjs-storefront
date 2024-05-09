@@ -98,7 +98,9 @@ const getShipItems = (order: CrOrder): CrOrderItem[] =>
   getItemsByFulfillment(order, FulfillmentOptions.SHIP)
 
 const getDeliveryItems = (order: CrOrder): CrOrderItem[] =>
-  getItemsByFulfillment(order, FulfillmentOptions.DELIVERY)
+  getItemsByFulfillment(order, FulfillmentOptions.DELIVERY)?.filter(
+    (item) => item?.product?.productType !== 'InstantDeliveryProductType'
+  )
 
 const getDigitalItems = (order: CrOrder): CrOrderItem[] =>
   getItemsByFulfillment(order, FulfillmentOptions.DIGITAL)
@@ -380,6 +382,17 @@ const isPayPalPaymentMethodActive = (order: CrOrder) => {
   return id && paymentType === PaymentType.PAYPALEXPRESS2 && status === 'New'
 }
 
+const getDeliveryItemPrice = (order: CrOrder) => {
+  const filterItem = order?.items?.find(
+    (item) => item?.product?.productType === 'InstantDeliveryProductType'
+  )
+
+  const filterItemPrice = filterItem?.product?.price?.tenantOverridePrice
+    ? filterItem?.product?.price?.tenantOverridePrice
+    : filterItem?.product?.price?.price
+  return filterItemPrice
+}
+
 export const orderGetters = {
   isPayPalPaymentMethodActive,
   getCheckoutItemCount,
@@ -425,4 +438,5 @@ export const orderGetters = {
   getItemTaxTotal,
   getDigitalItems,
   getDeliveryItems,
+  getDeliveryItemPrice,
 }
