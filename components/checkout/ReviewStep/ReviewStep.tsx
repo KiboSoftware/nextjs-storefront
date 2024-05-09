@@ -168,7 +168,7 @@ const ReviewStep = (props: ReviewStepProps) => {
       }
 
       await onCreateOrder(checkout)
-
+      localStorage.removeItem('delivery-address-date-and-window')
       setStepStatusComplete()
       setStepNext()
     } catch (e) {

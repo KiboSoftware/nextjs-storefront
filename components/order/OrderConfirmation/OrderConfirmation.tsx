@@ -20,6 +20,7 @@ const OrderConfirmation = ({ order }: { order: CrOrder }) => {
   const submittedDate = orderGetters.getSubmittedDate(order)
   const pickupItems = orderGetters.getPickupItems(order)
   const shipItems = orderGetters.getShipItems(order)
+  const deliveryItems = orderGetters.getDeliveryItems(order)
   const email = orderGetters.getEmail(order)
 
   const options = [
@@ -35,7 +36,11 @@ const OrderConfirmation = ({ order }: { order: CrOrder }) => {
 
   const orderSummeryArgs = {
     nameLabel: t('order-summary'),
-    subTotalLabel: `${t('subtotal')} (${t('item-quantity', { count: order.items?.length })})`,
+    subTotalLabel: `${t('subtotal')} (${t('item-quantity', {
+      count: order.items?.filter(
+        (orderItem) => orderItem?.product?.productType !== 'InstantDeliveryProductType'
+      )?.length,
+    })})`,
     shippingTotalLabel: t('shipping'),
     taxLabel: t('estimated-tax'),
     totalLabel: t('total-price'),
@@ -67,7 +72,11 @@ const OrderConfirmation = ({ order }: { order: CrOrder }) => {
             <Typography variant="h1">{t('thank-you')}</Typography>
             <Box display="flex" gap={3}>
               <Typography variant="h2" fontWeight={'normal'}>
-                {t('item-quantity', { count: order.items?.length })}
+                {t('item-quantity', {
+                  count: order.items?.filter(
+                    (orderItem) => orderItem?.product?.productType !== 'InstantDeliveryProductType'
+                  )?.length,
+                })}
               </Typography>
               <Typography variant="h2">{t('currency', { val: orderTotal })}</Typography>
             </Box>
@@ -129,6 +138,15 @@ const OrderConfirmation = ({ order }: { order: CrOrder }) => {
                   {t('pickup')}
                 </Typography>
                 <ProductItemList items={pickupItems} />
+              </Box>
+            )}
+            {/* Instant Delivery */}
+            {deliveryItems && deliveryItems.length > 0 && (
+              <Box sx={{ paddingBlock: 2 }}>
+                <Typography variant="h3" fontWeight={700} gutterBottom>
+                  {t('instant-delivery')}
+                </Typography>
+                <ProductItemList items={deliveryItems} />
               </Box>
             )}
           </Container>

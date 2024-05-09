@@ -33,7 +33,9 @@ const CheckoutHeader = ({ isMultiShipEnabled }: { isMultiShipEnabled: boolean })
     isMultiship: isMultiShipEnabled,
   })
   const numberOfItems =
-    multishipCheckout?.items?.length ||
+    multishipCheckout?.items?.filter(
+      (checkoutItem) => checkoutItem?.product?.productType !== 'InstantDeliveryProductType'
+    )?.length ||
     order?.items?.filter(
       (checkoutItem) => checkoutItem?.product?.productType !== 'InstantDeliveryProductType'
     )?.length

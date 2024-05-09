@@ -18,7 +18,7 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
     // Prepare the GraphQL mutation
 
     const headers = req ? getAdditionalHeader(req) : {}
-    const updateCartItemCartResponse: any = await gqlFetch(
+    const updateCartItemResponse: any = await gqlFetch(
       {
         query: updateCartItemByCartIDMutation,
         variables: { ...params },
@@ -27,18 +27,18 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
     )
     // Execute the mutation
     correlationId =
-      updateCartItemCartResponse.headers.get('X-Vol-Correlation') ||
-      updateCartItemCartResponse.headers.get('x-vol-correlation')
+      updateCartItemResponse.headers.get('X-Vol-Correlation') ||
+      updateCartItemResponse.headers.get('x-vol-correlation')
     res.setHeader('x-vol-correlation', correlationId)
     // Send the GraphQL response back to the client
-    if (updateCartItemCartResponse.status > 499) {
+    if (updateCartItemResponse.status > 499) {
       throw new Error('Internal Server Error')
     }
-    const result = await updateCartItemCartResponse.json()
-    if (updateCartItemCartResponse.ok) {
+    const result = await updateCartItemResponse.json()
+    if (updateCartItemResponse.ok) {
       return res.status(200).json(result.data.updateCartItem)
     } else {
-      return res.status(updateCartItemCartResponse.status).json(result)
+      return res.status(updateCartItemResponse.status).json(result)
     }
   } catch (error) {
     console.error('Error handling request:', error)

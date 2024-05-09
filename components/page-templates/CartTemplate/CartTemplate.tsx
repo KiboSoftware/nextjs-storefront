@@ -145,7 +145,7 @@ const CartTemplate = (props: CartTemplateProps) => {
     const instantDeliveryItem = cartItems.find(
       (item) => item?.product?.productType === 'InstantDeliveryProductType'
     )
-    if (!isLoading && deliveryFee) {
+    if (!isLoading && deliveryFee && instantDeliveryItem) {
       const variables = {
         params: {
           cartId: cart?.id as string,
