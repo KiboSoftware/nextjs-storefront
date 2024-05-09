@@ -11,6 +11,7 @@ const getCheckoutQuery = /* GraphQL */ `
     checkout: order(orderId: $checkoutId) {
       originalQuoteId
       originalQuoteNumber
+      data
       siteId
       ...baseCheckoutFragment
       items {

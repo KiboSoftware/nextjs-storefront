@@ -5,9 +5,14 @@ import {
 } from '../../fragments/checkout'
 
 const getOrCreateCheckoutFromCartMutation = /* GraphQL */ `
-  mutation getOrCreateCheckoutFromCart($cartId: String, $quoteId: String) {
-    checkout: createOrder(cartId: $cartId, quoteId: $quoteId) {
+  mutation getOrCreateCheckoutFromCart(
+    $cartId: String
+    $quoteId: String
+    $orderInput: CrOrderInput
+  ) {
+    checkout: createOrder(cartId: $cartId, quoteId: $quoteId, orderInput: $orderInput) {
       originalQuoteId
+      data
       originalQuoteNumber
       ...baseCheckoutFragment
       items {

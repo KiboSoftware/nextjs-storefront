@@ -313,7 +313,6 @@ const ProductDetailTemplate = (props: ProductDetailTemplateProps) => {
       handleProductPickupLocation()
     }
   }
-  console.log('selectedfulfillemtnoption', selectedFulfillmentOption)
 
   const handleProductPickupLocation = (title?: string) => {
     showModal({

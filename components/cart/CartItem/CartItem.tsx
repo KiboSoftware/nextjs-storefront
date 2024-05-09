@@ -127,7 +127,6 @@ const CartItem = (props: CartItemProps) => {
     onFulfillmentOptionChange(fulfillmentMethod, cartItemId)
   const handleProductPickupLocation = (cartItemId: string) => onProductPickupLocation(cartItemId)
   const handleLinkAction = (cartItemId: string, fulfillmentMethod: string) => {
-    console.log('handleLinkAction', cartItemId, fulfillmentMethod)
     if (fulfillmentMethod === 'PICKUP') {
       onProductPickupLocation(cartItemId)
     } else if (fulfillmentMethod === 'DELIVERY') {

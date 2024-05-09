@@ -50,6 +50,7 @@ export const cartItemDetails = /* GraphQL */ `
       price {
         price
         salePrice
+        tenantOverridePrice
       }
       categories {
         id
@@ -64,6 +65,7 @@ export const cartDetails = /* GraphQL */ `
 
   fragment cartDetails on CrCart {
     id
+    data
     invalidCoupons {
       couponCode
       reason

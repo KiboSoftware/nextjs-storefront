@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useState, useEffect } from 'react'
 
 import KeyboardArrowLeft from '@mui/icons-material/KeyboardArrowLeft'
 import { LoadingButton } from '@mui/lab'
@@ -33,6 +33,7 @@ import {
   useProductCardActions,
   useUpdateCartItem,
   useGetDeliveryRates,
+  useUpdateCartItemByCartID,
 } from '@/hooks'
 import { orderGetters, cartGetters } from '@/lib/getters'
 
@@ -47,6 +48,7 @@ const CartTemplate = (props: CartTemplateProps) => {
   const { isMultiShipEnabled } = props
   const { data: cart } = useGetCart(props?.cart)
   const [deliveryRatesPayload, setDeliveryRatesPayload] = useState<any>()
+  const [deliveryFees, setDeliveryFees] = useState<any>()
 
   const { t } = useTranslation('common')
   const theme = useTheme()
@@ -58,8 +60,9 @@ const CartTemplate = (props: CartTemplateProps) => {
   const { deleteCartItem } = useDeleteCartItem()
   const { showModal, closeModal } = useModalContext()
   const { updateCartItem } = useUpdateCartItem()
-  const { data: deliveryFee, isLoading } = useGetDeliveryRates(deliveryRatesPayload)
-  console.log('delivery fee', deliveryFee)
+  const { updateCartItemByCartID } = useUpdateCartItemByCartID()
+  const { data: deliveryFee, isLoading, isSuccess } = useGetDeliveryRates(deliveryRatesPayload)
+  console.log('delivery fee', isLoading, isSuccess, deliveryFee)
   const cartItems = cartGetters.getCartItems(cart)
   const deliveryAddressDateAndWindow =
     typeof localStorage !== 'undefined' &&
@@ -121,40 +124,99 @@ const CartTemplate = (props: CartTemplateProps) => {
         setDeliveryRatesPayload(
           cartGetters.getNormalizedDataForRates(filterCartItems, deliveryAddressDateAndWindow)
         )
-        const instantDeliveryItem = cartItems.find(
-          (item) => item?.product?.productType === 'InstantDeliveryProductType'
-        )
-        // if (deliveryFee) {
-        await updateCartItem.mutateAsync({
-          cartItemInput: {
-            ...(instantDeliveryItem as CrCartItemInput),
-            total: 10,
-            subtotal: 10,
-            discountedTotal: 10,
-            quantity: instantDeliveryItem?.quantity as number,
-            unitPrice: {
-              saleAmount: 10,
-              listAmount: 10,
-              extendedAmount: 10,
-              overrideAmount: 10,
-            },
-          },
-          cartItemId: instantDeliveryItem?.id as string,
-        })
-      }
-      // }
-      const initiateOrderResponse = isMultiShipEnabled
-        ? await initiateCheckout.mutateAsync(cart?.id)
-        : await initiateOrder.mutateAsync({ cartId: cart?.id as string })
+      } else {
+        const initiateOrderResponse = isMultiShipEnabled
+          ? await initiateCheckout.mutateAsync(cart?.id)
+          : await initiateOrder.mutateAsync({
+              cartId: cart?.id as string,
+            })
 
-      if (initiateOrderResponse?.id) {
-        router.push(`/checkout/${initiateOrderResponse.id}`)
+        if (initiateOrderResponse?.id) {
+          router.push(`/checkout/${initiateOrderResponse.id}`)
+        }
       }
     } catch (err) {
       console.error(err)
       setShowLoadingButton(false)
     }
   }
+
+  const handleCheckoutWithRates = async (deliveryFee: any) => {
+    const instantDeliveryItem = cartItems.find(
+      (item) => item?.product?.productType === 'InstantDeliveryProductType'
+    )
+    if (!isLoading && deliveryFee) {
+      const variables = {
+        params: {
+          cartId: cart?.id as string,
+          cartItemId: instantDeliveryItem?.id as string,
+          cartItemInput: {
+            ...(instantDeliveryItem as CrCartItemInput),
+            quantity: instantDeliveryItem?.quantity as number,
+            product: {
+              ...(instantDeliveryItem?.product as any),
+              price: {
+                ...instantDeliveryItem?.product?.price,
+                tenantOverridePrice: deliveryFee,
+              },
+            },
+          },
+        },
+      }
+      const response = await fetch('/api/update-cart-item', {
+        method: 'POST',
+        headers: {
+          Accept: 'application/json, text/plain, */*',
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(variables),
+      })
+
+      const updateCartItemResponse = await response.json()
+
+      // const updateCartVariable = {
+      //   params: {
+      //     cartId: cart?.id as string,
+      //     cartInput: {
+      //       ...cart,
+      //       data: {
+      //         deliveryDateAndWindow: deliveryAddressDateAndWindow?.deliveryDateAndWindow,
+      //       },
+      //     },
+      //   },
+      // }
+      // const updateCartResponse = await fetch('/api/update-cart', {
+      //   method: 'POST',
+      //   headers: {
+      //     Accept: 'application/json, text/plain, */*',
+      //     'Content-Type': 'application/json',
+      //   },
+      //   body: JSON.stringify(updateCartVariable),
+      // })
+      // console.log('update cart response', await updateCartResponse.json())
+      const initiateOrderResponse = isMultiShipEnabled
+        ? await initiateCheckout.mutateAsync(cart?.id)
+        : await initiateOrder.mutateAsync({
+            cartId: cart?.id as string,
+            // orderInput: {
+            //   totalCollected: 0,
+            //   amountAvailableForRefund: 0,
+            //   amountRemainingForPayment: 0,
+            //   amountRefunded: 0,
+            //   continuityOrderOrdinal: 0,
+            //   data: deliveryAddressDateAndWindow?.deliveryDateAndWindow,
+            // },
+          })
+
+      if (initiateOrderResponse?.id) {
+        router.push(`/checkout/${initiateOrderResponse.id}`)
+      }
+    }
+  }
+  useEffect(() => {
+    setDeliveryFees(deliveryFee)
+    handleCheckoutWithRates(deliveryFee)
+  }, [isSuccess, deliveryFee])
   const {
     onFulfillmentOptionChange,
     handleQuantityUpdate,
