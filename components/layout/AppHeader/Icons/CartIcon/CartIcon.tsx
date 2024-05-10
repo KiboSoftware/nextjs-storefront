@@ -13,9 +13,9 @@ const CartIcon = ({ size, isElementVisible, mobileIconColor }: IconProps) => {
   const { data: cart } = useGetCart()
   const deliveryAddressDateAndWindow =
     typeof localStorage !== 'undefined' &&
-    JSON.parse(localStorage.getItem('delivery-address-date-and-window') as string)
+    JSON.parse(localStorage.getItem('instant-delivery') as string)
   const filterCartItemsTotal = cart?.items?.filter(
-    (cartItem) => cartItem?.product?.productType !== 'InstantDeliveryProductType'
+    (cartItem) => cartItem?.product?.productType !== 'DeliveryService'
   )?.length
   const itemCount = !deliveryAddressDateAndWindow
     ? cartGetters.getCartItemCount(cart)

@@ -132,7 +132,7 @@ export const useProductCardActions = (shouldFetchShippingMethods?: boolean) => {
   const handleDeleteCurrentCart = async () => {
     try {
       await deleteCurrentCart.mutateAsync()
-      localStorage.removeItem('delivery-address-date-and-window')
+      localStorage.removeItem('instant-delivery')
     } catch (err) {
       console.error(err)
     }

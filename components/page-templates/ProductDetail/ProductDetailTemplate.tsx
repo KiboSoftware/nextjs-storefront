@@ -191,7 +191,7 @@ const ProductDetailTemplate = (props: ProductDetailTemplateProps) => {
   )
   const deliveryAddressDateAndWindow =
     typeof localStorage !== 'undefined' &&
-    JSON.parse(localStorage.getItem('delivery-address-date-and-window') as string)
+    JSON.parse(localStorage.getItem('instant-delivery') as string)
 
   const isValidForAddToCart = () => {
     if (purchaseType === PurchaseTypes.SUBSCRIPTION) {
@@ -252,8 +252,8 @@ const ProductDetailTemplate = (props: ProductDetailTemplateProps) => {
           if (!deliveryAddressDateAndWindow) {
             await addToCart.mutateAsync({
               product: {
-                productCode: 'InstantDeliveryProduct',
-                variationProductCode: 'InstantDeliveryProduct',
+                productCode: 'Delivery',
+                variationProductCode: 'Delivery',
                 fulfillmentMethod,
                 options: [],
                 purchaseLocationCode: selectedFulfillmentOption?.location?.code as string,
@@ -262,7 +262,7 @@ const ProductDetailTemplate = (props: ProductDetailTemplateProps) => {
             })
           }
           localStorage.setItem(
-            'delivery-address-date-and-window',
+            'instant-delivery',
             JSON.stringify(selectedFulfillmentOption?.location?.deliveryAddressDateAndWindow)
           )
         }
@@ -306,7 +306,7 @@ const ProductDetailTemplate = (props: ProductDetailTemplateProps) => {
         location: {},
         method: value,
       })
-      localStorage.removeItem('delivery-address-date-and-window')
+      localStorage.removeItem('instant-delivery')
     } else if (value === FulfillmentOptionsConstant.DELIVERY) {
       handleInstantDelivery()
     } else {
@@ -363,7 +363,7 @@ const ProductDetailTemplate = (props: ProductDetailTemplateProps) => {
             method: FulfillmentOptionsConstant.PICKUP,
             location: selectedStore,
           })
-          localStorage.removeItem('delivery-address-date-and-window')
+          localStorage.removeItem('instant-delivery')
         },
       },
     })

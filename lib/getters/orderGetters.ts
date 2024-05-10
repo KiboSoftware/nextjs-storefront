@@ -99,7 +99,7 @@ const getShipItems = (order: CrOrder): CrOrderItem[] =>
 
 const getDeliveryItems = (order: CrOrder): CrOrderItem[] =>
   getItemsByFulfillment(order, FulfillmentOptions.DELIVERY)?.filter(
-    (item) => item?.product?.productType !== 'InstantDeliveryProductType'
+    (item) => item?.product?.productType !== 'DeliveryService'
   )
 
 const getDigitalItems = (order: CrOrder): CrOrderItem[] =>
@@ -384,7 +384,7 @@ const isPayPalPaymentMethodActive = (order: CrOrder) => {
 
 const getDeliveryItemPrice = (order: CrOrder) => {
   const filterItem = order?.items?.find(
-    (item) => item?.product?.productType === 'InstantDeliveryProductType'
+    (item) => item?.product?.productType === 'DeliveryService'
   )
 
   const filterItemPrice = filterItem?.product?.price?.tenantOverridePrice

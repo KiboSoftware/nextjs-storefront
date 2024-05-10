@@ -26,7 +26,7 @@ export const useCartActions = ({ cartItems, purchaseLocation }: UseCartActionsPr
   const { addToCart } = useAddCartItem()
   const deliveryAddressDateAndWindowFromLocalStorage =
     typeof localStorage !== 'undefined' &&
-    JSON.parse(localStorage.getItem('delivery-address-date-and-window') as string)
+    JSON.parse(localStorage.getItem('instant-delivery') as string)
 
   const handleProductPickupLocation = (cartItemId: string) => {
     showModal({
@@ -34,7 +34,7 @@ export const useCartActions = ({ cartItems, purchaseLocation }: UseCartActionsPr
       props: {
         handleSetStore: async (selectedStore: LocationCustom) => {
           mutateCartItem(cartItemId, FulfillmentOptions.PICKUP, selectedStore?.code)
-          localStorage.removeItem('delivery-address-date-and-window')
+          localStorage.removeItem('instant-delivery')
           closeModal()
         },
       },
@@ -55,8 +55,8 @@ export const useCartActions = ({ cartItems, purchaseLocation }: UseCartActionsPr
             if (!deliveryAddressDateAndWindowFromLocalStorage) {
               await addToCart.mutateAsync({
                 product: {
-                  productCode: 'InstantDeliveryProduct',
-                  variationProductCode: 'InstantDeliveryProduct',
+                  productCode: 'Delivery',
+                  variationProductCode: 'Delivery',
                   fulfillmentMethod: FulfillmentOptions.DELIVERY,
                   options: [],
                   purchaseLocationCode: deliveryAddressDateAndWindow?.deliveryDateAndWindow
@@ -65,10 +65,7 @@ export const useCartActions = ({ cartItems, purchaseLocation }: UseCartActionsPr
                 quantity: 1,
               })
             }
-            localStorage.setItem(
-              'delivery-address-date-and-window',
-              JSON.stringify(deliveryAddressDateAndWindow)
-            )
+            localStorage.setItem('instant-delivery', JSON.stringify(deliveryAddressDateAndWindow))
           }
           closeModal()
         },
@@ -106,7 +103,7 @@ export const useCartActions = ({ cartItems, purchaseLocation }: UseCartActionsPr
       handleInstantDelivery(cartItemId)
     } else {
       mutateCartItem(cartItemId, fulfillmentMethod, locationCode)
-      localStorage.removeItem('delivery-address-date-and-window')
+      localStorage.removeItem('instant-delivery')
     }
   }
 
@@ -148,10 +145,7 @@ export const useCartActions = ({ cartItems, purchaseLocation }: UseCartActionsPr
     } catch (err) {
       console.error(err)
     }
-    localStorage.setItem(
-      'delivery-address-date-and-window',
-      JSON.stringify(deliveryAddressDateAndWindow)
-    )
+    localStorage.setItem('instant-delivery', JSON.stringify(deliveryAddressDateAndWindow))
   }
 
   return {

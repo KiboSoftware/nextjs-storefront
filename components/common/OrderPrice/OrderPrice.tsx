@@ -41,25 +41,27 @@ const OrderPrice = <T extends CrCart | CrOrder | Checkout>(props: OrderPriceProp
 
   const deliveryAddressDateAndWindow =
     typeof localStorage !== 'undefined' &&
-    JSON.parse(localStorage.getItem('delivery-address-date-and-window') as string)
+    JSON.parse(localStorage.getItem('instant-delivery') as string)
 
   const deliveryItemPrice = orderGetters.getDeliveryItemPrice(orderDetails as CrOrder) || 0
 
   const total =
-    isCart && deliveryAddressDateAndWindow
+    isCart && (deliveryAddressDateAndWindow || deliveryItemPrice)
       ? orderGetters.getTotal(orderDetails) - deliveryItemPrice
       : orderGetters.getTotal(orderDetails)
-  const subTotal = deliveryAddressDateAndWindow
-    ? orderGetters.getSubtotal(orderDetails) - deliveryItemPrice
-    : orderGetters.getSubtotal(orderDetails)
+  const subTotal =
+    deliveryAddressDateAndWindow || deliveryItemPrice
+      ? orderGetters.getSubtotal(orderDetails) - deliveryItemPrice
+      : orderGetters.getSubtotal(orderDetails)
   const itemTaxTotal = orderGetters.getItemTaxTotal(orderDetails as CrOrder)
   const discountedSubtotal =
     orderGetters.getDiscountedSubtotal(orderDetails as CrOrder | CrCart) ||
     checkoutGetters.getDiscountedSubtotal(orderDetails as Checkout)
   const orderDiscounts = orderGetters.getOrderDiscounts(orderDetails as CrOrder)
-  const lineItemSubtotal = deliveryAddressDateAndWindow
-    ? orderGetters.getLineItemSubtotal(orderDetails as CrOrder) - deliveryItemPrice
-    : orderGetters.getLineItemSubtotal(orderDetails as CrOrder)
+  const lineItemSubtotal =
+    deliveryAddressDateAndWindow || deliveryItemPrice
+      ? orderGetters.getLineItemSubtotal(orderDetails as CrOrder) - deliveryItemPrice
+      : orderGetters.getLineItemSubtotal(orderDetails as CrOrder)
 
   const shippingTotal = orderGetters.getShippingTotal(orderDetails as CrOrder)
   const shippingSubTotal = orderGetters.getShippingSubTotal(orderDetails)
@@ -101,11 +103,15 @@ const OrderPrice = <T extends CrCart | CrOrder | Checkout>(props: OrderPriceProp
               discounts={handlingDiscounts}
             />
             <Box sx={{ ...styles.priceTotalRow }}>
-        <Typography sx={{ ...styles.priceLabel }} variant="body1" fontWeight="bold">
-          Delivery Fee:
-        </Typography>
-        <Price variant="body1" fontWeight="bold" price={t('currency', { val: deliveryItemPrice })} />
-      </Box>
+              <Typography sx={{ ...styles.priceLabel }} variant="body1" fontWeight="bold">
+                Delivery Fee:
+              </Typography>
+              <Price
+                variant="body1"
+                fontWeight="bold"
+                price={t('currency', { val: deliveryItemPrice })}
+              />
+            </Box>
           </>
         )}
 
