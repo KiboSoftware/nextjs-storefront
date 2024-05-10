@@ -34,6 +34,8 @@ import {
   useUpdateCartItem,
   useGetDeliveryRates,
   useUpdateCartItemByCartID,
+  useUpdateCart,
+  useUpdateCurrentCart,
 } from '@/hooks'
 import { orderGetters, cartGetters } from '@/lib/getters'
 
@@ -60,6 +62,7 @@ const CartTemplate = (props: CartTemplateProps) => {
   const { deleteCartItem } = useDeleteCartItem()
   const { showModal, closeModal } = useModalContext()
   const { updateCartItem } = useUpdateCartItem()
+  const { updateCart } = useUpdateCart()
   const { updateCartItemByCartID } = useUpdateCartItemByCartID()
   const { data: deliveryFee, isLoading, isSuccess } = useGetDeliveryRates(deliveryRatesPayload)
   console.log('delivery fee', isLoading, isSuccess, deliveryFee)
@@ -80,6 +83,7 @@ const CartTemplate = (props: CartTemplateProps) => {
   const { data: purchaseLocation } = useGetPurchaseLocation()
   const { updateCartCoupon } = useUpdateCartCoupon()
   const { deleteCartCoupon } = useDeleteCartCoupon()
+  const { updateCurrentCart } = useUpdateCurrentCart()
   const [promoError, setPromoError] = useState<string>('')
   const [showLoadingButton, setShowLoadingButton] = useState<boolean>(false)
   const { handleDeleteCurrentCart } = useProductCardActions()
@@ -173,6 +177,26 @@ const CartTemplate = (props: CartTemplateProps) => {
       })
 
       const updateCartItemResponse = await response.json()
+      const updateCurrentCartResponse = await updateCurrentCart.mutateAsync({
+        cartInput: {
+          ...updateCartItemResponse,
+          data: {
+            confirmedWindow: JSON.stringify(
+              deliveryAddressDateAndWindow?.deliveryDateAndWindow?.confirmedWindow
+            ),
+          },
+        },
+      })
+      // const updateCartResponse = await updateCart.mutateAsync({
+      //   cartId: cart?.id as string,
+      //   cartInput: {
+      //     ...cart,
+      //     data: {
+      //       deliveryDateAndWindow: deliveryAddressDateAndWindow?.deliveryDateAndWindow,
+      //     },
+      //   },
+      // })
+      // console.log('updateCartResponse', updateCartResponse)
 
       // const updateCartVariable = {
       //   params: {
@@ -198,17 +222,39 @@ const CartTemplate = (props: CartTemplateProps) => {
         ? await initiateCheckout.mutateAsync(cart?.id)
         : await initiateOrder.mutateAsync({
             cartId: cart?.id as string,
-            orderInput: {
-              totalCollected: 0,
-              amountAvailableForRefund: 0,
-              amountRemainingForPayment: 0,
-              amountRefunded: 0,
-              continuityOrderOrdinal: 0,
-              data: deliveryAddressDateAndWindow?.deliveryDateAndWindow,
-            },
+            // orderInput: {
+            //   totalCollected: 0,
+            //   amountAvailableForRefund: 0,
+            //   amountRemainingForPayment: 0,
+            //   amountRefunded: 0,
+            //   continuityOrderOrdinal: 0,
+            //   data: deliveryAddressDateAndWindow?.deliveryDateAndWindow,
+            // },
           })
 
       if (initiateOrderResponse?.id) {
+        // const updateOrderVariables = {
+        //   params: {
+        //     orderId: initiateOrderResponse?.id as string,
+        //     orderInput: {
+        //       totalCollected: 0,
+        //       amountAvailableForRefund: 0,
+        //       amountRemainingForPayment: 0,
+        //       amountRefunded: 0,
+        //       continuityOrderOrdinal: 0,
+        //       data: deliveryAddressDateAndWindow?.deliveryDateAndWindow,
+        //     },
+        //   },
+        // }
+        // const updateOrderResponse = await fetch('/api/update-order', {
+        //   method: 'POST',
+        //   headers: {
+        //     Accept: 'application/json, text/plain, */*',
+        //     'Content-Type': 'application/json',
+        //   },
+        //   body: JSON.stringify(updateOrderVariables),
+        // })
+        // console.log('update order response', await updateOrderResponse.json())
         router.push(`/checkout/${initiateOrderResponse.id}`)
       }
     }

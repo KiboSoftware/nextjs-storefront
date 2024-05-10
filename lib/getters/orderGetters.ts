@@ -383,13 +383,11 @@ const isPayPalPaymentMethodActive = (order: CrOrder) => {
 }
 
 const getDeliveryItemPrice = (order: CrOrder) => {
-  const filterItem = order?.items?.find(
-    (item) => item?.product?.productType === 'DeliveryService'
-  )
+  const filterItem = order?.items?.find((item) => item?.product?.productType === 'DeliveryService')
 
   const filterItemPrice = filterItem?.product?.price?.tenantOverridePrice
     ? filterItem?.product?.price?.tenantOverridePrice
-    : filterItem?.product?.price?.price
+    : filterItem?.product?.price?.salePrice
   return filterItemPrice
 }
 

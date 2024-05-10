@@ -5,6 +5,7 @@ const updateCurrentCartMutation = /* GraphQL */ `
 
   mutation updateCurrentCartMutation($cartInput: CrCartInput) {
     updateCurrentCart(cartInput: $cartInput) {
+      data
       items {
         ...cartItemDetails
       }

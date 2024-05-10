@@ -7,6 +7,7 @@ export { default as updateCartItemQuantityMutation } from './cart/updateCartItem
 export { default as deleteCartItemMutation } from './cart/deleteCartItemMutation'
 export { default as deleteCurrentCartMutation } from './cart/deleteCurrentCartMutation'
 export { default as updateCartItemMutation } from './cart/updateCartItemMutation'
+export { default as updateCartMutation } from './cart/updateCart'
 export { default as updateCurrentCartMutation } from './cart/update-current-cart'
 export { default as updateCartItemByCartIDMutation } from './cart/updateCartItemByCartID'
 export { default as createWishlistMutation } from './wishlist/createWishlistMutation'

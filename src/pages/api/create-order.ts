@@ -1,9 +1,9 @@
 import { NextApiRequest, NextApiResponse } from 'next'
 
-import { getCart } from '@/lib/api/operations'
 import { fetcher, getAdditionalHeader } from '@/lib/api/util'
 import { gqlFetch } from '@/lib/api/util/fetch-gql'
 import { updateCartItemByCartIDMutation, updateCartItemMutation } from '@/lib/gql/mutations'
+import { getOrCreateCheckoutFromCartMutation } from '@/lib/gql/queries'
 
 // Configure your GraphQL endpoint
 
@@ -19,28 +19,27 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
     // Prepare the GraphQL mutation
 
     const headers = req ? getAdditionalHeader(req) : {}
-    const updateCartItemResponse: any = await gqlFetch(
+    const createOrderResponse: any = await gqlFetch(
       {
-        query: updateCartItemByCartIDMutation,
+        query: getOrCreateCheckoutFromCartMutation,
         variables: { ...params },
       },
       { headers }
     )
     // Execute the mutation
     correlationId =
-      updateCartItemResponse.headers.get('X-Vol-Correlation') ||
-      updateCartItemResponse.headers.get('x-vol-correlation')
+      createOrderResponse.headers.get('X-Vol-Correlation') ||
+      createOrderResponse.headers.get('x-vol-correlation')
     res.setHeader('x-vol-correlation', correlationId)
     // Send the GraphQL response back to the client
-    if (updateCartItemResponse.status > 499) {
+    if (createOrderResponse.status > 499) {
       throw new Error('Internal Server Error')
     }
-    const result = await updateCartItemResponse.json()
-    if (updateCartItemResponse.ok) {
-      const getCartResponse = await getCart(req as NextApiRequest, res as NextApiResponse)
-      return res.status(200).json(getCartResponse?.currentCart)
+    const result = await createOrderResponse.json()
+    if (createOrderResponse.ok) {
+      return res.status(200).json(result.data.checkout)
     } else {
-      return res.status(updateCartItemResponse.status).json(result)
+      return res.status(createOrderResponse.status).json(result)
     }
   } catch (error) {
     console.error('Error handling request:', error)

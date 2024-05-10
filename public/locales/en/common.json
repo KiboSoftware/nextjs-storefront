@@ -556,5 +556,6 @@
   "change": "Change",
   "delivery-time": "Delivery Time:",
   "change-delivery-time": "Change Delivery Time",
-  "instant-delivery": "Instant Delivery"
+  "instant-delivery": "Instant Delivery",
+  "select-delivery-window-and-address": "Select Delivery Address and Window"
 }
