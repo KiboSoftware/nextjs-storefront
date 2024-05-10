@@ -198,14 +198,14 @@ const CartTemplate = (props: CartTemplateProps) => {
         ? await initiateCheckout.mutateAsync(cart?.id)
         : await initiateOrder.mutateAsync({
             cartId: cart?.id as string,
-            // orderInput: {
-            //   totalCollected: 0,
-            //   amountAvailableForRefund: 0,
-            //   amountRemainingForPayment: 0,
-            //   amountRefunded: 0,
-            //   continuityOrderOrdinal: 0,
-            //   data: deliveryAddressDateAndWindow?.deliveryDateAndWindow,
-            // },
+            orderInput: {
+              totalCollected: 0,
+              amountAvailableForRefund: 0,
+              amountRemainingForPayment: 0,
+              amountRefunded: 0,
+              continuityOrderOrdinal: 0,
+              data: deliveryAddressDateAndWindow?.deliveryDateAndWindow,
+            },
           })
 
       if (initiateOrderResponse?.id) {

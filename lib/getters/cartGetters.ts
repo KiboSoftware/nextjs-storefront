@@ -99,6 +99,7 @@ const getNormalizedDataForRates = (cartItems: any, deliveryWindowDateAndTime: an
     type: 'delivery',
     deliveryAddress: deliveryWindowDateAndTime?.deliveryAddress,
     itemList: cartItems.map(normalizeProduct),
+    dropoffTime: deliveryWindowDateAndTime?.deliveryDateAndWindow?.confirmedWindow?.dropoffTime,
   }
 }
 

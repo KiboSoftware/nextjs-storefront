@@ -29,14 +29,15 @@ interface Delivery {
   windows: DeliveryWindow[]
 }
 
+interface DropoffTime {
+  startsAt: number
+  endsAt: number
+}
 interface DeliveryWindow {
   pickupTime: {
     startsAt: number
   }
-  dropoffTime: {
-    startsAt: number
-    endsAt: number
-  }
+  dropoffTime: DropoffTime
   tz: string
   windowId: null | string
   provider: null | string
@@ -45,7 +46,7 @@ interface DeliveryWindow {
 export type DeliveryDateAndWindow =
   | {
       confirmedDate: string
-      confirmedWindow: string
+      confirmedWindow: Time
       confirmedStoreId: string
     }
   | undefined
@@ -65,10 +66,10 @@ type Props = {
   setDeliveryDateAndWindow: (selectedDateAndWindow: DeliveryDateAndWindow) => void
 }
 
-type DropOffTimeByDate = [] | { original: DeliveryWindow; readable: string }[] | null
+type Time = { dropoffTime: { startsAt: number; endsAt: number }; readable: string }
 
 function formatDropoffTime(dropoffTime: DeliveryWindow): string {
-  const startTime = new Date(dropoffTime.pickupTime.startsAt)
+  const startTime = new Date(dropoffTime.dropoffTime.startsAt)
   const endTime = new Date(dropoffTime.dropoffTime.endsAt)
 
   const formattedStartTime = startTime.toLocaleTimeString('en-US', {
@@ -85,15 +86,16 @@ function formatDropoffTime(dropoffTime: DeliveryWindow): string {
   return `${formattedStartTime} - ${formattedEndTime}`
 }
 
-function getDropoffTimesByDate(deliveries: Delivery[], date: string) {
+function getDropoffTimesByDate(deliveries: Delivery[], date: string): Time[] | null {
   if (!deliveries) return null
 
-  const dropoffTimes: string[] = []
+  const dropoffTimes: Time[] = []
   deliveries.forEach((delivery: Delivery) => {
     if (delivery.date === date) {
       delivery.windows.forEach((window: DeliveryWindow) => {
         const readable = formatDropoffTime(window)
-        dropoffTimes.push(readable)
+        const time = { dropoffTime: window.dropoffTime, readable }
+        dropoffTimes.push(time)
       })
     }
   })
@@ -140,7 +142,7 @@ export const DeliveryWindow = ({ storeBoundary, setDeliveryDateAndWindow }: Prop
   } = getDate()
 
   const [selectedDate, setSelectedDate] = useState<string | undefined | null>(todayMMDDYYYY)
-  const [selectedWindow, setSelectedWindow] = useState<string | undefined>(undefined)
+  const [selectedWindow, setSelectedWindow] = useState<Time | undefined>(undefined)
 
   const parsedSelectedDate = dayjs(selectedDate, 'MM/DD/YYYY')
   const isToday = parsedSelectedDate.isSame(todayMMDDYYYY, 'day')
@@ -172,7 +174,7 @@ export const DeliveryWindow = ({ storeBoundary, setDeliveryDateAndWindow }: Prop
     setDeliveryDateAndWindow(undefined)
   }
 
-  const handleDeliveryWindowClick = (window: string) => {
+  const handleDeliveryWindowClick = (window: Time) => {
     setSelectedWindow(window)
   }
 
@@ -198,12 +200,12 @@ export const DeliveryWindow = ({ storeBoundary, setDeliveryDateAndWindow }: Prop
     return { isError: false, message: t('enter-date-in-format') }
   })()
 
+  const readable = selectedWindow?.readable
+
   return (
     <Stack gap={2}>
       <Typography sx={{ fontWeight: 'bold' }}>
-        {selectedWindow
-          ? t('selected-delivery-window', { selectedWindow })
-          : t('select-delivery-window')}
+        {readable ? t('selected-delivery-window', { readable }) : t('select-delivery-window')}
       </Typography>
 
       <Stack direction="row" gap={1}>
@@ -240,16 +242,17 @@ export const DeliveryWindow = ({ storeBoundary, setDeliveryDateAndWindow }: Prop
       </Stack>
       {isToday && (
         <Stack>
-          {todayDropoffs?.map((dropoffTime) => (
+          {todayDropoffs?.map((dropoffTime: Time) => (
             <Box
-              key={dropoffTime}
+              key={dropoffTime.readable}
               sx={{
                 ...commonStyles,
-                backgroundColor: selectedWindow === dropoffTime ? 'grey.200' : 'white',
+                backgroundColor:
+                  selectedWindow?.readable === dropoffTime.readable ? 'grey.200' : 'white',
               }}
               onClick={() => handleDeliveryWindowClick(dropoffTime)}
             >
-              {dropoffTime}
+              {dropoffTime.readable}
             </Box>
           ))}
 
@@ -262,14 +265,15 @@ export const DeliveryWindow = ({ storeBoundary, setDeliveryDateAndWindow }: Prop
         <Stack>
           {tomorrowDropoffs?.map((dropoffTime) => (
             <Box
-              key={dropoffTime}
+              key={dropoffTime.readable}
               sx={{
                 ...commonStyles,
-                backgroundColor: selectedWindow === dropoffTime ? 'grey.200' : 'white',
+                backgroundColor:
+                  selectedWindow?.readable === dropoffTime.readable ? 'grey.200' : 'white',
               }}
               onClick={() => handleDeliveryWindowClick(dropoffTime)}
             >
-              {dropoffTime}
+              {dropoffTime.readable}
             </Box>
           ))}
 
@@ -305,14 +309,15 @@ export const DeliveryWindow = ({ storeBoundary, setDeliveryDateAndWindow }: Prop
 
           {otherDateDropoffs?.map((dropoffTime) => (
             <Box
-              key={dropoffTime}
+              key={dropoffTime.readable}
               sx={{
                 ...commonStyles,
-                backgroundColor: selectedWindow === dropoffTime ? 'grey.200' : 'white',
+                backgroundColor:
+                  selectedWindow?.readable === dropoffTime.readable ? 'grey.200' : 'white',
               }}
               onClick={() => handleDeliveryWindowClick(dropoffTime)}
             >
-              {dropoffTime}
+              {dropoffTime.readable}
             </Box>
           ))}
 

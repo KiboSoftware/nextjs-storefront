@@ -135,7 +135,7 @@ const OrderSummary = <T extends CrCart | CrOrder | Checkout>(props: OrderSummary
                 )}
               </Typography>
               <Typography>
-                {deliveryAddressDateAndWindow?.deliveryDateAndWindow?.confirmedWindow}
+                {deliveryAddressDateAndWindow?.deliveryDateAndWindow?.confirmedWindow?.readable}
               </Typography>
               <Typography
                 variant="caption"

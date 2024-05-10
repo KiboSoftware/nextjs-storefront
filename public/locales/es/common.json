@@ -37,7 +37,7 @@
   "delivery-window": "Delivery Window",
   "delivery-address-error-message": "The address is not recognized. Double check that address was entered correctly.",
   "selected-delivery-day": "Selected delivery day",
-  "selected-delivery-window": "Selected delivery window: {{deliveryWindow}}",
+  "selected-delivery-window": "Selected delivery window: {{readable}}",
   "select-delivery-window": "Select delivery window",
   "today": "Today",
   "tomorrow": "Tomorrow",
