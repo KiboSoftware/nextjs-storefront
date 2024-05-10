@@ -56,7 +56,9 @@ export const useFormSchema = () => {
 // Component
 const AddressForm = (props: AddressFormProps) => {
   const { publicRuntimeConfig } = getConfig()
-  const isInstantDelivery = false
+  const { t: translation } = useTranslation('common')
+
+  const isInstantDeliveryShipping = props.saveAddressLabel === translation('save-shipping-address')
 
   const {
     contact,
@@ -180,7 +182,7 @@ const AddressForm = (props: AddressFormProps) => {
                 onChange={(_name: string, value: string) => field.onChange(value)}
                 onBlur={field.onBlur}
                 required={true}
-                disabled={isInstantDelivery ? true : false}
+                disabled={isInstantDeliveryShipping ? true : false}
               />
             )}
           />
@@ -201,7 +203,7 @@ const AddressForm = (props: AddressFormProps) => {
                 helperText={errors?.address?.address2?.message}
                 onChange={(_name: string, value: string) => field.onChange(value)}
                 onBlur={field.onBlur}
-                disabled={isInstantDelivery ? true : false}
+                disabled={isInstantDeliveryShipping ? true : false}
               />
             )}
           />
@@ -223,7 +225,7 @@ const AddressForm = (props: AddressFormProps) => {
                 onChange={(_name: string, value: string) => field.onChange(value)}
                 onBlur={field.onBlur}
                 required={true}
-                disabled={isInstantDelivery ? true : false}
+                disabled={isInstantDeliveryShipping ? true : false}
               />
             )}
           />
@@ -245,7 +247,7 @@ const AddressForm = (props: AddressFormProps) => {
                 onChange={(_name: string, value: string) => field.onChange(value)}
                 onBlur={field.onBlur}
                 required={true}
-                disabled={isInstantDelivery ? true : false}
+                disabled={isInstantDeliveryShipping ? true : false}
               />
             )}
           />
@@ -267,7 +269,7 @@ const AddressForm = (props: AddressFormProps) => {
                 onChange={(_name: string, value: string) => field.onChange(value)}
                 onBlur={field.onBlur}
                 required={true}
-                disabled={isInstantDelivery ? true : false}
+                disabled={isInstantDeliveryShipping ? true : false}
               />
             )}
           />
@@ -291,7 +293,7 @@ const AddressForm = (props: AddressFormProps) => {
                   onChange={(_name, value) => field.onChange(value)}
                   onBlur={field.onBlur}
                   required={true}
-                  disabled={isInstantDelivery ? true : false}
+                  disabled={isInstantDeliveryShipping ? true : false}
                 >
                   {generateSelectOptions()}
                 </KiboSelect>

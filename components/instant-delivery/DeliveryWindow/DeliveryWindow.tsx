@@ -68,9 +68,9 @@ type Props = {
 
 type Time = { dropoffTime: { startsAt: number; endsAt: number }; readable: string }
 
-function formatDropoffTime(dropoffTime: DeliveryWindow): string {
-  const startTime = new Date(dropoffTime.dropoffTime.startsAt)
-  const endTime = new Date(dropoffTime.dropoffTime.endsAt)
+function formatDropoffTime(dropoffTime: DropoffTime): string {
+  const startTime = new Date(dropoffTime.startsAt)
+  const endTime = new Date(dropoffTime.endsAt)
 
   const formattedStartTime = startTime.toLocaleTimeString('en-US', {
     hour: '2-digit',
@@ -93,7 +93,7 @@ function getDropoffTimesByDate(deliveries: Delivery[], date: string): Time[] | n
   deliveries.forEach((delivery: Delivery) => {
     if (delivery.date === date) {
       delivery.windows.forEach((window: DeliveryWindow) => {
-        const readable = formatDropoffTime(window)
+        const readable = formatDropoffTime(window.dropoffTime)
         const time = { dropoffTime: window.dropoffTime, readable }
         dropoffTimes.push(time)
       })
