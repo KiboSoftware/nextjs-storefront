@@ -19,21 +19,22 @@ const stepperStyles = {
 }
 
 type InstantDeliveryStepperProps = {
-  storeBoundary?: string[] | null
+  currentActiveStep: number
   children: any
 }
 
 type InstantDeliveryTemplateProps = {
   initialDeliveryAddress?: DeliveryLocation
+  initialStoreBoundary?: string[]
+  initialDeliveryDateAndWindow?: DeliveryDateAndWindow
   onInstantDelivery: (selectedAddress: any) => void
 }
 
-const InstantDeliveryStepper = ({ storeBoundary, children }: InstantDeliveryStepperProps) => {
+const InstantDeliveryStepper = ({ currentActiveStep, children }: InstantDeliveryStepperProps) => {
   const { t } = useTranslation('common')
-  const isAddressValid = !!storeBoundary
 
   const isSticky = false
-  const [activeStep, setActiveStep] = useState(0)
+  const [activeStep, setActiveStep] = useState(currentActiveStep)
   const steps = ['address', 'delivery-window']
 
   const activeChild = children?.[activeStep] || null
@@ -42,16 +43,14 @@ const InstantDeliveryStepper = ({ storeBoundary, children }: InstantDeliveryStep
     return ((activeStep + 1) / 2) * 100 - 25
   }
 
-  const handleStepChange = (index: number) => {
-    if (index === 1 && !isAddressValid) return
-    setActiveStep(index)
+  const handleStepChange = (newActiveStep: number) => {
+    if (newActiveStep === 1) return
+    setActiveStep(newActiveStep)
   }
 
   useEffect(() => {
-    if (storeBoundary) {
-      setActiveStep(1)
-    }
-  }, [storeBoundary])
+    setActiveStep(currentActiveStep)
+  }, [currentActiveStep])
 
   return (
     <Stack sx={{ maxWidth: '872px' }} gap={1}>
@@ -59,7 +58,7 @@ const InstantDeliveryStepper = ({ storeBoundary, children }: InstantDeliveryStep
         <Stepper nonLinear activeStep={activeStep} connector={null} data-testid="stepper">
           {steps.map((label: string, index: number) => (
             <Step key={label} sx={{ flex: 1, padding: 0 }}>
-              <StepButton icon={<></>} disabled={index === 1 && !isAddressValid}>
+              <StepButton icon={<></>} disabled={index === 1}>
                 <Typography
                   variant="subtitle1"
                   color={index + 1 <= activeStep ? 'primary' : 'inherit'}
@@ -83,23 +82,40 @@ const InstantDeliveryStepper = ({ storeBoundary, children }: InstantDeliveryStep
 
 const InstantDeliveryTemplate = ({
   initialDeliveryAddress,
+  initialStoreBoundary,
+  initialDeliveryDateAndWindow,
   onInstantDelivery,
 }: InstantDeliveryTemplateProps) => {
-  const [storeBoundary, setStoreBoundary] = useState<string[] | undefined | null>(undefined)
   const [deliveryAddress, setDeliveryAddress] = useState<DeliveryLocation | undefined>(
     initialDeliveryAddress
   )
-  const [deliveryDateAndWindow, setDeliveryDateAndWindow] = useState<DeliveryDateAndWindow>()
+  const [storeBoundary, setStoreBoundary] = useState<string[] | undefined | null>(
+    initialStoreBoundary
+  )
+  const [deliveryDateAndWindow, setDeliveryDateAndWindow] = useState<DeliveryDateAndWindow>(
+    initialDeliveryDateAndWindow
+  )
+
+  const [currentActiveStep, setCurrentActiveStep] = useState(0)
 
   useEffect(() => {
     if (deliveryDateAndWindow) {
-      onInstantDelivery({ deliveryAddress, deliveryDateAndWindow })
+      const selectionDetails = { deliveryAddress, storeBoundary, deliveryDateAndWindow }
+      onInstantDelivery(selectionDetails)
     }
   }, [deliveryDateAndWindow])
 
+  useEffect(() => {
+    if (storeBoundary || deliveryDateAndWindow) {
+      if (currentActiveStep === 0) setCurrentActiveStep(1)
+    } else {
+      if (currentActiveStep === 1) setCurrentActiveStep(0)
+    }
+  }, [storeBoundary, deliveryDateAndWindow])
+
   return (
     <div>
-      <InstantDeliveryStepper storeBoundary={storeBoundary}>
+      <InstantDeliveryStepper currentActiveStep={currentActiveStep}>
         <div>
           <DeliveryAddress
             storeBoundary={storeBoundary}

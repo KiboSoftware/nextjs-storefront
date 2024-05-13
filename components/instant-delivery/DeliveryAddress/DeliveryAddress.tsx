@@ -1,4 +1,4 @@
-import { useEffect } from 'react'
+import { useEffect, useState } from 'react'
 
 import { yupResolver } from '@hookform/resolvers/yup'
 import { Box, Grid, Button, Typography } from '@mui/material'
@@ -35,17 +35,18 @@ const DeliveryAddress = ({
 }: Props) => {
   const { t } = useTranslation('common')
   const addressSchema = useFormSchema()
+  const [isSubmitted, setIsSubmitted] = useState<boolean>(false)
 
-  const { data: newStoreBoundary } = useGetStoreServiceBoundary(deliveryAddress)
-  setStoreBoundary(newStoreBoundary)
+  const submitDeliveryAddress = isSubmitted ? deliveryAddress : undefined
+  const { data: newStoreBoundary } = useGetStoreServiceBoundary(submitDeliveryAddress)
 
   const showErrorMessage = storeBoundary === null
 
   const {
     control,
     formState: { errors, isDirty },
-    reset,
     handleSubmit,
+    getValues,
   } = useForm({
     mode: 'onBlur',
     reValidateMode: 'onBlur',
@@ -54,9 +55,9 @@ const DeliveryAddress = ({
     shouldFocusError: true,
   })
 
-  const onSubmit = (data: DeliveryLocation) => {
+  const onSubmit = () => {
     setStoreBoundary(undefined)
-    setDeliveryAddress({ ...data })
+    setIsSubmitted(true)
   }
 
   // clear storeBoundary when address is changed
@@ -66,6 +67,13 @@ const DeliveryAddress = ({
       setDeliveryAddress(undefined)
     }
   }, [isDirty])
+
+  useEffect(() => {
+    if (newStoreBoundary) {
+      setDeliveryAddress({ ...getValues() })
+      setStoreBoundary(newStoreBoundary)
+    }
+  }, [newStoreBoundary])
 
   return (
     <div>
