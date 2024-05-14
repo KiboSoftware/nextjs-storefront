@@ -55,8 +55,9 @@ const DeliveryAddress = ({
     shouldFocusError: true,
   })
 
-  const onSubmit = () => {
+  const onSubmit = (data: DeliveryLocation) => {
     setStoreBoundary(undefined)
+    setDeliveryAddress({ ...data })
     setIsSubmitted(true)
   }
 
