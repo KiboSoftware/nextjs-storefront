@@ -94,7 +94,7 @@ function getDropoffTimesByDate(deliveries: Delivery[], date: string): Time[] | n
     if (delivery.date === date) {
       delivery.windows.forEach((window: DeliveryWindow) => {
         const readable = formatDropoffTime(window.dropoffTime)
-        const time = { dropoffTime: window.dropoffTime, readable }
+        const time = { dropoffTime: window.dropoffTime, pickupTime: window.pickupTime, readable }
         dropoffTimes.push(time)
       })
     }
@@ -328,7 +328,7 @@ export const DeliveryWindow = ({ storeBoundary, setDeliveryDateAndWindow }: Prop
           )}
         </Stack>
       )}
-      <div>{t('instant-delivery-warning-message')}</div>
+
       <Button
         variant="contained"
         color="primary"
