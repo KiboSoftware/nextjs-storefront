@@ -20,25 +20,46 @@ export const useFormSchema = () => {
   })
 }
 
-type Props = {
-  storeBoundary: string[] | undefined | null
-  setStoreBoundary: (storeBoundary: string[] | undefined | null) => void
-  deliveryAddress: DeliveryLocation | undefined
-  setDeliveryAddress: (address: DeliveryLocation | undefined) => void
+type Window = {
+  pickupTime: { startsAt: number; endsAt?: number }
+  dropoffTime: { startsAt: number; endsAt: number }
+  readable: string
+}
+type InstantDelivery = {
+  address?:
+    | {
+        street: string
+        city: string
+        country: string
+        state: string
+        zipcode: string
+      }
+    | undefined
+  storeBoundary?: string[] | undefined | null
+  window?:
+    | {
+        confirmedDate: string
+        confirmedWindow: Window
+        confirmedStoreId: string
+      }
+    | undefined
+  notification?: { isSendSMS: boolean; isSendEmail: boolean }
 }
 
-const DeliveryAddress = ({
-  storeBoundary,
-  setStoreBoundary,
-  deliveryAddress,
-  setDeliveryAddress,
-}: Props) => {
+type DeliveryAddressProps = {
+  instantDelivery?: InstantDelivery
+  setInstantDelivery: (instantDelivery: InstantDelivery) => void
+}
+
+const DeliveryAddress = ({ instantDelivery, setInstantDelivery }: DeliveryAddressProps) => {
+  const address = instantDelivery?.address
+
+  const [isSubmitted, setIsSubmitted] = useState<boolean>(false)
   const { t } = useTranslation('common')
   const addressSchema = useFormSchema()
-  const [isSubmitted, setIsSubmitted] = useState<boolean>(false)
 
-  const submitDeliveryAddress = isSubmitted ? deliveryAddress : undefined
-  const { data: newStoreBoundary } = useGetStoreServiceBoundary(submitDeliveryAddress)
+  const submitDeliveryAddress = isSubmitted ? address : undefined
+  const { data: storeBoundary } = useGetStoreServiceBoundary(submitDeliveryAddress)
 
   const showErrorMessage = storeBoundary === null
 
@@ -50,31 +71,31 @@ const DeliveryAddress = ({
   } = useForm({
     mode: 'onBlur',
     reValidateMode: 'onBlur',
-    defaultValues: deliveryAddress ? deliveryAddress : undefined,
+    defaultValues: address ? address : undefined,
     resolver: yupResolver(addressSchema),
     shouldFocusError: true,
   })
 
-  const onSubmit = (data: DeliveryLocation) => {
-    setStoreBoundary(undefined)
-    setDeliveryAddress({ ...data })
+  const onSubmit = (address: DeliveryLocation) => {
+    setInstantDelivery({ ...instantDelivery, address, storeBoundary: undefined })
     setIsSubmitted(true)
   }
 
   // clear storeBoundary when address is changed
   useEffect(() => {
     if (storeBoundary && isDirty) {
-      setStoreBoundary(undefined)
-      setDeliveryAddress(undefined)
+      setInstantDelivery({ ...instantDelivery, address: undefined, storeBoundary: undefined })
     }
+
+    setIsSubmitted(false)
   }, [isDirty])
 
+  // update storeBoundary
   useEffect(() => {
-    if (newStoreBoundary) {
-      setDeliveryAddress({ ...getValues() })
-      setStoreBoundary(newStoreBoundary)
+    if (storeBoundary) {
+      setInstantDelivery({ ...instantDelivery, address: getValues(), storeBoundary })
     }
-  }, [newStoreBoundary])
+  }, [storeBoundary])
 
   return (
     <div>
@@ -85,6 +106,7 @@ const DeliveryAddress = ({
           </Typography>
         )}
       </Box>
+      isSubmitted: {isSubmitted.toString()}
       <Box
         component="form"
         sx={{
@@ -101,7 +123,7 @@ const DeliveryAddress = ({
             <Controller
               name="street"
               control={control}
-              defaultValue={deliveryAddress?.street}
+              defaultValue={address?.street}
               render={({ field }) => (
                 <KiboTextBox
                   {...field}
@@ -122,7 +144,7 @@ const DeliveryAddress = ({
             <Controller
               name="city"
               control={control}
-              defaultValue={deliveryAddress?.city}
+              defaultValue={address?.city}
               render={({ field }) => (
                 <KiboTextBox
                   {...field}
@@ -143,7 +165,7 @@ const DeliveryAddress = ({
             <Controller
               name="country"
               control={control}
-              defaultValue={deliveryAddress?.country}
+              defaultValue={address?.country}
               render={({ field }) => (
                 <KiboTextBox
                   {...field}
@@ -164,7 +186,7 @@ const DeliveryAddress = ({
             <Controller
               name="state"
               control={control}
-              defaultValue={deliveryAddress?.state}
+              defaultValue={address?.state}
               render={({ field }) => (
                 <KiboTextBox
                   {...field}
@@ -185,7 +207,7 @@ const DeliveryAddress = ({
             <Controller
               name="zipcode"
               control={control}
-              defaultValue={deliveryAddress?.zipcode}
+              defaultValue={address?.zipcode}
               render={({ field }) => (
                 <KiboTextBox
                   {...field}

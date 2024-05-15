@@ -19,6 +19,6 @@ const Template: ComponentStory<typeof InstantDeliveryTemplate> = (args) => (
 
 export const Common = Template.bind({})
 Common.args = {
-  initialDeliveryAddress: undefined,
+  initialInstantDelivery: undefined,
   onInstantDelivery: undefined,
 }

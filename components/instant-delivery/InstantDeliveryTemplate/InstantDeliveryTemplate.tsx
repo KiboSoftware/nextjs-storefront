@@ -23,13 +23,6 @@ type InstantDeliveryStepperProps = {
   children: any
 }
 
-type InstantDeliveryTemplateProps = {
-  initialDeliveryAddress?: DeliveryLocation
-  initialStoreBoundary?: string[]
-  initialDeliveryDateAndWindow?: DeliveryDateAndWindow
-  onInstantDelivery: (selectedAddress: any) => void
-}
-
 const InstantDeliveryStepper = ({ currentActiveStep, children }: InstantDeliveryStepperProps) => {
   const { t } = useTranslation('common')
 
@@ -80,54 +73,77 @@ const InstantDeliveryStepper = ({ currentActiveStep, children }: InstantDelivery
   )
 }
 
+type Window = {
+  pickupTime: { startsAt: number; endsAt?: number }
+  dropoffTime: { startsAt: number; endsAt: number }
+  readable: string
+}
+type InstantDelivery = {
+  address?:
+    | {
+        street: string
+        city: string
+        country: string
+        state: string
+        zipcode: string
+      }
+    | undefined
+  storeBoundary?: string[] | undefined | null
+  window?:
+    | {
+        confirmedDate: string
+        confirmedWindow: Window
+        confirmedStoreId: string
+      }
+    | undefined
+  notification?: { isSendSMS: boolean; isSendEmail: boolean }
+}
+
+type InstantDeliveryTemplateProps = {
+  initialInstantDelivery?: InstantDelivery
+  onInstantDelivery: (selectedAddress: any) => void
+}
+
 const InstantDeliveryTemplate = ({
-  initialDeliveryAddress,
-  initialStoreBoundary,
-  initialDeliveryDateAndWindow,
+  initialInstantDelivery,
   onInstantDelivery,
 }: InstantDeliveryTemplateProps) => {
-  const [deliveryAddress, setDeliveryAddress] = useState<DeliveryLocation | undefined>(
-    initialDeliveryAddress
+  const [instantDelivery, setInstantDelivery] = useState<InstantDelivery | undefined>(
+    initialInstantDelivery
   )
-  const [storeBoundary, setStoreBoundary] = useState<string[] | undefined | null>(
-    initialStoreBoundary
-  )
-  const [deliveryDateAndWindow, setDeliveryDateAndWindow] = useState<DeliveryDateAndWindow>(
-    initialDeliveryDateAndWindow
-  )
+  const storeBoundary = instantDelivery?.storeBoundary
+  const window = instantDelivery?.window
 
   const [currentActiveStep, setCurrentActiveStep] = useState(0)
 
   useEffect(() => {
-    if (deliveryDateAndWindow) {
-      const selectionDetails = { deliveryAddress, storeBoundary, deliveryDateAndWindow }
-      onInstantDelivery(selectionDetails)
+    if (instantDelivery?.window) {
+      console.log('--instantDelivery--', JSON.stringify(instantDelivery))
+      // onInstantDelivery(instantDelivery)
     }
-  }, [deliveryDateAndWindow])
+  }, [window])
 
   useEffect(() => {
-    if (storeBoundary || deliveryDateAndWindow) {
+    if (storeBoundary || window) {
       if (currentActiveStep === 0) setCurrentActiveStep(1)
     } else {
       if (currentActiveStep === 1) setCurrentActiveStep(0)
     }
-  }, [storeBoundary, deliveryDateAndWindow])
+  }, [storeBoundary, window])
 
   return (
     <div>
       <InstantDeliveryStepper currentActiveStep={currentActiveStep}>
         <div>
           <DeliveryAddress
-            storeBoundary={storeBoundary}
-            setStoreBoundary={setStoreBoundary}
-            deliveryAddress={deliveryAddress}
-            setDeliveryAddress={setDeliveryAddress}
+            instantDelivery={instantDelivery}
+            setInstantDelivery={setInstantDelivery}
           />
         </div>
         <div>
           <DeliveryWindow
-            storeBoundary={storeBoundary}
-            setDeliveryDateAndWindow={setDeliveryDateAndWindow}
+            instantDelivery={instantDelivery}
+            setInstantDelivery={setInstantDelivery}
           />
         </div>
       </InstantDeliveryStepper>

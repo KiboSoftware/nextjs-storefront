@@ -1,6 +1,14 @@
 import { useState } from 'react'
 
-import { Typography, Button, Box, Stack, TextField } from '@mui/material'
+import {
+  Typography,
+  Button,
+  Box,
+  Stack,
+  TextField,
+  Checkbox,
+  FormControlLabel,
+} from '@mui/material'
 import { DatePicker } from '@mui/x-date-pickers'
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs'
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider'
@@ -46,7 +54,7 @@ interface DeliveryWindow {
 export type DeliveryDateAndWindow =
   | {
       confirmedDate: string
-      confirmedWindow: Time
+      confirmedWindow: Window
       confirmedStoreId: string
     }
   | undefined
@@ -60,13 +68,6 @@ const commonTabStyles = {
   ...commonStyles,
   border: '1px solid grey',
 }
-
-type Props = {
-  storeBoundary: string[] | undefined | null
-  setDeliveryDateAndWindow: (selectedDateAndWindow: DeliveryDateAndWindow) => void
-}
-
-type Time = { dropoffTime: { startsAt: number; endsAt: number }; readable: string }
 
 function formatDropoffTime(dropoffTime: DropoffTime): string {
   const startTime = new Date(dropoffTime.startsAt)
@@ -86,20 +87,24 @@ function formatDropoffTime(dropoffTime: DropoffTime): string {
   return `${formattedStartTime} - ${formattedEndTime}`
 }
 
-function getDropoffTimesByDate(deliveries: Delivery[], date: string): Time[] | null {
+function getDropoffTimesByDate(deliveries: Delivery[], date: string): Window[] | null {
   if (!deliveries) return null
 
-  const dropoffTimes: Time[] = []
+  const window: Window[] = []
   deliveries.forEach((delivery: Delivery) => {
     if (delivery.date === date) {
-      delivery.windows.forEach((window: DeliveryWindow) => {
-        const readable = formatDropoffTime(window.dropoffTime)
-        const time = { dropoffTime: window.dropoffTime, pickupTime: window.pickupTime, readable }
-        dropoffTimes.push(time)
+      delivery.windows.forEach((deliveryWindow: DeliveryWindow) => {
+        const readable = formatDropoffTime(deliveryWindow.dropoffTime)
+
+        window.push({
+          pickupTime: deliveryWindow.pickupTime,
+          dropoffTime: deliveryWindow.dropoffTime,
+          readable,
+        })
       })
     }
   })
-  return dropoffTimes.length > 0 ? dropoffTimes : null
+  return window.length > 0 ? window : null
 }
 
 function checkDWAvailability(storeBoundary: string[] | undefined | null, deliveryResponse: any) {
@@ -131,7 +136,38 @@ const getDate = () => {
   }
 }
 
-export const DeliveryWindow = ({ storeBoundary, setDeliveryDateAndWindow }: Props) => {
+type Window = {
+  pickupTime: { startsAt: number; endsAt?: number }
+  dropoffTime: { startsAt: number; endsAt: number }
+  readable: string
+}
+type InstantDelivery = {
+  address?:
+    | {
+        street: string
+        city: string
+        country: string
+        state: string
+        zipcode: string
+      }
+    | undefined
+  storeBoundary?: string[] | undefined | null
+  window?:
+    | {
+        confirmedDate: string
+        confirmedWindow: Window
+        confirmedStoreId: string
+      }
+    | undefined
+  notification?: { isSendSMS: boolean; isSendEmail: boolean }
+}
+
+type DeliveryWindowProps = {
+  instantDelivery?: InstantDelivery
+  setInstantDelivery: (instantDelivery: InstantDelivery) => void
+}
+
+export const DeliveryWindow = ({ instantDelivery, setInstantDelivery }: DeliveryWindowProps) => {
   const { t } = useTranslation('common')
   const {
     todayMMDDYYYY,
@@ -141,8 +177,14 @@ export const DeliveryWindow = ({ storeBoundary, setDeliveryDateAndWindow }: Prop
     dayAfterTomorrowMMDDYYYY,
   } = getDate()
 
+  const initialNotification = (instantDelivery?.notification && instantDelivery?.notification) || {
+    isSendSMS: false,
+    isSendEmail: false,
+  }
+
   const [selectedDate, setSelectedDate] = useState<string | undefined | null>(todayMMDDYYYY)
-  const [selectedWindow, setSelectedWindow] = useState<Time | undefined>(undefined)
+  const [selectedWindow, setSelectedWindow] = useState<Window | undefined>(undefined)
+  const [notification, setNotification] = useState(initialNotification)
 
   const parsedSelectedDate = dayjs(selectedDate, 'MM/DD/YYYY')
   const isToday = parsedSelectedDate.isSame(todayMMDDYYYY, 'day')
@@ -150,7 +192,7 @@ export const DeliveryWindow = ({ storeBoundary, setDeliveryDateAndWindow }: Prop
   const isOtherDay = !isToday && !isTomorrow
 
   // Remove this line later
-  const storeBoundaryList = storeBoundary // && [...storeBoundary, '001']
+  const storeBoundaryList = instantDelivery?.storeBoundary
 
   // Today and Tomorrow
   const { data: dwResponse, isLoading: dwIsLoading } = useGetDeliveryWindow(storeBoundaryList)
@@ -171,19 +213,23 @@ export const DeliveryWindow = ({ storeBoundary, setDeliveryDateAndWindow }: Prop
   const handleTabChange = (date: string) => {
     setSelectedDate(date)
     setSelectedWindow(undefined)
-    setDeliveryDateAndWindow(undefined)
+    setInstantDelivery({ ...instantDelivery, window: undefined })
   }
 
-  const handleDeliveryWindowClick = (window: Time) => {
+  const handleDeliveryWindowClick = (window: Window) => {
     setSelectedWindow(window)
   }
 
   const confirmDeliveryWindow = () => {
     if (selectedDate && selectedWindow) {
-      setDeliveryDateAndWindow({
-        confirmedDate: selectedDate as string,
-        confirmedWindow: selectedWindow,
-        confirmedStoreId: stores?.storeId as string,
+      setInstantDelivery({
+        ...instantDelivery,
+        window: {
+          confirmedStoreId: stores?.storeId as string,
+          confirmedDate: selectedDate as string,
+          confirmedWindow: selectedWindow,
+        },
+        notification: notification,
       })
     }
   }
@@ -199,6 +245,18 @@ export const DeliveryWindow = ({ storeBoundary, setDeliveryDateAndWindow }: Prop
 
     return { isError: false, message: t('enter-date-in-format') }
   })()
+
+  const handleNotification = (event: React.ChangeEvent<HTMLInputElement>) => {
+    const name = event.target.name as string
+    const checked = event.target.checked as boolean
+
+    setNotification((prevState: { isSendSMS: boolean; isSendEmail: boolean }) => {
+      return {
+        ...prevState,
+        [name]: checked,
+      }
+    })
+  }
 
   const readable = selectedWindow?.readable
 
@@ -242,7 +300,7 @@ export const DeliveryWindow = ({ storeBoundary, setDeliveryDateAndWindow }: Prop
       </Stack>
       {isToday && (
         <Stack>
-          {todayDropoffs?.map((dropoffTime: Time) => (
+          {todayDropoffs?.map((dropoffTime: Window) => (
             <Box
               key={dropoffTime.readable}
               sx={{
@@ -328,6 +386,39 @@ export const DeliveryWindow = ({ storeBoundary, setDeliveryDateAndWindow }: Prop
           )}
         </Stack>
       )}
+
+      <Stack direction="row" gap={1}>
+        <FormControlLabel
+          sx={{
+            width: '100%',
+            paddingLeft: '0.5rem',
+          }}
+          control={
+            <Checkbox
+              data-testid="isSendSMS"
+              name="isSendSMS"
+              checked={notification?.isSendSMS}
+              onChange={handleNotification}
+            />
+          }
+          label={`${t('send-me-sms-updates')}`}
+        />
+        <FormControlLabel
+          sx={{
+            width: '100%',
+            paddingLeft: '0.5rem',
+          }}
+          control={
+            <Checkbox
+              data-testid="isSendEmail"
+              name="isSendEmail"
+              checked={notification?.isSendEmail}
+              onChange={handleNotification}
+            />
+          }
+          label={`${t('send-me-email-updates')}`}
+        />
+      </Stack>
 
       <Button
         variant="contained"

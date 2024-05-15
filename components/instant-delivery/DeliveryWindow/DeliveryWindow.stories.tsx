@@ -17,5 +17,7 @@ const Template: ComponentStory<typeof DeliveryWindow> = (args) => <DeliveryWindo
 
 export const Common = Template.bind({})
 Common.args = {
-  storeBoundary: ['003', '002', '001'],
+  instantDelivery: {
+    storeBoundary: ['003', '002', '001'],
+  },
 }

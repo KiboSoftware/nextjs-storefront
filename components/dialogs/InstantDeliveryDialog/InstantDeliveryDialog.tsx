@@ -14,7 +14,7 @@ const InstantDeliveryDialog = (props: any) => {
     isOpen: isOpen,
     Content: (
       <InstantDeliveryTemplate
-        initialDeliveryAddress={deliveryAddress}
+        // initialDeliveryAddress={deliveryAddress}
         onInstantDelivery={handleInstantDelivery}
       />
     ),

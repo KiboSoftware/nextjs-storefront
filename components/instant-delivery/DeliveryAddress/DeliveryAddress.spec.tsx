@@ -9,17 +9,11 @@ jest.mock('@/hooks', () => ({
   useGetStoreServiceBoundary: jest.fn(),
 }))
 
-const setDeliveryAddressMock = jest.fn()
-const setStoreBoundaryMock = jest.fn()
+const setInstantDeliveryMock = jest.fn()
 
 const setup = () => {
   renderWithQueryClient(
-    <DeliveryAddress
-      deliveryAddress={undefined}
-      setDeliveryAddress={setDeliveryAddressMock}
-      storeBoundary={undefined}
-      setStoreBoundary={setStoreBoundaryMock}
-    />
+    <DeliveryAddress instantDelivery={undefined} setInstantDelivery={setInstantDeliveryMock} />
   )
 }
 
@@ -80,7 +74,7 @@ describe('[component] - DeliveryAddress', () => {
     const confirmButton = screen.getByRole('button', { name: /confirm\-address/i })
     await userEvent.click(confirmButton)
 
-    expect(setDeliveryAddressMock).toHaveBeenCalledWith({
+    expect(setInstantDeliveryMock).toHaveBeenCalledWith({
       street: 'street',
       city: 'city',
       country: 'country',

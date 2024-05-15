@@ -46,5 +46,7 @@
   "no-delivery-available": "No delivery available",
   "loading": "Loading...",
   "select-a-future-date": "Select a future date",
-  "instant-delivery": "Instant Delivery"
+  "instant-delivery": "Instant Delivery",
+  "send-me-sms-updates": "Send me SMS updates",
+  "send-me-email-updates": "Send me Email updates"
 }

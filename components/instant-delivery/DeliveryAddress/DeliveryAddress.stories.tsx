@@ -17,6 +17,8 @@ const Template: ComponentStory<typeof DeliveryAddress> = (args) => <DeliveryAddr
 
 export const Common = Template.bind({})
 Common.args = {
-  storeBoundary: undefined,
-  deliveryAddress: undefined,
+  instantDelivery: {
+    storeBoundary: undefined,
+    address: undefined,
+  },
 }
