@@ -118,8 +118,7 @@ const InstantDeliveryTemplate = ({
 
   useEffect(() => {
     if (instantDelivery?.window) {
-      console.log('--instantDelivery--', JSON.stringify(instantDelivery))
-      // onInstantDelivery(instantDelivery)
+      onInstantDelivery(instantDelivery)
     }
   }, [window])
 

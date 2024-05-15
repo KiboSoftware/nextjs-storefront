@@ -36,6 +36,7 @@ const CheckoutUITemplate = <T extends CrOrder | Checkout>(props: CheckoutUITempl
     isMultiShipEnabled = false,
     children,
   } = props
+  const { publicRuntimeConfig } = getConfig()
   const { t } = useTranslation('common')
   const { activeStep, stepStatus, steps, setStepStatusSubmit, setStepBack } =
     useCheckoutStepContext()
@@ -49,7 +50,8 @@ const CheckoutUITemplate = <T extends CrOrder | Checkout>(props: CheckoutUITempl
   const handleBack = () => setStepBack()
   const handleSubmit = useCallback(() => setStepStatusSubmit(), [])
   const filterCheckoutItems = checkout?.items?.filter(
-    (checkoutItem) => checkoutItem?.product?.productType !== 'DeliveryService'
+    (checkoutItem) =>
+      checkoutItem?.product?.productType !== publicRuntimeConfig?.instantDelivery?.productType
   )
   const orderSummaryArgs = {
     nameLabel: t('order-summary'),
@@ -75,7 +77,6 @@ const CheckoutUITemplate = <T extends CrOrder | Checkout>(props: CheckoutUITempl
   }
   const showCheckoutSteps = activeStep !== steps.length
 
-  const { publicRuntimeConfig } = getConfig()
   const reCaptchaKey = publicRuntimeConfig.recaptcha.reCaptchaKey
 
   const commonElements = showCheckoutSteps ? (

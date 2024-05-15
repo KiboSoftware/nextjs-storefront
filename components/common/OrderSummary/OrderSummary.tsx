@@ -74,7 +74,7 @@ const OrderSummary = <T extends CrCart | CrOrder | Checkout>(props: OrderSummary
       </CardContent>
       <Divider />
       <CardContent>
-        {deliveryAddressDateAndWindow?.deliveryAddress && (
+        {deliveryAddressDateAndWindow?.address && (
           <Stack
             direction="row"
             sx={{
@@ -102,10 +102,10 @@ const OrderSummary = <T extends CrCart | CrOrder | Checkout>(props: OrderSummary
             <Box>
               <Typography>{t('delivery-to')}</Typography>
               <AddressCard
-                address1={deliveryAddressDateAndWindow?.deliveryAddress?.street as string}
-                cityOrTown={deliveryAddressDateAndWindow?.deliveryAddress?.city as string}
-                stateOrProvince={deliveryAddressDateAndWindow?.deliveryAddress?.state as string}
-                postalOrZipCode={deliveryAddressDateAndWindow?.deliveryAddress?.zipcode as string}
+                address1={deliveryAddressDateAndWindow?.address?.street as string}
+                cityOrTown={deliveryAddressDateAndWindow?.address?.city as string}
+                stateOrProvince={deliveryAddressDateAndWindow?.address?.state as string}
+                postalOrZipCode={deliveryAddressDateAndWindow?.address?.zipcode as string}
               />
             </Box>
             <Box sx={{ marginLeft: 'auto' }}>
@@ -113,7 +113,10 @@ const OrderSummary = <T extends CrCart | CrOrder | Checkout>(props: OrderSummary
                 data-testid="change-address-button"
                 variant="contained"
                 onClick={() =>
-                  onHandleInstantDelivery && onHandleInstantDelivery(deliveryAddressDateAndWindow)
+                  onHandleInstantDelivery &&
+                  onHandleInstantDelivery({
+                    deliveryAddress: deliveryAddressDateAndWindow?.address,
+                  })
                 }
               >
                 {t('change')}
@@ -121,7 +124,7 @@ const OrderSummary = <T extends CrCart | CrOrder | Checkout>(props: OrderSummary
             </Box>
           </Stack>
         )}
-        {deliveryAddressDateAndWindow?.deliveryDateAndWindow && (
+        {deliveryAddressDateAndWindow?.window && (
           <Stack direction="row" sx={{ backgroundColor: 'white', padding: '1rem' }} mt={2}>
             <Box mr={1}>
               <KiboImage src={Clock} alt={'delivery'} width={24} height={24} />
@@ -130,17 +133,22 @@ const OrderSummary = <T extends CrCart | CrOrder | Checkout>(props: OrderSummary
               <Typography fontWeight="bold">{t('delivery-time')}</Typography>
               <Typography>
                 {format(
-                  new Date(deliveryAddressDateAndWindow?.deliveryDateAndWindow?.confirmedDate),
+                  new Date(deliveryAddressDateAndWindow?.window?.confirmedDate),
                   'EEEE, MMMM dd, yyyy'
                 )}
               </Typography>
               <Typography>
-                {deliveryAddressDateAndWindow?.deliveryDateAndWindow?.confirmedWindow?.readable}
+                {deliveryAddressDateAndWindow?.window?.confirmedWindow?.readable}
               </Typography>
               <Typography
                 variant="caption"
                 onClick={() =>
-                  onHandleInstantDelivery && onHandleInstantDelivery(deliveryAddressDateAndWindow)
+                  onHandleInstantDelivery &&
+                  onHandleInstantDelivery({
+                    deliveryAddress: deliveryAddressDateAndWindow?.address,
+                    deliveryStoreBoundary: deliveryAddressDateAndWindow?.storeBoundary,
+                    deliveryNotification: deliveryAddressDateAndWindow?.notification,
+                  })
                 }
                 sx={{ textDecoration: 'underline', cursor: 'pointer' }}
               >

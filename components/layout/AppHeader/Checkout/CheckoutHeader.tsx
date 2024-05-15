@@ -1,6 +1,7 @@
 import React from 'react'
 
 import { Box, Container, Typography } from '@mui/material'
+import getConfig from 'next/config'
 import Link from 'next/link'
 import { useRouter } from 'next/router'
 import { useTranslation } from 'next-i18next'
@@ -22,6 +23,7 @@ const checkoutHeaderStyles = {
 const CheckoutHeader = ({ isMultiShipEnabled }: { isMultiShipEnabled: boolean }) => {
   const { t } = useTranslation()
   const router = useRouter()
+  const { publicRuntimeConfig } = getConfig()
   const { checkoutId } = router.query
   const { data: multishipCheckout } = useGetCurrentCheckout({
     checkoutId: checkoutId as string,
@@ -34,10 +36,13 @@ const CheckoutHeader = ({ isMultiShipEnabled }: { isMultiShipEnabled: boolean })
   })
   const numberOfItems =
     multishipCheckout?.items?.filter(
-      (checkoutItem) => checkoutItem?.product?.productType !== 'DeliveryService'
+      (checkoutItem) =>
+        checkoutItem?.product?.productType !== publicRuntimeConfig?.instantDelivery?.productType
     )?.length ||
-    order?.items?.filter((checkoutItem) => checkoutItem?.product?.productType !== 'DeliveryService')
-      ?.length
+    order?.items?.filter(
+      (checkoutItem) =>
+        checkoutItem?.product?.productType !== publicRuntimeConfig?.instantDelivery?.productType
+    )?.length
 
   return (
     <>

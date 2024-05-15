@@ -1,4 +1,5 @@
 import ShoppingCartIcon from '@mui/icons-material/ShoppingCart'
+import getConfig from 'next/config'
 import { useRouter } from 'next/router'
 import { useTranslation } from 'next-i18next'
 
@@ -9,13 +10,14 @@ import type { IconProps } from '@/lib/types'
 
 const CartIcon = ({ size, isElementVisible, mobileIconColor }: IconProps) => {
   const { t } = useTranslation('common')
-
+  const { publicRuntimeConfig } = getConfig()
   const { data: cart } = useGetCart()
   const deliveryAddressDateAndWindow =
     typeof localStorage !== 'undefined' &&
     JSON.parse(localStorage.getItem('instant-delivery') as string)
   const filterCartItemsTotal = cart?.items?.filter(
-    (cartItem) => cartItem?.product?.productType !== 'DeliveryService'
+    (cartItem) =>
+      cartItem?.product?.productType !== publicRuntimeConfig?.instantDelivery?.productType
   )?.length
   const itemCount = !deliveryAddressDateAndWindow
     ? cartGetters.getCartItemCount(cart)

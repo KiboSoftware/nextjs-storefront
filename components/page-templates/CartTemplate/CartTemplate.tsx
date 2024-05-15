@@ -12,6 +12,7 @@ import {
   Divider,
   useMediaQuery,
 } from '@mui/material'
+import getConfig from 'next/config'
 import { useRouter } from 'next/router'
 import { useTranslation } from 'next-i18next'
 
@@ -48,10 +49,11 @@ export interface CartTemplateProps {
 
 const CartTemplate = (props: CartTemplateProps) => {
   const { isMultiShipEnabled } = props
+  const { publicRuntimeConfig } = getConfig()
+
   const { data: cart } = useGetCart(props?.cart)
   const [deliveryRatesPayload, setDeliveryRatesPayload] = useState<any>()
   const [deliveryFees, setDeliveryFees] = useState<any>()
-
   const { t } = useTranslation('common')
   const theme = useTheme()
   const isMobileViewport = useMediaQuery(theme.breakpoints.down('md'))
@@ -65,13 +67,13 @@ const CartTemplate = (props: CartTemplateProps) => {
   const { updateCart } = useUpdateCart()
   const { updateCartItemByCartID } = useUpdateCartItemByCartID()
   const { data: deliveryFee, isLoading, isSuccess } = useGetDeliveryRates(deliveryRatesPayload)
-  console.log('delivery fee', isLoading, isSuccess, deliveryFee)
   const cartItems = cartGetters.getCartItems(cart)
   const deliveryAddressDateAndWindow =
     typeof localStorage !== 'undefined' &&
     JSON.parse(localStorage.getItem('instant-delivery') as string)
   const filterCartItems = cartItems?.filter(
-    (cartItem) => cartItem?.product?.productType !== 'DeliveryService'
+    (cartItem) =>
+      cartItem?.product?.productType !== publicRuntimeConfig?.instantDelivery?.productType
   )
   const cartItemCount = !deliveryAddressDateAndWindow
     ? cartGetters.getCartItemCount(cart)
@@ -87,6 +89,10 @@ const CartTemplate = (props: CartTemplateProps) => {
   const [promoError, setPromoError] = useState<string>('')
   const [showLoadingButton, setShowLoadingButton] = useState<boolean>(false)
   const { handleDeleteCurrentCart } = useProductCardActions()
+
+  const instantDeliveryItem = cartItems.find(
+    (item) => item?.product?.productType === publicRuntimeConfig?.instantDelivery?.productType
+  )
 
   const handleApplyPromoCode = async (couponCode: string) => {
     try {
@@ -113,9 +119,15 @@ const CartTemplate = (props: CartTemplateProps) => {
     }
   }
 
+  const handleDeleteDeliveryItem = async () => {
+    await handleDeleteItem(instantDeliveryItem?.id as string)
+  }
+
   const handleDeleteItem = async (cartItemId: string) => {
     await deleteCartItem.mutateAsync({ cartItemId })
   }
+
+  // const handleDeleteCartItem = async (cartItemId: string) => {}
 
   const handleItemActions = () => {
     // your code here
@@ -146,9 +158,6 @@ const CartTemplate = (props: CartTemplateProps) => {
   }
 
   const handleCheckoutWithRates = async (deliveryFee: any) => {
-    const instantDeliveryItem = cartItems.find(
-      (item) => item?.product?.productType === 'DeliveryService'
-    )
     if (!isLoading && deliveryFee && instantDeliveryItem) {
       const variables = {
         params: {
@@ -181,9 +190,24 @@ const CartTemplate = (props: CartTemplateProps) => {
         cartInput: {
           ...updateCartItemResponse,
           data: {
-            confirmedWindow: JSON.stringify(
-              deliveryAddressDateAndWindow?.deliveryDateAndWindow?.confirmedWindow
-            ),
+            dropoffTime: {
+              startsAt:
+                deliveryAddressDateAndWindow?.window?.confirmedWindow?.dropoffTime?.startsAt.toString(),
+              endsAt:
+                deliveryAddressDateAndWindow?.window?.confirmedWindow?.dropoffTime?.endsAt.toString(),
+            },
+            pickupTime: {
+              startsAt:
+                deliveryAddressDateAndWindow?.window?.confirmedWindow?.pickupTime?.startsAt.toString(),
+            },
+            deliveryInstructions: '',
+            pickupInstructions: '',
+            tips: 0,
+            deliveryContact: {
+              notifySms: deliveryAddressDateAndWindow?.notification?.isSendSMS,
+              notifyEmail: deliveryAddressDateAndWindow?.notification?.isSendEmail,
+            },
+            packages: [],
           },
         },
       })
@@ -222,14 +246,6 @@ const CartTemplate = (props: CartTemplateProps) => {
         ? await initiateCheckout.mutateAsync(cart?.id)
         : await initiateOrder.mutateAsync({
             cartId: cart?.id as string,
-            // orderInput: {
-            //   totalCollected: 0,
-            //   amountAvailableForRefund: 0,
-            //   amountRemainingForPayment: 0,
-            //   amountRefunded: 0,
-            //   continuityOrderOrdinal: 0,
-            //   data: deliveryAddressDateAndWindow?.deliveryDateAndWindow,
-            // },
           })
 
       if (initiateOrderResponse?.id) {

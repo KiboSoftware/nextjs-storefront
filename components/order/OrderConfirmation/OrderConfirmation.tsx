@@ -2,6 +2,7 @@ import React, { useRef } from 'react'
 
 import Print from '@mui/icons-material/Print'
 import { Box, Container, Divider, Grid, IconButton, Stack, Typography } from '@mui/material'
+import getConfig from 'next/config'
 import { useTranslation } from 'next-i18next'
 import { useReactToPrint } from 'react-to-print'
 
@@ -14,7 +15,7 @@ import type { CrOrder } from '@/lib/gql/types'
 const OrderConfirmation = ({ order }: { order: CrOrder }) => {
   const { t } = useTranslation('common')
   const componentRef = useRef(null)
-
+  const { publicRuntimeConfig } = getConfig()
   const orderTotal = orderGetters.getTotal(order)
   const orderNumber = orderGetters.getOrderNumber(order)
   const submittedDate = orderGetters.getSubmittedDate(order)
@@ -38,7 +39,8 @@ const OrderConfirmation = ({ order }: { order: CrOrder }) => {
     nameLabel: t('order-summary'),
     subTotalLabel: `${t('subtotal')} (${t('item-quantity', {
       count: order.items?.filter(
-        (orderItem) => orderItem?.product?.productType !== 'DeliveryService'
+        (orderItem) =>
+          orderItem?.product?.productType !== publicRuntimeConfig?.instantDelivery?.productType
       )?.length,
     })})`,
     shippingTotalLabel: t('shipping'),
@@ -74,7 +76,9 @@ const OrderConfirmation = ({ order }: { order: CrOrder }) => {
               <Typography variant="h2" fontWeight={'normal'}>
                 {t('item-quantity', {
                   count: order.items?.filter(
-                    (orderItem) => orderItem?.product?.productType !== 'DeliveryService'
+                    (orderItem) =>
+                      orderItem?.product?.productType !==
+                      publicRuntimeConfig?.instantDelivery?.productType
                   )?.length,
                 })}
               </Typography>

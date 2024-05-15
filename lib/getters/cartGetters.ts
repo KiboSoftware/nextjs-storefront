@@ -1,5 +1,6 @@
 import getConfig from 'next/config'
 
+import { productGetters } from './productGetters'
 import { subscriptionGetters } from './subscriptionGetters'
 import { FulfillmentOptions } from '../constants'
 
@@ -80,14 +81,14 @@ const normalizeProduct = (product: any) => {
   return {
     quantity: product?.quantity,
     size: {
-      height: 1,
-      width: 1,
-      length: 1,
+      height: product?.product?.measurements?.height?.value,
+      width: product?.product?.measurements?.width?.value,
+      length: product?.product?.measurements?.length?.value,
     },
     sku: product?.product?.productCode,
-    weight: 1,
+    weight: product?.product?.measurements?.weight?.value,
     price: product?.product?.price?.price,
-    image: `https:${product?.product?.imageUrl}`,
+    image: productGetters.handleProtocolRelativeUrl(product?.product?.imageUrl),
     title: product?.product?.name,
     description: product.product.description ? product.product.description : '',
   }
@@ -95,12 +96,34 @@ const normalizeProduct = (product: any) => {
 
 const getNormalizedDataForRates = (cartItems: any, deliveryWindowDateAndTime: any) => {
   return {
-    storeExternalIds: [deliveryWindowDateAndTime?.deliveryDateAndWindow?.confirmedStoreId],
+    storeExternalIds: [deliveryWindowDateAndTime?.window?.confirmedStoreId],
     type: 'delivery',
-    deliveryAddress: deliveryWindowDateAndTime?.deliveryAddress,
+    deliveryAddress: deliveryWindowDateAndTime?.address,
     itemList: cartItems.map(normalizeProduct),
-    dropoffTime: deliveryWindowDateAndTime?.deliveryDateAndWindow?.confirmedWindow?.dropoffTime,
+    dropoffTime: deliveryWindowDateAndTime?.window?.confirmedWindow?.dropoffTime,
   }
+}
+
+const getPackagesDetails = (cartItems: any) => {
+  let totalWeight = 0
+  let totalHeight = 0
+  let totalLength = 0
+  let totalWidth = 0
+
+  cartItems.forEach((item: any) => {
+    const quantity = item.quantity
+    const measurements = item.product.measurements
+
+    const weight = measurements.weight.value * quantity
+    const height = measurements.height.value * quantity
+    const length = measurements.length.value * quantity
+    const width = measurements.width.value * quantity
+
+    totalWeight += weight
+    totalHeight += height
+    totalLength += length
+    totalWidth += width
+  })
 }
 
 export const cartGetters = {

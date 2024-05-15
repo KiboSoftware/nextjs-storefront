@@ -1,4 +1,5 @@
 import { format } from 'date-fns'
+import getConfig from 'next/config'
 
 import { addressGetters } from './addressGetters'
 import { cardGetters } from './cardGetters'
@@ -25,6 +26,8 @@ import type {
   CuAddress,
   Checkout,
 } from '@/lib/gql/types'
+
+const { publicRuntimeConfig } = getConfig()
 
 const getCheckoutItemCount = (order: CrOrder) => order?.items?.length
 
@@ -99,7 +102,7 @@ const getShipItems = (order: CrOrder): CrOrderItem[] =>
 
 const getDeliveryItems = (order: CrOrder): CrOrderItem[] =>
   getItemsByFulfillment(order, FulfillmentOptions.DELIVERY)?.filter(
-    (item) => item?.product?.productType !== 'DeliveryService'
+    (item) => item?.product?.productType !== publicRuntimeConfig?.instantDelivery?.productType
   )
 
 const getDigitalItems = (order: CrOrder): CrOrderItem[] =>
@@ -383,7 +386,9 @@ const isPayPalPaymentMethodActive = (order: CrOrder) => {
 }
 
 const getDeliveryItemPrice = (order: CrOrder) => {
-  const filterItem = order?.items?.find((item) => item?.product?.productType === 'DeliveryService')
+  const filterItem = order?.items?.find(
+    (item) => item?.product?.productType === publicRuntimeConfig?.instantDelivery?.productType
+  )
 
   const filterItemPrice = filterItem?.product?.price?.tenantOverridePrice
     ? filterItem?.product?.price?.tenantOverridePrice

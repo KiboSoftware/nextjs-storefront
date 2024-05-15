@@ -16,6 +16,7 @@ import {
   Theme,
   MenuItem,
 } from '@mui/material'
+import getConfig from 'next/config'
 import Link from 'next/link'
 import { useTranslation } from 'next-i18next'
 
@@ -101,6 +102,7 @@ const StyledLink = styled(Link)(({ theme }: { theme: Theme }) => ({
 }))
 
 const ProductDetailTemplate = (props: ProductDetailTemplateProps) => {
+  const { publicRuntimeConfig } = getConfig()
   const { getProductLink } = uiHelpers()
   const {
     product,
@@ -252,8 +254,8 @@ const ProductDetailTemplate = (props: ProductDetailTemplateProps) => {
           if (!deliveryAddressDateAndWindow) {
             await addToCart.mutateAsync({
               product: {
-                productCode: 'Delivery',
-                variationProductCode: 'Delivery',
+                productCode: publicRuntimeConfig?.instantDelivery?.productCode,
+                variationProductCode: publicRuntimeConfig?.instantDelivery?.productCode,
                 fulfillmentMethod,
                 options: [],
                 purchaseLocationCode: selectedFulfillmentOption?.location?.code as string,
@@ -263,7 +265,7 @@ const ProductDetailTemplate = (props: ProductDetailTemplateProps) => {
           }
           localStorage.setItem(
             'instant-delivery',
-            JSON.stringify(selectedFulfillmentOption?.location?.deliveryAddressDateAndWindow)
+            JSON.stringify(selectedFulfillmentOption?.location)
           )
         }
         showModal({
@@ -282,11 +284,11 @@ const ProductDetailTemplate = (props: ProductDetailTemplateProps) => {
     showModal({
       Component: InstantDeliveryDialog,
       props: {
-        handleInstantDelivery: async (deliveryAddressDateAndWindow: any) => {
+        handleInstantDelivery: async (instantDelivery: any) => {
           setSelectedFulfillmentOption({
             location: {
-              code: deliveryAddressDateAndWindow?.deliveryDateAndWindow?.confirmedStoreId,
-              deliveryAddressDateAndWindow,
+              code: instantDelivery?.window?.confirmedStoreId,
+              ...instantDelivery,
             },
             method: FulfillmentOptionsConstant.DELIVERY,
           })

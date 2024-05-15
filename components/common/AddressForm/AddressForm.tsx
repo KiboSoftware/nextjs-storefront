@@ -58,7 +58,8 @@ const AddressForm = (props: AddressFormProps) => {
   const { publicRuntimeConfig } = getConfig()
   const { t: translation } = useTranslation('common')
 
-  const isInstantDeliveryShipping = props.saveAddressLabel === translation('save-shipping-address')
+  // const isInstantDeliveryShipping = props.saveAddressLabel === translation('save-shipping-address')
+  const isInstantDeliveryShipping = false
 
   const {
     contact,

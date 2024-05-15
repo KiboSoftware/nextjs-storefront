@@ -367,7 +367,7 @@ const StandardShippingStep = (props: ShippingProps) => {
   // Instant Delivery
   const instantDelivery = localStorage.getItem('instant-delivery') as string
   const instantDeliveryObj = JSON.parse(instantDelivery)
-  const deliveryAddress = instantDeliveryObj.deliveryAddress
+  const deliveryAddress = instantDeliveryObj.address
   const contact = convertToContactForm(deliveryAddress)
 
   return (

@@ -31,6 +31,24 @@ export const cartItemDetails = /* GraphQL */ `
       productType
       variationProductCode
       fulfillmentTypesSupported
+      measurements {
+        height {
+          unit
+          value
+        }
+        width {
+          unit
+          value
+        }
+        length {
+          unit
+          value
+        }
+        weight {
+          unit
+          value
+        }
+      }
       name
       description
       imageUrl

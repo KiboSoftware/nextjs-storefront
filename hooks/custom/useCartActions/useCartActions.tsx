@@ -1,5 +1,8 @@
 import React from 'react'
 
+import { AnyNaptrRecord } from 'dns'
+import getConfig from 'next/config'
+
 import { InstantDeliveryDialog, StoreLocatorDialog } from '@/components/dialogs'
 import { useModalContext } from '@/context'
 import {
@@ -12,13 +15,13 @@ import { FulfillmentOptions } from '@/lib/constants'
 import { LocationCustom } from '@/lib/types'
 
 import { CrCartItem, CrCartItemInput, Maybe, Location } from '@/lib/gql/types'
-
 interface UseCartActionsProps {
   cartItems: CrCartItem[]
   purchaseLocation: Location
 }
 
 export const useCartActions = ({ cartItems, purchaseLocation }: UseCartActionsProps) => {
+  const { publicRuntimeConfig } = getConfig()
   const { showModal, closeModal } = useModalContext()
   const { updateCartItem } = useUpdateCartItem()
   const { updateCartItemQuantity } = useUpdateCartItemQuantity()
@@ -45,27 +48,26 @@ export const useCartActions = ({ cartItems, purchaseLocation }: UseCartActionsPr
     showModal({
       Component: InstantDeliveryDialog,
       props: {
-        handleInstantDelivery: async (deliveryAddressDateAndWindow: any) => {
+        handleInstantDelivery: async (instantDelivery: any) => {
           const response = await mutateCartItem(
             cartItemId as string,
             FulfillmentOptions.DELIVERY,
-            deliveryAddressDateAndWindow?.deliveryDateAndWindow?.confirmedStoreId
+            instantDelivery?.window?.confirmedStoreId
           )
           if (response?.id) {
             if (!deliveryAddressDateAndWindowFromLocalStorage) {
               await addToCart.mutateAsync({
                 product: {
-                  productCode: 'Delivery',
-                  variationProductCode: 'Delivery',
+                  productCode: publicRuntimeConfig?.instantDelivery?.productCode,
+                  variationProductCode: publicRuntimeConfig?.instantDelivery?.productCode,
                   fulfillmentMethod: FulfillmentOptions.DELIVERY,
                   options: [],
-                  purchaseLocationCode: deliveryAddressDateAndWindow?.deliveryDateAndWindow
-                    ?.confirmedStoreId as string,
+                  purchaseLocationCode: instantDelivery?.window?.confirmedStoreId as string,
                 },
                 quantity: 1,
               })
             }
-            localStorage.setItem('instant-delivery', JSON.stringify(deliveryAddressDateAndWindow))
+            localStorage.setItem('instant-delivery', JSON.stringify(instantDelivery))
           }
           closeModal()
         },
@@ -115,11 +117,23 @@ export const useCartActions = ({ cartItems, purchaseLocation }: UseCartActionsPr
     }
   }
 
-  const handChangeDeliveryAddressDateAndTime = (deliveryAddressDateAndWindow: any) => {
+  const handChangeDeliveryAddressDateAndTime = ({
+    deliveryAddress,
+    deliveryStoreBoundary,
+    deliveryNotification,
+  }: {
+    deliveryAddress: any
+    deliveryStoreBoundary: any
+    deliveryNotification: AnyNaptrRecord
+  }) => {
     showModal({
       Component: InstantDeliveryDialog,
       props: {
-        deliveryAddress: deliveryAddressDateAndWindow?.deliveryAddress,
+        instantDelivery: {
+          address: deliveryAddress,
+          storeBoundary: deliveryStoreBoundary,
+          notification: deliveryNotification,
+        },
         handleInstantDelivery: async (deliveryAddressDateAndWindow: any) => {
           handleUpdateCartItems(deliveryAddressDateAndWindow)
           closeModal()
@@ -128,12 +142,11 @@ export const useCartActions = ({ cartItems, purchaseLocation }: UseCartActionsPr
     })
   }
 
-  const handleUpdateCartItems = async (deliveryAddressDateAndWindow: any) => {
+  const handleUpdateCartItems = async (instantDelivery: any) => {
     const newCartItems = [...cartItems]
     newCartItems.forEach((item: CrCartItem) => {
       if (item?.fulfillmentMethod && item?.fulfillmentMethod === FulfillmentOptions.DELIVERY) {
-        item.fulfillmentLocationCode =
-          deliveryAddressDateAndWindow?.deliveryDateAndWindow?.confirmedStoreId
+        item.fulfillmentLocationCode = instantDelivery?.window?.confirmedStoreId
       }
     })
     try {
@@ -145,7 +158,7 @@ export const useCartActions = ({ cartItems, purchaseLocation }: UseCartActionsPr
     } catch (err) {
       console.error(err)
     }
-    localStorage.setItem('instant-delivery', JSON.stringify(deliveryAddressDateAndWindow))
+    localStorage.setItem('instant-delivery', JSON.stringify(instantDelivery))
   }
 
   return {

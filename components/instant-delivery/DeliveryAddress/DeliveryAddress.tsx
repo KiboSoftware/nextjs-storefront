@@ -106,7 +106,6 @@ const DeliveryAddress = ({ instantDelivery, setInstantDelivery }: DeliveryAddres
           </Typography>
         )}
       </Box>
-      isSubmitted: {isSubmitted.toString()}
       <Box
         component="form"
         sx={{
