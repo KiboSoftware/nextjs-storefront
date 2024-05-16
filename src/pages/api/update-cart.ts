@@ -39,7 +39,6 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
       },
       { headers }
     )
-    console.log('--------------------updateCartResponse', JSON.stringify(updateCartResponse))
     // Execute the mutation
     correlationId =
       updateCartResponse.headers.get('X-Vol-Correlation') ||

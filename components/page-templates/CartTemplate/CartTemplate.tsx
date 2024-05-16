@@ -119,8 +119,9 @@ const CartTemplate = (props: CartTemplateProps) => {
     }
   }
 
-  const handleDeleteDeliveryItem = async () => {
-    await handleDeleteItem(instantDeliveryItem?.id as string)
+  const handleDeleteDeliveryItem = async (cartItemId: string) => {
+    await handleDeleteItem(cartItemId as string)
+    localStorage.removeItem('instant-delivery')
   }
 
   const handleDeleteItem = async (cartItemId: string) => {
@@ -207,7 +208,7 @@ const CartTemplate = (props: CartTemplateProps) => {
               notifySms: deliveryAddressDateAndWindow?.notification?.isSendSMS,
               notifyEmail: deliveryAddressDateAndWindow?.notification?.isSendEmail,
             },
-            packages: [],
+            packages: [cartGetters.getPackagesDetails(filterCartItems)],
           },
         },
       })
@@ -325,6 +326,14 @@ const CartTemplate = (props: CartTemplateProps) => {
     })
   }
 
+  useEffect(() => {
+    const instantDeliveryItem = cartItems.find(
+      (item) => item?.product?.productType === publicRuntimeConfig?.instantDelivery?.productType
+    )
+    if (!cartGetters.checkDeliveryItems(cartItems) && instantDeliveryItem?.id) {
+      handleDeleteDeliveryItem(instantDeliveryItem?.id as string)
+    }
+  }, [!cartGetters.checkDeliveryItems(cartItems), cartItems])
   return (
     <Grid container>
       {/* Header section */}

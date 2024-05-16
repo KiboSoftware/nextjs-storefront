@@ -281,21 +281,31 @@ const ProductDetailTemplate = (props: ProductDetailTemplateProps) => {
   }
 
   const handleInstantDelivery = () => {
-    showModal({
-      Component: InstantDeliveryDialog,
-      props: {
-        handleInstantDelivery: async (instantDelivery: any) => {
-          setSelectedFulfillmentOption({
-            location: {
-              code: instantDelivery?.window?.confirmedStoreId,
-              ...instantDelivery,
-            },
-            method: FulfillmentOptionsConstant.DELIVERY,
-          })
-          closeModal()
+    if (deliveryAddressDateAndWindow) {
+      setSelectedFulfillmentOption({
+        location: {
+          code: deliveryAddressDateAndWindow?.window?.confirmedStoreId,
+          ...deliveryAddressDateAndWindow,
         },
-      },
-    })
+        method: FulfillmentOptionsConstant.DELIVERY,
+      })
+    } else {
+      showModal({
+        Component: InstantDeliveryDialog,
+        props: {
+          handleInstantDelivery: async (instantDelivery: any) => {
+            setSelectedFulfillmentOption({
+              location: {
+                code: instantDelivery?.window?.confirmedStoreId,
+                ...instantDelivery,
+              },
+              method: FulfillmentOptionsConstant.DELIVERY,
+            })
+            closeModal()
+          },
+        },
+      })
+    }
   }
   const handleFulfillmentOptionChange = (value: string) => {
     if (
@@ -308,7 +318,6 @@ const ProductDetailTemplate = (props: ProductDetailTemplateProps) => {
         location: {},
         method: value,
       })
-      localStorage.removeItem('instant-delivery')
     } else if (value === FulfillmentOptionsConstant.DELIVERY) {
       handleInstantDelivery()
     } else {
@@ -365,7 +374,6 @@ const ProductDetailTemplate = (props: ProductDetailTemplateProps) => {
             method: FulfillmentOptionsConstant.PICKUP,
             location: selectedStore,
           })
-          localStorage.removeItem('instant-delivery')
         },
       },
     })

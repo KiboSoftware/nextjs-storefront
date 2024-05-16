@@ -87,7 +87,9 @@ const normalizeProduct = (product: any) => {
     },
     sku: product?.product?.productCode,
     weight: product?.product?.measurements?.weight?.value,
-    price: product?.product?.price?.price,
+    price: product?.product?.price?.tenantOverridePrice
+      ? product?.product?.price?.tenantOverridePrice
+      : product?.product?.price?.salePrice,
     image: productGetters.handleProtocolRelativeUrl(product?.product?.imageUrl),
     title: product?.product?.name,
     description: product.product.description ? product.product.description : '',
@@ -99,8 +101,8 @@ const getNormalizedDataForRates = (cartItems: any, deliveryWindowDateAndTime: an
     storeExternalIds: [deliveryWindowDateAndTime?.window?.confirmedStoreId],
     type: 'delivery',
     deliveryAddress: deliveryWindowDateAndTime?.address,
-    itemList: cartItems.map(normalizeProduct),
     dropoffTime: deliveryWindowDateAndTime?.window?.confirmedWindow?.dropoffTime,
+    packages: [{ ...getPackagesDetails(cartItems), itemList: cartItems.map(normalizeProduct) }],
   }
 }
 
@@ -124,6 +126,29 @@ const getPackagesDetails = (cartItems: any) => {
     totalLength += length
     totalWidth += width
   })
+
+  return {
+    name: 'custom',
+    size: {
+      height: totalHeight,
+      width: totalWidth,
+      length: totalLength,
+    },
+    weight: totalWeight,
+    quantity: cartItems.length,
+    items: 1,
+    barcode: 'null',
+    temperatureControl: 'none',
+  }
+}
+
+const checkDeliveryItems = (data: any) => {
+  for (const item of data) {
+    if (item.fulfillmentMethod === 'Delivery' && item.product.productType !== 'DeliveryService') {
+      return true // Return true if such an item is found
+    }
+  }
+  return false // Return false if no such item is found
 }
 
 export const cartGetters = {
@@ -134,4 +159,6 @@ export const cartGetters = {
   getSubscriptionDetails,
   getLineItemPrice,
   getNormalizedDataForRates,
+  getPackagesDetails,
+  checkDeliveryItems,
 }

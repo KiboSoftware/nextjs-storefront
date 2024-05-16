@@ -37,42 +37,49 @@ export const useCartActions = ({ cartItems, purchaseLocation }: UseCartActionsPr
       props: {
         handleSetStore: async (selectedStore: LocationCustom) => {
           mutateCartItem(cartItemId, FulfillmentOptions.PICKUP, selectedStore?.code)
-          localStorage.removeItem('instant-delivery')
           closeModal()
         },
       },
     })
   }
 
-  const handleInstantDelivery = (cartItemId?: string) => {
-    showModal({
-      Component: InstantDeliveryDialog,
-      props: {
-        handleInstantDelivery: async (instantDelivery: any) => {
-          const response = await mutateCartItem(
-            cartItemId as string,
-            FulfillmentOptions.DELIVERY,
-            instantDelivery?.window?.confirmedStoreId
-          )
-          if (response?.id) {
-            if (!deliveryAddressDateAndWindowFromLocalStorage) {
-              await addToCart.mutateAsync({
-                product: {
-                  productCode: publicRuntimeConfig?.instantDelivery?.productCode,
-                  variationProductCode: publicRuntimeConfig?.instantDelivery?.productCode,
-                  fulfillmentMethod: FulfillmentOptions.DELIVERY,
-                  options: [],
-                  purchaseLocationCode: instantDelivery?.window?.confirmedStoreId as string,
-                },
-                quantity: 1,
-              })
+  const handleInstantDelivery = async (cartItemId?: string) => {
+    if (deliveryAddressDateAndWindowFromLocalStorage) {
+      await mutateCartItem(
+        cartItemId as string,
+        FulfillmentOptions.DELIVERY,
+        deliveryAddressDateAndWindowFromLocalStorage?.window?.confirmedStoreId
+      )
+    } else {
+      showModal({
+        Component: InstantDeliveryDialog,
+        props: {
+          handleInstantDelivery: async (instantDelivery: any) => {
+            const response = await mutateCartItem(
+              cartItemId as string,
+              FulfillmentOptions.DELIVERY,
+              instantDelivery?.window?.confirmedStoreId
+            )
+            if (response?.id) {
+              if (!deliveryAddressDateAndWindowFromLocalStorage) {
+                await addToCart.mutateAsync({
+                  product: {
+                    productCode: publicRuntimeConfig?.instantDelivery?.productCode,
+                    variationProductCode: publicRuntimeConfig?.instantDelivery?.productCode,
+                    fulfillmentMethod: FulfillmentOptions.DELIVERY,
+                    options: [],
+                    purchaseLocationCode: instantDelivery?.window?.confirmedStoreId as string,
+                  },
+                  quantity: 1,
+                })
+              }
+              localStorage.setItem('instant-delivery', JSON.stringify(instantDelivery))
             }
-            localStorage.setItem('instant-delivery', JSON.stringify(instantDelivery))
-          }
-          closeModal()
+            closeModal()
+          },
         },
-      },
-    })
+      })
+    }
   }
 
   const mutateCartItem = async (
@@ -105,7 +112,6 @@ export const useCartActions = ({ cartItems, purchaseLocation }: UseCartActionsPr
       handleInstantDelivery(cartItemId)
     } else {
       mutateCartItem(cartItemId, fulfillmentMethod, locationCode)
-      localStorage.removeItem('instant-delivery')
     }
   }
 
