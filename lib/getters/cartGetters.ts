@@ -87,9 +87,10 @@ const normalizeProduct = (product: any) => {
     },
     sku: product?.product?.productCode,
     weight: product?.product?.measurements?.weight?.value,
-    price: product?.product?.price?.tenantOverridePrice
-      ? product?.product?.price?.tenantOverridePrice
-      : product?.product?.price?.salePrice,
+    price:
+      product?.product?.price?.tenantOverridePrice ||
+      product?.product?.price?.salePrice ||
+      product?.product?.price?.price,
     image: productGetters.handleProtocolRelativeUrl(product?.product?.imageUrl),
     title: product?.product?.name,
     description: product.product.description ? product.product.description : '',

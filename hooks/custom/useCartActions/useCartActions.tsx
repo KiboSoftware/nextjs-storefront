@@ -1,6 +1,5 @@
 import React from 'react'
 
-import { AnyNaptrRecord } from 'dns'
 import getConfig from 'next/config'
 
 import { InstantDeliveryDialog, StoreLocatorDialog } from '@/components/dialogs'
@@ -130,7 +129,7 @@ export const useCartActions = ({ cartItems, purchaseLocation }: UseCartActionsPr
   }: {
     deliveryAddress: any
     deliveryStoreBoundary: any
-    deliveryNotification: AnyNaptrRecord
+    deliveryNotification: any
   }) => {
     showModal({
       Component: InstantDeliveryDialog,

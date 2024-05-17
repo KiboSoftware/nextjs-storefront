@@ -390,9 +390,10 @@ const getDeliveryItemPrice = (order: CrOrder) => {
     (item) => item?.product?.productType === publicRuntimeConfig?.instantDelivery?.productType
   )
 
-  const filterItemPrice = filterItem?.product?.price?.tenantOverridePrice
-    ? filterItem?.product?.price?.tenantOverridePrice
-    : filterItem?.product?.price?.salePrice
+  const filterItemPrice =
+    filterItem?.product?.price?.tenantOverridePrice ||
+    filterItem?.product?.price?.salePrice ||
+    filterItem?.product?.price?.price
   return filterItemPrice
 }
 
