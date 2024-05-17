@@ -148,7 +148,7 @@ const OrderConfirmation = ({ order }: { order: CrOrder }) => {
             {deliveryItems && deliveryItems.length > 0 && (
               <Box sx={{ paddingBlock: 2 }}>
                 <Typography variant="h3" fontWeight={700} gutterBottom>
-                  {t('instant-delivery')}
+                  {t('delivery-products')}
                 </Typography>
                 <ProductItemList items={deliveryItems} />
               </Box>

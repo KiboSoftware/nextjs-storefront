@@ -132,7 +132,7 @@ const DeliveryItemList = (deliveryProps: DeliveryItemListProps) => {
   return (
     <Box data-testid="ship-items">
       <Typography sx={styles.shippingType} py={2} data-testid="ship-title">
-        {t('instant-delivery')}
+        {t('delivery-products')}
       </Typography>
       <Box pt={3}>
         <ProductItemList items={deliveryItems} />

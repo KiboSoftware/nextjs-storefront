@@ -558,5 +558,6 @@
   "instant-delivery": "Instant Delivery",
   "select-delivery-window-and-address": "Select Delivery Address and Window",
   "send-me-sms-updates": "Send me SMS updates",
-  "send-me-email-updates": "Send me Email updates"
+  "send-me-email-updates": "Send me Email updates",
+  "delivery-products": "Delivery Products"
 }
