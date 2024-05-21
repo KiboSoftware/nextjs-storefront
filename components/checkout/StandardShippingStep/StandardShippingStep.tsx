@@ -16,15 +16,18 @@ import { useTranslation } from 'next-i18next'
 
 import { ShippingMethod } from '@/components/checkout'
 import { AddressCard, AddressForm, KiboRadio } from '@/components/common'
-import { useCheckoutStepContext, STEP_STATUS, useAuthContext } from '@/context'
+import { InstantDeliveryDialog } from '@/components/dialogs'
+import { useCheckoutStepContext, STEP_STATUS, useAuthContext, useModalContext } from '@/context'
 import {
   useUpdateOrderShippingInfo,
   useGetShippingMethods,
   useValidateCustomerAddress,
   useCreateCustomerAddress,
+  useUpdateOrder,
+  useGetDeliveryRates,
 } from '@/hooks'
 import { DefaultId, AddressType, CountryCode, FulfillmentOptions } from '@/lib/constants'
-import { orderGetters, userGetters } from '@/lib/getters'
+import { cartGetters, orderGetters, userGetters } from '@/lib/getters'
 import { actions, buildAddressParams, hasPermission } from '@/lib/helpers'
 import type { ContactForm, Address } from '@/lib/types'
 
@@ -136,6 +139,9 @@ const StandardShippingStep = (props: ShippingProps) => {
     setStepStatusIncomplete,
   } = useCheckoutStepContext()
   const { updateOrderShippingInfo } = useUpdateOrderShippingInfo()
+  const [deliveryRatesPayload, setDeliveryRatesPayload] = useState<any>()
+  const { data: deliveryFee, isLoading, isSuccess } = useGetDeliveryRates(deliveryRatesPayload)
+  const { showModal, closeModal } = useModalContext()
   const { data: shippingMethods } = useGetShippingMethods(
     checkoutId,
     isNewAddressAdded,
@@ -163,7 +169,7 @@ const StandardShippingStep = (props: ShippingProps) => {
 
     return createCustomerAddress.mutateAsync(params)
   }
-
+  const { updateOrder } = useUpdateOrder()
   const handleSaveAddressToCheckout = async ({ contact }: { contact: CrContact }) => {
     try {
       if (!allowInvalidAddresses && contact?.address?.countryCode === CountryCode.US) {
@@ -340,6 +346,170 @@ const StandardShippingStep = (props: ShippingProps) => {
 
     setStepStatusValid()
   }
+  const updateFulfillmentLocationCode = (items: any, deliveryAddressDateAndWindow: any) => {
+    items.forEach((item: any) => {
+      if (item.fulfillmentMethod === 'Delivery') {
+        item.fulfillmentLocationCode = deliveryAddressDateAndWindow?.window?.confirmedStoreId
+      }
+    })
+    return items
+  }
+  const [updateOrderResponse, setUpdateOrderResponse] = useState<any>()
+  const [updateDeliveryDateAndWindow, setUpdateDeliveryDateAndWindow] = useState<any>()
+  const [editAddressId, setEditAddressId] = useState()
+  const handleUpdateOrderItemPriceAndFulfillmentInfo = async () => {
+    const deliveryItem = updateOrderResponse?.items?.find(
+      (item: any) =>
+        item?.product?.productType === publicRuntimeConfig?.instantDelivery?.productType
+    )
+    const updateOrderItemPriceVariables = {
+      params: {
+        orderId: updateOrderResponse?.id,
+        orderItemId: deliveryItem?.id,
+        price: deliveryFee,
+      },
+    }
+    const response = await fetch('/api/update-order-item-price', {
+      method: 'POST',
+      headers: {
+        Accept: 'application/json, text/plain, */*',
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify(updateOrderItemPriceVariables),
+    })
+    const updateOrderItemPriceResponse = await response.json()
+    await updateOrderShippingInfo.mutateAsync({
+      checkout: { ...updateOrderItemPriceResponse },
+      contact: {
+        firstName: updateDeliveryDateAndWindow?.address?.firstName,
+        lastNameOrSurname: updateDeliveryDateAndWindow?.address?.lastName,
+        id: editAddressId,
+        phoneNumbers: {
+          home: updateDeliveryDateAndWindow?.address?.phoneNumber,
+        },
+        address: {
+          address1: updateDeliveryDateAndWindow?.address?.street,
+          cityOrTown: updateDeliveryDateAndWindow?.address?.city,
+          stateOrProvince: updateDeliveryDateAndWindow?.address?.state,
+          countryCode: updateDeliveryDateAndWindow?.address?.country,
+          postalOrZipCode: updateDeliveryDateAndWindow?.address?.zipcode,
+        },
+      },
+    })
+  }
+  const handleEditAddress = (address: any) => {
+    showModal({
+      Component: InstantDeliveryDialog,
+      props: {
+        instantDelivery: {
+          address: {
+            firstName: address?.firstName,
+            lastName: address?.lastNameOrSurname,
+            phoneNumber: address?.phoneNumbers?.home,
+            street: address?.address?.address1,
+            city: address?.address?.cityOrTown,
+            state: address?.address?.stateOrProvince,
+            country: address?.address?.countryCode,
+            zipcode: address?.address?.postalOrZipCode,
+          },
+        },
+        handleInstantDelivery: async (deliveryAddressDateAndWindow: any) => {
+          const filterOrderItems = checkout?.items?.filter(
+            (orderItem: any) =>
+              orderItem?.product?.productType !== publicRuntimeConfig?.instantDelivery?.productType
+          )
+          const params = {
+            orderId: checkout?.id as string,
+            orderInput: {
+              ...checkout,
+              items: updateFulfillmentLocationCode(checkout?.items, deliveryAddressDateAndWindow),
+              data: {
+                dropoffTime: {
+                  startsAt:
+                    deliveryAddressDateAndWindow?.window?.confirmedWindow?.dropoffTime?.startsAt.toString(),
+                  endsAt:
+                    deliveryAddressDateAndWindow?.window?.confirmedWindow?.dropoffTime?.endsAt.toString(),
+                },
+                pickupTime: {
+                  startsAt:
+                    deliveryAddressDateAndWindow?.window?.confirmedWindow?.pickupTime?.startsAt.toString(),
+                },
+                deliveryInstructions: '',
+                pickupInstructions: '',
+                tips: 0,
+                deliveryContact: {
+                  notifySms: deliveryAddressDateAndWindow?.notification?.isSendSMS,
+                  notifyEmail: deliveryAddressDateAndWindow?.notification?.isSendEmail,
+                },
+                packages: [cartGetters.getPackagesDetails(filterOrderItems)],
+              },
+            },
+          }
+          const updateOrderResponseAPI = await updateOrder.mutateAsync(params)
+          const updateOrderFilterItems = updateOrderResponseAPI?.items?.filter(
+            (orderItem: any) =>
+              orderItem?.product?.productType !== publicRuntimeConfig?.instantDelivery?.productType
+          )
+          setDeliveryRatesPayload(
+            cartGetters.getNormalizedDataForRates(
+              updateOrderFilterItems,
+              deliveryAddressDateAndWindow
+            )
+          )
+          // if (deliveryFee && isSuccess) {
+          //   const deliveryItem = updateOrderResponse?.items?.find(
+          //     (item: any) =>
+          //       item?.product?.productType === publicRuntimeConfig?.instantDelivery?.productType
+          //   )
+          //   const updateOrderItemPriceVariables = {
+          //     params: {
+          //       orderId: updateOrderResponse?.id,
+          //       orderItemId: deliveryItem?.id,
+          //       price: deliveryFee,
+          //     },
+          //   }
+          //   const updateOrderItemPriceResponse = await fetch('/api/update-order-item-price', {
+          //     method: 'POST',
+          //     headers: {
+          //       Accept: 'application/json, text/plain, */*',
+          //       'Content-Type': 'application/json',
+          //     },
+          //     body: JSON.stringify(updateOrderItemPriceVariables),
+          //   })
+          // await updateOrderShippingInfo.mutateAsync({
+          //   checkout,
+          //   contact: {
+          //     firstName: deliveryAddressDateAndWindow?.address?.firstName,
+          //     lastNameOrSurname: deliveryAddressDateAndWindow?.address?.lastName,
+          //     id: address?.id,
+          //     phoneNumbers: {
+          //       home: deliveryAddressDateAndWindow?.address?.phoneNumber,
+          //     },
+          //     address: {
+          //       address1: deliveryAddressDateAndWindow?.address?.street,
+          //       cityOrTown: deliveryAddressDateAndWindow?.address?.city,
+          //       stateOrProvince: deliveryAddressDateAndWindow?.address?.state,
+          //       countryCode: deliveryAddressDateAndWindow?.address?.country,
+          //       postalOrZipCode: deliveryAddressDateAndWindow?.address?.zipcode,
+          //     },
+          //   },
+          // })
+          // }
+          setUpdateOrderResponse(updateOrderResponseAPI)
+          setUpdateDeliveryDateAndWindow(deliveryAddressDateAndWindow)
+          setEditAddressId(address?.id)
+
+          // await updateOrder.mutateAsync(params)
+          closeModal()
+        },
+      },
+    })
+  }
+  useEffect(() => {
+    if (isSuccess) {
+      handleUpdateOrderItemPriceAndFulfillmentInfo()
+    }
+  }, [isSuccess, deliveryFee])
 
   useEffect(() => {
     if (isAllItemsDigital || !shipItems.length)
@@ -436,22 +606,41 @@ const StandardShippingStep = (props: ShippingProps) => {
                       value: String(address.id),
                       name: String(address.id),
                       label: (
-                        <AddressCard
-                          firstName={address?.firstName as string}
-                          middleNameOrInitial={address?.middleNameOrInitial as string}
-                          lastNameOrSurname={address?.lastNameOrSurname as string}
-                          address1={address?.address?.address1 as string}
-                          address2={address?.address?.address2 as string}
-                          cityOrTown={address?.address?.cityOrTown as string}
-                          stateOrProvince={address?.address?.stateOrProvince as string}
-                          postalOrZipCode={address?.address?.postalOrZipCode as string}
-                        />
+                        <Box
+                          sx={{
+                            display: 'flex',
+                            justifyContent: 'space-between',
+                            alignItems: 'center',
+                          }}
+                        >
+                          <AddressCard
+                            firstName={address?.firstName as string}
+                            middleNameOrInitial={address?.middleNameOrInitial as string}
+                            lastNameOrSurname={address?.lastNameOrSurname as string}
+                            address1={address?.address?.address1 as string}
+                            address2={address?.address?.address2 as string}
+                            cityOrTown={address?.address?.cityOrTown as string}
+                            stateOrProvince={address?.address?.stateOrProvince as string}
+                            postalOrZipCode={address?.address?.postalOrZipCode as string}
+                          />
+                          {!isAuthenticated && (
+                            <Typography
+                              variant="body2"
+                              sx={{ cursor: 'pointer' }}
+                              data-testid={`address-edit`}
+                              onClick={() => handleEditAddress(address)}
+                            >
+                              {t('edit')}
+                            </Typography>
+                          )}
+                        </Box>
                       ),
                     }
                   })}
                   selected={selectedShippingAddressId?.toString()}
                   align="flex-start"
                   onChange={handleAddressSelect}
+                  sx={{ width: '100%' }}
                 />
               </>
             )}

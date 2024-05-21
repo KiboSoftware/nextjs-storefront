@@ -5,6 +5,24 @@ export const checkoutItemProductFragment = /* GraphQL */ `
     description
     productType
     imageUrl
+    measurements {
+      height {
+        unit
+        value
+      }
+      width {
+        unit
+        value
+      }
+      length {
+        unit
+        value
+      }
+      weight {
+        unit
+        value
+      }
+    }
     options {
       attributeFQN
       name

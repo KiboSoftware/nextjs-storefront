@@ -62,7 +62,7 @@ export const KiboRadio = (props: KiboRadioProps) => {
       >
         {radioOptions?.map((radio, index) => {
           return (
-            <Box key={radio.value + index}>
+            <Box key={radio.value + index} sx={{ width: '100%' }}>
               {radio.optionIndicator && (
                 <Typography
                   sx={{ fontSize: 'subtitle2', color: 'text.primary', fontWeight: 700, pl: 4 }}
@@ -71,7 +71,14 @@ export const KiboRadio = (props: KiboRadioProps) => {
                 </Typography>
               )}
               <FormControlLabel
-                sx={{ width: 'fit-content', alignItems: align, ...sx }}
+                sx={{
+                  width: '100%',
+                  alignItems: align,
+                  ...sx,
+                  '& .MuiFormControlLabel-label': {
+                    width: '100%',
+                  },
+                }}
                 value={radio.value}
                 control={
                   <Radio
