@@ -187,31 +187,31 @@ const CartTemplate = (props: CartTemplateProps) => {
       })
 
       const updateCartItemResponse = await response.json()
-      const updateCurrentCartResponse = await updateCurrentCart.mutateAsync({
-        cartInput: {
-          ...updateCartItemResponse,
-          data: {
-            dropoffTime: {
-              startsAt:
-                deliveryAddressDateAndWindow?.window?.confirmedWindow?.dropoffTime?.startsAt.toString(),
-              endsAt:
-                deliveryAddressDateAndWindow?.window?.confirmedWindow?.dropoffTime?.endsAt.toString(),
-            },
-            pickupTime: {
-              startsAt:
-                deliveryAddressDateAndWindow?.window?.confirmedWindow?.pickupTime?.startsAt.toString(),
-            },
-            deliveryInstructions: '',
-            pickupInstructions: '',
-            tips: 0,
-            deliveryContact: {
-              notifySms: deliveryAddressDateAndWindow?.notification?.isSendSMS,
-              notifyEmail: deliveryAddressDateAndWindow?.notification?.isSendEmail,
-            },
-            packages: [cartGetters.getPackagesDetails(filterCartItems)],
-          },
-        },
-      })
+      // const updateCurrentCartResponse = await updateCurrentCart.mutateAsync({
+      //   cartInput: {
+      //     ...updateCartItemResponse,
+      //     data: {
+      //       dropoffTime: {
+      //         startsAt:
+      //           deliveryAddressDateAndWindow?.window?.confirmedWindow?.dropoffTime?.startsAt.toString(),
+      //         endsAt:
+      //           deliveryAddressDateAndWindow?.window?.confirmedWindow?.dropoffTime?.endsAt.toString(),
+      //       },
+      //       pickupTime: {
+      //         startsAt:
+      //           deliveryAddressDateAndWindow?.window?.confirmedWindow?.pickupTime?.startsAt.toString(),
+      //       },
+      //       deliveryInstructions: '',
+      //       pickupInstructions: '',
+      //       tips: 0,
+      //       deliveryContact: {
+      //         notifySms: deliveryAddressDateAndWindow?.notification?.isSendSMS,
+      //         notifyEmail: deliveryAddressDateAndWindow?.notification?.isSendEmail,
+      //       },
+      //       packages: [cartGetters.getPackagesDetails(filterCartItems)],
+      //     },
+      //   },
+      // })
       // const updateCartResponse = await updateCart.mutateAsync({
       //   cartId: cart?.id as string,
       //   cartInput: {

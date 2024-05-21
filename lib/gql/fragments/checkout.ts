@@ -169,6 +169,7 @@ export const baseCheckoutFragment = /* GraphQL */ `
     fulfillmentInfo {
       shippingMethodCode
       shippingMethodName
+      data
       fulfillmentContact {
         id
         email
@@ -225,6 +226,7 @@ export const fullfillmentInfoFragment = /* GraphQL */ `
   fragment fullfillmentInfoFragment on CrFulfillmentInfo {
     shippingMethodCode
     shippingMethodName
+    data
     fulfillmentContact {
       address {
         address1

@@ -11,15 +11,17 @@ export interface CheckoutShippingParams {
   email?: string
   shippingMethodCode?: string
   shippingMethodName?: string
+  data?: any
 }
 
 export const buildCheckoutShippingParams = (params: CheckoutShippingParams): ShippingParams => {
-  const { checkout, contact, email, shippingMethodCode, shippingMethodName } = params
+  const { checkout, contact, email, shippingMethodCode, shippingMethodName, data } = params
 
   return {
     orderId: checkout.id,
 
     fulfillmentInfoInput: {
+      data,
       fulfillmentContact: {
         ...(contact ? contact : checkout.fulfillmentInfo?.fulfillmentContact),
         email: email ? email : checkout.email,

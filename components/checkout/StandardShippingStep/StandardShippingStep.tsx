@@ -177,14 +177,44 @@ const StandardShippingStep = (props: ShippingProps) => {
           addressValidationRequestInput: { address: contact?.address as CuAddress },
         })
       }
-
+      const deliveryAddressDateAndWindow =
+        typeof localStorage !== 'undefined' &&
+        JSON.parse(localStorage.getItem('instant-delivery') as string)
+      const filterOrderItems = checkout?.items?.filter(
+        (orderItem: any) =>
+          orderItem?.product?.productType !== publicRuntimeConfig?.instantDelivery?.productType
+      )
+      const data = {
+        dropoffTime: {
+          startsAt:
+            deliveryAddressDateAndWindow?.window?.confirmedWindow?.dropoffTime?.startsAt.toString(),
+          endsAt:
+            deliveryAddressDateAndWindow?.window?.confirmedWindow?.dropoffTime?.endsAt.toString(),
+        },
+        pickupTime: {
+          startsAt:
+            deliveryAddressDateAndWindow?.window?.confirmedWindow?.pickupTime?.startsAt.toString(),
+        },
+        deliveryInstructions: '',
+        pickupInstructions: '',
+        tips: 0,
+        deliveryContact: {
+          notifySms: deliveryAddressDateAndWindow?.notification?.isSendSMS,
+          notifyEmail: deliveryAddressDateAndWindow?.notification?.isSendEmail,
+        },
+        packages: [cartGetters.getPackagesDetails(filterOrderItems)],
+      }
       if (isAddressSavedToAccount) {
         const customerSavedAddress = await handleSaveAddressToAccount(contact)
         const { accountId: _, types: __, ...customerContact } = customerSavedAddress
-        await updateOrderShippingInfo.mutateAsync({ checkout, contact: customerContact })
+        await updateOrderShippingInfo.mutateAsync({ checkout, contact: customerContact, data })
         setSelectedShippingAddressId(customerSavedAddress?.id as number)
       } else {
-        await updateOrderShippingInfo.mutateAsync({ checkout, contact })
+        await updateOrderShippingInfo.mutateAsync({
+          checkout,
+          contact,
+          data,
+        })
         setSelectedShippingAddressId((contact?.id as number) || DefaultId.ADDRESSID)
       }
       setIsAddressSavedToAccount(false)
@@ -378,6 +408,10 @@ const StandardShippingStep = (props: ShippingProps) => {
       body: JSON.stringify(updateOrderItemPriceVariables),
     })
     const updateOrderItemPriceResponse = await response.json()
+    const filterUpdatedOrderItems = updateOrderItemPriceResponse?.items?.filter(
+      (orderItem: any) =>
+        orderItem?.product?.productType !== publicRuntimeConfig?.instantDelivery?.productType
+    )
     await updateOrderShippingInfo.mutateAsync({
       checkout: { ...updateOrderItemPriceResponse },
       contact: {
@@ -394,6 +428,26 @@ const StandardShippingStep = (props: ShippingProps) => {
           countryCode: updateDeliveryDateAndWindow?.address?.country,
           postalOrZipCode: updateDeliveryDateAndWindow?.address?.zipcode,
         },
+      },
+      data: {
+        dropoffTime: {
+          startsAt:
+            updateDeliveryDateAndWindow?.window?.confirmedWindow?.dropoffTime?.startsAt.toString(),
+          endsAt:
+            updateDeliveryDateAndWindow?.window?.confirmedWindow?.dropoffTime?.endsAt.toString(),
+        },
+        pickupTime: {
+          startsAt:
+            updateDeliveryDateAndWindow?.window?.confirmedWindow?.pickupTime?.startsAt.toString(),
+        },
+        deliveryInstructions: '',
+        pickupInstructions: '',
+        tips: 0,
+        deliveryContact: {
+          notifySms: updateDeliveryDateAndWindow?.notification?.isSendSMS,
+          notifyEmail: updateDeliveryDateAndWindow?.notification?.isSendEmail,
+        },
+        packages: [cartGetters.getPackagesDetails(filterUpdatedOrderItems)],
       },
     })
   }
@@ -423,26 +477,6 @@ const StandardShippingStep = (props: ShippingProps) => {
             orderInput: {
               ...checkout,
               items: updateFulfillmentLocationCode(checkout?.items, deliveryAddressDateAndWindow),
-              data: {
-                dropoffTime: {
-                  startsAt:
-                    deliveryAddressDateAndWindow?.window?.confirmedWindow?.dropoffTime?.startsAt.toString(),
-                  endsAt:
-                    deliveryAddressDateAndWindow?.window?.confirmedWindow?.dropoffTime?.endsAt.toString(),
-                },
-                pickupTime: {
-                  startsAt:
-                    deliveryAddressDateAndWindow?.window?.confirmedWindow?.pickupTime?.startsAt.toString(),
-                },
-                deliveryInstructions: '',
-                pickupInstructions: '',
-                tips: 0,
-                deliveryContact: {
-                  notifySms: deliveryAddressDateAndWindow?.notification?.isSendSMS,
-                  notifyEmail: deliveryAddressDateAndWindow?.notification?.isSendEmail,
-                },
-                packages: [cartGetters.getPackagesDetails(filterOrderItems)],
-              },
             },
           }
           const updateOrderResponseAPI = await updateOrder.mutateAsync(params)
