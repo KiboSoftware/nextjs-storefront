@@ -144,6 +144,9 @@ type Window = {
 type InstantDelivery = {
   address?:
     | {
+        firstName: string
+        lastName: string
+        phoneNumber: string
         street: string
         city: string
         country: string

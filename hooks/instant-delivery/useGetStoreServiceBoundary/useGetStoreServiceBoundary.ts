@@ -3,11 +3,14 @@ import { useQuery } from '@tanstack/react-query'
 import { deliverySolutionsKeys } from '@/lib/react-query/queryKeys'
 
 export type DeliveryLocation = {
+  firstName: string
+  lastName: string
   street: string
   city: string
   country: string
   state: string
   zipcode: string
+  phoneNumber: string
 }
 
 export type StoreBoundary = {

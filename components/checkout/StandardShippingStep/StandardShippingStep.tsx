@@ -42,12 +42,21 @@ interface ShippingProps {
   savedUserAddressData?: CustomerContactCollection
   isAuthenticated: boolean
 }
-type Contact = { street: string; city: string; country: string; state: string; zipcode: string }
+type Contact = {
+  firstName?: string
+  lastName?: string
+  phoneNumber?: string
+  street: string
+  city: string
+  country: string
+  state: string
+  zipcode: string
+}
 
 const convertToContactForm = (contact: Contact): ContactForm => {
   return {
-    firstName: '',
-    lastNameOrSurname: '',
+    firstName: contact.firstName as string,
+    lastNameOrSurname: contact.lastName as string,
     address: {
       address1: contact.street,
       address2: '',
@@ -58,7 +67,7 @@ const convertToContactForm = (contact: Contact): ContactForm => {
       stateOrProvince: contact.state,
     },
     phoneNumbers: {
-      home: '',
+      home: contact.phoneNumber as string,
     },
   }
 }
@@ -367,7 +376,7 @@ const StandardShippingStep = (props: ShippingProps) => {
   // Instant Delivery
   const instantDelivery = localStorage.getItem('instant-delivery') as string
   const instantDeliveryObj = JSON.parse(instantDelivery)
-  const deliveryAddress = instantDeliveryObj.address
+  const deliveryAddress = instantDeliveryObj?.address
   const contact = convertToContactForm(deliveryAddress)
 
   return (

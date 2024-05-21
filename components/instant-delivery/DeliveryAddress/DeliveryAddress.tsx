@@ -12,6 +12,9 @@ import { useGetStoreServiceBoundary, DeliveryLocation } from '@/hooks'
 export const useFormSchema = () => {
   const { t } = useTranslation('common')
   return yup.object().shape({
+    firstName: yup.string().required(t('this-field-is-required')),
+    lastName: yup.string().required(t('this-field-is-required')),
+    phoneNumber: yup.string().required(t('this-field-is-required')),
     street: yup.string().required(t('this-field-is-required')),
     city: yup.string().required(t('this-field-is-required')),
     country: yup.string().required(t('this-field-is-required')),
@@ -28,6 +31,9 @@ type Window = {
 type InstantDelivery = {
   address?:
     | {
+        firstName: string
+        lastName: string
+        phoneNumber: string
         street: string
         city: string
         country: string
@@ -49,9 +55,14 @@ type InstantDelivery = {
 type DeliveryAddressProps = {
   instantDelivery?: InstantDelivery
   setInstantDelivery: (instantDelivery: InstantDelivery) => void
+  isAddressDisabled?: boolean
 }
 
-const DeliveryAddress = ({ instantDelivery, setInstantDelivery }: DeliveryAddressProps) => {
+const DeliveryAddress = ({
+  instantDelivery,
+  setInstantDelivery,
+  isAddressDisabled,
+}: DeliveryAddressProps) => {
   const address = instantDelivery?.address
 
   const [isSubmitted, setIsSubmitted] = useState<boolean>(false)
@@ -120,6 +131,50 @@ const DeliveryAddress = ({ instantDelivery, setInstantDelivery }: DeliveryAddres
         <Grid container rowSpacing={1} columnSpacing={{ md: 4 }}>
           <Grid item xs={12}>
             <Controller
+              name="firstName"
+              control={control}
+              defaultValue={address?.firstName}
+              render={({ field }) => (
+                <KiboTextBox
+                  {...field}
+                  value={field.value || ''}
+                  label={t('delivery-solutions-firstName')}
+                  ref={null}
+                  error={!!errors?.firstName}
+                  helperText={errors?.firstName?.message}
+                  onChange={(_name: string, value: string) => field.onChange(value)}
+                  onBlur={field.onBlur}
+                  required={true}
+                  disabled={isAddressDisabled}
+                />
+              )}
+            />
+          </Grid>
+
+          <Grid item xs={12}>
+            <Controller
+              name="lastName"
+              control={control}
+              defaultValue={address?.lastName}
+              render={({ field }) => (
+                <KiboTextBox
+                  {...field}
+                  value={field.value || ''}
+                  label={t('delivery-solutions-lastName')}
+                  ref={null}
+                  error={!!errors?.lastName}
+                  helperText={errors?.lastName?.message}
+                  onChange={(_name: string, value: string) => field.onChange(value)}
+                  onBlur={field.onBlur}
+                  required={true}
+                  disabled={isAddressDisabled}
+                />
+              )}
+            />
+          </Grid>
+
+          <Grid item xs={12}>
+            <Controller
               name="street"
               control={control}
               defaultValue={address?.street}
@@ -134,6 +189,7 @@ const DeliveryAddress = ({ instantDelivery, setInstantDelivery }: DeliveryAddres
                   onChange={(_name: string, value: string) => field.onChange(value)}
                   onBlur={field.onBlur}
                   required={true}
+                  disabled={isAddressDisabled}
                 />
               )}
             />
@@ -155,6 +211,7 @@ const DeliveryAddress = ({ instantDelivery, setInstantDelivery }: DeliveryAddres
                   onChange={(_name: string, value: string) => field.onChange(value)}
                   onBlur={field.onBlur}
                   required={true}
+                  disabled={isAddressDisabled}
                 />
               )}
             />
@@ -176,6 +233,7 @@ const DeliveryAddress = ({ instantDelivery, setInstantDelivery }: DeliveryAddres
                   onChange={(_name: string, value: string) => field.onChange(value)}
                   onBlur={field.onBlur}
                   required={true}
+                  disabled={isAddressDisabled}
                 />
               )}
             />
@@ -197,6 +255,7 @@ const DeliveryAddress = ({ instantDelivery, setInstantDelivery }: DeliveryAddres
                   onChange={(_name: string, value: string) => field.onChange(value)}
                   onBlur={field.onBlur}
                   required={true}
+                  disabled={isAddressDisabled}
                 />
               )}
             />
@@ -218,6 +277,29 @@ const DeliveryAddress = ({ instantDelivery, setInstantDelivery }: DeliveryAddres
                   onChange={(_name: string, value: string) => field.onChange(value)}
                   onBlur={field.onBlur}
                   required={true}
+                  disabled={isAddressDisabled}
+                />
+              )}
+            />
+          </Grid>
+
+          <Grid item xs={12}>
+            <Controller
+              name="phoneNumber"
+              control={control}
+              defaultValue={address?.phoneNumber}
+              render={({ field }) => (
+                <KiboTextBox
+                  {...field}
+                  value={field.value || ''}
+                  label={t('delivery-solutions-phoneNumber')}
+                  ref={null}
+                  error={!!errors?.phoneNumber}
+                  helperText={errors?.phoneNumber?.message}
+                  onChange={(_name: string, value: string) => field.onChange(value)}
+                  onBlur={field.onBlur}
+                  required={true}
+                  disabled={isAddressDisabled}
                 />
               )}
             />

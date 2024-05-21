@@ -81,6 +81,9 @@ type Window = {
 type InstantDelivery = {
   address?:
     | {
+        firstName: string
+        lastName: string
+        phoneNumber: string
         street: string
         city: string
         country: string
@@ -102,11 +105,13 @@ type InstantDelivery = {
 type InstantDeliveryTemplateProps = {
   initialInstantDelivery?: InstantDelivery
   onInstantDelivery: (selectedAddress: any) => void
+  isAddressDisabled?: boolean
 }
 
 const InstantDeliveryTemplate = ({
   initialInstantDelivery,
   onInstantDelivery,
+  isAddressDisabled,
 }: InstantDeliveryTemplateProps) => {
   const [instantDelivery, setInstantDelivery] = useState<InstantDelivery | undefined>(
     initialInstantDelivery
@@ -137,6 +142,7 @@ const InstantDeliveryTemplate = ({
           <DeliveryAddress
             instantDelivery={instantDelivery}
             setInstantDelivery={setInstantDelivery}
+            isAddressDisabled={isAddressDisabled}
           />
         </div>
         <div>
