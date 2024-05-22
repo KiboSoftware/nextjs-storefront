@@ -58,8 +58,8 @@ const AddressForm = (props: AddressFormProps) => {
   const { publicRuntimeConfig } = getConfig()
   const { t: translation } = useTranslation('common')
 
-  // const isInstantDeliveryShipping = props.saveAddressLabel === translation('save-shipping-address')
-  const isInstantDeliveryShipping = false
+  const isInstantDeliveryShipping = props.saveAddressLabel === translation('save-shipping-address')
+  // const isInstantDeliveryShipping = false
 
   const {
     contact,
@@ -112,6 +112,10 @@ const AddressForm = (props: AddressFormProps) => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [isValid, validateForm])
 
+  useEffect(() => {
+    if (isInstantDeliveryShipping) handleSubmit(onValid)()
+  }, [])
+
   return (
     <Box
       component="form"
@@ -141,6 +145,7 @@ const AddressForm = (props: AddressFormProps) => {
                 onBlur={field.onBlur}
                 autoFocus={setAutoFocus}
                 required={true}
+                disabled={isInstantDeliveryShipping ? true : false}
               />
             )}
           />
@@ -162,6 +167,7 @@ const AddressForm = (props: AddressFormProps) => {
                 onChange={(_name: string, value: string) => field.onChange(value)}
                 onBlur={field.onBlur}
                 required={true}
+                disabled={isInstantDeliveryShipping ? true : false}
               />
             )}
           />
@@ -319,6 +325,7 @@ const AddressForm = (props: AddressFormProps) => {
                 onChange={(_name: string, value: string) => field.onChange(value)}
                 onBlur={field.onBlur}
                 required={true}
+                disabled={isInstantDeliveryShipping ? true : false}
               />
             )}
           />
