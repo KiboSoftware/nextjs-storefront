@@ -102,10 +102,15 @@ const OrderSummary = <T extends CrCart | CrOrder | Checkout>(props: OrderSummary
             <Box>
               <Typography>{t('delivery-to')}</Typography>
               <AddressCard
-                address1={deliveryAddressDateAndWindow?.address?.street as string}
-                cityOrTown={deliveryAddressDateAndWindow?.address?.city as string}
-                stateOrProvince={deliveryAddressDateAndWindow?.address?.state as string}
-                postalOrZipCode={deliveryAddressDateAndWindow?.address?.zipcode as string}
+                address1={deliveryAddressDateAndWindow?.contact?.address?.address1 as string}
+                address2={deliveryAddressDateAndWindow?.contact?.address?.address2 as string}
+                cityOrTown={deliveryAddressDateAndWindow?.contact?.address?.cityOrTown as string}
+                stateOrProvince={
+                  deliveryAddressDateAndWindow?.contact?.address?.stateOrProvince as string
+                }
+                postalOrZipCode={
+                  deliveryAddressDateAndWindow?.contact?.address?.postalOrZipCode as string
+                }
               />
             </Box>
             <Box sx={{ marginLeft: 'auto' }}>

@@ -45,35 +45,6 @@ interface ShippingProps {
   savedUserAddressData?: CustomerContactCollection
   isAuthenticated: boolean
 }
-type Contact = {
-  firstName?: string
-  lastName?: string
-  phoneNumber?: string
-  street: string
-  city: string
-  country: string
-  state: string
-  zipcode: string
-}
-
-const convertToContactForm = (contact: Contact): ContactForm => {
-  return {
-    firstName: contact.firstName as string,
-    lastNameOrSurname: contact.lastName as string,
-    address: {
-      address1: contact.street,
-      address2: '',
-      cityOrTown: contact.city,
-      countryCode: contact.country,
-      isValidated: false,
-      postalOrZipCode: contact.zipcode,
-      stateOrProvince: contact.state,
-    },
-    phoneNumbers: {
-      home: contact.phoneNumber as string,
-    },
-  }
-}
 
 const StandardShippingStep = (props: ShippingProps) => {
   const { checkout, savedUserAddressData: addresses, isAuthenticated } = props
@@ -415,18 +386,19 @@ const StandardShippingStep = (props: ShippingProps) => {
     await updateOrderShippingInfo.mutateAsync({
       checkout: { ...updateOrderItemPriceResponse },
       contact: {
-        firstName: updateDeliveryDateAndWindow?.address?.firstName,
-        lastNameOrSurname: updateDeliveryDateAndWindow?.address?.lastName,
+        firstName: updateDeliveryDateAndWindow?.contact?.firstName,
+        lastNameOrSurname: updateDeliveryDateAndWindow?.contact?.lastNameOrSurname,
         id: editAddressId,
         phoneNumbers: {
-          home: updateDeliveryDateAndWindow?.address?.phoneNumber,
+          home: updateDeliveryDateAndWindow?.contact?.phoneNumbers?.home,
         },
         address: {
-          address1: updateDeliveryDateAndWindow?.address?.street,
-          cityOrTown: updateDeliveryDateAndWindow?.address?.city,
-          stateOrProvince: updateDeliveryDateAndWindow?.address?.state,
-          countryCode: updateDeliveryDateAndWindow?.address?.country,
-          postalOrZipCode: updateDeliveryDateAndWindow?.address?.zipcode,
+          address1: updateDeliveryDateAndWindow?.contact?.address?.address1,
+          address2: updateDeliveryDateAndWindow?.contact?.address?.address2,
+          cityOrTown: updateDeliveryDateAndWindow?.contact?.address?.cityOrTown,
+          stateOrProvince: updateDeliveryDateAndWindow?.contact?.address?.stateOrProvince,
+          countryCode: updateDeliveryDateAndWindow?.contact?.address?.countryCode,
+          postalOrZipCode: updateDeliveryDateAndWindow?.contact?.address?.postalOrZipCode,
         },
       },
       data: {
@@ -580,8 +552,7 @@ const StandardShippingStep = (props: ShippingProps) => {
   // Instant Delivery
   const instantDelivery = localStorage.getItem('instant-delivery') as string
   const instantDeliveryObj = JSON.parse(instantDelivery)
-  const deliveryAddress = instantDeliveryObj?.address
-  const contact = convertToContactForm(deliveryAddress)
+  const contact = instantDeliveryObj?.contact
 
   return (
     <Stack data-testid="checkout-shipping" gap={2} ref={shippingAddressRef}>

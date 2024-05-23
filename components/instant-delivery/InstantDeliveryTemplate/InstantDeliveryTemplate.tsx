@@ -169,7 +169,6 @@ const InstantDeliveryTemplate = ({
 
   return (
     <div>
-      <div>{JSON.stringify(instantDelivery)}</div> <br />
       <InstantDeliveryStepper
         currentActiveStep={currentActiveStep}
         setCurrentActiveStep={setCurrentActiveStep}
