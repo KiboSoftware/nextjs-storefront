@@ -97,11 +97,22 @@ const normalizeProduct = (product: any) => {
   }
 }
 
+const getNormalizedDeliveryAddress = (deliveryAddress: any) => {
+  return {
+    street: deliveryAddress?.address2
+      ? deliveryAddress?.address1 + ' ' + deliveryAddress?.address2
+      : deliveryAddress?.address1,
+    city: deliveryAddress?.cityOrTown,
+    state: deliveryAddress?.stateOrProvince,
+    zipcode: deliveryAddress?.postalOrZipCode,
+  }
+}
+
 const getNormalizedDataForRates = (cartItems: any, deliveryWindowDateAndTime: any) => {
   return {
     storeExternalIds: [deliveryWindowDateAndTime?.window?.confirmedStoreId],
     type: 'delivery',
-    deliveryAddress: deliveryWindowDateAndTime?.address,
+    deliveryAddress: getNormalizedDeliveryAddress(deliveryWindowDateAndTime?.contact?.address),
     dropoffTime: deliveryWindowDateAndTime?.window?.confirmedWindow?.dropoffTime,
     packages: [{ ...getPackagesDetails(cartItems), itemList: cartItems.map(normalizeProduct) }],
   }
@@ -113,7 +124,7 @@ const getPackagesDetails = (cartItems: any) => {
   let totalLength = 0
   let totalWidth = 0
 
-  cartItems.forEach((item: any) => {
+  cartItems?.forEach((item: any) => {
     const quantity = item.quantity
     const measurements = item.product.measurements
 

@@ -193,11 +193,13 @@ const StandardShipCheckoutTemplate = (props: StandardShipCheckoutProps) => {
         <DetailsStep
           checkout={order as CrOrder}
           updateCheckoutPersonalInfo={updateCheckoutPersonalInfo}
+          isMultiShipEnabled={isMultiShipEnabled}
         />
         <StandardShippingStep
           checkout={order as CrOrder}
           savedUserAddressData={addressCollection}
           isAuthenticated={isAuthenticated}
+          isMultiShipEnabled={isMultiShipEnabled}
         />
         <PaymentStep
           checkout={order as CrOrder}

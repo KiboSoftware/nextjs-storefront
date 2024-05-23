@@ -15,6 +15,7 @@ import * as yup from 'yup'
 import { KiboTextBox } from '@/components/common'
 import { LoginDialog } from '@/components/layout'
 import { useAuthContext, useCheckoutStepContext, STEP_STATUS, useModalContext } from '@/context'
+import { useGetCurrentOrder } from '@/hooks'
 import type { PersonalDetails } from '@/lib/types'
 
 import type { Maybe, CrOrder, Checkout } from '@/lib/gql/types'
@@ -23,6 +24,7 @@ interface DetailsProps<T> {
   setAutoFocus?: boolean
   checkout: T
   perks?: any
+  isMultiShipEnabled?: boolean
   updateCheckoutPersonalInfo: (params: { email: Maybe<string> | undefined }) => Promise<void>
 }
 
@@ -59,7 +61,13 @@ const useDetailsSchema = () => {
 }
 
 const DetailsStep = <T extends CrOrder | Checkout>(props: DetailsProps<T>) => {
-  const { setAutoFocus = true, checkout, perks = null, updateCheckoutPersonalInfo } = props
+  const {
+    setAutoFocus = true,
+    checkout: checkoutFromProps,
+    perks = null,
+    isMultiShipEnabled,
+    updateCheckoutPersonalInfo,
+  } = props
 
   const { t } = useTranslation('common')
 
@@ -72,7 +80,12 @@ const DetailsStep = <T extends CrOrder | Checkout>(props: DetailsProps<T>) => {
     setStepStatusComplete,
     setStepStatusIncomplete,
   } = useCheckoutStepContext()
-
+  const { data: order } = useGetCurrentOrder({
+    checkoutId: checkoutFromProps?.id as string,
+    isMultiship: isMultiShipEnabled,
+    initialCheckout: checkoutFromProps,
+  })
+  const checkout = order as CrOrder
   const personalDetails = {
     email: checkout.email ?? '',
   }

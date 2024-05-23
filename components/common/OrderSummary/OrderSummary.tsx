@@ -74,7 +74,7 @@ const OrderSummary = <T extends CrCart | CrOrder | Checkout>(props: OrderSummary
       </CardContent>
       <Divider />
       <CardContent>
-        {deliveryAddressDateAndWindow?.address && (
+        {deliveryAddressDateAndWindow?.contact?.address && (
           <Stack
             direction="row"
             sx={{
@@ -120,7 +120,7 @@ const OrderSummary = <T extends CrCart | CrOrder | Checkout>(props: OrderSummary
                 onClick={() =>
                   onHandleInstantDelivery &&
                   onHandleInstantDelivery({
-                    deliveryAddress: deliveryAddressDateAndWindow?.address,
+                    deliveryAddress: deliveryAddressDateAndWindow?.contact,
                   })
                 }
               >
@@ -150,7 +150,7 @@ const OrderSummary = <T extends CrCart | CrOrder | Checkout>(props: OrderSummary
                 onClick={() =>
                   onHandleInstantDelivery &&
                   onHandleInstantDelivery({
-                    deliveryAddress: deliveryAddressDateAndWindow?.address,
+                    deliveryAddress: deliveryAddressDateAndWindow?.contact,
                     deliveryStoreBoundary: deliveryAddressDateAndWindow?.storeBoundary,
                     deliveryNotification: deliveryAddressDateAndWindow?.notification,
                   })

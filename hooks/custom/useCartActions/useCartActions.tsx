@@ -135,7 +135,7 @@ export const useCartActions = ({ cartItems, purchaseLocation }: UseCartActionsPr
       Component: InstantDeliveryDialog,
       props: {
         instantDelivery: {
-          address: deliveryAddress,
+          contact: deliveryAddress,
           storeBoundary: deliveryStoreBoundary,
           notification: deliveryNotification,
         },

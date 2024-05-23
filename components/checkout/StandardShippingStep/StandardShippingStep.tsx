@@ -25,6 +25,7 @@ import {
   useCreateCustomerAddress,
   useUpdateOrder,
   useGetDeliveryRates,
+  useGetCurrentOrder,
 } from '@/hooks'
 import { DefaultId, AddressType, CountryCode, FulfillmentOptions } from '@/lib/constants'
 import { cartGetters, orderGetters, userGetters } from '@/lib/getters'
@@ -44,10 +45,16 @@ interface ShippingProps {
   checkout: CrOrder
   savedUserAddressData?: CustomerContactCollection
   isAuthenticated: boolean
+  isMultiShipEnabled?: boolean
 }
 
 const StandardShippingStep = (props: ShippingProps) => {
-  const { checkout, savedUserAddressData: addresses, isAuthenticated } = props
+  const {
+    checkout: checkoutFromProps,
+    savedUserAddressData: addresses,
+    isAuthenticated,
+    isMultiShipEnabled,
+  } = props
 
   // Use this to submit the form with reCaptcha: Don't delete this code
   // const { executeRecaptcha } = useReCaptcha()
@@ -56,6 +63,12 @@ const StandardShippingStep = (props: ShippingProps) => {
   const allowInvalidAddresses = publicRuntimeConfig.allowInvalidAddresses
 
   const { user } = useAuthContext()
+  const { data: order } = useGetCurrentOrder({
+    checkoutId: checkoutFromProps?.id as string,
+    isMultiship: isMultiShipEnabled,
+    initialCheckout: checkoutFromProps,
+  })
+  const checkout = order as CrOrder
   const checkoutShippingContact = orderGetters.getShippingContact(checkout)
   const checkoutShippingMethodCode = orderGetters.getShippingMethodCode(checkout)
   // getting shipping address from all addresses returned from server
@@ -422,28 +435,17 @@ const StandardShippingStep = (props: ShippingProps) => {
         packages: [cartGetters.getPackagesDetails(filterUpdatedOrderItems)],
       },
     })
+    localStorage.setItem('instant-delivery', JSON.stringify(updateDeliveryDateAndWindow))
+    closeModal()
   }
   const handleEditAddress = (address: any) => {
     showModal({
       Component: InstantDeliveryDialog,
       props: {
         instantDelivery: {
-          address: {
-            firstName: address?.firstName,
-            lastName: address?.lastNameOrSurname,
-            phoneNumber: address?.phoneNumbers?.home,
-            street: address?.address?.address1,
-            city: address?.address?.cityOrTown,
-            state: address?.address?.stateOrProvince,
-            country: address?.address?.countryCode,
-            zipcode: address?.address?.postalOrZipCode,
-          },
+          contact: address,
         },
         handleInstantDelivery: async (deliveryAddressDateAndWindow: any) => {
-          const filterOrderItems = checkout?.items?.filter(
-            (orderItem: any) =>
-              orderItem?.product?.productType !== publicRuntimeConfig?.instantDelivery?.productType
-          )
           const params = {
             orderId: checkout?.id as string,
             orderInput: {
@@ -506,7 +508,6 @@ const StandardShippingStep = (props: ShippingProps) => {
           setEditAddressId(address?.id)
 
           // await updateOrder.mutateAsync(params)
-          closeModal()
         },
       },
     })
