@@ -185,7 +185,9 @@ export const DeliveryWindow = ({ instantDelivery, setInstantDelivery }: Delivery
     isSendEmail: false,
   }
 
-  const [selectedDate, setSelectedDate] = useState<string | undefined | null>(todayMMDDYYYY)
+  const initialSelectedDate = instantDelivery?.window?.confirmedDate || todayMMDDYYYY
+
+  const [selectedDate, setSelectedDate] = useState<string | undefined | null>(initialSelectedDate)
   const [selectedWindow, setSelectedWindow] = useState<Window | undefined>(undefined)
   const [notification, setNotification] = useState(initialNotification)
 

@@ -3,14 +3,11 @@ import { useQuery } from '@tanstack/react-query'
 import { deliverySolutionsKeys } from '@/lib/react-query/queryKeys'
 
 export type DeliveryLocation = {
-  firstName: string
-  lastName: string
   street: string
   city: string
   country: string
   state: string
   zipcode: string
-  phoneNumber: string
 }
 
 export type StoreBoundary = {
@@ -36,6 +33,8 @@ type Fulfillment = {
 const getStoreServiceBoundary = async (
   deliveryAddress: DeliveryLocation | undefined
 ): Promise<string[] | null> => {
+  if (!deliveryAddress) return null
+
   const body = {
     services: ['store-boundary-dsp'],
     deliveryAddress: deliveryAddress,
@@ -67,7 +66,6 @@ export const useGetStoreServiceBoundary = (deliveryAddress: DeliveryLocation | u
     queryKey: deliverySolutionsKeys.serviceBoundary(deliveryAddress),
     queryFn: () => getStoreServiceBoundary(deliveryAddress),
     refetchOnWindowFocus: false,
-    enabled: !!deliveryAddress,
   })
 
   return { data, isLoading, isSuccess }
