@@ -145,8 +145,23 @@ const InstantDeliveryTemplate = ({
     setValidateForm(true)
   }
 
+  const handleStepChange = (newActiveStep: number) => {
+    if (newActiveStep) {
+      setInstantDelivery({
+        ...instantDelivery,
+        storeBoundary: undefined,
+        window: undefined,
+        notification: undefined,
+      })
+    }
+    setCurrentActiveStep(newActiveStep)
+  }
+
   useEffect(() => {
-    if (storeBoundary) setInstantDelivery({ ...instantDelivery, storeBoundary })
+    if (storeBoundary) {
+      setInstantDelivery({ ...instantDelivery, storeBoundary })
+      if (currentActiveStep === 0) setCurrentActiveStep(1)
+    }
   }, [storeBoundary])
 
   useEffect(() => {
@@ -156,14 +171,6 @@ const InstantDeliveryTemplate = ({
   }, [window])
 
   useEffect(() => {
-    if (storeBoundary?.length || window) {
-      if (currentActiveStep === 0) setCurrentActiveStep(1)
-    } else {
-      if (currentActiveStep === 1) setCurrentActiveStep(0)
-    }
-  }, [storeBoundary, window])
-
-  useEffect(() => {
     if (initialInstantDelivery?.storeBoundary) setCurrentActiveStep(1)
   }, [initialInstantDelivery?.storeBoundary])
 
@@ -171,7 +178,7 @@ const InstantDeliveryTemplate = ({
     <div>
       <InstantDeliveryStepper
         currentActiveStep={currentActiveStep}
-        setCurrentActiveStep={setCurrentActiveStep}
+        setCurrentActiveStep={handleStepChange}
       >
         <div>
           <Box sx={{ display: 'flex', justifyContent: 'center' }}>
@@ -181,22 +188,24 @@ const InstantDeliveryTemplate = ({
               </Typography>
             )}
           </Box>
-          <AddressForm
-            contact={instantDelivery?.contact}
-            isUserLoggedIn={false}
-            setAutoFocus={true}
-            validateForm={validateForm}
-            onSaveAddress={handleSaveAddress}
-            isDisabled={isAddressDisabled}
-          />
-          <Button
-            variant="contained"
-            color="inherit"
-            style={{ textTransform: 'none' }}
-            onClick={handleValidateForm}
-          >
-            {t('save-shipping-address')}
-          </Button>
+          <Stack>
+            <AddressForm
+              contact={instantDelivery?.contact}
+              isUserLoggedIn={false}
+              setAutoFocus={true}
+              validateForm={validateForm}
+              onSaveAddress={handleSaveAddress}
+              isDisabled={isAddressDisabled}
+            />
+            <Button
+              variant="contained"
+              color="inherit"
+              style={{ textTransform: 'none' }}
+              onClick={handleValidateForm}
+            >
+              {t('confirm-address')}
+            </Button>
+          </Stack>
         </div>
         <div>
           <DeliveryWindow

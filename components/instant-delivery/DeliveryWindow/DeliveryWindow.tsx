@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 
 import {
   Typography,
@@ -15,7 +15,6 @@ import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider'
 import dayjs from 'dayjs'
 import { useTranslation } from 'next-i18next'
 
-import { KiboRadio } from '@/components/common'
 import { useGetDeliveryWindow } from '@/hooks'
 
 interface DeliveryWindow {
@@ -186,6 +185,7 @@ export const DeliveryWindow = ({ instantDelivery, setInstantDelivery }: Delivery
   }
 
   const initialSelectedDate = instantDelivery?.window?.confirmedDate || todayMMDDYYYY
+  const initialSelectedWindow = instantDelivery?.window?.confirmedWindow
 
   const [selectedDate, setSelectedDate] = useState<string | undefined | null>(initialSelectedDate)
   const [selectedWindow, setSelectedWindow] = useState<Window | undefined>(undefined)
@@ -264,6 +264,13 @@ export const DeliveryWindow = ({ instantDelivery, setInstantDelivery }: Delivery
   }
 
   const readable = selectedWindow?.readable
+
+  // To set default window
+  useEffect(() => {
+    if (todayDropoffs || tomorrowDropoffs || otherDateYYYYMMDD) {
+      if (initialSelectedWindow) setSelectedWindow(initialSelectedWindow)
+    }
+  }, [dwResponse])
 
   return (
     <Stack gap={2}>
@@ -427,7 +434,7 @@ export const DeliveryWindow = ({ instantDelivery, setInstantDelivery }: Delivery
 
       <Button
         variant="contained"
-        color="primary"
+        color="inherit"
         type="submit"
         disabled={!selectedWindow}
         onClick={confirmDeliveryWindow}
