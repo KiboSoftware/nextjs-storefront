@@ -147,7 +147,7 @@ const getPackagesDetails = (cartItems: any) => {
       length: totalLength,
     },
     weight: totalWeight,
-    quantity: cartItems.length,
+    quantity: cartItems?.length,
     items: 1,
     barcode: 'null',
     temperatureControl: 'none',

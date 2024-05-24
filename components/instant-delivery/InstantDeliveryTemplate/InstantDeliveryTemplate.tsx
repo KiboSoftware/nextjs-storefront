@@ -3,7 +3,7 @@ import { useEffect, useState } from 'react'
 import { Box, Stack, Step, Stepper, Typography, Slider, StepButton, Button } from '@mui/material'
 import { useTranslation } from 'next-i18next'
 
-import { type DeliveryDateAndWindow, DeliveryWindow } from '../DeliveryWindow/DeliveryWindow'
+import { DeliveryWindow } from '../DeliveryWindow/DeliveryWindow'
 import { AddressForm } from '@/components/common'
 import { DeliveryLocation, useGetStoreServiceBoundary } from '@/hooks'
 import type { ContactForm } from '@/lib/types'
@@ -123,17 +123,17 @@ const InstantDeliveryTemplate = ({
   const [instantDelivery, setInstantDelivery] = useState<InstantDelivery | undefined>(
     initialInstantDelivery || defaultInstantDelivery
   )
-  // const storeBoundary = instantDelivery?.storeBoundary
-  const window = instantDelivery?.window
+
   const { t } = useTranslation('common')
 
   const [currentActiveStep, setCurrentActiveStep] = useState(0)
   const [validateForm, setValidateForm] = useState<boolean>(false)
+  const [isSubmitClicked, setIsSubmitClicked] = useState<boolean>(false)
 
   const deliveryAddress = mapToDeliveryLocation(instantDelivery?.contact)
   const { data: storeBoundary } = useGetStoreServiceBoundary(deliveryAddress)
 
-  const showErrorMessage = storeBoundary?.length === 0
+  const showErrorMessage = storeBoundary === null
 
   const handleSaveAddress = ({ contact }: { contact: ContactForm }) => {
     setInstantDelivery({ ...instantDelivery, contact })
@@ -141,8 +141,9 @@ const InstantDeliveryTemplate = ({
   }
 
   const handleValidateForm = () => {
-    setInstantDelivery({ ...instantDelivery, contact: undefined })
+    setInstantDelivery({ ...instantDelivery, contact: undefined, storeBoundary: undefined })
     setValidateForm(true)
+    setIsSubmitClicked(true)
   }
 
   const handleStepChange = (newActiveStep: number) => {
@@ -157,18 +158,16 @@ const InstantDeliveryTemplate = ({
     setCurrentActiveStep(newActiveStep)
   }
 
+  const confirmInstantDelivery = () => {
+    onInstantDelivery(instantDelivery)
+  }
+
   useEffect(() => {
-    if (storeBoundary) {
+    if (isSubmitClicked && storeBoundary) {
       setInstantDelivery({ ...instantDelivery, storeBoundary })
       if (currentActiveStep === 0) setCurrentActiveStep(1)
     }
   }, [storeBoundary])
-
-  useEffect(() => {
-    if (instantDelivery?.window) {
-      onInstantDelivery(instantDelivery)
-    }
-  }, [window])
 
   useEffect(() => {
     if (initialInstantDelivery?.storeBoundary) setCurrentActiveStep(1)
@@ -211,6 +210,7 @@ const InstantDeliveryTemplate = ({
           <DeliveryWindow
             instantDelivery={instantDelivery}
             setInstantDelivery={setInstantDelivery}
+            confirmInstantDelivery={confirmInstantDelivery}
           />
         </div>
       </InstantDeliveryStepper>

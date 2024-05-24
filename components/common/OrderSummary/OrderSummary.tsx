@@ -153,6 +153,7 @@ const OrderSummary = <T extends CrCart | CrOrder | Checkout>(props: OrderSummary
                     deliveryAddress: deliveryAddressDateAndWindow?.contact,
                     deliveryStoreBoundary: deliveryAddressDateAndWindow?.storeBoundary,
                     deliveryNotification: deliveryAddressDateAndWindow?.notification,
+                    deliveryWindow: deliveryAddressDateAndWindow?.window,
                   })
                 }
                 sx={{ textDecoration: 'underline', cursor: 'pointer' }}

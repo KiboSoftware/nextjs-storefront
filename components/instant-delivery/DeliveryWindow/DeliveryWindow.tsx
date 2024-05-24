@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react'
+import { useState } from 'react'
 
 import {
   Typography,
@@ -140,6 +140,9 @@ type Window = {
   dropoffTime: { startsAt: number; endsAt: number }
   readable: string
 }
+
+type Notification = { isSendSMS: boolean; isSendEmail: boolean }
+
 type InstantDelivery = {
   address?:
     | {
@@ -161,15 +164,20 @@ type InstantDelivery = {
         confirmedStoreId: string
       }
     | undefined
-  notification?: { isSendSMS: boolean; isSendEmail: boolean }
+  notification?: Notification
 }
 
 type DeliveryWindowProps = {
   instantDelivery?: InstantDelivery
   setInstantDelivery: (instantDelivery: InstantDelivery) => void
+  confirmInstantDelivery: () => void
 }
 
-export const DeliveryWindow = ({ instantDelivery, setInstantDelivery }: DeliveryWindowProps) => {
+export const DeliveryWindow = ({
+  instantDelivery,
+  setInstantDelivery,
+  confirmInstantDelivery,
+}: DeliveryWindowProps) => {
   const { t } = useTranslation('common')
   const {
     todayMMDDYYYY,
@@ -179,24 +187,15 @@ export const DeliveryWindow = ({ instantDelivery, setInstantDelivery }: Delivery
     dayAfterTomorrowMMDDYYYY,
   } = getDate()
 
-  const initialNotification = (instantDelivery?.notification && instantDelivery?.notification) || {
-    isSendSMS: false,
-    isSendEmail: false,
-  }
-
   const initialSelectedDate = instantDelivery?.window?.confirmedDate || todayMMDDYYYY
-  const initialSelectedWindow = instantDelivery?.window?.confirmedWindow
 
   const [selectedDate, setSelectedDate] = useState<string | undefined | null>(initialSelectedDate)
-  const [selectedWindow, setSelectedWindow] = useState<Window | undefined>(undefined)
-  const [notification, setNotification] = useState(initialNotification)
 
   const parsedSelectedDate = dayjs(selectedDate, 'MM/DD/YYYY')
   const isToday = parsedSelectedDate.isSame(todayMMDDYYYY, 'day')
   const isTomorrow = parsedSelectedDate.isSame(tomorrowMMDDYYYY, 'day')
   const isOtherDay = !isToday && !isTomorrow
 
-  // Remove this line later
   const storeBoundaryList = instantDelivery?.storeBoundary
 
   // Today and Tomorrow
@@ -217,26 +216,22 @@ export const DeliveryWindow = ({ instantDelivery, setInstantDelivery }: Delivery
   // Functions
   const handleTabChange = (date: string) => {
     setSelectedDate(date)
-    setSelectedWindow(undefined)
     setInstantDelivery({ ...instantDelivery, window: undefined })
   }
 
   const handleDeliveryWindowClick = (window: Window) => {
-    setSelectedWindow(window)
+    setInstantDelivery({
+      ...instantDelivery,
+      window: {
+        confirmedStoreId: stores?.storeId as string,
+        confirmedDate: selectedDate as string,
+        confirmedWindow: window,
+      },
+    })
   }
 
   const confirmDeliveryWindow = () => {
-    if (selectedDate && selectedWindow) {
-      setInstantDelivery({
-        ...instantDelivery,
-        window: {
-          confirmedStoreId: stores?.storeId as string,
-          confirmedDate: selectedDate as string,
-          confirmedWindow: selectedWindow,
-        },
-        notification: notification,
-      })
-    }
+    confirmInstantDelivery()
   }
 
   const error = (() => {
@@ -255,22 +250,16 @@ export const DeliveryWindow = ({ instantDelivery, setInstantDelivery }: Delivery
     const name = event.target.name as string
     const checked = event.target.checked as boolean
 
-    setNotification((prevState: { isSendSMS: boolean; isSendEmail: boolean }) => {
-      return {
-        ...prevState,
+    setInstantDelivery({
+      ...instantDelivery,
+      notification: {
+        ...(instantDelivery?.notification as Notification),
         [name]: checked,
-      }
+      },
     })
   }
 
-  const readable = selectedWindow?.readable
-
-  // To set default window
-  useEffect(() => {
-    if (todayDropoffs || tomorrowDropoffs || otherDateYYYYMMDD) {
-      if (initialSelectedWindow) setSelectedWindow(initialSelectedWindow)
-    }
-  }, [dwResponse])
+  const readable = instantDelivery?.window?.confirmedWindow?.readable
 
   return (
     <Stack gap={2}>
@@ -317,8 +306,7 @@ export const DeliveryWindow = ({ instantDelivery, setInstantDelivery }: Delivery
               key={dropoffTime.readable}
               sx={{
                 ...commonStyles,
-                backgroundColor:
-                  selectedWindow?.readable === dropoffTime.readable ? 'grey.200' : 'white',
+                backgroundColor: readable === dropoffTime.readable ? 'grey.200' : 'white',
               }}
               onClick={() => handleDeliveryWindowClick(dropoffTime)}
             >
@@ -338,8 +326,7 @@ export const DeliveryWindow = ({ instantDelivery, setInstantDelivery }: Delivery
               key={dropoffTime.readable}
               sx={{
                 ...commonStyles,
-                backgroundColor:
-                  selectedWindow?.readable === dropoffTime.readable ? 'grey.200' : 'white',
+                backgroundColor: readable === dropoffTime.readable ? 'grey.200' : 'white',
               }}
               onClick={() => handleDeliveryWindowClick(dropoffTime)}
             >
@@ -382,8 +369,7 @@ export const DeliveryWindow = ({ instantDelivery, setInstantDelivery }: Delivery
               key={dropoffTime.readable}
               sx={{
                 ...commonStyles,
-                backgroundColor:
-                  selectedWindow?.readable === dropoffTime.readable ? 'grey.200' : 'white',
+                backgroundColor: readable === dropoffTime.readable ? 'grey.200' : 'white',
               }}
               onClick={() => handleDeliveryWindowClick(dropoffTime)}
             >
@@ -409,7 +395,7 @@ export const DeliveryWindow = ({ instantDelivery, setInstantDelivery }: Delivery
             <Checkbox
               data-testid="isSendSMS"
               name="isSendSMS"
-              checked={notification?.isSendSMS}
+              checked={instantDelivery?.notification?.isSendSMS}
               onChange={handleNotification}
             />
           }
@@ -424,7 +410,7 @@ export const DeliveryWindow = ({ instantDelivery, setInstantDelivery }: Delivery
             <Checkbox
               data-testid="isSendEmail"
               name="isSendEmail"
-              checked={notification?.isSendEmail}
+              checked={instantDelivery?.notification?.isSendEmail}
               onChange={handleNotification}
             />
           }
@@ -436,7 +422,7 @@ export const DeliveryWindow = ({ instantDelivery, setInstantDelivery }: Delivery
         variant="contained"
         color="inherit"
         type="submit"
-        disabled={!selectedWindow}
+        disabled={!readable}
         onClick={confirmDeliveryWindow}
       >
         {t('confirm-delivery-window')}

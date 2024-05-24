@@ -114,7 +114,7 @@ const AddressForm = (props: AddressFormProps) => {
   }, [isValid, validateForm])
 
   useEffect(() => {
-    if (isInstantDeliveryShipping && isDisabled) handleSubmit(onValid)()
+    if (isInstantDeliveryShipping) handleSubmit(onValid)()
   }, [])
 
   return (

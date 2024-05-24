@@ -126,10 +126,12 @@ export const useCartActions = ({ cartItems, purchaseLocation }: UseCartActionsPr
     deliveryAddress,
     deliveryStoreBoundary,
     deliveryNotification,
+    deliveryWindow,
   }: {
     deliveryAddress: any
     deliveryStoreBoundary: any
     deliveryNotification: any
+    deliveryWindow: any
   }) => {
     showModal({
       Component: InstantDeliveryDialog,
@@ -138,6 +140,7 @@ export const useCartActions = ({ cartItems, purchaseLocation }: UseCartActionsPr
           contact: deliveryAddress,
           storeBoundary: deliveryStoreBoundary,
           notification: deliveryNotification,
+          window: deliveryWindow,
         },
         handleInstantDelivery: async (deliveryAddressDateAndWindow: any) => {
           handleUpdateCartItems(deliveryAddressDateAndWindow)
