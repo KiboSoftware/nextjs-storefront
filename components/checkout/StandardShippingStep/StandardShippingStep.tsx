@@ -371,7 +371,9 @@ const StandardShippingStep = (props: ShippingProps) => {
   const [updateOrderResponse, setUpdateOrderResponse] = useState<any>()
   const [updateDeliveryDateAndWindow, setUpdateDeliveryDateAndWindow] = useState<any>()
   const [editAddressId, setEditAddressId] = useState()
+  const [localIsSuccess, setLocalIsSuccess] = useState(false)
   const handleUpdateOrderItemPriceAndFulfillmentInfo = async () => {
+    setLocalIsSuccess(false)
     const deliveryItem = updateOrderResponse?.items?.find(
       (item: any) =>
         item?.product?.productType === publicRuntimeConfig?.instantDelivery?.productType
@@ -435,6 +437,7 @@ const StandardShippingStep = (props: ShippingProps) => {
         packages: [cartGetters.getPackagesDetails(filterUpdatedOrderItems)],
       },
     })
+    setDeliveryRatesPayload(null)
     localStorage.setItem('instant-delivery', JSON.stringify(updateDeliveryDateAndWindow))
     closeModal()
   }
@@ -512,11 +515,30 @@ const StandardShippingStep = (props: ShippingProps) => {
       },
     })
   }
+  const [hasRun, setHasRun] = useState(false)
   useEffect(() => {
-    if (isSuccess) {
+    if (isSuccess && deliveryFee && !hasRun) {
+      // Data is successfully fetched and hasn't been processed yet
       handleUpdateOrderItemPriceAndFulfillmentInfo()
+      setHasRun(true) // Mark that the function has run for the current data
     }
-  }, [isSuccess, deliveryFee])
+  }, [isSuccess, deliveryFee, hasRun])
+
+  // Reset the hasRun state if the data changes
+  useEffect(() => {
+    setHasRun(false)
+  }, [deliveryFee])
+  // useEffect(() => {
+  //   if (isSuccess) {
+  //     setLocalIsSuccess(true)
+  //   }
+  // }, [isSuccess])
+  // useEffect(() => {
+  //   console.log('useeffect', localIsSuccess)
+  //   if (localIsSuccess) {
+  //     handleUpdateOrderItemPriceAndFulfillmentInfo()
+  //   }
+  // }, [localIsSuccess])
 
   useEffect(() => {
     if (isAllItemsDigital || !shipItems.length)
