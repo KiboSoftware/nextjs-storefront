@@ -69,7 +69,7 @@ const mapToInternalContactForm = (contact: ContactForm): InternalContactForm => 
 const mapToContactForm = (internalContact: InternalContactForm): ContactForm => {
   const name = internalContact.firstName.split(' ')
 
-  const contact = internalContact
+  const contact = { ...internalContact, lastNameOrSurname: '' }
   contact.firstName = name[0]
   contact['lastNameOrSurname'] = name[1]
 
@@ -126,7 +126,7 @@ const AddressForm = (props: AddressFormProps) => {
       )
     })
 
-  const onValid = async (formData: ContactForm) =>
+  const onValid = async (formData: InternalContactForm) =>
     onSaveAddress({ contact: mapToContactForm(formData), isDataUpdated: true })
 
   useEffect(() => {
