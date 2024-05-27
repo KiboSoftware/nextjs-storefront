@@ -133,7 +133,7 @@ const InstantDeliveryTemplate = ({
   const deliveryAddress = mapToDeliveryLocation(instantDelivery?.contact)
   const { data: storeBoundary } = useGetStoreServiceBoundary(deliveryAddress)
 
-  const showErrorMessage = storeBoundary === null
+  const showErrorMessage = isSubmitClicked && storeBoundary === null
 
   const handleSaveAddress = ({ contact }: { contact: ContactForm }) => {
     setInstantDelivery({ ...instantDelivery, contact })
