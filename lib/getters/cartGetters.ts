@@ -162,6 +162,76 @@ const checkDeliveryItems = (data: any) => {
   }
   return false // Return false if no such item is found
 }
+const formatTimestamp = (startTime: any, endTime = null) => {
+  // Create Date objects using the timestamps
+  const startDate = new Date(startTime)
+  const endDate = endTime ? new Date(endTime) : null
+
+  // Function to get the month name
+  const getMonthName = (monthIndex: any) => {
+    const monthNames = [
+      'January',
+      'February',
+      'March',
+      'April',
+      'May',
+      'June',
+      'July',
+      'August',
+      'September',
+      'October',
+      'November',
+      'December',
+    ]
+    return monthNames[monthIndex]
+  }
+
+  const formatTime = (date: any) => {
+    let hours = date.getHours()
+    const minutes = String(date.getMinutes()).padStart(2, '0')
+    const ampm = hours >= 12 ? 'PM' : 'AM'
+    hours = hours % 12
+    hours = hours ? hours : 12
+    return `${hours}:${minutes} ${ampm}`
+  }
+
+  const startMonthName = getMonthName(startDate.getMonth())
+  const startDay = startDate.getDate()
+  const startFormattedTime = formatTime(startDate)
+
+  let formattedDate
+  if (endDate && !isNaN(endDate.getTime())) {
+    const endMonthName = getMonthName(endDate.getMonth())
+    const endDay = endDate.getDate()
+    const endFormattedTime = formatTime(endDate)
+
+    if (startDay === endDay && startMonthName === endMonthName) {
+      formattedDate = `${startMonthName} ${startDay} ${startFormattedTime} - ${endFormattedTime}`
+    } else {
+      formattedDate = `${startMonthName} ${startDay} ${startFormattedTime} - ${endMonthName} ${endDay} ${endFormattedTime}`
+    }
+  } else {
+    formattedDate = `${startMonthName} ${startDay} ${startFormattedTime}`
+  }
+  return formattedDate
+}
+
+const getDSDescription = (deliveryDateAndWindow: any, packages: any, tipAmount: any) => {
+  return `<div><table><tr><td style="vertical-align:top"><div><b>Dropoff:</b> ${formatTimestamp(
+    deliveryDateAndWindow?.window?.confirmedWindow?.dropoffTime?.startsAt,
+    deliveryDateAndWindow?.window?.confirmedWindow?.dropoffTime?.endsAt
+  )}</div><div><b>Pickup:</b> ${formatTimestamp(
+    deliveryDateAndWindow?.window?.confirmedWindow?.pickupTime?.startsAt
+  )}</div><div><b>Tip:</b> $${
+    tipAmount || 0
+  }</div><div><b>Delivery Instructions:</b> Please deliver to the front desk</div><div><b>Pickup Instruction:</b> Please pick up from the front desk</div><div><b>Send SMS Notification:</b> ${
+    deliveryDateAndWindow?.notification?.isSendSMS || false
+  }</div><div><b>Send Email Notification:</b> ${
+    deliveryDateAndWindow?.notification?.isSendEmail || false
+  }</div></td><td style="vertical-align:top"><div><b>Package Details:</b><table border="1"><tr><td colspan='4'><b>Name:</b> ${
+    packages.name
+  }</td></tr><tr><td><b> Size (H * W * L)</b></td><td><b> Quantity</b></td><td><b>Items</b></td></tr><tr><td> ${packages.size.height.toString()} * ${packages.size.width.toString()} * ${packages.size.length.toString()}</td><td>${packages.quantity.toString()}</td><td>${packages.items.toString()}</td></tr></table></div></td></tr></table></div>`
+}
 
 export const cartGetters = {
   getCartItemCount,
@@ -173,4 +243,6 @@ export const cartGetters = {
   getNormalizedDataForRates,
   getPackagesDetails,
   checkDeliveryItems,
+  formatTimestamp,
+  getDSDescription,
 }

@@ -133,6 +133,10 @@ const StandardShippingStep = (props: ShippingProps) => {
   )
   const { validateCustomerAddress } = useValidateCustomerAddress()
   const { createCustomerAddress } = useCreateCustomerAddress()
+  // Instant Delivery
+  const instantDelivery = localStorage.getItem('instant-delivery') as string
+  const instantDeliveryObj = JSON.parse(instantDelivery)
+  const contact = instantDeliveryObj?.contact
 
   const handleAddressValidationAndSave = () => setValidateForm(true)
 
@@ -161,43 +165,43 @@ const StandardShippingStep = (props: ShippingProps) => {
           addressValidationRequestInput: { address: contact?.address as CuAddress },
         })
       }
-      const deliveryAddressDateAndWindow =
-        typeof localStorage !== 'undefined' &&
-        JSON.parse(localStorage.getItem('instant-delivery') as string)
-      const filterOrderItems = checkout?.items?.filter(
-        (orderItem: any) =>
-          orderItem?.product?.productType !== publicRuntimeConfig?.instantDelivery?.productType
-      )
-      const data = {
-        dropoffTime: {
-          startsAt:
-            deliveryAddressDateAndWindow?.window?.confirmedWindow?.dropoffTime?.startsAt.toString(),
-          endsAt:
-            deliveryAddressDateAndWindow?.window?.confirmedWindow?.dropoffTime?.endsAt.toString(),
-        },
-        pickupTime: {
-          startsAt:
-            deliveryAddressDateAndWindow?.window?.confirmedWindow?.pickupTime?.startsAt.toString(),
-        },
-        deliveryInstructions: '',
-        pickupInstructions: '',
-        tips: 0,
-        deliveryContact: {
-          notifySms: deliveryAddressDateAndWindow?.notification?.isSendSMS,
-          notifyEmail: deliveryAddressDateAndWindow?.notification?.isSendEmail,
-        },
-        packages: [cartGetters.getPackagesDetails(filterOrderItems)],
-      }
+      // const deliveryAddressDateAndWindow =
+      //   typeof localStorage !== 'undefined' &&
+      //   JSON.parse(localStorage.getItem('instant-delivery') as string)
+      // const filterOrderItems = checkout?.items?.filter(
+      //   (orderItem: any) =>
+      //     orderItem?.product?.productType !== publicRuntimeConfig?.instantDelivery?.productType
+      // )
+      // const data = {
+      //   dropoffTime: {
+      //     startsAt:
+      //       deliveryAddressDateAndWindow?.window?.confirmedWindow?.dropoffTime?.startsAt.toString(),
+      //     endsAt:
+      //       deliveryAddressDateAndWindow?.window?.confirmedWindow?.dropoffTime?.endsAt.toString(),
+      //   },
+      //   pickupTime: {
+      //     startsAt:
+      //       deliveryAddressDateAndWindow?.window?.confirmedWindow?.pickupTime?.startsAt.toString(),
+      //   },
+      //   deliveryInstructions: '',
+      //   pickupInstructions: '',
+      //   tips: orderGetters.getTipAmount(checkout),
+      //   deliveryContact: {
+      //     notifySms: deliveryAddressDateAndWindow?.notification?.isSendSMS,
+      //     notifyEmail: deliveryAddressDateAndWindow?.notification?.isSendEmail,
+      //   },
+      //   packages: [cartGetters.getPackagesDetails(filterOrderItems)],
+      // }
       if (isAddressSavedToAccount) {
         const customerSavedAddress = await handleSaveAddressToAccount(contact)
         const { accountId: _, types: __, ...customerContact } = customerSavedAddress
-        await updateOrderShippingInfo.mutateAsync({ checkout, contact: customerContact, data })
+        await updateOrderShippingInfo.mutateAsync({ checkout, contact: customerContact })
         setSelectedShippingAddressId(customerSavedAddress?.id as number)
       } else {
         await updateOrderShippingInfo.mutateAsync({
           checkout,
           contact,
-          data,
+          // data,
         })
         setSelectedShippingAddressId((contact?.id as number) || DefaultId.ADDRESSID)
       }
@@ -280,14 +284,28 @@ const StandardShippingStep = (props: ShippingProps) => {
           ...(selectedAddress?.phoneNumbers as any),
         },
       }
-      handleSaveAddressToCheckout({ contact })
+      if (instantDeliveryObj?.contact) {
+        handleEditAddress({
+          deliveryAddress: contact,
+          isAddressDisabled: true,
+        })
+      } else {
+        handleSaveAddressToCheckout({ contact })
+      }
     }
   }
 
   const handleAddNewAddress = () => {
     setValidateForm(false)
-    setShouldShowAddAddressButton(false)
     setIsNewAddressAdded(false)
+    if (instantDeliveryObj?.contact) {
+      handleEditAddress({
+        deliveryAddress: undefined,
+        isAddressDisabled: false,
+      })
+    } else {
+      setShouldShowAddAddressButton(false)
+    }
   }
 
   useEffect(() => {
@@ -398,12 +416,13 @@ const StandardShippingStep = (props: ShippingProps) => {
       (orderItem: any) =>
         orderItem?.product?.productType !== publicRuntimeConfig?.instantDelivery?.productType
     )
+    const updatedOrderPackages = cartGetters.getPackagesDetails(filterUpdatedOrderItems)
     await updateOrderShippingInfo.mutateAsync({
       checkout: { ...updateOrderItemPriceResponse },
       contact: {
         firstName: updateDeliveryDateAndWindow?.contact?.firstName,
         lastNameOrSurname: updateDeliveryDateAndWindow?.contact?.lastNameOrSurname,
-        id: editAddressId,
+        id: updateDeliveryDateAndWindow?.contact?.id || DefaultId.ADDRESSID,
         phoneNumbers: {
           home: updateDeliveryDateAndWindow?.contact?.phoneNumbers?.home,
         },
@@ -417,37 +436,70 @@ const StandardShippingStep = (props: ShippingProps) => {
         },
       },
       data: {
-        dropoffTime: {
-          startsAt:
-            updateDeliveryDateAndWindow?.window?.confirmedWindow?.dropoffTime?.startsAt.toString(),
-          endsAt:
-            updateDeliveryDateAndWindow?.window?.confirmedWindow?.dropoffTime?.endsAt.toString(),
+        dsDescription: cartGetters.getDSDescription(
+          updateDeliveryDateAndWindow,
+          updatedOrderPackages,
+          orderGetters.getTipAmount(updateOrderItemPriceResponse)
+        ),
+        // `<div><b>Dropoff:</b> ${cartGetters.formatTimestamp(
+        //   updateDeliveryDateAndWindow?.window?.confirmedWindow?.dropoffTime?.startsAt,
+        //   updateDeliveryDateAndWindow?.window?.confirmedWindow?.dropoffTime?.endsAt
+        // )}</div><div><b>Pickup:</b> ${cartGetters.formatTimestamp(
+        //   updateDeliveryDateAndWindow?.window?.confirmedWindow?.pickupTime?.startsAt
+        // )}</div><div><b>Tip:</b> $0.00</div><div><b>Delivery Instructions:</b> Please deliver to the front desk</div><div><b>Pickup Instruction:</b> Test</div><div><b>Notify SMS:</b> ${
+        //   updateDeliveryDateAndWindow?.notification?.isSendSMS || false
+        // }</div><div><b>Notify Email:</b> ${
+        //   updateDeliveryDateAndWindow?.notification?.isSendEmail || false
+        // }</div><div><b>Package Details:</b><table border="1"><tr><td colspan='3'><b>Name: </b>${
+        //   updatedOrderPackages.name
+        // }</td></tr><tr><td><b> Size:</b></td><td><b> Quantity:</b></td><td><b>Items: </b></td></tr><tr><td>${updatedOrderPackages.size.length.toString()} * ${updatedOrderPackages.size.width.toString()} * ${updatedOrderPackages.size.length.toString()}</td><td>${updatedOrderPackages.quantity.toString()}</td><td>${updatedOrderPackages.items.toString()}</td></tr></table></div>`,
+        ds: {
+          dropoffTime: {
+            startsAt:
+              updateDeliveryDateAndWindow?.window?.confirmedWindow?.dropoffTime?.startsAt.toString(),
+            endsAt:
+              updateDeliveryDateAndWindow?.window?.confirmedWindow?.dropoffTime?.endsAt.toString(),
+          },
+          pickupTime: {
+            startsAt:
+              updateDeliveryDateAndWindow?.window?.confirmedWindow?.pickupTime?.startsAt.toString(),
+          },
+          deliveryInstructions: '',
+          pickupInstructions: '',
+          tips: orderGetters.getTipAmount(updateOrderItemPriceResponse),
+          deliveryContact: {
+            notifySms: updateDeliveryDateAndWindow?.notification?.isSendSMS,
+            notifyEmail: updateDeliveryDateAndWindow?.notification?.isSendEmail,
+          },
+          packages: [cartGetters.getPackagesDetails(filterUpdatedOrderItems)],
         },
-        pickupTime: {
-          startsAt:
-            updateDeliveryDateAndWindow?.window?.confirmedWindow?.pickupTime?.startsAt.toString(),
-        },
-        deliveryInstructions: '',
-        pickupInstructions: '',
-        tips: 0,
-        deliveryContact: {
-          notifySms: updateDeliveryDateAndWindow?.notification?.isSendSMS,
-          notifyEmail: updateDeliveryDateAndWindow?.notification?.isSendEmail,
-        },
-        packages: [cartGetters.getPackagesDetails(filterUpdatedOrderItems)],
       },
     })
+    setSelectedShippingAddressId(updateDeliveryDateAndWindow?.contact?.id || DefaultId.ADDRESSID)
     setDeliveryRatesPayload(null)
     localStorage.setItem('instant-delivery', JSON.stringify(updateDeliveryDateAndWindow))
     closeModal()
   }
-  const handleEditAddress = (address: any) => {
+  const handleEditAddress = ({
+    deliveryAddress,
+    deliveryStoreBoundary,
+    deliveryNotification,
+    deliveryWindow,
+    isAddressDisabled,
+  }: {
+    deliveryAddress?: any
+    deliveryStoreBoundary?: any
+    deliveryNotification?: any
+    deliveryWindow?: any
+    isAddressDisabled?: boolean
+  }) => {
     showModal({
       Component: InstantDeliveryDialog,
       props: {
         instantDelivery: {
-          contact: address,
+          contact: deliveryAddress,
         },
+        isAddressDisabled,
         handleInstantDelivery: async (deliveryAddressDateAndWindow: any) => {
           const params = {
             orderId: checkout?.id as string,
@@ -508,7 +560,7 @@ const StandardShippingStep = (props: ShippingProps) => {
           // }
           setUpdateOrderResponse(updateOrderResponseAPI)
           setUpdateDeliveryDateAndWindow(deliveryAddressDateAndWindow)
-          setEditAddressId(address?.id)
+          // setEditAddressId(address?.id)
 
           // await updateOrder.mutateAsync(params)
         },
@@ -539,6 +591,78 @@ const StandardShippingStep = (props: ShippingProps) => {
   //     handleUpdateOrderItemPriceAndFulfillmentInfo()
   //   }
   // }, [localIsSuccess])
+
+  // const instantDelivery = localStorage.getItem('instant-delivery') as string
+  // const instantDeliveryObj = JSON.parse(instantDelivery)
+  // const contact = instantDeliveryObj?.contact
+  const handleSetDeliveryAddress = async () => {
+    const filterOrderItems = checkout?.items?.filter(
+      (orderItem: any) =>
+        orderItem?.product?.productType !== publicRuntimeConfig?.instantDelivery?.productType
+    )
+    const packages = cartGetters.getPackagesDetails(filterOrderItems)
+    await updateOrderShippingInfo.mutateAsync({
+      checkout,
+      contact: {
+        firstName: instantDeliveryObj?.contact?.firstName,
+        lastNameOrSurname: instantDeliveryObj?.contact?.lastNameOrSurname,
+        id: instantDeliveryObj?.contact?.id,
+        phoneNumbers: {
+          home: instantDeliveryObj?.contact?.phoneNumbers?.home,
+        },
+        address: {
+          address1: instantDeliveryObj?.contact?.address?.address1,
+          address2: instantDeliveryObj?.contact?.address?.address2,
+          cityOrTown: instantDeliveryObj?.contact?.address?.cityOrTown,
+          stateOrProvince: instantDeliveryObj?.contact?.address?.stateOrProvince,
+          countryCode: instantDeliveryObj?.contact?.address?.countryCode,
+          postalOrZipCode: instantDeliveryObj?.contact?.address?.postalOrZipCode,
+        },
+      },
+      data: {
+        dsDescription: cartGetters.getDSDescription(
+          instantDeliveryObj,
+          packages,
+          orderGetters.getTipAmount(checkout)
+        ),
+        // `<div><b>Dropoff:</b> ${cartGetters.formatTimestamp(
+        //   instantDeliveryObj?.window?.confirmedWindow?.dropoffTime?.startsAt,
+        //   instantDeliveryObj?.window?.confirmedWindow?.dropoffTime?.endsAt
+        // )}</div><div><b>Pickup:</b> ${cartGetters.formatTimestamp(
+        //   instantDeliveryObj?.window?.confirmedWindow?.pickupTime?.startsAt
+        // )}</div><div><b>Tip:</b> $0.00</div><div><b>Delivery Instructions:</b> Please deliver to the front desk</div><div><b>Pickup Instruction:</b> Test</div><div><b>Notify SMS:</b> ${
+        //   instantDeliveryObj?.notification?.isSendSMS || false
+        // }</div><div><b>Notify Email:</b> ${
+        //   instantDeliveryObj?.notification?.isSendEmail || false
+        // }</div><div><b>Package Details:</b><table border="1"><tr><td colspan='3'><b>Name: </b>${
+        //   packages.name
+        // }</td></tr><tr><td><b> Size:</b></td><td><b> Quantity:</b></td><td><b>Items: </b></td></tr><tr><td>${packages.size.length.toString()} * ${packages.size.width.toString()} * ${packages.size.length.toString()}</td><td>${packages.quantity.toString()}</td><td>${packages.items.toString()}</td></tr></table></div>`,
+        ds: {
+          dropoffTime: {
+            startsAt: instantDeliveryObj?.window?.confirmedWindow?.dropoffTime?.startsAt.toString(),
+            endsAt: instantDeliveryObj?.window?.confirmedWindow?.dropoffTime?.endsAt.toString(),
+          },
+          pickupTime: {
+            startsAt: instantDeliveryObj?.window?.confirmedWindow?.pickupTime?.startsAt.toString(),
+          },
+          deliveryInstructions: '',
+          pickupInstructions: '',
+          tips: orderGetters.getTipAmount(checkout),
+          deliveryContact: {
+            notifySms: instantDeliveryObj?.notification?.isSendSMS,
+            notifyEmail: instantDeliveryObj?.notification?.isSendEmail,
+          },
+          packages: [cartGetters.getPackagesDetails(filterOrderItems)],
+        },
+      },
+    })
+    setSelectedShippingAddressId((instantDeliveryObj?.contact?.id as number) || DefaultId.ADDRESSID)
+  }
+  // useEffect(() => {
+  //   if (instantDeliveryObj?.contact) {
+  //     handleSetDeliveryAddress()
+  //   }
+  // }, [])
 
   useEffect(() => {
     if (isAllItemsDigital || !shipItems.length)
@@ -572,11 +696,6 @@ const StandardShippingStep = (props: ShippingProps) => {
     )
   }
 
-  // Instant Delivery
-  const instantDelivery = localStorage.getItem('instant-delivery') as string
-  const instantDeliveryObj = JSON.parse(instantDelivery)
-  const contact = instantDeliveryObj?.contact
-
   return (
     <Stack data-testid="checkout-shipping" gap={2} ref={shippingAddressRef}>
       <Typography variant="h2" component="h2" sx={{ fontWeight: 'bold' }}>
@@ -597,22 +716,47 @@ const StandardShippingStep = (props: ShippingProps) => {
                       name: String(defaultShippingAddress.id),
                       optionIndicator: t('primary'),
                       label: (
-                        <AddressCard
-                          firstName={defaultShippingAddress?.firstName as string}
-                          middleNameOrInitial={
-                            defaultShippingAddress?.middleNameOrInitial as string
-                          }
-                          lastNameOrSurname={defaultShippingAddress?.lastNameOrSurname as string}
-                          address1={defaultShippingAddress?.address?.address1 as string}
-                          address2={defaultShippingAddress?.address?.address2 as string}
-                          cityOrTown={defaultShippingAddress?.address?.cityOrTown as string}
-                          stateOrProvince={
-                            defaultShippingAddress?.address?.stateOrProvince as string
-                          }
-                          postalOrZipCode={
-                            defaultShippingAddress?.address?.postalOrZipCode as string
-                          }
-                        />
+                        <Box
+                          sx={{
+                            display: 'flex',
+                            justifyContent: 'space-between',
+                            alignItems: 'center',
+                          }}
+                        >
+                          <AddressCard
+                            firstName={defaultShippingAddress?.firstName as string}
+                            middleNameOrInitial={
+                              defaultShippingAddress?.middleNameOrInitial as string
+                            }
+                            lastNameOrSurname={defaultShippingAddress?.lastNameOrSurname as string}
+                            address1={defaultShippingAddress?.address?.address1 as string}
+                            address2={defaultShippingAddress?.address?.address2 as string}
+                            cityOrTown={defaultShippingAddress?.address?.cityOrTown as string}
+                            stateOrProvince={
+                              defaultShippingAddress?.address?.stateOrProvince as string
+                            }
+                            postalOrZipCode={
+                              defaultShippingAddress?.address?.postalOrZipCode as string
+                            }
+                          />
+                          {isAuthenticated &&
+                            instantDelivery &&
+                            selectedShippingAddressId === defaultShippingAddress?.id && (
+                              <Typography
+                                variant="caption"
+                                sx={{ textDecoration: 'underline', cursor: 'pointer' }}
+                                data-testid={`change-delivery-time`}
+                                onClick={() =>
+                                  handleEditAddress({
+                                    deliveryAddress: defaultShippingAddress,
+                                    isAddressDisabled: true,
+                                  })
+                                }
+                              >
+                                {t('change-delivery-time')}
+                              </Typography>
+                            )}
+                        </Box>
                       ),
                     },
                   ]}
@@ -653,14 +797,31 @@ const StandardShippingStep = (props: ShippingProps) => {
                           />
                           {!isAuthenticated && (
                             <Typography
-                              variant="body2"
+                              variant="caption"
                               sx={{ cursor: 'pointer' }}
                               data-testid={`address-edit`}
-                              onClick={() => handleEditAddress(address)}
+                              onClick={() => handleEditAddress({ deliveryAddress: address })}
                             >
                               {t('edit')}
                             </Typography>
                           )}
+                          {isAuthenticated &&
+                            instantDelivery &&
+                            selectedShippingAddressId === address?.id && (
+                              <Typography
+                                variant="caption"
+                                sx={{ textDecoration: 'underline', cursor: 'pointer' }}
+                                data-testid={`change-delivery-time`}
+                                onClick={() =>
+                                  handleEditAddress({
+                                    deliveryAddress: address,
+                                    isAddressDisabled: true,
+                                  })
+                                }
+                              >
+                                {t('change-delivery-time')}
+                              </Typography>
+                            )}
                         </Box>
                       ),
                     }

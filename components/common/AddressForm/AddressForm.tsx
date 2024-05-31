@@ -81,8 +81,6 @@ const AddressForm = (props: AddressFormProps) => {
   const { publicRuntimeConfig } = getConfig()
   const { t: translation } = useTranslation('common')
 
-  const isInstantDeliveryShipping = props.saveAddressLabel === translation('save-shipping-address')
-
   const {
     contact,
     countries = publicRuntimeConfig.countries,
@@ -134,10 +132,6 @@ const AddressForm = (props: AddressFormProps) => {
     if (validateForm) handleSubmit(onValid)()
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [isValid, validateForm])
-
-  useEffect(() => {
-    if (isInstantDeliveryShipping) handleSubmit(onValid)()
-  }, [])
 
   return (
     <Box

@@ -39,7 +39,7 @@ import {
   ProductQuickViewDialog,
   ProductVariantSizeSelector,
 } from '@/components/product'
-import { useModalContext } from '@/context'
+import { useAuthContext, useModalContext } from '@/context'
 import {
   useProductDetailTemplate,
   useGetPurchaseLocation,
@@ -47,9 +47,10 @@ import {
   useWishlist,
   useGetProductInventory,
   usePriceRangeFormatter,
+  useGetCustomerAddresses,
 } from '@/hooks'
 import { FulfillmentOptions as FulfillmentOptionsConstant, PurchaseTypes } from '@/lib/constants'
-import { productGetters, subscriptionGetters, wishlistGetters } from '@/lib/getters'
+import { productGetters, subscriptionGetters, userGetters, wishlistGetters } from '@/lib/getters'
 import { uiHelpers } from '@/lib/helpers'
 import type { ProductCustom, BreadCrumb, LocationCustom } from '@/lib/types'
 
@@ -59,6 +60,7 @@ import type {
   ProductOption,
   ProductOptionValue,
   CrProduct,
+  CustomerContact,
 } from '@/lib/gql/types'
 
 interface ProductDetailTemplateProps {
@@ -135,6 +137,13 @@ const ProductDetailTemplate = (props: ProductDetailTemplateProps) => {
   const { data: purchaseLocation } = useGetPurchaseLocation()
 
   const { addOrRemoveWishlistItem, checkProductInWishlist, isWishlistLoading } = useWishlist()
+
+  const { isAuthenticated, user } = useAuthContext()
+  const { data: addressCollection } = useGetCustomerAddresses(user?.id as number)
+  const defaultShippingAddress =
+    userGetters.getDefaultShippingAddress(
+      addressCollection?.items as unknown as CustomerContact[]
+    ) || null
 
   const {
     currentProduct,
@@ -293,6 +302,9 @@ const ProductDetailTemplate = (props: ProductDetailTemplateProps) => {
       showModal({
         Component: InstantDeliveryDialog,
         props: {
+          instantDelivery: {
+            contact: defaultShippingAddress ? defaultShippingAddress : null,
+          },
           handleInstantDelivery: async (instantDelivery: any) => {
             setSelectedFulfillmentOption({
               location: {

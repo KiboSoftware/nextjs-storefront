@@ -17,6 +17,7 @@ export interface OrderPriceProps<T extends CrCart | CrOrder | Checkout> {
   orderDetails: T
   isShippingTaxIncluded?: boolean
   promoComponent?: ReactNode
+  tipComponent?: ReactNode
   isCart?: boolean
 }
 
@@ -34,6 +35,7 @@ const OrderPrice = <T extends CrCart | CrOrder | Checkout>(props: OrderPriceProp
     handlingLabel,
 
     promoComponent,
+    tipComponent,
     isShippingTaxIncluded = true,
     orderDetails,
     isCart,
@@ -44,11 +46,12 @@ const OrderPrice = <T extends CrCart | CrOrder | Checkout>(props: OrderPriceProp
     JSON.parse(localStorage.getItem('instant-delivery') as string)
 
   const deliveryItemPrice = orderGetters.getDeliveryItemPrice(orderDetails as CrOrder) || 0
+  const tipAmount = orderGetters.getTipAmount(orderDetails as CrOrder)
 
   const total =
     isCart && (deliveryAddressDateAndWindow || deliveryItemPrice)
       ? orderGetters.getTotal(orderDetails) - deliveryItemPrice
-      : orderGetters.getTotal(orderDetails)
+      : orderGetters.getTotal(orderDetails) + tipAmount
   const subTotal =
     deliveryAddressDateAndWindow || deliveryItemPrice
       ? orderGetters.getSubtotal(orderDetails) - deliveryItemPrice
@@ -104,7 +107,7 @@ const OrderPrice = <T extends CrCart | CrOrder | Checkout>(props: OrderPriceProp
             />
             <Box sx={{ ...styles.priceTotalRow }}>
               <Typography sx={{ ...styles.priceLabel }} variant="body1" fontWeight="bold">
-                Delivery Fee:
+                {t('delivery-fee')}
               </Typography>
               <Price
                 variant="body1"
@@ -112,6 +115,20 @@ const OrderPrice = <T extends CrCart | CrOrder | Checkout>(props: OrderPriceProp
                 price={t('currency', { val: deliveryItemPrice })}
               />
             </Box>
+            {(deliveryAddressDateAndWindow !== null || deliveryItemPrice !== undefined) &&
+              tipAmount !== undefined &&
+              tipAmount !== 0 && (
+                <Box sx={{ ...styles.priceTotalRow }}>
+                  <Typography sx={{ ...styles.priceLabel }} variant="body1" fontWeight="bold">
+                    {t('tip')}
+                  </Typography>
+                  <Price
+                    variant="body1"
+                    fontWeight="bold"
+                    price={t('currency', { val: tipAmount })}
+                  />
+                </Box>
+              )}
           </>
         )}
 
@@ -143,7 +160,7 @@ const OrderPrice = <T extends CrCart | CrOrder | Checkout>(props: OrderPriceProp
       <Divider sx={{ margin: '0 0.438rem' }} />
 
       {promoComponent && <Box>{promoComponent}</Box>}
-
+      {deliveryAddressDateAndWindow && tipComponent && <Box>{tipComponent}</Box>}
       <Box sx={{ ...styles.priceTotalRow }}>
         <Typography sx={{ ...styles.priceLabel }} variant="body1" fontWeight="bold">
           {totalLabel}

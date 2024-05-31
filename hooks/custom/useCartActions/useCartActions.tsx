@@ -3,17 +3,19 @@ import React from 'react'
 import getConfig from 'next/config'
 
 import { InstantDeliveryDialog, StoreLocatorDialog } from '@/components/dialogs'
-import { useModalContext } from '@/context'
+import { useAuthContext, useModalContext } from '@/context'
 import {
   useUpdateCartItem,
   useUpdateCartItemQuantity,
   useUpdateCurrentCart,
   useAddCartItem,
+  useGetCustomerAddresses,
 } from '@/hooks'
 import { FulfillmentOptions } from '@/lib/constants'
+import { userGetters } from '@/lib/getters'
 import { LocationCustom } from '@/lib/types'
 
-import { CrCartItem, CrCartItemInput, Maybe, Location } from '@/lib/gql/types'
+import { CrCartItem, CrCartItemInput, Maybe, Location, CustomerContact } from '@/lib/gql/types'
 interface UseCartActionsProps {
   cartItems: CrCartItem[]
   purchaseLocation: Location
@@ -26,6 +28,12 @@ export const useCartActions = ({ cartItems, purchaseLocation }: UseCartActionsPr
   const { updateCartItemQuantity } = useUpdateCartItemQuantity()
   const { updateCurrentCart } = useUpdateCurrentCart()
   const { addToCart } = useAddCartItem()
+  const { isAuthenticated, user } = useAuthContext()
+  const { data: addressCollection } = useGetCustomerAddresses(user?.id as number)
+  const defaultShippingAddress =
+    userGetters.getDefaultShippingAddress(
+      addressCollection?.items as unknown as CustomerContact[]
+    ) || null
   const deliveryAddressDateAndWindowFromLocalStorage =
     typeof localStorage !== 'undefined' &&
     JSON.parse(localStorage.getItem('instant-delivery') as string)
@@ -53,6 +61,9 @@ export const useCartActions = ({ cartItems, purchaseLocation }: UseCartActionsPr
       showModal({
         Component: InstantDeliveryDialog,
         props: {
+          instantDelivery: {
+            contact: defaultShippingAddress ? defaultShippingAddress : null,
+          },
           handleInstantDelivery: async (instantDelivery: any) => {
             const response = await mutateCartItem(
               cartItemId as string,

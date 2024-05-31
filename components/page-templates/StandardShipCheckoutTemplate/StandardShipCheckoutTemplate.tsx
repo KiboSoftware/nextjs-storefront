@@ -21,9 +21,10 @@ import {
   useGetCustomerPurchaseOrderAccount,
   useCreateCustomerCard,
   useCreateCustomerAddress,
+  useUpdateOrderShippingInfo,
 } from '@/hooks'
-import { AccountType, AddressType } from '@/lib/constants'
-import { orderGetters } from '@/lib/getters'
+import { AccountType, AddressType, DefaultId } from '@/lib/constants'
+import { cartGetters, orderGetters } from '@/lib/getters'
 import { buildCreateCustomerCardParam, buildAddressParams } from '@/lib/helpers'
 import type { PersonalDetails } from '@/lib/types'
 
@@ -54,6 +55,7 @@ const StandardShipCheckoutTemplate = (props: StandardShipCheckoutProps) => {
   const { data: cardCollection } = useGetCards(user?.id as number)
   const { createCustomerAddress } = useCreateCustomerAddress()
   const { createCustomerCard } = useCreateCustomerCard()
+  const { updateOrderShippingInfo } = useUpdateOrderShippingInfo()
   const isB2BUser = user?.accountType?.toLowerCase() === AccountType.B2B.toLowerCase()
 
   const { data: customerPurchaseOrderAccount } = useGetCustomerPurchaseOrderAccount(
@@ -88,7 +90,62 @@ const StandardShipCheckoutTemplate = (props: StandardShipCheckoutProps) => {
       console.error(err)
     }
   }
-
+  const handleAddTip = async (amount: string) => {
+    const filterOrderItems = order?.items?.filter(
+      (orderItem: any) =>
+        orderItem?.product?.productType !== publicRuntimeConfig?.instantDelivery?.productType
+    )
+    const packages = cartGetters.getPackagesDetails(filterOrderItems)
+    const deliveryAddressDateAndWindow =
+      typeof localStorage !== 'undefined' &&
+      JSON.parse(localStorage.getItem('instant-delivery') as string)
+    await updateOrderShippingInfo.mutateAsync({
+      checkout: { ...(order as CrOrder) },
+      contact: {
+        firstName: deliveryAddressDateAndWindow?.contact?.firstName,
+        lastNameOrSurname: deliveryAddressDateAndWindow?.contact?.lastNameOrSurname,
+        id: deliveryAddressDateAndWindow?.contact?.id || DefaultId.ADDRESSID,
+        phoneNumbers: {
+          home: deliveryAddressDateAndWindow?.contact?.phoneNumbers?.home,
+        },
+        address: {
+          address1: deliveryAddressDateAndWindow?.contact?.address?.address1,
+          address2: deliveryAddressDateAndWindow?.contact?.address?.address2,
+          cityOrTown: deliveryAddressDateAndWindow?.contact?.address?.cityOrTown,
+          stateOrProvince: deliveryAddressDateAndWindow?.contact?.address?.stateOrProvince,
+          countryCode: deliveryAddressDateAndWindow?.contact?.address?.countryCode,
+          postalOrZipCode: deliveryAddressDateAndWindow?.contact?.address?.postalOrZipCode,
+        },
+      },
+      data: {
+        dsDescription: cartGetters.getDSDescription(
+          deliveryAddressDateAndWindow,
+          packages,
+          +amount || 0
+        ),
+        ds: {
+          dropoffTime: {
+            startsAt:
+              deliveryAddressDateAndWindow?.window?.confirmedWindow?.dropoffTime?.startsAt.toString(),
+            endsAt:
+              deliveryAddressDateAndWindow?.window?.confirmedWindow?.dropoffTime?.endsAt.toString(),
+          },
+          pickupTime: {
+            startsAt:
+              deliveryAddressDateAndWindow?.window?.confirmedWindow?.pickupTime?.startsAt.toString(),
+          },
+          deliveryInstructions: '',
+          pickupInstructions: '',
+          tips: +amount,
+          deliveryContact: {
+            notifySms: deliveryAddressDateAndWindow?.notification?.isSendSMS,
+            notifyEmail: deliveryAddressDateAndWindow?.notification?.isSendEmail,
+          },
+          packages: [cartGetters.getPackagesDetails(filterOrderItems)],
+        },
+      },
+    })
+  }
   const { updateOrderPersonalInfo } = useUpdateOrderPersonalInfo()
 
   const updateCheckoutPersonalInfo = async (formData: PersonalDetails) => {
@@ -188,6 +245,7 @@ const StandardShipCheckoutTemplate = (props: StandardShipCheckoutProps) => {
         checkout={order as CrOrder}
         handleApplyCouponCode={handleApplyCouponCode}
         handleRemoveCouponCode={handleRemoveCouponCode}
+        handleAddTip={handleAddTip}
         promoError={promoError}
       >
         <DetailsStep

@@ -37,7 +37,9 @@ import {
   useUpdateCartItemByCartID,
   useUpdateCart,
   useUpdateCurrentCart,
+  useUpdateOrderShippingInfo,
 } from '@/hooks'
+import { DefaultId } from '@/lib/constants'
 import { orderGetters, cartGetters } from '@/lib/getters'
 
 import type { CrCart, Location, CrCartItem, CrCartItemInput } from '@/lib/gql/types'
@@ -89,7 +91,7 @@ const CartTemplate = (props: CartTemplateProps) => {
   const [promoError, setPromoError] = useState<string>('')
   const [showLoadingButton, setShowLoadingButton] = useState<boolean>(false)
   const { handleDeleteCurrentCart } = useProductCardActions()
-
+  const { updateOrderShippingInfo } = useUpdateOrderShippingInfo()
   const instantDeliveryItem = cartItems.find(
     (item) => item?.product?.productType === publicRuntimeConfig?.instantDelivery?.productType
   )
@@ -187,28 +189,36 @@ const CartTemplate = (props: CartTemplateProps) => {
       })
 
       const updateCartItemResponse = await response.json()
+      // const updatedCartFilterItems = updateCartItemResponse?.items?.filter(
+      //   (cartItem) =>
+      //     cartItem?.product?.productType !== publicRuntimeConfig?.instantDelivery?.productType
+      // )
+      // const packages = cartGetters.getPackagesDetails(updatedCartFilterItems)
       // const updateCurrentCartResponse = await updateCurrentCart.mutateAsync({
       //   cartInput: {
       //     ...updateCartItemResponse,
       //     data: {
-      //       dropoffTime: {
-      //         startsAt:
-      //           deliveryAddressDateAndWindow?.window?.confirmedWindow?.dropoffTime?.startsAt.toString(),
-      //         endsAt:
-      //           deliveryAddressDateAndWindow?.window?.confirmedWindow?.dropoffTime?.endsAt.toString(),
+      //       dsDescription: cartGetters.getDSDescription(deliveryAddressDateAndWindow, packages),
+      //       ds: {
+      //         dropoffTime: {
+      //           startsAt:
+      //             deliveryAddressDateAndWindow?.window?.confirmedWindow?.dropoffTime?.startsAt.toString(),
+      //           endsAt:
+      //             deliveryAddressDateAndWindow?.window?.confirmedWindow?.dropoffTime?.endsAt.toString(),
+      //         },
+      //         pickupTime: {
+      //           startsAt:
+      //             deliveryAddressDateAndWindow?.window?.confirmedWindow?.pickupTime?.startsAt.toString(),
+      //         },
+      //         deliveryInstructions: '',
+      //         pickupInstructions: '',
+      //         tips: 0,
+      //         deliveryContact: {
+      //           notifySms: deliveryAddressDateAndWindow?.notification?.isSendSMS,
+      //           notifyEmail: deliveryAddressDateAndWindow?.notification?.isSendEmail,
+      //         },
+      //         packages: [cartGetters.getPackagesDetails(updatedCartFilterItems)],
       //       },
-      //       pickupTime: {
-      //         startsAt:
-      //           deliveryAddressDateAndWindow?.window?.confirmedWindow?.pickupTime?.startsAt.toString(),
-      //       },
-      //       deliveryInstructions: '',
-      //       pickupInstructions: '',
-      //       tips: 0,
-      //       deliveryContact: {
-      //         notifySms: deliveryAddressDateAndWindow?.notification?.isSendSMS,
-      //         notifyEmail: deliveryAddressDateAndWindow?.notification?.isSendEmail,
-      //       },
-      //       packages: [cartGetters.getPackagesDetails(filterCartItems)],
       //     },
       //   },
       // })
@@ -250,6 +260,57 @@ const CartTemplate = (props: CartTemplateProps) => {
           })
 
       if (initiateOrderResponse?.id) {
+        const filterOrderItems = initiateOrderResponse?.items?.filter(
+          (orderItem: any) =>
+            orderItem?.product?.productType !== publicRuntimeConfig?.instantDelivery?.productType
+        )
+        const packages = cartGetters.getPackagesDetails(filterOrderItems)
+        await updateOrderShippingInfo.mutateAsync({
+          checkout: { ...initiateOrderResponse },
+          contact: {
+            firstName: deliveryAddressDateAndWindow?.contact?.firstName,
+            lastNameOrSurname: deliveryAddressDateAndWindow?.contact?.lastNameOrSurname,
+            id: deliveryAddressDateAndWindow?.contact?.id || DefaultId.ADDRESSID,
+            phoneNumbers: {
+              home: deliveryAddressDateAndWindow?.contact?.phoneNumbers?.home,
+            },
+            address: {
+              address1: deliveryAddressDateAndWindow?.contact?.address?.address1,
+              address2: deliveryAddressDateAndWindow?.contact?.address?.address2,
+              cityOrTown: deliveryAddressDateAndWindow?.contact?.address?.cityOrTown,
+              stateOrProvince: deliveryAddressDateAndWindow?.contact?.address?.stateOrProvince,
+              countryCode: deliveryAddressDateAndWindow?.contact?.address?.countryCode,
+              postalOrZipCode: deliveryAddressDateAndWindow?.contact?.address?.postalOrZipCode,
+            },
+          },
+          data: {
+            dsDescription: cartGetters.getDSDescription(
+              deliveryAddressDateAndWindow,
+              packages,
+              orderGetters.getTipAmount(initiateOrderResponse) || 0
+            ),
+            ds: {
+              dropoffTime: {
+                startsAt:
+                  deliveryAddressDateAndWindow?.window?.confirmedWindow?.dropoffTime?.startsAt.toString(),
+                endsAt:
+                  deliveryAddressDateAndWindow?.window?.confirmedWindow?.dropoffTime?.endsAt.toString(),
+              },
+              pickupTime: {
+                startsAt:
+                  deliveryAddressDateAndWindow?.window?.confirmedWindow?.pickupTime?.startsAt.toString(),
+              },
+              deliveryInstructions: '',
+              pickupInstructions: '',
+              tips: orderGetters.getTipAmount(initiateOrderResponse) || 0,
+              deliveryContact: {
+                notifySms: deliveryAddressDateAndWindow?.notification?.isSendSMS,
+                notifyEmail: deliveryAddressDateAndWindow?.notification?.isSendEmail,
+              },
+              packages: [cartGetters.getPackagesDetails(filterOrderItems)],
+            },
+          },
+        })
         // const updateOrderVariables = {
         //   params: {
         //     orderId: initiateOrderResponse?.id as string,

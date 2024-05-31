@@ -7,7 +7,7 @@ import { InstantDeliveryTemplate } from '@/components/instant-delivery'
 import { useModalContext } from '@/context'
 const InstantDeliveryDialog = (props: any) => {
   const { t } = useTranslation('common')
-  const { isOpen, handleInstantDelivery, instantDelivery } = props
+  const { isOpen, handleInstantDelivery, instantDelivery, isAddressDisabled = false } = props
   const { closeModal } = useModalContext()
   const DialogArgs = {
     Title: t('select-delivery-window-and-address'),
@@ -16,6 +16,7 @@ const InstantDeliveryDialog = (props: any) => {
       <InstantDeliveryTemplate
         initialInstantDelivery={instantDelivery}
         onInstantDelivery={handleInstantDelivery}
+        isAddressDisabled={isAddressDisabled}
       />
     ),
     showContentTopDivider: true,

@@ -29,7 +29,7 @@ const styles = {
     minWidth: '10rem',
     mr: '0.5rem',
   },
-  buttonStyle: { width: '5rem', height: '2.20rem', marginTop: '1.5rem' },
+  buttonStyle: { width: '5rem', height: '2.20rem' },
 }
 
 const PromoCodeBadge = (props: PromoCodeBadgeProps) => {
@@ -71,7 +71,7 @@ const PromoCodeBadge = (props: PromoCodeBadgeProps) => {
   return (
     <>
       {isEdit && (
-        <Stack direction="row">
+        <Stack direction="row" mt={2}>
           <KiboTextBox
             name="promocode"
             label={couponLabel}
