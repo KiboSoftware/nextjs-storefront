@@ -165,33 +165,6 @@ const StandardShippingStep = (props: ShippingProps) => {
           addressValidationRequestInput: { address: contact?.address as CuAddress },
         })
       }
-      // const deliveryAddressDateAndWindow =
-      //   typeof localStorage !== 'undefined' &&
-      //   JSON.parse(localStorage.getItem('instant-delivery') as string)
-      // const filterOrderItems = checkout?.items?.filter(
-      //   (orderItem: any) =>
-      //     orderItem?.product?.productType !== publicRuntimeConfig?.instantDelivery?.productType
-      // )
-      // const data = {
-      //   dropoffTime: {
-      //     startsAt:
-      //       deliveryAddressDateAndWindow?.window?.confirmedWindow?.dropoffTime?.startsAt.toString(),
-      //     endsAt:
-      //       deliveryAddressDateAndWindow?.window?.confirmedWindow?.dropoffTime?.endsAt.toString(),
-      //   },
-      //   pickupTime: {
-      //     startsAt:
-      //       deliveryAddressDateAndWindow?.window?.confirmedWindow?.pickupTime?.startsAt.toString(),
-      //   },
-      //   deliveryInstructions: '',
-      //   pickupInstructions: '',
-      //   tips: orderGetters.getTipAmount(checkout),
-      //   deliveryContact: {
-      //     notifySms: deliveryAddressDateAndWindow?.notification?.isSendSMS,
-      //     notifyEmail: deliveryAddressDateAndWindow?.notification?.isSendEmail,
-      //   },
-      //   packages: [cartGetters.getPackagesDetails(filterOrderItems)],
-      // }
       if (isAddressSavedToAccount) {
         const customerSavedAddress = await handleSaveAddressToAccount(contact)
         const { accountId: _, types: __, ...customerContact } = customerSavedAddress
@@ -201,7 +174,6 @@ const StandardShippingStep = (props: ShippingProps) => {
         await updateOrderShippingInfo.mutateAsync({
           checkout,
           contact,
-          // data,
         })
         setSelectedShippingAddressId((contact?.id as number) || DefaultId.ADDRESSID)
       }
@@ -337,15 +309,11 @@ const StandardShippingStep = (props: ShippingProps) => {
     // eslint-disable-next-line @typescript-eslint/no-extra-semi
     if (
       (selectedShippingAddressId && checkoutShippingMethodCode && shouldShowAddAddressButton) ||
-      (!shipItems.length && (pickupItems.length || digitalItems.length))
+      (!shipItems.length && (pickupItems.length || digitalItems.length || deliveryItems.length))
     ) {
       setStepStatusValid()
     } else {
-      if (checkout?.fulfillmentInfo?.fulfillmentContact) {
-        setStepStatusValid()
-      } else {
-        setStepStatusIncomplete()
-      }
+      setStepStatusIncomplete()
     }
 
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -441,18 +409,6 @@ const StandardShippingStep = (props: ShippingProps) => {
           updatedOrderPackages,
           orderGetters.getTipAmount(updateOrderItemPriceResponse)
         ),
-        // `<div><b>Dropoff:</b> ${cartGetters.formatTimestamp(
-        //   updateDeliveryDateAndWindow?.window?.confirmedWindow?.dropoffTime?.startsAt,
-        //   updateDeliveryDateAndWindow?.window?.confirmedWindow?.dropoffTime?.endsAt
-        // )}</div><div><b>Pickup:</b> ${cartGetters.formatTimestamp(
-        //   updateDeliveryDateAndWindow?.window?.confirmedWindow?.pickupTime?.startsAt
-        // )}</div><div><b>Tip:</b> $0.00</div><div><b>Delivery Instructions:</b> Please deliver to the front desk</div><div><b>Pickup Instruction:</b> Test</div><div><b>Notify SMS:</b> ${
-        //   updateDeliveryDateAndWindow?.notification?.isSendSMS || false
-        // }</div><div><b>Notify Email:</b> ${
-        //   updateDeliveryDateAndWindow?.notification?.isSendEmail || false
-        // }</div><div><b>Package Details:</b><table border="1"><tr><td colspan='3'><b>Name: </b>${
-        //   updatedOrderPackages.name
-        // }</td></tr><tr><td><b> Size:</b></td><td><b> Quantity:</b></td><td><b>Items: </b></td></tr><tr><td>${updatedOrderPackages.size.length.toString()} * ${updatedOrderPackages.size.width.toString()} * ${updatedOrderPackages.size.length.toString()}</td><td>${updatedOrderPackages.quantity.toString()}</td><td>${updatedOrderPackages.items.toString()}</td></tr></table></div>`,
         ds: {
           dropoffTime: {
             startsAt:
@@ -519,45 +475,6 @@ const StandardShippingStep = (props: ShippingProps) => {
               deliveryAddressDateAndWindow
             )
           )
-          // if (deliveryFee && isSuccess) {
-          //   const deliveryItem = updateOrderResponse?.items?.find(
-          //     (item: any) =>
-          //       item?.product?.productType === publicRuntimeConfig?.instantDelivery?.productType
-          //   )
-          //   const updateOrderItemPriceVariables = {
-          //     params: {
-          //       orderId: updateOrderResponse?.id,
-          //       orderItemId: deliveryItem?.id,
-          //       price: deliveryFee,
-          //     },
-          //   }
-          //   const updateOrderItemPriceResponse = await fetch('/api/update-order-item-price', {
-          //     method: 'POST',
-          //     headers: {
-          //       Accept: 'application/json, text/plain, */*',
-          //       'Content-Type': 'application/json',
-          //     },
-          //     body: JSON.stringify(updateOrderItemPriceVariables),
-          //   })
-          // await updateOrderShippingInfo.mutateAsync({
-          //   checkout,
-          //   contact: {
-          //     firstName: deliveryAddressDateAndWindow?.address?.firstName,
-          //     lastNameOrSurname: deliveryAddressDateAndWindow?.address?.lastName,
-          //     id: address?.id,
-          //     phoneNumbers: {
-          //       home: deliveryAddressDateAndWindow?.address?.phoneNumber,
-          //     },
-          //     address: {
-          //       address1: deliveryAddressDateAndWindow?.address?.street,
-          //       cityOrTown: deliveryAddressDateAndWindow?.address?.city,
-          //       stateOrProvince: deliveryAddressDateAndWindow?.address?.state,
-          //       countryCode: deliveryAddressDateAndWindow?.address?.country,
-          //       postalOrZipCode: deliveryAddressDateAndWindow?.address?.zipcode,
-          //     },
-          //   },
-          // })
-          // }
           setUpdateOrderResponse(updateOrderResponseAPI)
           setUpdateDeliveryDateAndWindow(deliveryAddressDateAndWindow)
           // setEditAddressId(address?.id)
@@ -625,18 +542,6 @@ const StandardShippingStep = (props: ShippingProps) => {
           packages,
           orderGetters.getTipAmount(checkout)
         ),
-        // `<div><b>Dropoff:</b> ${cartGetters.formatTimestamp(
-        //   instantDeliveryObj?.window?.confirmedWindow?.dropoffTime?.startsAt,
-        //   instantDeliveryObj?.window?.confirmedWindow?.dropoffTime?.endsAt
-        // )}</div><div><b>Pickup:</b> ${cartGetters.formatTimestamp(
-        //   instantDeliveryObj?.window?.confirmedWindow?.pickupTime?.startsAt
-        // )}</div><div><b>Tip:</b> $0.00</div><div><b>Delivery Instructions:</b> Please deliver to the front desk</div><div><b>Pickup Instruction:</b> Test</div><div><b>Notify SMS:</b> ${
-        //   instantDeliveryObj?.notification?.isSendSMS || false
-        // }</div><div><b>Notify Email:</b> ${
-        //   instantDeliveryObj?.notification?.isSendEmail || false
-        // }</div><div><b>Package Details:</b><table border="1"><tr><td colspan='3'><b>Name: </b>${
-        //   packages.name
-        // }</td></tr><tr><td><b> Size:</b></td><td><b> Quantity:</b></td><td><b>Items: </b></td></tr><tr><td>${packages.size.length.toString()} * ${packages.size.width.toString()} * ${packages.size.length.toString()}</td><td>${packages.quantity.toString()}</td><td>${packages.items.toString()}</td></tr></table></div>`,
         ds: {
           dropoffTime: {
             startsAt: instantDeliveryObj?.window?.confirmedWindow?.dropoffTime?.startsAt.toString(),

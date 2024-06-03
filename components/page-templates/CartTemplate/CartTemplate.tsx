@@ -311,28 +311,6 @@ const CartTemplate = (props: CartTemplateProps) => {
             },
           },
         })
-        // const updateOrderVariables = {
-        //   params: {
-        //     orderId: initiateOrderResponse?.id as string,
-        //     orderInput: {
-        //       totalCollected: 0,
-        //       amountAvailableForRefund: 0,
-        //       amountRemainingForPayment: 0,
-        //       amountRefunded: 0,
-        //       continuityOrderOrdinal: 0,
-        //       data: deliveryAddressDateAndWindow?.deliveryDateAndWindow,
-        //     },
-        //   },
-        // }
-        // const updateOrderResponse = await fetch('/api/update-order', {
-        //   method: 'POST',
-        //   headers: {
-        //     Accept: 'application/json, text/plain, */*',
-        //     'Content-Type': 'application/json',
-        //   },
-        //   body: JSON.stringify(updateOrderVariables),
-        // })
-        // console.log('update order response', await updateOrderResponse.json())
         router.push(`/checkout/${initiateOrderResponse.id}`)
       }
     }

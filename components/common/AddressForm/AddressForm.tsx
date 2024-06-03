@@ -34,7 +34,10 @@ type InternalContactForm = Omit<ContactForm, 'lastNameOrSurname'>
 export const useFormSchema = () => {
   const { t } = useTranslation('common')
   return yup.object().shape({
-    firstName: yup.string().required(t('this-field-is-required')),
+    firstName: yup
+      .string()
+      .required(t('this-field-is-required'))
+      .matches(/^\w+(\s\w+){1,2}$/, t('enter-valid-full-name')),
     // lastNameOrSurname: yup.string().required(t('this-field-is-required')),
     address: yup.object().shape({
       address1: yup.string().required(t('this-field-is-required')),
@@ -67,11 +70,11 @@ const mapToInternalContactForm = (contact: ContactForm): InternalContactForm => 
 }
 
 const mapToContactForm = (internalContact: InternalContactForm): ContactForm => {
-  const name = internalContact.firstName.split(' ')
+  const name = internalContact.firstName.trim().split(/\s+/)
 
   const contact = { ...internalContact, lastNameOrSurname: '' }
   contact.firstName = name[0]
-  contact['lastNameOrSurname'] = name[1]
+  contact['lastNameOrSurname'] = name.slice(1).join(' ')
 
   return contact as ContactForm
 }
@@ -181,7 +184,7 @@ const AddressForm = (props: AddressFormProps) => {
               <KiboTextBox
                 {...field}
                 value={field.value || ''}
-                label={t('first-name')}
+                label={t('full-name-first-and-last')}
                 ref={null}
                 error={!!errors?.firstName}
                 helperText={errors?.firstName?.message}
@@ -190,7 +193,7 @@ const AddressForm = (props: AddressFormProps) => {
                 autoFocus={setAutoFocus}
                 required={true}
                 disabled={isDisabled}
-                placeholder={t('first-name')}
+                placeholder={t('full-name-first-and-last')}
               />
             )}
           />

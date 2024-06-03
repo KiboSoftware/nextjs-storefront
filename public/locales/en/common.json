@@ -196,7 +196,8 @@
   "full-rewards-program-benefits": "Full Rewards Program Benefits",
   "manage-your-wishlist": "Manage your wishlist",
   "i-want-to-create-an-account": "I want to create an account",
-  "first-name": "Full name (First and Last name)",
+  "first-name": "First name",
+  "full-name-first-and-last": "Full name (First and Last name)",
   "last-name-or-sur-name": "Last name",
   "email-address": "Email address",
   "role": "Role",
@@ -217,6 +218,7 @@
   "phone-number-info": "May be used to assist delivery",
   "this-field-is-required": "This field is required",
   "enter-valid-zip-code": "Please provide valid zip code",
+  "enter-valid-full-name": "Enter valid full name",
   "ending": "Ending:",
   "exp": "Exp:",
   "apartment": "APT. ",
@@ -567,5 +569,6 @@
   "send-me-email-updates": "Send me Email updates",
   "delivery-products": "Delivery Products",
   "delivery-fee": "Delivery Fee:",
-  "tip": "Tip:"
+  "tip": "Tip:",
+  "add": "Add"
 }

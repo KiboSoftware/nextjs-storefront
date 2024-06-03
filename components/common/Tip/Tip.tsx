@@ -52,7 +52,7 @@ const Tip = (props: TipProps) => {
         variant="contained"
         data-testid="tip-button"
       >
-        Add
+        {t('add')}
       </Button>
     </Stack>
   )
