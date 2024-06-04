@@ -151,6 +151,10 @@ const CartTemplate = (props: CartTemplateProps) => {
             })
 
         if (initiateOrderResponse?.id) {
+          await updateOrderShippingInfo.mutateAsync({
+            checkout: { ...initiateOrderResponse },
+            data: null,
+          })
           router.push(`/checkout/${initiateOrderResponse.id}`)
         }
       }

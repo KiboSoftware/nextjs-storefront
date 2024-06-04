@@ -168,12 +168,17 @@ const StandardShippingStep = (props: ShippingProps) => {
       if (isAddressSavedToAccount) {
         const customerSavedAddress = await handleSaveAddressToAccount(contact)
         const { accountId: _, types: __, ...customerContact } = customerSavedAddress
-        await updateOrderShippingInfo.mutateAsync({ checkout, contact: customerContact })
+        await updateOrderShippingInfo.mutateAsync({
+          checkout,
+          contact: customerContact,
+          data: checkout?.fulfillmentInfo?.data,
+        })
         setSelectedShippingAddressId(customerSavedAddress?.id as number)
       } else {
         await updateOrderShippingInfo.mutateAsync({
           checkout,
           contact,
+          data: checkout?.fulfillmentInfo?.data,
         })
         setSelectedShippingAddressId((contact?.id as number) || DefaultId.ADDRESSID)
       }
@@ -221,6 +226,7 @@ const StandardShippingStep = (props: ShippingProps) => {
         email: undefined,
         shippingMethodCode,
         shippingMethodName,
+        data: checkout?.fulfillmentInfo?.data,
       })
       shippingAddressRef.current &&
         (shippingAddressRef.current as Element).scrollIntoView({
@@ -342,6 +348,7 @@ const StandardShippingStep = (props: ShippingProps) => {
         lastNameOrSurname: '',
         phoneNumbers: { home: '' },
       },
+      data: checkout?.fulfillmentInfo?.data,
     })
 
     setStepStatusValid()
@@ -700,7 +707,7 @@ const StandardShippingStep = (props: ShippingProps) => {
                             stateOrProvince={address?.address?.stateOrProvince as string}
                             postalOrZipCode={address?.address?.postalOrZipCode as string}
                           />
-                          {!isAuthenticated && (
+                          {!isAuthenticated && instantDelivery && (
                             <Typography
                               variant="caption"
                               sx={{ cursor: 'pointer' }}
