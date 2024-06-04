@@ -124,6 +124,8 @@ const setup = (initialActiveStep = 0, currentStepStatus = STEP_STATUS.INCOMPLETE
   const handleApplyCouponCodeMock = jest.fn()
   const handleRemoveCouponCodeMock = jest.fn()
   const handleAddTipMock = jest.fn()
+  const handleAddDeliveryInstructionsMock = jest.fn()
+  const handleAddPickupInstructionsMock = jest.fn()
 
   renderWithQueryClient(
     <CheckoutStepProvider
@@ -137,6 +139,8 @@ const setup = (initialActiveStep = 0, currentStepStatus = STEP_STATUS.INCOMPLETE
         handleApplyCouponCode={handleApplyCouponCodeMock}
         handleRemoveCouponCode={handleRemoveCouponCodeMock}
         handleAddTip={handleAddTipMock}
+        handleAddDeliveryInstructions={handleAddDeliveryInstructionsMock}
+        handleAddPickupInstructions={handleAddPickupInstructionsMock}
       >
         <DetailsStepMock />
         <ShippingStepMock />

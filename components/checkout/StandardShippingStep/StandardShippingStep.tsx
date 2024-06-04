@@ -414,7 +414,9 @@ const StandardShippingStep = (props: ShippingProps) => {
         dsDescription: cartGetters.getDSDescription(
           updateDeliveryDateAndWindow,
           updatedOrderPackages,
-          orderGetters.getTipAmount(updateOrderItemPriceResponse)
+          orderGetters.getTipAmount(updateOrderItemPriceResponse),
+          orderGetters.getDeliveryInstructions(updateOrderItemPriceResponse),
+          orderGetters.getPickupInstructions(updateOrderItemPriceResponse)
         ),
         ds: {
           dropoffTime: {
@@ -427,8 +429,8 @@ const StandardShippingStep = (props: ShippingProps) => {
             startsAt:
               updateDeliveryDateAndWindow?.window?.confirmedWindow?.pickupTime?.startsAt.toString(),
           },
-          deliveryInstructions: '',
-          pickupInstructions: '',
+          deliveryInstructions: orderGetters.getDeliveryInstructions(updateOrderItemPriceResponse),
+          pickupInstructions: orderGetters.getPickupInstructions(updateOrderItemPriceResponse),
           tips: orderGetters.getTipAmount(updateOrderItemPriceResponse),
           deliveryContact: {
             notifySms: updateDeliveryDateAndWindow?.notification?.isSendSMS,
@@ -547,7 +549,9 @@ const StandardShippingStep = (props: ShippingProps) => {
         dsDescription: cartGetters.getDSDescription(
           instantDeliveryObj,
           packages,
-          orderGetters.getTipAmount(checkout)
+          orderGetters.getTipAmount(checkout),
+          orderGetters.getDeliveryInstructions(checkout),
+          orderGetters.getPickupInstructions(checkout)
         ),
         ds: {
           dropoffTime: {

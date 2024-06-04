@@ -189,6 +189,8 @@ const MultiShipCheckoutTemplate = (props: MultiShipCheckoutProps) => {
         promoError={promoError}
         isMultiShipEnabled={true}
         handleAddTip={() => null}
+        handleAddDeliveryInstructions={() => null}
+        handleAddPickupInstructions={() => null}
       >
         <DetailsStep
           checkout={checkout as Checkout}

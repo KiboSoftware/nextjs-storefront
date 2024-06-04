@@ -216,15 +216,23 @@ const formatTimestamp = (startTime: any, endTime = null) => {
   return formattedDate
 }
 
-const getDSDescription = (deliveryDateAndWindow: any, packages: any, tipAmount: any) => {
+const getDSDescription = (
+  deliveryDateAndWindow: any,
+  packages: any,
+  tipAmount: any,
+  deliveryInstructions: any,
+  pickupInstructions: any
+) => {
   return `<div><table><tr><td style="vertical-align:top"><div><b>Dropoff:</b> ${formatTimestamp(
     deliveryDateAndWindow?.window?.confirmedWindow?.dropoffTime?.startsAt,
     deliveryDateAndWindow?.window?.confirmedWindow?.dropoffTime?.endsAt
   )}</div><div><b>Pickup:</b> ${formatTimestamp(
     deliveryDateAndWindow?.window?.confirmedWindow?.pickupTime?.startsAt
-  )}</div><div><b>Tip:</b> $${
-    tipAmount || 0
-  }</div><div><b>Delivery Instructions:</b> Please deliver to the front desk</div><div><b>Pickup Instruction:</b> Please pick up from the front desk</div><div><b>Send SMS Notification:</b> ${
+  )}</div><div><b>Tip:</b> $${tipAmount || 0}</div><div><b>Delivery Instructions:</b> ${
+    deliveryInstructions || 'Please deliver to the front desk'
+  }</div><div><b>Pickup Instruction:</b> ${
+    pickupInstructions || 'Please pick up from the front desk'
+  }</div><div><b>Send SMS Notification:</b> ${
     deliveryDateAndWindow?.notification?.isSendSMS || false
   }</div><div><b>Send Email Notification:</b> ${
     deliveryDateAndWindow?.notification?.isSendEmail || false

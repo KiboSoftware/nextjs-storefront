@@ -291,7 +291,9 @@ const CartTemplate = (props: CartTemplateProps) => {
             dsDescription: cartGetters.getDSDescription(
               deliveryAddressDateAndWindow,
               packages,
-              orderGetters.getTipAmount(initiateOrderResponse) || 0
+              orderGetters.getTipAmount(initiateOrderResponse) || 0,
+              orderGetters.getDeliveryInstructions(initiateOrderResponse),
+              orderGetters.getPickupInstructions(initiateOrderResponse)
             ),
             ds: {
               dropoffTime: {
@@ -304,8 +306,8 @@ const CartTemplate = (props: CartTemplateProps) => {
                 startsAt:
                   deliveryAddressDateAndWindow?.window?.confirmedWindow?.pickupTime?.startsAt.toString(),
               },
-              deliveryInstructions: '',
-              pickupInstructions: '',
+              deliveryInstructions: orderGetters.getDeliveryInstructions(initiateOrderResponse),
+              pickupInstructions: orderGetters.getPickupInstructions(initiateOrderResponse),
               tips: orderGetters.getTipAmount(initiateOrderResponse) || 0,
               deliveryContact: {
                 notifySms: deliveryAddressDateAndWindow?.notification?.isSendSMS,

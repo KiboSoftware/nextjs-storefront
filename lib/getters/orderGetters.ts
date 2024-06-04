@@ -401,6 +401,14 @@ const getTipAmount = (order: CrOrder) => {
   return order?.fulfillmentInfo?.data?.ds?.tips || 0
 }
 
+const getDeliveryInstructions = (order: CrOrder) => {
+  return order?.fulfillmentInfo?.data?.ds?.deliveryInstructions || ''
+}
+
+const getPickupInstructions = (order: CrOrder) => {
+  return order?.fulfillmentInfo?.data?.ds?.pickupInstructions || ''
+}
+
 export const orderGetters = {
   isPayPalPaymentMethodActive,
   getCheckoutItemCount,
@@ -448,4 +456,6 @@ export const orderGetters = {
   getDeliveryItems,
   getDeliveryItemPrice,
   getTipAmount,
+  getDeliveryInstructions,
+  getPickupInstructions,
 }

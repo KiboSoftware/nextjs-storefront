@@ -121,7 +121,9 @@ const StandardShipCheckoutTemplate = (props: StandardShipCheckoutProps) => {
         dsDescription: cartGetters.getDSDescription(
           deliveryAddressDateAndWindow,
           packages,
-          +amount || 0
+          +amount || 0,
+          orderGetters.getDeliveryInstructions(order as CrOrder),
+          orderGetters.getPickupInstructions(order as CrOrder)
         ),
         ds: {
           dropoffTime: {
@@ -134,9 +136,125 @@ const StandardShipCheckoutTemplate = (props: StandardShipCheckoutProps) => {
             startsAt:
               deliveryAddressDateAndWindow?.window?.confirmedWindow?.pickupTime?.startsAt.toString(),
           },
-          deliveryInstructions: '',
-          pickupInstructions: '',
+          deliveryInstructions: orderGetters.getDeliveryInstructions(order as CrOrder),
+          pickupInstructions: orderGetters.getPickupInstructions(order as CrOrder),
           tips: +amount,
+          deliveryContact: {
+            notifySms: deliveryAddressDateAndWindow?.notification?.isSendSMS,
+            notifyEmail: deliveryAddressDateAndWindow?.notification?.isSendEmail,
+          },
+          packages: [cartGetters.getPackagesDetails(filterOrderItems)],
+        },
+      },
+    })
+  }
+  const handleAddDeliveryInstructions = async (deliveryInstructions: string) => {
+    const filterOrderItems = order?.items?.filter(
+      (orderItem: any) =>
+        orderItem?.product?.productType !== publicRuntimeConfig?.instantDelivery?.productType
+    )
+    const packages = cartGetters.getPackagesDetails(filterOrderItems)
+    const deliveryAddressDateAndWindow =
+      typeof localStorage !== 'undefined' &&
+      JSON.parse(localStorage.getItem('instant-delivery') as string)
+    await updateOrderShippingInfo.mutateAsync({
+      checkout: { ...(order as CrOrder) },
+      contact: {
+        firstName: deliveryAddressDateAndWindow?.contact?.firstName,
+        lastNameOrSurname: deliveryAddressDateAndWindow?.contact?.lastNameOrSurname,
+        id: deliveryAddressDateAndWindow?.contact?.id || DefaultId.ADDRESSID,
+        phoneNumbers: {
+          home: deliveryAddressDateAndWindow?.contact?.phoneNumbers?.home,
+        },
+        address: {
+          address1: deliveryAddressDateAndWindow?.contact?.address?.address1,
+          address2: deliveryAddressDateAndWindow?.contact?.address?.address2,
+          cityOrTown: deliveryAddressDateAndWindow?.contact?.address?.cityOrTown,
+          stateOrProvince: deliveryAddressDateAndWindow?.contact?.address?.stateOrProvince,
+          countryCode: deliveryAddressDateAndWindow?.contact?.address?.countryCode,
+          postalOrZipCode: deliveryAddressDateAndWindow?.contact?.address?.postalOrZipCode,
+        },
+      },
+      data: {
+        dsDescription: cartGetters.getDSDescription(
+          deliveryAddressDateAndWindow,
+          packages,
+          orderGetters.getTipAmount(order as CrOrder),
+          deliveryInstructions,
+          orderGetters.getPickupInstructions(order as CrOrder)
+        ),
+        ds: {
+          dropoffTime: {
+            startsAt:
+              deliveryAddressDateAndWindow?.window?.confirmedWindow?.dropoffTime?.startsAt.toString(),
+            endsAt:
+              deliveryAddressDateAndWindow?.window?.confirmedWindow?.dropoffTime?.endsAt.toString(),
+          },
+          pickupTime: {
+            startsAt:
+              deliveryAddressDateAndWindow?.window?.confirmedWindow?.pickupTime?.startsAt.toString(),
+          },
+          deliveryInstructions,
+          pickupInstructions: orderGetters.getPickupInstructions(order as CrOrder),
+          tips: orderGetters.getTipAmount(order as CrOrder),
+          deliveryContact: {
+            notifySms: deliveryAddressDateAndWindow?.notification?.isSendSMS,
+            notifyEmail: deliveryAddressDateAndWindow?.notification?.isSendEmail,
+          },
+          packages: [cartGetters.getPackagesDetails(filterOrderItems)],
+        },
+      },
+    })
+  }
+  const handleAddPickupInstructions = async (pickupInstructions: string) => {
+    const filterOrderItems = order?.items?.filter(
+      (orderItem: any) =>
+        orderItem?.product?.productType !== publicRuntimeConfig?.instantDelivery?.productType
+    )
+    const packages = cartGetters.getPackagesDetails(filterOrderItems)
+    const deliveryAddressDateAndWindow =
+      typeof localStorage !== 'undefined' &&
+      JSON.parse(localStorage.getItem('instant-delivery') as string)
+    await updateOrderShippingInfo.mutateAsync({
+      checkout: { ...(order as CrOrder) },
+      contact: {
+        firstName: deliveryAddressDateAndWindow?.contact?.firstName,
+        lastNameOrSurname: deliveryAddressDateAndWindow?.contact?.lastNameOrSurname,
+        id: deliveryAddressDateAndWindow?.contact?.id || DefaultId.ADDRESSID,
+        phoneNumbers: {
+          home: deliveryAddressDateAndWindow?.contact?.phoneNumbers?.home,
+        },
+        address: {
+          address1: deliveryAddressDateAndWindow?.contact?.address?.address1,
+          address2: deliveryAddressDateAndWindow?.contact?.address?.address2,
+          cityOrTown: deliveryAddressDateAndWindow?.contact?.address?.cityOrTown,
+          stateOrProvince: deliveryAddressDateAndWindow?.contact?.address?.stateOrProvince,
+          countryCode: deliveryAddressDateAndWindow?.contact?.address?.countryCode,
+          postalOrZipCode: deliveryAddressDateAndWindow?.contact?.address?.postalOrZipCode,
+        },
+      },
+      data: {
+        dsDescription: cartGetters.getDSDescription(
+          deliveryAddressDateAndWindow,
+          packages,
+          orderGetters.getTipAmount(order as CrOrder),
+          orderGetters.getDeliveryInstructions(order as CrOrder),
+          pickupInstructions
+        ),
+        ds: {
+          dropoffTime: {
+            startsAt:
+              deliveryAddressDateAndWindow?.window?.confirmedWindow?.dropoffTime?.startsAt.toString(),
+            endsAt:
+              deliveryAddressDateAndWindow?.window?.confirmedWindow?.dropoffTime?.endsAt.toString(),
+          },
+          pickupTime: {
+            startsAt:
+              deliveryAddressDateAndWindow?.window?.confirmedWindow?.pickupTime?.startsAt.toString(),
+          },
+          deliveryInstructions: orderGetters.getDeliveryInstructions(order as CrOrder),
+          pickupInstructions,
+          tips: orderGetters.getTipAmount(order as CrOrder),
           deliveryContact: {
             notifySms: deliveryAddressDateAndWindow?.notification?.isSendSMS,
             notifyEmail: deliveryAddressDateAndWindow?.notification?.isSendEmail,
@@ -246,6 +364,8 @@ const StandardShipCheckoutTemplate = (props: StandardShipCheckoutProps) => {
         handleApplyCouponCode={handleApplyCouponCode}
         handleRemoveCouponCode={handleRemoveCouponCode}
         handleAddTip={handleAddTip}
+        handleAddDeliveryInstructions={handleAddDeliveryInstructions}
+        handleAddPickupInstructions={handleAddPickupInstructions}
         promoError={promoError}
       >
         <DetailsStep

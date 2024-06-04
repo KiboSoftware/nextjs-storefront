@@ -47,6 +47,8 @@ const OrderSummary = <T extends CrCart | CrOrder | Checkout>(props: OrderSummary
     isShippingTaxIncluded,
     promoComponent,
     tipComponent,
+    deliveryInstructionsComponent,
+    pickupInstructionsComponent,
     deliveryAddressDateAndWindow,
     isCart,
     onHandleInstantDelivery,
@@ -61,6 +63,8 @@ const OrderSummary = <T extends CrCart | CrOrder | Checkout>(props: OrderSummary
 
     promoComponent,
     tipComponent,
+    pickupInstructionsComponent,
+    deliveryInstructionsComponent,
     isShippingTaxIncluded,
     orderDetails,
     isCart,

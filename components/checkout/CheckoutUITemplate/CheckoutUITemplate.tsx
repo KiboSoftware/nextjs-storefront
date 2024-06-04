@@ -8,7 +8,12 @@ import { useTranslation } from 'next-i18next'
 import { ReCaptchaProvider } from 'next-recaptcha-v3'
 
 import { KiboStepper, OrderReview } from '@/components/checkout'
-import { OrderSummary, PromoCodeBadge, Tip } from '@/components/common'
+import {
+  DeliveryAndPickupInstructions,
+  OrderSummary,
+  PromoCodeBadge,
+  Tip,
+} from '@/components/common'
 import { useCheckoutStepContext, STEP_STATUS } from '@/context'
 import { checkoutGetters, orderGetters } from '@/lib/getters'
 
@@ -21,6 +26,8 @@ interface CheckoutUITemplateProps<T> {
   handleApplyCouponCode: (couponCode: string) => void
   handleRemoveCouponCode: (couponCode: string) => void
   handleAddTip: (tip: string) => void
+  handleAddDeliveryInstructions: (deliveryInstructions: string) => void
+  handleAddPickupInstructions: (pickupInstructions: string) => void
   children?: React.ReactNode
 }
 const buttonStyle = {
@@ -34,6 +41,8 @@ const CheckoutUITemplate = <T extends CrOrder | Checkout>(props: CheckoutUITempl
     handleApplyCouponCode,
     handleRemoveCouponCode,
     handleAddTip,
+    handleAddDeliveryInstructions,
+    handleAddPickupInstructions,
     promoError,
     isMultiShipEnabled = false,
     children,
@@ -77,6 +86,18 @@ const CheckoutUITemplate = <T extends CrOrder | Checkout>(props: CheckoutUITempl
       />
     ),
     tipComponent: <Tip onAddTip={handleAddTip} />,
+    deliveryInstructionsComponent: (
+      <DeliveryAndPickupInstructions
+        placeHolder="Enter Delivery Instructions"
+        onAddInstructions={handleAddDeliveryInstructions}
+      />
+    ),
+    pickupInstructionsComponent: (
+      <DeliveryAndPickupInstructions
+        placeHolder="Enter Pickup Instructions"
+        onAddInstructions={handleAddPickupInstructions}
+      />
+    ),
   }
   const showCheckoutSteps = activeStep !== steps.length
 
