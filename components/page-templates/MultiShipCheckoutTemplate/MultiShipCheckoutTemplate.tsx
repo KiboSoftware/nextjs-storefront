@@ -190,7 +190,6 @@ const MultiShipCheckoutTemplate = (props: MultiShipCheckoutProps) => {
         isMultiShipEnabled={true}
         handleAddTip={() => null}
         handleAddDeliveryInstructions={() => null}
-        handleAddPickupInstructions={() => null}
       >
         <DetailsStep
           checkout={checkout as Checkout}

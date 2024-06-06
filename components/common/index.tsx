@@ -33,4 +33,4 @@ export { default as PaymentBillingCard } from './PaymentBillingCard/PaymentBilli
 export { default as Address } from './PaymentBillingCard/PaymentBillingCard'
 export { default as KeyValueDisplay } from './KeyValueDisplay/KeyValueDisplay'
 export { default as Tip } from './Tip/Tip'
-export { default as DeliveryAndPickupInstructions } from './DeliveryAndPickupInstructions/DeliveryAndPickupInstructions'
+export { default as DeliveryInstructions } from './DeliveryInstructions/DeliveryInstructions'

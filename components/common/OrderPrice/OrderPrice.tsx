@@ -18,7 +18,6 @@ export interface OrderPriceProps<T extends CrCart | CrOrder | Checkout> {
   isShippingTaxIncluded?: boolean
   promoComponent?: ReactNode
   tipComponent?: ReactNode
-  pickupInstructionsComponent?: ReactNode
   deliveryInstructionsComponent?: ReactNode
   isCart?: boolean
 }
@@ -38,7 +37,6 @@ const OrderPrice = <T extends CrCart | CrOrder | Checkout>(props: OrderPriceProp
 
     promoComponent,
     tipComponent,
-    pickupInstructionsComponent,
     deliveryInstructionsComponent,
     isShippingTaxIncluded = true,
     orderDetails,
@@ -166,9 +164,6 @@ const OrderPrice = <T extends CrCart | CrOrder | Checkout>(props: OrderPriceProp
       {deliveryAddressDateAndWindow && tipComponent && <Box>{tipComponent}</Box>}
       {deliveryAddressDateAndWindow && deliveryInstructionsComponent && (
         <Box>{deliveryInstructionsComponent}</Box>
-      )}
-      {deliveryAddressDateAndWindow && pickupInstructionsComponent && (
-        <Box>{pickupInstructionsComponent}</Box>
       )}
       <Box sx={{ ...styles.priceTotalRow }}>
         <Typography sx={{ ...styles.priceLabel }} variant="body1" fontWeight="bold">

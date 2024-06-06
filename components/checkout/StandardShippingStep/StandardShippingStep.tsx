@@ -415,8 +415,7 @@ const StandardShippingStep = (props: ShippingProps) => {
           updateDeliveryDateAndWindow,
           updatedOrderPackages,
           orderGetters.getTipAmount(updateOrderItemPriceResponse),
-          orderGetters.getDeliveryInstructions(updateOrderItemPriceResponse),
-          orderGetters.getPickupInstructions(updateOrderItemPriceResponse)
+          orderGetters.getDeliveryInstructions(updateOrderItemPriceResponse)
         ),
         ds: {
           dropoffTime: {
@@ -430,7 +429,7 @@ const StandardShippingStep = (props: ShippingProps) => {
               updateDeliveryDateAndWindow?.window?.confirmedWindow?.pickupTime?.startsAt.toString(),
           },
           deliveryInstructions: orderGetters.getDeliveryInstructions(updateOrderItemPriceResponse),
-          pickupInstructions: orderGetters.getPickupInstructions(updateOrderItemPriceResponse),
+          pickupInstructions: '',
           tips: orderGetters.getTipAmount(updateOrderItemPriceResponse),
           deliveryContact: {
             notifySms: updateDeliveryDateAndWindow?.notification?.isSendSMS,
@@ -550,8 +549,7 @@ const StandardShippingStep = (props: ShippingProps) => {
           instantDeliveryObj,
           packages,
           orderGetters.getTipAmount(checkout),
-          orderGetters.getDeliveryInstructions(checkout),
-          orderGetters.getPickupInstructions(checkout)
+          orderGetters.getDeliveryInstructions(checkout)
         ),
         ds: {
           dropoffTime: {

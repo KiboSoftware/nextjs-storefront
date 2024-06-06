@@ -151,10 +151,12 @@ const CartTemplate = (props: CartTemplateProps) => {
             })
 
         if (initiateOrderResponse?.id) {
-          await updateOrderShippingInfo.mutateAsync({
-            checkout: { ...initiateOrderResponse },
-            data: null,
-          })
+          if (initiateOrderResponse?.fulfillmentInfo?.fulfillmentContact) {
+            await updateOrderShippingInfo.mutateAsync({
+              checkout: { ...initiateOrderResponse },
+              data: null,
+            })
+          }
           router.push(`/checkout/${initiateOrderResponse.id}`)
         }
       }
@@ -292,8 +294,7 @@ const CartTemplate = (props: CartTemplateProps) => {
               deliveryAddressDateAndWindow,
               packages,
               orderGetters.getTipAmount(initiateOrderResponse) || 0,
-              orderGetters.getDeliveryInstructions(initiateOrderResponse),
-              orderGetters.getPickupInstructions(initiateOrderResponse)
+              orderGetters.getDeliveryInstructions(initiateOrderResponse)
             ),
             ds: {
               dropoffTime: {
@@ -307,7 +308,7 @@ const CartTemplate = (props: CartTemplateProps) => {
                   deliveryAddressDateAndWindow?.window?.confirmedWindow?.pickupTime?.startsAt.toString(),
               },
               deliveryInstructions: orderGetters.getDeliveryInstructions(initiateOrderResponse),
-              pickupInstructions: orderGetters.getPickupInstructions(initiateOrderResponse),
+              pickupInstructions: '',
               tips: orderGetters.getTipAmount(initiateOrderResponse) || 0,
               deliveryContact: {
                 notifySms: deliveryAddressDateAndWindow?.notification?.isSendSMS,

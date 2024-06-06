@@ -109,12 +109,15 @@ const getNormalizedDeliveryAddress = (deliveryAddress: any) => {
 }
 
 const getNormalizedDataForRates = (cartItems: any, deliveryWindowDateAndTime: any) => {
+  const deliveryItems = cartItems.filter((item: any) => item.fulfillmentMethod === 'Delivery')
   return {
     storeExternalIds: [deliveryWindowDateAndTime?.window?.confirmedStoreId],
     type: 'delivery',
     deliveryAddress: getNormalizedDeliveryAddress(deliveryWindowDateAndTime?.contact?.address),
     dropoffTime: deliveryWindowDateAndTime?.window?.confirmedWindow?.dropoffTime,
-    packages: [{ ...getPackagesDetails(cartItems), itemList: cartItems.map(normalizeProduct) }],
+    packages: [
+      { ...getPackagesDetails(cartItems), itemList: deliveryItems?.map(normalizeProduct) },
+    ],
   }
 }
 
@@ -123,8 +126,8 @@ const getPackagesDetails = (cartItems: any) => {
   let totalHeight = 0
   let totalLength = 0
   let totalWidth = 0
-
-  cartItems?.forEach((item: any) => {
+  const deliveryItems = cartItems.filter((item: any) => item.fulfillmentMethod === 'Delivery')
+  deliveryItems?.forEach((item: any) => {
     const quantity = item.quantity
     const measurements = item.product.measurements
 
@@ -147,7 +150,7 @@ const getPackagesDetails = (cartItems: any) => {
       length: totalLength,
     },
     weight: totalWeight,
-    quantity: cartItems?.length,
+    quantity: deliveryItems?.length,
     items: 1,
     barcode: 'null',
     temperatureControl: 'none',
@@ -220,8 +223,7 @@ const getDSDescription = (
   deliveryDateAndWindow: any,
   packages: any,
   tipAmount: any,
-  deliveryInstructions: any,
-  pickupInstructions: any
+  deliveryInstructions: any
 ) => {
   return `<div><table><tr><td style="vertical-align:top"><div><b>Dropoff:</b> ${formatTimestamp(
     deliveryDateAndWindow?.window?.confirmedWindow?.dropoffTime?.startsAt,
@@ -230,15 +232,11 @@ const getDSDescription = (
     deliveryDateAndWindow?.window?.confirmedWindow?.pickupTime?.startsAt
   )}</div><div><b>Tip:</b> $${tipAmount || 0}</div><div><b>Delivery Instructions:</b> ${
     deliveryInstructions || 'Please deliver to the front desk'
-  }</div><div><b>Pickup Instruction:</b> ${
-    pickupInstructions || 'Please pick up from the front desk'
   }</div><div><b>Send SMS Notification:</b> ${
     deliveryDateAndWindow?.notification?.isSendSMS || false
   }</div><div><b>Send Email Notification:</b> ${
     deliveryDateAndWindow?.notification?.isSendEmail || false
-  }</div></td><td style="vertical-align:top"><div><b>Package Details:</b><table border="1"><tr><td colspan='4'><b>Name:</b> ${
-    packages.name
-  }</td></tr><tr><td><b> Size (H * W * L)</b></td><td><b> Quantity</b></td><td><b>Items</b></td></tr><tr><td> ${packages.size.height.toString()} * ${packages.size.width.toString()} * ${packages.size.length.toString()}</td><td>${packages.quantity.toString()}</td><td>${packages.items.toString()}</td></tr></table></div></td></tr></table></div>`
+  }</div></td><td style="vertical-align:top"><div><b>Package Details:</b><table border="1"><tr><td><b> Size (H * W * L)</b></td><td><b> Quantity</b></td><td><b>Items</b></td></tr><tr><td> ${packages.size.height.toString()} * ${packages.size.width.toString()} * ${packages.size.length.toString()}</td><td>${packages.quantity.toString()}</td><td>${packages.items.toString()}</td></tr></table></div></td></tr></table></div>`
 }
 
 export const cartGetters = {

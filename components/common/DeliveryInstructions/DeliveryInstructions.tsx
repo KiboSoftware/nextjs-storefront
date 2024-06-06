@@ -5,7 +5,7 @@ import { useState } from 'react'
 import { Button, Stack, TextField } from '@mui/material'
 import { useTranslation } from 'next-i18next'
 
-export interface DeliveryAndPickupInstructionsProps {
+export interface DeliveryInstructionsProps {
   placeHolder?: string
   onAddInstructions: (instructions: string) => void
 }
@@ -25,7 +25,7 @@ const styles = {
   buttonStyle: { width: '5rem', height: '2.20rem' },
 }
 
-const DeliveryAndPickupInstructions = (props: DeliveryAndPickupInstructionsProps) => {
+const DeliveryInstructions = (props: DeliveryInstructionsProps) => {
   const { t } = useTranslation('common')
   const { placeHolder, onAddInstructions } = props
   const [instructions, setInstructions] = useState<string>('')
@@ -62,4 +62,4 @@ const DeliveryAndPickupInstructions = (props: DeliveryAndPickupInstructionsProps
   )
 }
 
-export default DeliveryAndPickupInstructions
+export default DeliveryInstructions
