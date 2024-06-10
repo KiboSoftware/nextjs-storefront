@@ -10,9 +10,10 @@ import {
   useUpdateCurrentCart,
   useAddCartItem,
   useGetCustomerAddresses,
+  useGetCart,
 } from '@/hooks'
 import { FulfillmentOptions } from '@/lib/constants'
-import { userGetters } from '@/lib/getters'
+import { cartGetters, orderGetters, userGetters } from '@/lib/getters'
 import { LocationCustom } from '@/lib/types'
 
 import { CrCartItem, CrCartItemInput, Maybe, Location, CustomerContact } from '@/lib/gql/types'
@@ -28,6 +29,7 @@ export const useCartActions = ({ cartItems, purchaseLocation }: UseCartActionsPr
   const { updateCartItemQuantity } = useUpdateCartItemQuantity()
   const { updateCurrentCart } = useUpdateCurrentCart()
   const { addToCart } = useAddCartItem()
+  const { data: cart, refetch } = useGetCart()
   const { isAuthenticated, user } = useAuthContext()
   const { data: addressCollection } = useGetCustomerAddresses(user?.id as number)
   const defaultShippingAddress =
@@ -85,6 +87,49 @@ export const useCartActions = ({ cartItems, purchaseLocation }: UseCartActionsPr
               }
               localStorage.setItem('instant-delivery', JSON.stringify(instantDelivery))
             }
+            // queryClient.invalidateQueries({ queryKey: cartKeys.all })
+            const refetchCartData = await refetch()
+            const updatedCartFilterItems = refetchCartData?.data?.items?.filter(
+              (cartItem: any) =>
+                cartItem?.product?.productType !== publicRuntimeConfig?.instantDelivery?.productType
+            )
+            const packages = cartGetters.getPackagesDetails(updatedCartFilterItems)
+            const updateCurrentCartesponse = await updateCurrentCart.mutateAsync({
+              cartInput: {
+                ...refetchCartData?.data,
+                data: {
+                  deliverySolution: {
+                    ds: {
+                      dropoffTime: {
+                        startsAt:
+                          instantDelivery?.window?.confirmedWindow?.dropoffTime?.startsAt.toString(),
+                        endsAt:
+                          instantDelivery?.window?.confirmedWindow?.dropoffTime?.endsAt.toString(),
+                      },
+                      pickupTime: {
+                        startsAt:
+                          instantDelivery?.window?.confirmedWindow?.pickupTime?.startsAt.toString(),
+                      },
+                      deliveryInstructions:
+                        orderGetters.getDeliveryInstructions(refetchCartData?.data) || '',
+                      pickupInstructions: '',
+                      tips: orderGetters.getTipAmount(refetchCartData?.data) || 0,
+                      deliveryContact: {
+                        notifySms: instantDelivery?.notification?.isSendSMS || false,
+                        notifyEmail: instantDelivery?.notification?.isSendEmail || false,
+                      },
+                      packages: [cartGetters.getPackagesDetails(updatedCartFilterItems)],
+                    },
+                    dsDescription: cartGetters.getDSDescription(
+                      instantDelivery,
+                      packages,
+                      orderGetters.getTipAmount(refetchCartData?.data) || 0,
+                      orderGetters.getDeliveryInstructions(refetchCartData?.data)
+                    ),
+                  },
+                },
+              },
+            })
             closeModal()
           },
         },
@@ -169,9 +214,43 @@ export const useCartActions = ({ cartItems, purchaseLocation }: UseCartActionsPr
       }
     })
     try {
+      const updatedCartFilterItems = newCartItems?.filter(
+        (cartItem: any) =>
+          cartItem?.product?.productType !== publicRuntimeConfig?.instantDelivery?.productType
+      )
+      const packages = cartGetters.getPackagesDetails(updatedCartFilterItems)
       const response = await updateCurrentCart.mutateAsync({
         cartInput: {
           items: newCartItems,
+          data: {
+            deliverySolution: {
+              ds: {
+                dropoffTime: {
+                  startsAt:
+                    instantDelivery?.window?.confirmedWindow?.dropoffTime?.startsAt.toString(),
+                  endsAt: instantDelivery?.window?.confirmedWindow?.dropoffTime?.endsAt.toString(),
+                },
+                pickupTime: {
+                  startsAt:
+                    instantDelivery?.window?.confirmedWindow?.pickupTime?.startsAt.toString(),
+                },
+                deliveryInstructions: orderGetters.getDeliveryInstructions(cart) || '',
+                pickupInstructions: '',
+                tips: orderGetters.getTipAmount(cart) || 0,
+                deliveryContact: {
+                  notifySms: instantDelivery?.notification?.isSendSMS || false,
+                  notifyEmail: instantDelivery?.notification?.isSendEmail || false,
+                },
+                packages: [cartGetters.getPackagesDetails(updatedCartFilterItems)],
+              },
+              dsDescription: cartGetters.getDSDescription(
+                instantDelivery,
+                packages,
+                orderGetters.getTipAmount(cart) || 0,
+                orderGetters.getDeliveryInstructions(cart)
+              ),
+            },
+          },
         },
       })
     } catch (err) {

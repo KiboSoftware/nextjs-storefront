@@ -397,12 +397,12 @@ const getDeliveryItemPrice = (order: CrOrder) => {
   return filterItemPrice
 }
 
-const getTipAmount = (order: CrOrder) => {
-  return order?.fulfillmentInfo?.data?.ds?.tips || 0
+const getTipAmount = (order: CrCart | CrOrder) => {
+  return order?.data?.deliverySolution?.ds?.tips || 0
 }
 
-const getDeliveryInstructions = (order: CrOrder) => {
-  return order?.fulfillmentInfo?.data?.ds?.deliveryInstructions || ''
+const getDeliveryInstructions = (order: CrCart | CrOrder) => {
+  return order?.data?.deliverySolution?.ds?.deliveryInstructions || ''
 }
 
 export const orderGetters = {

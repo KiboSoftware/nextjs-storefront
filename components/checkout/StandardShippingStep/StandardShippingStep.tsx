@@ -11,6 +11,7 @@ import {
   Checkbox,
   NoSsr,
 } from '@mui/material'
+import { useQueryClient } from '@tanstack/react-query'
 import getConfig from 'next/config'
 import { useTranslation } from 'next-i18next'
 
@@ -30,6 +31,7 @@ import {
 import { DefaultId, AddressType, CountryCode, FulfillmentOptions } from '@/lib/constants'
 import { cartGetters, orderGetters, userGetters } from '@/lib/getters'
 import { actions, buildAddressParams, hasPermission } from '@/lib/helpers'
+import { checkoutKeys } from '@/lib/react-query/queryKeys'
 import type { ContactForm, Address } from '@/lib/types'
 
 import type {
@@ -122,6 +124,7 @@ const StandardShippingStep = (props: ShippingProps) => {
     setStepStatusComplete,
     setStepStatusIncomplete,
   } = useCheckoutStepContext()
+  const queryClient = useQueryClient()
   const { updateOrderShippingInfo } = useUpdateOrderShippingInfo()
   const [deliveryRatesPayload, setDeliveryRatesPayload] = useState<any>()
   const { data: deliveryFee, isLoading, isSuccess } = useGetDeliveryRates(deliveryRatesPayload)
@@ -171,14 +174,12 @@ const StandardShippingStep = (props: ShippingProps) => {
         await updateOrderShippingInfo.mutateAsync({
           checkout,
           contact: customerContact,
-          data: checkout?.fulfillmentInfo?.data,
         })
         setSelectedShippingAddressId(customerSavedAddress?.id as number)
       } else {
         await updateOrderShippingInfo.mutateAsync({
           checkout,
           contact,
-          data: checkout?.fulfillmentInfo?.data,
         })
         setSelectedShippingAddressId((contact?.id as number) || DefaultId.ADDRESSID)
       }
@@ -226,7 +227,6 @@ const StandardShippingStep = (props: ShippingProps) => {
         email: undefined,
         shippingMethodCode,
         shippingMethodName,
-        data: checkout?.fulfillmentInfo?.data,
       })
       shippingAddressRef.current &&
         (shippingAddressRef.current as Element).scrollIntoView({
@@ -348,7 +348,6 @@ const StandardShippingStep = (props: ShippingProps) => {
         lastNameOrSurname: '',
         phoneNumbers: { home: '' },
       },
-      data: checkout?.fulfillmentInfo?.data,
     })
 
     setStepStatusValid()
@@ -410,35 +409,84 @@ const StandardShippingStep = (props: ShippingProps) => {
           postalOrZipCode: updateDeliveryDateAndWindow?.contact?.address?.postalOrZipCode,
         },
       },
-      data: {
-        dsDescription: cartGetters.getDSDescription(
-          updateDeliveryDateAndWindow,
-          updatedOrderPackages,
-          orderGetters.getTipAmount(updateOrderItemPriceResponse),
-          orderGetters.getDeliveryInstructions(updateOrderItemPriceResponse)
-        ),
-        ds: {
-          dropoffTime: {
-            startsAt:
-              updateDeliveryDateAndWindow?.window?.confirmedWindow?.dropoffTime?.startsAt.toString(),
-            endsAt:
-              updateDeliveryDateAndWindow?.window?.confirmedWindow?.dropoffTime?.endsAt.toString(),
+      // data: {
+      //   dsDescription: cartGetters.getDSDescription(
+      //     updateDeliveryDateAndWindow,
+      //     updatedOrderPackages,
+      //     orderGetters.getTipAmount(updateOrderItemPriceResponse),
+      //     orderGetters.getDeliveryInstructions(updateOrderItemPriceResponse)
+      //   ),
+      //   ds: {
+      //     dropoffTime: {
+      //       startsAt:
+      //         updateDeliveryDateAndWindow?.window?.confirmedWindow?.dropoffTime?.startsAt.toString(),
+      //       endsAt:
+      //         updateDeliveryDateAndWindow?.window?.confirmedWindow?.dropoffTime?.endsAt.toString(),
+      //     },
+      //     pickupTime: {
+      //       startsAt:
+      //         updateDeliveryDateAndWindow?.window?.confirmedWindow?.pickupTime?.startsAt.toString(),
+      //     },
+      //     deliveryInstructions: orderGetters.getDeliveryInstructions(updateOrderItemPriceResponse),
+      //     pickupInstructions: '',
+      //     tips: orderGetters.getTipAmount(updateOrderItemPriceResponse),
+      //     deliveryContact: {
+      //       notifySms: updateDeliveryDateAndWindow?.notification?.isSendSMS || false,
+      //       notifyEmail: updateDeliveryDateAndWindow?.notification?.isSendEmail || false,
+      //     },
+      //     packages: [cartGetters.getPackagesDetails(filterUpdatedOrderItems)],
+      //   },
+      // },
+    })
+    const updateOrderDataVariables = {
+      params: {
+        orderId: checkout?.id,
+        orderDataId: 'deliverySolution',
+        undefinedInput: {
+          dsDescription: cartGetters.getDSDescription(
+            updateDeliveryDateAndWindow,
+            updatedOrderPackages,
+            orderGetters.getTipAmount(updateOrderItemPriceResponse),
+            orderGetters.getDeliveryInstructions(updateOrderItemPriceResponse)
+          ),
+          ds: {
+            dropoffTime: {
+              startsAt:
+                updateDeliveryDateAndWindow?.window?.confirmedWindow?.dropoffTime?.startsAt.toString(),
+              endsAt:
+                updateDeliveryDateAndWindow?.window?.confirmedWindow?.dropoffTime?.endsAt.toString(),
+            },
+            pickupTime: {
+              startsAt:
+                updateDeliveryDateAndWindow?.window?.confirmedWindow?.pickupTime?.startsAt.toString(),
+            },
+            deliveryInstructions: orderGetters.getDeliveryInstructions(
+              updateOrderItemPriceResponse
+            ),
+            pickupInstructions: '',
+            tips: orderGetters.getTipAmount(updateOrderItemPriceResponse),
+            deliveryContact: {
+              notifySms: updateDeliveryDateAndWindow?.notification?.isSendSMS || false,
+              notifyEmail: updateDeliveryDateAndWindow?.notification?.isSendEmail || false,
+            },
+            packages: [cartGetters.getPackagesDetails(filterUpdatedOrderItems)],
           },
-          pickupTime: {
-            startsAt:
-              updateDeliveryDateAndWindow?.window?.confirmedWindow?.pickupTime?.startsAt.toString(),
-          },
-          deliveryInstructions: orderGetters.getDeliveryInstructions(updateOrderItemPriceResponse),
-          pickupInstructions: '',
-          tips: orderGetters.getTipAmount(updateOrderItemPriceResponse),
-          deliveryContact: {
-            notifySms: updateDeliveryDateAndWindow?.notification?.isSendSMS,
-            notifyEmail: updateDeliveryDateAndWindow?.notification?.isSendEmail,
-          },
-          packages: [cartGetters.getPackagesDetails(filterUpdatedOrderItems)],
         },
       },
+    }
+    const updateOrderDataResponse = await fetch('/api/update-order-data', {
+      method: 'POST',
+      headers: {
+        Accept: 'application/json, text/plain, */*',
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify(updateOrderDataVariables),
     })
+    const updateOrderResponseJSON = await updateOrderDataResponse.json()
+    if (updateOrderResponseJSON) {
+      queryClient.invalidateQueries({ queryKey: checkoutKeys.all })
+    }
+
     setSelectedShippingAddressId(updateDeliveryDateAndWindow?.contact?.id || DefaultId.ADDRESSID)
     setDeliveryRatesPayload(null)
     localStorage.setItem('instant-delivery', JSON.stringify(updateDeliveryDateAndWindow))
@@ -526,6 +574,47 @@ const StandardShippingStep = (props: ShippingProps) => {
         orderItem?.product?.productType !== publicRuntimeConfig?.instantDelivery?.productType
     )
     const packages = cartGetters.getPackagesDetails(filterOrderItems)
+    const updateOrderDataVariables = {
+      params: {
+        orderId: checkout?.id,
+        orderDataId: 'deliverySolution',
+        undefinedInput: {
+          dsDescription: cartGetters.getDSDescription(
+            instantDeliveryObj,
+            packages,
+            orderGetters.getTipAmount(checkout),
+            orderGetters.getDeliveryInstructions(checkout)
+          ),
+          ds: {
+            dropoffTime: {
+              startsAt:
+                instantDeliveryObj?.window?.confirmedWindow?.dropoffTime?.startsAt.toString(),
+              endsAt: instantDeliveryObj?.window?.confirmedWindow?.dropoffTime?.endsAt.toString(),
+            },
+            pickupTime: {
+              startsAt:
+                instantDeliveryObj?.window?.confirmedWindow?.pickupTime?.startsAt.toString(),
+            },
+            deliveryInstructions: '',
+            pickupInstructions: '',
+            tips: orderGetters.getTipAmount(checkout),
+            deliveryContact: {
+              notifySms: instantDeliveryObj?.notification?.isSendSMS || false,
+              notifyEmail: instantDeliveryObj?.notification?.isSendEmail || false,
+            },
+            packages: [cartGetters.getPackagesDetails(filterOrderItems)],
+          },
+        },
+      },
+    }
+    const updateOrderDataResponse = await fetch('/api/update-order-data', {
+      method: 'POST',
+      headers: {
+        Accept: 'application/json, text/plain, */*',
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify(updateOrderDataVariables),
+    })
     await updateOrderShippingInfo.mutateAsync({
       checkout,
       contact: {
@@ -544,32 +633,33 @@ const StandardShippingStep = (props: ShippingProps) => {
           postalOrZipCode: instantDeliveryObj?.contact?.address?.postalOrZipCode,
         },
       },
-      data: {
-        dsDescription: cartGetters.getDSDescription(
-          instantDeliveryObj,
-          packages,
-          orderGetters.getTipAmount(checkout),
-          orderGetters.getDeliveryInstructions(checkout)
-        ),
-        ds: {
-          dropoffTime: {
-            startsAt: instantDeliveryObj?.window?.confirmedWindow?.dropoffTime?.startsAt.toString(),
-            endsAt: instantDeliveryObj?.window?.confirmedWindow?.dropoffTime?.endsAt.toString(),
-          },
-          pickupTime: {
-            startsAt: instantDeliveryObj?.window?.confirmedWindow?.pickupTime?.startsAt.toString(),
-          },
-          deliveryInstructions: '',
-          pickupInstructions: '',
-          tips: orderGetters.getTipAmount(checkout),
-          deliveryContact: {
-            notifySms: instantDeliveryObj?.notification?.isSendSMS,
-            notifyEmail: instantDeliveryObj?.notification?.isSendEmail,
-          },
-          packages: [cartGetters.getPackagesDetails(filterOrderItems)],
-        },
-      },
+      // data: {
+      //   dsDescription: cartGetters.getDSDescription(
+      //     instantDeliveryObj,
+      //     packages,
+      //     orderGetters.getTipAmount(checkout),
+      //     orderGetters.getDeliveryInstructions(checkout)
+      //   ),
+      //   ds: {
+      //     dropoffTime: {
+      //       startsAt: instantDeliveryObj?.window?.confirmedWindow?.dropoffTime?.startsAt.toString(),
+      //       endsAt: instantDeliveryObj?.window?.confirmedWindow?.dropoffTime?.endsAt.toString(),
+      //     },
+      //     pickupTime: {
+      //       startsAt: instantDeliveryObj?.window?.confirmedWindow?.pickupTime?.startsAt.toString(),
+      //     },
+      //     deliveryInstructions: '',
+      //     pickupInstructions: '',
+      //     tips: orderGetters.getTipAmount(checkout),
+      //     deliveryContact: {
+      //       notifySms: instantDeliveryObj?.notification?.isSendSMS || false,
+      //       notifyEmail: instantDeliveryObj?.notification?.isSendEmail || false,
+      //     },
+      //     packages: [cartGetters.getPackagesDetails(filterOrderItems)],
+      //   },
+      // },
     })
+
     setSelectedShippingAddressId((instantDeliveryObj?.contact?.id as number) || DefaultId.ADDRESSID)
   }
   // useEffect(() => {
