@@ -127,9 +127,11 @@ fragment productInfo on Product {
         ...productContent
         ...productOptions
         ...productInventoryInfo
+        ...productPrices
 }
 ${productAttributes}
 ${productContent}
 ${productOptions}
 ${productInventoryInfo}
+${productPrices}
 `

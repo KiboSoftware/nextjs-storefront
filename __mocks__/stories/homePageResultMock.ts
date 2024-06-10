@@ -1,7 +1,7 @@
 export const homePageResultMock = [
   {
     buttonText: 'Shop Deals',
-    buttonLink: '/category/CampHike',
+    buttonLink: '/search',
     description: 'Shop early to get your holiday gifts on time.',
     imageUrl: 'https://cdn-sb.mozu.com/26507-m1/cms/files/7b763015-5d76-4c3c-a5fd-6a14a476b56c',
     imageAlt: 'Outdoors!',
@@ -20,7 +20,7 @@ export const homePageResultMock = [
     subtitle: 'Save up to 50%',
     description: 'Shop early to get your holiday gifts on time.',
     buttonText: 'Shop Holiday Items on Sale',
-    buttonLink: '/category/CampHike',
+    buttonLink: '/search',
     contentPosition: 'right',
   },
 ]
