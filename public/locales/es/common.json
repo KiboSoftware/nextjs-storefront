@@ -27,5 +27,6 @@
   "total": "",
   "use-current-location": "",
   "remove-payPal": "Remove PayPal",
-  "loading-paypal": "Loading PayPal..."
+  "loading-paypal": "Loading PayPal...",
+  "error-cartTakeover": "Error al recuperar el carrito. Cierra la ventana e inténtalo de nuevo."
 }

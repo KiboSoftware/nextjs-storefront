@@ -11,16 +11,18 @@ import {
   Link as MuiLink,
   Typography,
 } from '@mui/material'
+import { getCookie } from 'cookies-next'
 import { useRouter } from 'next/router'
 import { useTranslation } from 'next-i18next'
 
 import { HeaderAction } from '@/components/common'
 import { CategoryNestedNavigation } from '@/components/layout'
-import { useAuthContext } from '@/context'
 import { uiHelpers } from '@/lib/helpers'
 import type { NavigationLink } from '@/lib/types'
 
 import type { Maybe, PrCategory } from '@/lib/gql/types'
+
+import { useAuthContext } from '@/context'
 
 interface HamburgerMenuProps {
   categoryTree: Maybe<PrCategory>[]
@@ -32,6 +34,7 @@ interface HamburgerMenuProps {
   requestAccountIconComponent?: React.ReactNode
 }
 
+const isCSR = getCookie('isCSR')
 const styles = {
   container: {
     width: '80vw',
@@ -105,16 +108,18 @@ const HamburgerMenu = (props: HamburgerMenuProps) => {
               onCategoryClick={handleCategoryClick}
             >
               <Box width="100%">
-                <HeaderAction
-                  title={isAuthenticated ? `${t('hi')}, ${user?.firstName}` : t('my-account')}
-                  subtitle={isAuthenticated ? t('go-to-my-account') : t('log-in')}
-                  icon={AccountCircle}
-                  mobileIconColor="black"
-                  iconFontSize="large"
-                  showTitleInMobile={true}
-                  onClick={onAccountIconClick}
-                  isElementVisible={true}
-                />
+                {!isCSR && isCSR === undefined && (
+                  <HeaderAction
+                    title={isAuthenticated ? `${t('hi')}, ${user?.firstName}` : t('my-account')}
+                    subtitle={isAuthenticated ? t('go-to-my-account') : t('log-in')}
+                    icon={AccountCircle}
+                    mobileIconColor="black"
+                    iconFontSize="large"
+                    showTitleInMobile={true}
+                    onClick={onAccountIconClick}
+                    isElementVisible={true}
+                  />
+                )}
               </Box>
             </CategoryNestedNavigation>
           </Box>
@@ -123,16 +128,18 @@ const HamburgerMenu = (props: HamburgerMenuProps) => {
             {navLinks?.map((nav) => (
               <Box key={nav.text}>
                 <MuiLink underline="none">
-                  <ListItem button sx={{ paddingInline: 4 }}>
-                    <ListItemText
-                      primary={
-                        <Typography variant="body2" color="text.primary">
-                          {t(`${nav.text}`)}
-                        </Typography>
-                      }
-                      onClick={() => handleNavLinks(nav.link)}
-                    />
-                  </ListItem>
+                  {!isCSR && isCSR === undefined && (
+                    <ListItem button sx={{ paddingInline: 4 }}>
+                      <ListItemText
+                        primary={
+                          <Typography variant="body2" color="text.primary">
+                            {t(`${nav.text}`)}
+                          </Typography>
+                        }
+                        onClick={() => handleNavLinks(nav.link)}
+                      />
+                    </ListItem>
+                  )}
                 </MuiLink>
                 <Divider />
               </Box>

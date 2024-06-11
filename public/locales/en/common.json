@@ -530,5 +530,6 @@
   "digital-products": "Digital Products",
   "menu": "Menu",
   "remove-payPal": "Remove PayPal",
-  "loading-paypal": "Loading PayPal..."
+  "loading-paypal": "Loading PayPal...",
+  "error-cartTakeover": "Error while fetching the cart. Please close the window and try again."
 }

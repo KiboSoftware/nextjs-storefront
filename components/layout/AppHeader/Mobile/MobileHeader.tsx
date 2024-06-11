@@ -2,11 +2,13 @@ import React from 'react'
 
 import SearchIcon from '@mui/icons-material/Search'
 import { Box } from '@mui/material'
+import { getCookie } from 'cookies-next'
 import Link from 'next/link'
 import { useTranslation } from 'next-i18next'
 
 import { HeaderAction, KiboLogo } from '@/components/common'
 import { HamburgerIcon, StoreFinderIcon, CartIcon } from '@/components/layout'
+
 import { useHeaderContext } from '@/context'
 
 const MobileHeaderStyles = {
@@ -23,6 +25,7 @@ const MobileHeader = ({ children }: { children?: React.ReactNode }) => {
   const { toggleMobileSearchPortal } = useHeaderContext()
   const { t } = useTranslation('common')
 
+  const isCSR = getCookie('isCSR')
   return (
     <>
       <Box sx={MobileHeaderStyles.container} data-testid="mobile-header">
@@ -48,11 +51,13 @@ const MobileHeader = ({ children }: { children?: React.ReactNode }) => {
           </Link>
         </Box>
 
-        <StoreFinderIcon
-          size="medium"
-          mobileIconColor="black"
-          data-testid="mobile-header-store-icon"
-        />
+        {!isCSR && isCSR === undefined && (
+          <StoreFinderIcon
+            size="medium"
+            mobileIconColor="black"
+            data-testid="mobile-header-store-icon"
+          />
+        )}
         <CartIcon size="medium" mobileIconColor="black" data-testid="mobile-header-cart-icon" />
       </Box>
       {children}

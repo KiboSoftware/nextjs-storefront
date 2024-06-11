@@ -11,6 +11,7 @@ import {
   styled,
   Theme,
 } from '@mui/material'
+import { getCookie } from 'cookies-next'
 import getConfig from 'next/config'
 import Link from 'next/link'
 import { useRouter } from 'next/router'
@@ -31,12 +32,13 @@ import {
   SearchSuggestions,
   StoreFinderIcon,
 } from '@/components/layout'
-import { useAuthContext, useHeaderContext, useModalContext } from '@/context'
-import { useCreateCustomerB2bAccountMutation, useGetCategoryTree } from '@/hooks'
 import { buildCreateCustomerB2bAccountParams } from '@/lib/helpers'
 import type { CreateCustomerB2bAccountParams, NavigationLink } from '@/lib/types'
 
 import type { Maybe, PrCategory } from '@/lib/gql/types'
+
+import { useAuthContext, useHeaderContext, useModalContext } from '@/context'
+import { useCreateCustomerB2bAccountMutation, useGetCategoryTree } from '@/hooks'
 
 interface KiboHeaderProps {
   navLinks: NavigationLink[]
@@ -51,6 +53,7 @@ interface HeaderActionAreaProps {
   onAccountRequestClick: () => void
 }
 
+const isCSR = getCookie('isCSR')
 const HeaderActionArea = (props: HeaderActionAreaProps) => {
   const { isHeaderSmall, onAccountIconClick, onAccountRequestClick } = props
   const { headerState, toggleSearchBar } = useHeaderContext()
@@ -87,17 +90,23 @@ const HeaderActionArea = (props: HeaderActionAreaProps) => {
         </Box>
 
         <Box display="flex" flex={1} justifyContent={'flex-end'} gap={2}>
-          <StoreFinderIcon size={isHeaderSmall ? 'small' : 'medium'} />
-          <AccountIcon
-            size={isHeaderSmall ? 'small' : 'medium'}
-            onAccountIconClick={onAccountIconClick}
-          />
-          <AccountRequestIcon
-            onClick={onAccountRequestClick}
-            isElementVisible={false}
-            iconProps={{ fontSize: isHeaderSmall ? 'small' : 'medium' }}
-            buttonText={t('b2b-account-request')}
-          />
+          {!isCSR && isCSR === undefined && (
+            <StoreFinderIcon size={isHeaderSmall ? 'small' : 'medium'} />
+          )}
+          {!isCSR && isCSR === undefined && (
+            <AccountIcon
+              size={isHeaderSmall ? 'small' : 'medium'}
+              onAccountIconClick={onAccountIconClick}
+            />
+          )}
+          {!isCSR && isCSR === undefined && (
+            <AccountRequestIcon
+              onClick={onAccountRequestClick}
+              isElementVisible={false}
+              iconProps={{ fontSize: isHeaderSmall ? 'small' : 'medium' }}
+              buttonText={t('b2b-account-request')}
+            />
+          )}
           <CartIcon size={isHeaderSmall ? 'small' : 'medium'} />
         </Box>
       </Container>
@@ -120,9 +129,11 @@ const TopHeader = ({ navLinks }: { navLinks: NavigationLink[] }) => {
           {navLinks?.map((nav, index) => {
             return (
               <Box key={index}>
-                <StyledLink href={nav.link} passHref>
-                  {t(`${nav.text}`)}
-                </StyledLink>
+                {!isCSR && isCSR === undefined && (
+                  <StyledLink href={nav.link} passHref>
+                    {t(`${nav.text}`)}
+                  </StyledLink>
+                )}
               </Box>
             )
           })}

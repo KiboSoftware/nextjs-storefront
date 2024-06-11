@@ -156,3 +156,7 @@ export const customerWishlistKeys = {
   all: ['customerWishlist'] as const,
   detail: (id: string) => [...customerWishlistKeys.all, id] as const,
 }
+
+export const cartTakeoverKeys = {
+  all: ['cartTakeover'] as const,
+}
