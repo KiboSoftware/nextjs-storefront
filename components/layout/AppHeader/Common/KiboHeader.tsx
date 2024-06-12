@@ -32,13 +32,12 @@ import {
   SearchSuggestions,
   StoreFinderIcon,
 } from '@/components/layout'
+import { useAuthContext, useHeaderContext, useModalContext } from '@/context'
+import { useCreateCustomerB2bAccountMutation, useGetCategoryTree } from '@/hooks'
 import { buildCreateCustomerB2bAccountParams } from '@/lib/helpers'
 import type { CreateCustomerB2bAccountParams, NavigationLink } from '@/lib/types'
 
 import type { Maybe, PrCategory } from '@/lib/gql/types'
-
-import { useAuthContext, useHeaderContext, useModalContext } from '@/context'
-import { useCreateCustomerB2bAccountMutation, useGetCategoryTree } from '@/hooks'
 
 interface KiboHeaderProps {
   navLinks: NavigationLink[]

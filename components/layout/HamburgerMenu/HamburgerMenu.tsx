@@ -17,12 +17,11 @@ import { useTranslation } from 'next-i18next'
 
 import { HeaderAction } from '@/components/common'
 import { CategoryNestedNavigation } from '@/components/layout'
+import { useAuthContext } from '@/context'
 import { uiHelpers } from '@/lib/helpers'
 import type { NavigationLink } from '@/lib/types'
 
 import type { Maybe, PrCategory } from '@/lib/gql/types'
-
-import { useAuthContext } from '@/context'
 
 interface HamburgerMenuProps {
   categoryTree: Maybe<PrCategory>[]

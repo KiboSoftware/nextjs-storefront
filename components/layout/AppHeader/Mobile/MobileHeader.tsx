@@ -8,7 +8,6 @@ import { useTranslation } from 'next-i18next'
 
 import { HeaderAction, KiboLogo } from '@/components/common'
 import { HamburgerIcon, StoreFinderIcon, CartIcon } from '@/components/layout'
-
 import { useHeaderContext } from '@/context'
 
 const MobileHeaderStyles = {
