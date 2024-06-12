@@ -91,6 +91,7 @@ const HeaderActionArea = (props: HeaderActionAreaProps) => {
           <AccountIcon
             size={isHeaderSmall ? 'small' : 'medium'}
             onAccountIconClick={onAccountIconClick}
+            isElementVisible={false}
           />
           <AccountRequestIcon
             onClick={onAccountRequestClick}
@@ -228,7 +229,7 @@ const KiboHeader = (props: KiboHeaderProps) => {
       >
         <Backdrop open={isBackdropOpen} data-testid="backdrop" />
 
-        <TopHeader navLinks={navLinks} />
+        {!isCheckoutPage && <TopHeader navLinks={navLinks} />}
 
         <Box component={'section'} sx={{ ...kiboHeaderStyles.topBarStyles }}>
           {getSection()}

@@ -33,7 +33,7 @@ export async function getServerSideProps(context: GetServerSidePropsContext) {
 
   const ipAddress = req?.headers['x-forwarded-for'] as string
 
-  updateOrder(
+  await updateOrder(
     checkoutId,
     { ...checkout, ipAddress: ipAddress?.split(',')[0] } as CrOrderInput,
     req as NextApiRequest,

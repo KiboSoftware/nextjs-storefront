@@ -285,7 +285,7 @@ const ReviewStep = (props: ReviewStepProps) => {
       {pickupItems && pickupItems.length > 0 && (
         <Stack gap={4}>
           <Typography variant="h3" component="h3" sx={{ fontWeight: 'bold' }} color="text.primary">
-            {t('pickup-in-store')}
+            {t('pickup')}
           </Typography>
           <ProductItemList items={pickupItems} testId={'review-pickup-items'} />
           <Divider sx={{ mt: '1.ZZ438rem', mb: '1.188rem' }} />
