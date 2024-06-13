@@ -78,7 +78,7 @@ const OrderSummary = <T extends CrCart | CrOrder | Checkout>(props: OrderSummary
       </CardContent>
       <Divider />
       <CardContent>
-        {deliveryAddressDateAndWindow?.contact?.address && (
+        {deliveryAddressDateAndWindow && deliveryAddressDateAndWindow?.contact?.address && (
           <Stack
             direction="row"
             sx={{
@@ -133,7 +133,7 @@ const OrderSummary = <T extends CrCart | CrOrder | Checkout>(props: OrderSummary
             </Box>
           </Stack>
         )}
-        {deliveryAddressDateAndWindow?.window && (
+        {deliveryAddressDateAndWindow && deliveryAddressDateAndWindow?.window && (
           <Stack direction="row" sx={{ backgroundColor: 'white', padding: '1rem' }} mt={2}>
             <Box mr={1}>
               <KiboImage src={Clock} alt={'delivery'} width={24} height={24} />
@@ -163,6 +163,30 @@ const OrderSummary = <T extends CrCart | CrOrder | Checkout>(props: OrderSummary
                 sx={{ textDecoration: 'underline', cursor: 'pointer' }}
               >
                 {t('change-delivery-time')}
+              </Typography>
+            </Stack>
+          </Stack>
+        )}
+        {deliveryAddressDateAndWindow && !deliveryAddressDateAndWindow?.window && (
+          <Stack direction="row" sx={{ backgroundColor: 'white', padding: '1rem' }} mt={2}>
+            <Box mr={1}>
+              <KiboImage src={Clock} alt={'delivery'} width={24} height={24} />
+            </Box>
+            <Stack>
+              <Typography>{t('no-delivery-window')}</Typography>
+              <Typography
+                variant="caption"
+                onClick={() =>
+                  onHandleInstantDelivery &&
+                  onHandleInstantDelivery({
+                    deliveryAddress: deliveryAddressDateAndWindow?.contact,
+                    deliveryStoreBoundary: deliveryAddressDateAndWindow?.storeBoundary,
+                    deliveryNotification: deliveryAddressDateAndWindow?.notification,
+                  })
+                }
+                sx={{ textDecoration: 'underline', cursor: 'pointer' }}
+              >
+                {t('select-delivery-window')}
               </Typography>
             </Stack>
           </Stack>

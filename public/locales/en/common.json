@@ -570,5 +570,6 @@
   "delivery-products": "Delivery Products",
   "delivery-fee": "Delivery Fee:",
   "tip": "Tip:",
-  "add": "Add"
+  "add": "Add",
+  "no-delivery-window": "No Delivery window found"
 }

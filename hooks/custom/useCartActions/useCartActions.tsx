@@ -98,28 +98,28 @@ export const useCartActions = ({ cartItems, purchaseLocation }: UseCartActionsPr
               cartInput: {
                 ...refetchCartData?.data,
                 data: {
-                  deliverySolution: {
-                    ds: {
-                      dropoffTime: {
-                        startsAt:
-                          instantDelivery?.window?.confirmedWindow?.dropoffTime?.startsAt.toString(),
-                        endsAt:
-                          instantDelivery?.window?.confirmedWindow?.dropoffTime?.endsAt.toString(),
-                      },
-                      pickupTime: {
-                        startsAt:
-                          instantDelivery?.window?.confirmedWindow?.pickupTime?.startsAt.toString(),
-                      },
-                      deliveryInstructions:
-                        orderGetters.getDeliveryInstructions(refetchCartData?.data) || '',
-                      pickupInstructions: '',
-                      tips: orderGetters.getTipAmount(refetchCartData?.data) || 0,
-                      deliveryContact: {
-                        notifySms: instantDelivery?.notification?.isSendSMS || false,
-                        notifyEmail: instantDelivery?.notification?.isSendEmail || false,
-                      },
-                      packages: [cartGetters.getPackagesDetails(updatedCartFilterItems)],
+                  ds: {
+                    dropoffTime: {
+                      startsAt:
+                        instantDelivery?.window?.confirmedWindow?.dropoffTime?.startsAt.toString(),
+                      endsAt:
+                        instantDelivery?.window?.confirmedWindow?.dropoffTime?.endsAt.toString(),
                     },
+                    pickupTime: {
+                      startsAt:
+                        instantDelivery?.window?.confirmedWindow?.pickupTime?.startsAt.toString(),
+                    },
+                    deliveryInstructions:
+                      orderGetters.getDeliveryInstructions(refetchCartData?.data) || '',
+                    pickupInstructions: '',
+                    tips: orderGetters.getTipAmount(refetchCartData?.data) || 0,
+                    deliveryContact: {
+                      notifySms: instantDelivery?.notification?.isSendSMS || false,
+                      notifyEmail: instantDelivery?.notification?.isSendEmail || false,
+                      ...instantDelivery?.contact,
+                    },
+                    packages: [cartGetters.getPackagesDetails(updatedCartFilterItems)],
+                    storeId: instantDelivery?.window?.confirmedStoreId,
                     dsDescription: cartGetters.getDSDescription(
                       instantDelivery,
                       packages,
@@ -223,26 +223,25 @@ export const useCartActions = ({ cartItems, purchaseLocation }: UseCartActionsPr
         cartInput: {
           items: newCartItems,
           data: {
-            deliverySolution: {
-              ds: {
-                dropoffTime: {
-                  startsAt:
-                    instantDelivery?.window?.confirmedWindow?.dropoffTime?.startsAt.toString(),
-                  endsAt: instantDelivery?.window?.confirmedWindow?.dropoffTime?.endsAt.toString(),
-                },
-                pickupTime: {
-                  startsAt:
-                    instantDelivery?.window?.confirmedWindow?.pickupTime?.startsAt.toString(),
-                },
-                deliveryInstructions: orderGetters.getDeliveryInstructions(cart) || '',
-                pickupInstructions: '',
-                tips: orderGetters.getTipAmount(cart) || 0,
-                deliveryContact: {
-                  notifySms: instantDelivery?.notification?.isSendSMS || false,
-                  notifyEmail: instantDelivery?.notification?.isSendEmail || false,
-                },
-                packages: [cartGetters.getPackagesDetails(updatedCartFilterItems)],
+            ds: {
+              dropoffTime: {
+                startsAt:
+                  instantDelivery?.window?.confirmedWindow?.dropoffTime?.startsAt.toString(),
+                endsAt: instantDelivery?.window?.confirmedWindow?.dropoffTime?.endsAt.toString(),
               },
+              pickupTime: {
+                startsAt: instantDelivery?.window?.confirmedWindow?.pickupTime?.startsAt.toString(),
+              },
+              deliveryInstructions: orderGetters.getDeliveryInstructions(cart) || '',
+              pickupInstructions: '',
+              tips: orderGetters.getTipAmount(cart) || 0,
+              deliveryContact: {
+                notifySms: instantDelivery?.notification?.isSendSMS || false,
+                notifyEmail: instantDelivery?.notification?.isSendEmail || false,
+                ...instantDelivery?.contact,
+              },
+              packages: [cartGetters.getPackagesDetails(updatedCartFilterItems)],
+              storeId: instantDelivery?.window?.confirmedStoreId,
               dsDescription: cartGetters.getDSDescription(
                 instantDelivery,
                 packages,

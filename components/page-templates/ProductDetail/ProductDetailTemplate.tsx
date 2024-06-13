@@ -293,30 +293,30 @@ const ProductDetailTemplate = (props: ProductDetailTemplateProps) => {
             cartInput: {
               ...updatedCartData?.data,
               data: {
-                deliverySolution: {
-                  ds: {
-                    dropoffTime: {
-                      startsAt:
-                        selectedFulfillmentOption?.location?.window?.confirmedWindow?.dropoffTime?.startsAt.toString(),
-                      endsAt:
-                        selectedFulfillmentOption?.location?.window?.confirmedWindow?.dropoffTime?.endsAt.toString(),
-                    },
-                    pickupTime: {
-                      startsAt:
-                        selectedFulfillmentOption?.location?.window?.confirmedWindow?.pickupTime?.startsAt.toString(),
-                    },
-                    deliveryInstructions:
-                      orderGetters.getDeliveryInstructions(updatedCartData?.data) || '',
-                    pickupInstructions: '',
-                    tips: orderGetters.getTipAmount(updatedCartData?.data) || 0,
-                    deliveryContact: {
-                      notifySms:
-                        selectedFulfillmentOption?.location?.notification?.isSendSMS || false,
-                      notifyEmail:
-                        selectedFulfillmentOption?.location?.notification?.isSendEmail || false,
-                    },
-                    packages: [cartGetters.getPackagesDetails(updatedCartFilterItems)],
+                ds: {
+                  dropoffTime: {
+                    startsAt:
+                      selectedFulfillmentOption?.location?.window?.confirmedWindow?.dropoffTime?.startsAt.toString(),
+                    endsAt:
+                      selectedFulfillmentOption?.location?.window?.confirmedWindow?.dropoffTime?.endsAt.toString(),
                   },
+                  pickupTime: {
+                    startsAt:
+                      selectedFulfillmentOption?.location?.window?.confirmedWindow?.pickupTime?.startsAt.toString(),
+                  },
+                  deliveryInstructions:
+                    orderGetters.getDeliveryInstructions(updatedCartData?.data) || '',
+                  pickupInstructions: '',
+                  tips: orderGetters.getTipAmount(updatedCartData?.data) || 0,
+                  deliveryContact: {
+                    notifySms:
+                      selectedFulfillmentOption?.location?.notification?.isSendSMS || false,
+                    notifyEmail:
+                      selectedFulfillmentOption?.location?.notification?.isSendEmail || false,
+                    ...selectedFulfillmentOption?.location?.contact,
+                  },
+                  packages: [cartGetters.getPackagesDetails(updatedCartFilterItems)],
+                  storeId: selectedFulfillmentOption?.location?.window?.confirmedStoreId,
                   dsDescription: cartGetters.getDSDescription(
                     selectedFulfillmentOption?.location,
                     packages,

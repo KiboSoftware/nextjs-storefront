@@ -158,9 +158,11 @@ const getPackagesDetails = (cartItems: any) => {
 }
 
 const checkDeliveryItems = (data: any) => {
-  for (const item of data) {
-    if (item.fulfillmentMethod === 'Delivery' && item.product.productType !== 'DeliveryService') {
-      return true // Return true if such an item is found
+  if (data) {
+    for (const item of data) {
+      if (item.fulfillmentMethod === 'Delivery' && item.product.productType !== 'DeliveryService') {
+        return true // Return true if such an item is found
+      }
     }
   }
   return false // Return false if no such item is found
@@ -239,6 +241,25 @@ const getDSDescription = (
   }</div></td><td style="vertical-align:top"><div><b>Package Details:</b><table border="1"><tr><td><b> Size (H * W * L)</b></td><td><b> Quantity</b></td><td><b>Items</b></td></tr><tr><td> ${packages.size.height.toString()} * ${packages.size.width.toString()} * ${packages.size.length.toString()}</td><td>${packages.quantity.toString()}</td><td>${packages.items.toString()}</td></tr></table></div></td></tr></table></div>`
 }
 
+const convertIntoLocalStorageObject = (ds: any) => {
+  const output = {
+    code: ds?.storeId,
+    contact: {
+      address: ds?.deliveryContact?.address,
+      firstName: ds?.deliveryContact?.firstName,
+      phoneNumbers: ds?.deliveryContact.phoneNumbers,
+      lastNameOrSurname: ds?.deliveryContact?.lastNameOrSurname,
+    },
+    storeBoundary: [ds?.storeId],
+    notification: {
+      isSendSMS: ds?.deliveryContact?.notifySms,
+      isSendEmail: ds?.deliveryContact?.notifyEmail,
+    },
+  }
+
+  return output
+}
+
 export const cartGetters = {
   getCartItemCount,
   getCartItems,
@@ -251,4 +272,5 @@ export const cartGetters = {
   checkDeliveryItems,
   formatTimestamp,
   getDSDescription,
+  convertIntoLocalStorageObject,
 }

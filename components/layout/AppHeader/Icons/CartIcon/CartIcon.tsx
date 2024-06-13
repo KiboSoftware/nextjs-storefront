@@ -1,3 +1,5 @@
+import { useEffect } from 'react'
+
 import ShoppingCartIcon from '@mui/icons-material/ShoppingCart'
 import getConfig from 'next/config'
 import { useRouter } from 'next/router'
@@ -28,6 +30,19 @@ const CartIcon = ({ size, isElementVisible, mobileIconColor }: IconProps) => {
   const gotoCart = () => {
     router.push('/cart')
   }
+
+  useEffect(() => {
+    if (
+      cartGetters.checkDeliveryItems(cart?.items) &&
+      cart?.data &&
+      !deliveryAddressDateAndWindow
+    ) {
+      localStorage.setItem(
+        'instant-delivery',
+        JSON.stringify(cartGetters.convertIntoLocalStorageObject(cart?.data?.ds))
+      )
+    }
+  }, [cartGetters.checkDeliveryItems(cart?.items)])
 
   return (
     <HeaderAction
