@@ -18,11 +18,7 @@ import { useTranslation } from 'next-i18next'
 
 import { CartItemList } from '@/components/cart'
 import { PromoCodeBadge, OrderSummary } from '@/components/common'
-import { ConfirmationDialog, StoreLocatorDialog } from '@/components/dialogs'
-import { orderGetters, cartGetters } from '@/lib/getters'
-
-import type { CrCart, Location, CrCartItem } from '@/lib/gql/types'
-
+import { ConfirmationDialog } from '@/components/dialogs'
 import { useModalContext } from '@/context'
 import {
   useGetCart,
@@ -37,7 +33,9 @@ import {
   useCartActions,
   useProductCardActions,
 } from '@/hooks'
+import { orderGetters, cartGetters } from '@/lib/getters'
 
+import type { CrCart, Location, CrCartItem } from '@/lib/gql/types'
 
 export interface CartTemplateProps {
   isMultiShipEnabled: boolean
@@ -207,17 +205,19 @@ const CartTemplate = (props: CartTemplateProps) => {
           <Grid item xs={12} md={4} sx={{ paddingRight: { xs: 0, md: 2 } }}>
             <OrderSummary {...orderSummaryArgs}>
               <Stack direction="column" gap={2}>
-              {!isCSR && isCSR === undefined && (<LoadingButton
-                  variant="contained"
-                  color="primary"
-                  name="goToCart"
-                  fullWidth
-                  onClick={handleGotoCheckout}
-                  loading={showLoadingButton}
-                  disabled={!cartItemCount || showLoadingButton}
-                >
-                  {t('go-to-checkout')}
-                </LoadingButton>)}
+                {!isCSR && isCSR === undefined && (
+                  <LoadingButton
+                    variant="contained"
+                    color="primary"
+                    name="goToCart"
+                    fullWidth
+                    onClick={handleGotoCheckout}
+                    loading={showLoadingButton}
+                    disabled={!cartItemCount || showLoadingButton}
+                  >
+                    {t('go-to-checkout')}
+                  </LoadingButton>
+                )}
                 <Button
                   variant="contained"
                   color="secondary"
