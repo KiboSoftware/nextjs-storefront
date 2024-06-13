@@ -36,6 +36,7 @@ async function cartTakeoverHandler(req: NextApiRequestWithLogger, res: NextApiRe
       const options = {
         ...(req && res && { req, res }),
       }
+
       const cookieValue: UserAuthTicket & { accountId: number } = {
         accessToken: authTicket?.value?.accessToken,
         refreshToken: authTicket?.value?.refreshToken,
