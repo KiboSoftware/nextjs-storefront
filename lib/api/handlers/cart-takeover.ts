@@ -19,8 +19,12 @@ async function cartTakeoverHandler(req: NextApiRequestWithLogger, res: NextApiRe
       req as NextApiRequestWithLogger,
       res as NextApiResponse
     )
-    if (!authTicket) {
-      //res.redirect(`/error-page`);
+    if (!authTicket?.getOneTimeSecret?.value && authTicket?.errors?.length > 0) {
+      res.redirect(
+        `/error-page?errorMessage=${encodeURIComponent(
+          authTicket?.errors[0]?.message || 'Unknown error'
+        )}`
+      )
     }
 
     if (authTicket?.getOneTimeSecret?.value) {
@@ -46,8 +50,7 @@ async function cartTakeoverHandler(req: NextApiRequestWithLogger, res: NextApiRe
       res.redirect(redirectUrl)
     }
   } catch (error: any) {
-    //res.redirect(`/error-page?error=${encodeURIComponent(error.message)}`);
-    //res.redirect(`/error-page`);
+    res.redirect(`/error-page?errorMessage=${encodeURIComponent(error.message)}`)
   }
 }
 

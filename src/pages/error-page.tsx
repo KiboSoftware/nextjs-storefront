@@ -1,23 +1,34 @@
 import React, { useEffect, useState } from 'react'
 
-import { Typography } from '@mui/material'
-import { useTranslation } from 'react-i18next'
+import { GetServerSidePropsContext } from 'next';
+import { serverSideTranslations } from 'next-i18next/serverSideTranslations';
 
+import ErrorPageTemplate from '@/components/page-templates/ErrorPageTemplate/ErrorPageTemplate'
+export async function getServerSideProps(context: GetServerSidePropsContext) {
+  const { locale } = context
+
+  return {
+    props: {
+      ...(await serverSideTranslations(locale as string, ['common'])),
+    },
+  }
+}
 const ErrorMessage = () => {
-  const { t } = useTranslation('common')
-  const [errorMessage, setErrorMessage] = useState<string | null>(null)
+  const [errorMessage, setErrorMessage] = useState<string>('');
 
   useEffect(() => {
-    const queryParams = new URLSearchParams(window.location.search)
-    const error = queryParams.get('error')
-    setErrorMessage(error)
-  }, [])
-
+    const queryParams = new URLSearchParams(window.location.search);
+    const error = queryParams.get('errorMessage');
+    setErrorMessage(error || 'Unknown error');
+  }, []);
+  
   return (
-    <Typography variant="subtitle2" fontWeight={'bold'}>
-      {errorMessage ? t(errorMessage) : t('error-cartTakeover')}
-    </Typography>
-  )
-}
+    <>
+      <ErrorPageTemplate errorMessage={errorMessage}></ErrorPageTemplate>
+    </>
+  );
+};
 
-export default ErrorMessage
+export default ErrorMessage;
+
+

@@ -12,12 +12,17 @@ import {
   Divider,
   useMediaQuery,
 } from '@mui/material'
+import { getCookie } from 'cookies-next'
 import { useRouter } from 'next/router'
 import { useTranslation } from 'next-i18next'
 
 import { CartItemList } from '@/components/cart'
 import { PromoCodeBadge, OrderSummary } from '@/components/common'
 import { ConfirmationDialog, StoreLocatorDialog } from '@/components/dialogs'
+import { orderGetters, cartGetters } from '@/lib/getters'
+
+import type { CrCart, Location, CrCartItem } from '@/lib/gql/types'
+
 import { useModalContext } from '@/context'
 import {
   useGetCart,
@@ -32,15 +37,13 @@ import {
   useCartActions,
   useProductCardActions,
 } from '@/hooks'
-import { orderGetters, cartGetters } from '@/lib/getters'
 
-import type { CrCart, Location, CrCartItem } from '@/lib/gql/types'
 
 export interface CartTemplateProps {
   isMultiShipEnabled: boolean
   cart: CrCart
 }
-
+const isCSR = getCookie('isCSR')
 const CartTemplate = (props: CartTemplateProps) => {
   const { isMultiShipEnabled } = props
   const { data: cart } = useGetCart(props?.cart)
@@ -204,7 +207,7 @@ const CartTemplate = (props: CartTemplateProps) => {
           <Grid item xs={12} md={4} sx={{ paddingRight: { xs: 0, md: 2 } }}>
             <OrderSummary {...orderSummaryArgs}>
               <Stack direction="column" gap={2}>
-                <LoadingButton
+              {!isCSR && isCSR === undefined && (<LoadingButton
                   variant="contained"
                   color="primary"
                   name="goToCart"
@@ -214,7 +217,7 @@ const CartTemplate = (props: CartTemplateProps) => {
                   disabled={!cartItemCount || showLoadingButton}
                 >
                   {t('go-to-checkout')}
-                </LoadingButton>
+                </LoadingButton>)}
                 <Button
                   variant="contained"
                   color="secondary"

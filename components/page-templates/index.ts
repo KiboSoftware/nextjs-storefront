@@ -19,3 +19,4 @@ export { default as QuickOrderTemplate } from './B2B/QuickOrderTemplate/QuickOrd
 export { default as AccountHierarchyTemplate } from './B2B/AccountHierarchyTemplate/AccountHierarchyTemplate'
 export { default as QuotesTemplate } from './B2B/QuotesTemplate/QuotesTemplate'
 export { default as QuoteDetailsTemplate } from './B2B/QuoteDetailsTemplate/QuoteDetailsTemplate'
+export { default as ErrorPageTemplate } from './ErrorPageTemplate/ErrorPageTemplate'
