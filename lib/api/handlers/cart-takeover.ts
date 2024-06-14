@@ -14,31 +14,42 @@ async function cartTakeoverHandler(req: NextApiRequestWithLogger, res: NextApiRe
       return res.status(400).json({ error: 'Missing secretId' })
     }
 
-    const authTicket = await getCartTakeover(
+    const cartTakeoverResponse = await getCartTakeover(
       secretId as string,
-      req as NextApiRequestWithLogger,
-      res as NextApiResponse
+      req as NextApiRequestWithLogger
     )
-    if (!authTicket?.getOneTimeSecret?.value && authTicket?.errors?.length > 0) {
+
+    if (!cartTakeoverResponse) {
+      return res.redirect(
+        `/error-page?errorMessage=${encodeURIComponent('Unexpected response from getCartTakeover')}`
+      )
+    }
+    const authTicket = cartTakeoverResponse?.data?.getOneTimeSecret
+
+    if (!authTicket && cartTakeoverResponse?.errors?.length > 0) {
       res.redirect(
         `/error-page?errorMessage=${encodeURIComponent(
-          authTicket?.errors[0]?.message || 'Unknown error'
+          cartTakeoverResponse?.errors[0]?.message || 'Unknown error'
         )}`
+      )
+    } else if (!authTicket) {
+      return res.redirect(
+        `/error-page?errorMessage=${encodeURIComponent('Missing oneTimeSecret value in response')}`
       )
     }
 
-    if (authTicket?.getOneTimeSecret?.value) {
+    if (authTicket) {
       const options = {
         ...(req && res && { req, res }),
       }
       const cookieValue: UserAuthTicket & { accountId: number } = {
-        accessToken: authTicket?.getOneTimeSecret?.value?.accessToken,
-        refreshToken: authTicket?.getOneTimeSecret?.value?.refreshToken,
-        accessTokenExpiration: authTicket?.getOneTimeSecret?.value?.accessTokenExpiration,
-        jwtAccessToken: authTicket?.getOneTimeSecret?.value?.jwtAccessToken,
-        refreshTokenExpiration: authTicket?.getOneTimeSecret?.value?.refreshTokenExpiration,
-        userId: authTicket?.getOneTimeSecret?.value?.userId,
-        accountId: authTicket?.getOneTimeSecret?.value?.customerAccount?.id,
+        accessToken: authTicket?.value?.accessToken,
+        refreshToken: authTicket?.value?.refreshToken,
+        accessTokenExpiration: authTicket?.value?.accessTokenExpiration,
+        jwtAccessToken: authTicket?.value?.jwtAccessToken,
+        refreshTokenExpiration: authTicket?.value?.refreshTokenExpiration,
+        userId: authTicket?.value?.userId,
+        accountId: authTicket?.value?.customerAccount?.id,
       }
 
       res.setHeader(
