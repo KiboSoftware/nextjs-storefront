@@ -20,22 +20,16 @@ async function cartTakeoverHandler(req: NextApiRequestWithLogger, res: NextApiRe
     )
 
     if (!cartTakeoverResponse) {
-      return res.redirect(
-        `/error-page?errorMessage=${encodeURIComponent('Unexpected response from getCartTakeover')}`
-      )
+      return res.redirect(`/error-page?status500`)
     }
+
     const authTicket = cartTakeoverResponse?.data?.getOneTimeSecret
 
     if (!authTicket && cartTakeoverResponse?.errors?.length > 0) {
-      res.redirect(
-        `/error-page?errorMessage=${encodeURIComponent(
-          cartTakeoverResponse?.errors[0]?.message || 'Unknown error'
-        )}`
-      )
-    } else if (!authTicket) {
-      return res.redirect(
-        `/error-page?errorMessage=${encodeURIComponent('Missing oneTimeSecret value in response')}`
-      )
+      const status = cartTakeoverResponse?.errors[0]?.extensions?.response?.status
+      const message = cartTakeoverResponse?.errors[0]?.extensions?.response?.body?.message
+
+      res.redirect(`/error-page?status=${status}&message=${encodeURIComponent(message)}`)
     }
 
     if (authTicket) {
@@ -61,7 +55,7 @@ async function cartTakeoverHandler(req: NextApiRequestWithLogger, res: NextApiRe
       res.redirect(redirectUrl)
     }
   } catch (error: any) {
-    res.redirect(`/error-page?errorMessage=${encodeURIComponent(error.message)}`)
+    res.redirect(`/error-page?status=500&message=${encodeURIComponent(error.message)}`)
   }
 }
 

@@ -1,19 +1,63 @@
-import React, { useEffect, useState } from 'react'
+import React from 'react'
 
+import { Box, Typography } from '@mui/material'
 import { GetServerSidePropsContext } from 'next'
-import Error from 'next/error'
+import Head from 'next/head'
+import { useTranslation } from 'next-i18next'
 import { serverSideTranslations } from 'next-i18next/serverSideTranslations'
 
-import ErrorPageTemplate from '@/components/page-templates/ErrorPageTemplate/ErrorPageTemplate'
 export async function getServerSideProps(context: GetServerSidePropsContext) {
   const { locale } = context
   return {
     props: {
-      customMessage: { ...(await serverSideTranslations(locale as string, ['common'])) },
-      errorMessage: context.query?.errorMessage || '',
+      ...(await serverSideTranslations(locale as string, ['common'])),
+      errorMessage: context.query?.message || '',
+      status: context.query?.status,
     },
   }
 }
-export default function ErrorMessage({ customMessage = '', errorMessage = '' }) {
-  return <Error statusCode={404} title={errorMessage} />
+export default function ErrorMessage({
+  errorMessage = '',
+  status,
+}: {
+  errorMessage: string
+  status: number
+}) {
+  const { t } = useTranslation('common')
+
+  return (
+    <>
+      <Head>
+        <title>{status}</title>
+      </Head>
+      <Box
+        sx={{
+          display: 'flex',
+          flexDirection: 'column',
+          alignItems: 'center',
+          justifyContent: 'center',
+          gap: '3rem',
+          minHeight: '50vh',
+          margin: 0,
+          padding: '2rem',
+        }}
+      >
+        {status && errorMessage && (
+          <Box display={'flex'} gap={2}>
+            <Box pr={2} borderRight={'1px solid rgba(0, 0,0,0.5)'}>
+              <Typography variant="h4">{status}</Typography>
+            </Box>
+            <Box display={'flex'} alignItems={'center'}>
+              <Typography variant="subtitle2" gutterBottom>
+                {errorMessage}
+              </Typography>
+            </Box>
+          </Box>
+        )}
+        <Box>
+          <Typography variant="h5">{t('error-cartTakeover')}</Typography>
+        </Box>
+      </Box>
+    </>
+  )
 }
