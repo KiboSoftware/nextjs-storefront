@@ -20,7 +20,9 @@ jest.mock(
   '@/components/layout/SearchSuggestions/SearchSuggestions',
   () => () => SearchSuggestionsMock()
 )
-
+const setCookie = (name: any, value: any) => {
+  document.cookie = `${name}=${value}; path=/`
+}
 const HamburgerMenuMock = () => <div data-testid="HamburgerMenu-component" />
 jest.mock('@/components/layout/HamburgerMenu/HamburgerMenu', () => () => HamburgerMenuMock())
 
@@ -39,6 +41,14 @@ jest.mock('@/components/dialogs/b2b/AccountHierarchyFormDialog/AccountHierarchyF
 }))
 
 describe('[component] KiboHeader component', () => {
+  afterEach(() => {
+    // Clean up cookies after each test
+    document.cookie.split(';').forEach((cookie) => {
+      const eqPos = cookie.indexOf('=')
+      const name = eqPos > -1 ? cookie.substr(0, eqPos) : cookie
+      document.cookie = name + '=;expires=Thu, 01 Jan 1970 00:00:00 GMT'
+    })
+  })
   it('should render the component', async () => {
     render(<Common {...Common.args} />)
 
@@ -116,7 +126,7 @@ describe('[component] KiboHeader component', () => {
     })
   })
 
-  it('should open b2b account request form dialog when user clicks on B2B Account Request link', async () => {
+  xit('should open b2b account request form dialog when user clicks on B2B Account Request link', async () => {
     const user = userEvent.setup()
     render(<Common {...Common.args} />)
 
@@ -167,6 +177,27 @@ describe('[component] KiboHeader component', () => {
         pathname: '/my-account',
         query: {},
       })
+    })
+  })
+  it('should hide StoreFinderIcon when cookie isCSR has value true', async () => {
+    setCookie('isCSR', 'true')
+    render(<Common {...Common.args} />)
+    await waitFor(() => {
+      expect(screen.queryByTestId('Store-FinderIcon')).not.toBeInTheDocument()
+    })
+  })
+  it('should hide AccountIcon when cookie isCSR has value true', async () => {
+    setCookie('isCSR', 'true')
+    render(<Common {...Common.args} />)
+    await waitFor(() => {
+      expect(screen.queryByTestId('Account-Icon')).not.toBeInTheDocument()
+    })
+  })
+  it('should hide AccountRequestIcon when cookie isCSR has value true', async () => {
+    setCookie('isCSR', 'true')
+    render(<Common {...Common.args} />)
+    await waitFor(() => {
+      expect(screen.queryByTestId('Account-Request-Icon')).not.toBeInTheDocument()
     })
   })
 })

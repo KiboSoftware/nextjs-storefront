@@ -4,6 +4,7 @@ import { Box, Container } from '@mui/material'
 import { ComponentStory, ComponentMeta } from '@storybook/react'
 
 import KiboHeader from './KiboHeader'
+import StoreFinderIcon from '../Icons/StoreFinderIcon/StoreFinderIcon'
 
 export default {
   title: 'Layout/App Header',
@@ -28,6 +29,7 @@ Praesent commodo cursus magna, vel scelerisque nisl consectetur et.`
           )
           .join('\n')}
       </Box>
+      <StoreFinderIcon></StoreFinderIcon>
     </Container>
   </>
 )

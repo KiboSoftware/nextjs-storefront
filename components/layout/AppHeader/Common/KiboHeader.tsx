@@ -32,12 +32,13 @@ import {
   SearchSuggestions,
   StoreFinderIcon,
 } from '@/components/layout'
-import { useAuthContext, useHeaderContext, useModalContext } from '@/context'
-import { useCreateCustomerB2bAccountMutation, useGetCategoryTree } from '@/hooks'
 import { buildCreateCustomerB2bAccountParams } from '@/lib/helpers'
 import type { CreateCustomerB2bAccountParams, NavigationLink } from '@/lib/types'
 
 import type { Maybe, PrCategory } from '@/lib/gql/types'
+
+import { useAuthContext, useHeaderContext, useModalContext } from '@/context'
+import { useCreateCustomerB2bAccountMutation, useGetCategoryTree } from '@/hooks'
 
 interface KiboHeaderProps {
   navLinks: NavigationLink[]
@@ -90,12 +91,16 @@ const HeaderActionArea = (props: HeaderActionAreaProps) => {
 
         <Box display="flex" flex={1} justifyContent={'flex-end'} gap={2}>
           {!isCSR && isCSR === undefined && (
-            <StoreFinderIcon size={isHeaderSmall ? 'small' : 'medium'} />
+            <StoreFinderIcon
+              size={isHeaderSmall ? 'small' : 'medium'}
+              data-testid="Store-FinderIcon"
+            />
           )}
           {!isCSR && isCSR === undefined && (
             <AccountIcon
               size={isHeaderSmall ? 'small' : 'medium'}
               onAccountIconClick={onAccountIconClick}
+              data-testid="Account-Icon"
             />
           )}
           {!isCSR && isCSR === undefined && (
@@ -104,6 +109,7 @@ const HeaderActionArea = (props: HeaderActionAreaProps) => {
               isElementVisible={false}
               iconProps={{ fontSize: isHeaderSmall ? 'small' : 'medium' }}
               buttonText={t('b2b-account-request')}
+              data-testid="Account-Request-Icon"
             />
           )}
           <CartIcon size={isHeaderSmall ? 'small' : 'medium'} />
