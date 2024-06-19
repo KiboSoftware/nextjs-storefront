@@ -3,7 +3,6 @@ import { render, screen, waitFor } from '@testing-library/react'
 
 import '@testing-library/jest-dom'
 import * as stories from './MobileHeader.stories' // import all stories from the stories file
-
 import { renderWithQueryClient } from '@/__test__/utils'
 
 const { Common } = composeStories(stories)

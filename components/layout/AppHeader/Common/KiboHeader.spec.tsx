@@ -82,7 +82,7 @@ describe('[component] KiboHeader component', () => {
     render(<Common {...Common.args} />)
 
     await waitFor(() => {
-      expect(screen.getByTestId('FmdGoodIcon')).toBeVisible()
+      expect(screen.getAllByTestId('FmdGoodIcon')[0]).toBeVisible()
     })
 
     expect(screen.getByTestId('ShoppingCartIcon')).toBeVisible()
