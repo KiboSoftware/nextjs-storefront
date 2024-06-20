@@ -95,13 +95,6 @@ const HeaderActionArea = (props: HeaderActionAreaProps) => {
                 size={isHeaderSmall ? 'small' : 'medium'}
                 data-testid="Store-FinderIcon"
               />
-              <AccountIcon
-                size={isHeaderSmall ? 'small' : 'medium'}
-                onAccountIconClick={onAccountIconClick}
-                data-testid="Account-Icon"
-                isElementVisible={isCSR ? true : false}
-                isCSR={Boolean(isCSR)}
-              />
               <AccountRequestIcon
                 onClick={onAccountRequestClick}
                 isElementVisible={false}
@@ -111,6 +104,13 @@ const HeaderActionArea = (props: HeaderActionAreaProps) => {
               />
             </>
           )}
+          <AccountIcon
+            size={isHeaderSmall ? 'small' : 'medium'}
+            onAccountIconClick={onAccountIconClick}
+            data-testid="Account-Icon"
+            isElementVisible={isCSR ? true : false}
+            isCSR={Boolean(isCSR)}
+          />
           <CartIcon size={isHeaderSmall ? 'small' : 'medium'} />
         </Box>
       </Container>
