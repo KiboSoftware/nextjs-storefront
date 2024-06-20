@@ -29,7 +29,6 @@ Praesent commodo cursus magna, vel scelerisque nisl consectetur et.`
           )
           .join('\n')}
       </Box>
-      <StoreFinderIcon></StoreFinderIcon>
     </Container>
   </>
 )

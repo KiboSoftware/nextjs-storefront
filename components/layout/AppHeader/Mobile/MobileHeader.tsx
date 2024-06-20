@@ -50,7 +50,7 @@ const MobileHeader = ({ children }: { children?: React.ReactNode }) => {
           </Link>
         </Box>
 
-        {!isCSR && isCSR === undefined && (
+        {!isCSR && (
           <StoreFinderIcon
             size="medium"
             mobileIconColor="black"

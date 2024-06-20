@@ -126,7 +126,7 @@ describe('[component] KiboHeader component', () => {
     })
   })
 
-  xit('should open b2b account request form dialog when user clicks on B2B Account Request link', async () => {
+  it('should open b2b account request form dialog when user clicks on B2B Account Request link', async () => {
     const user = userEvent.setup()
     render(<Common {...Common.args} />)
 

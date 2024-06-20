@@ -88,28 +88,28 @@ const HeaderActionArea = (props: HeaderActionAreaProps) => {
           </Link>
         </Box>
 
-        <Box display="flex" flex={1} justifyContent={'flex-end'} gap={2}>
-          {!isCSR && isCSR === undefined && (
-            <StoreFinderIcon
-              size={isHeaderSmall ? 'small' : 'medium'}
-              data-testid="Store-FinderIcon"
-            />
-          )}
-          {!isCSR && isCSR === undefined && (
-            <AccountIcon
-              size={isHeaderSmall ? 'small' : 'medium'}
-              onAccountIconClick={onAccountIconClick}
-              data-testid="Account-Icon"
-            />
-          )}
-          {!isCSR && isCSR === undefined && (
-            <AccountRequestIcon
-              onClick={onAccountRequestClick}
-              isElementVisible={false}
-              iconProps={{ fontSize: isHeaderSmall ? 'small' : 'medium' }}
-              buttonText={t('b2b-account-request')}
-              data-testid="Account-Request-Icon"
-            />
+        <Box display="flex" flex={1} justifyContent={'flex-end'} gap={1}>
+          {!isCSR && (
+            <>
+              <StoreFinderIcon
+                size={isHeaderSmall ? 'small' : 'medium'}
+                data-testid="Store-FinderIcon"
+              />
+              <AccountIcon
+                size={isHeaderSmall ? 'small' : 'medium'}
+                onAccountIconClick={onAccountIconClick}
+                data-testid="Account-Icon"
+                isElementVisible={isCSR ? true : false}
+                isCSR={Boolean(isCSR)}
+              />
+              <AccountRequestIcon
+                onClick={onAccountRequestClick}
+                isElementVisible={false}
+                iconProps={{ fontSize: isHeaderSmall ? 'small' : 'medium' }}
+                buttonText={t('b2b-account-request')}
+                data-testid="Account-Request-Icon"
+              />
+            </>
           )}
           <CartIcon size={isHeaderSmall ? 'small' : 'medium'} />
         </Box>
@@ -130,17 +130,16 @@ const TopHeader = ({ navLinks }: { navLinks: NavigationLink[] }) => {
     <Box sx={{ ...topHeaderStyles.wrapper }} data-testid="top-bar">
       <Container maxWidth="xl" sx={{ ...topHeaderStyles.container }}>
         <Box display="flex" justifyContent="flex-end" alignItems="center" gap={5}>
-          {navLinks?.map((nav, index) => {
-            return (
-              <Box key={index}>
-                {!isCSR && isCSR === undefined && (
+          {!isCSR &&
+            navLinks?.map((nav, index) => {
+              return (
+                <Box key={index}>
                   <StyledLink href={nav.link} passHref>
                     {t(`${nav.text}`)}
                   </StyledLink>
-                )}
-              </Box>
-            )
-          })}
+                </Box>
+              )
+            })}
         </Box>
       </Container>
     </Box>

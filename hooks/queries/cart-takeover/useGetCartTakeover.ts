@@ -33,22 +33,21 @@ const getOneTimeSceretMethods = async (secretId: string) => {
  *
  * <b>GetCartTakeover(secretId): [UseGetCartTakeoverResponse]</b>
  *
- * Description : Fetches the shipping methods based on quote id and draft.
+ * Description : Fetches the accessTokens for CSR based on secretId.
  *
- * Parameters passed to function getOneTimeSceretMethods(secretId: string) => expects quoteId and draft
+ * Parameters passed to function getOneTimeSceretMethods(secretId: string) => expects secretId
  *
- * On success, returns the received list of shipping methods.
+ * On success, returns the GetCartTakeoverResponse.
  *
  * @param secretId - string
  *
- * @returns 'response?.GetCartTakeover', which contains shipping methods based on quoteId and draft request.
+ * @returns 'response?.GetCartTakeover', which contains shipping methods based on secretI.
  */
 
 export const useGetCartTakeover = (secretId: string): UseGetCartTakeoverResponse => {
   const { data, isLoading, isSuccess } = useQuery({
     queryKey: cartTakeoverKeys.all,
     queryFn: () => getOneTimeSceretMethods(secretId),
-    // cacheTime: 0,
   })
 
   return { data, isLoading, isSuccess }

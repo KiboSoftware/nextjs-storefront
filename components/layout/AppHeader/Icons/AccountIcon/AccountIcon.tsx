@@ -7,16 +7,17 @@ import type { IconProps } from '@/lib/types'
 
 interface AccountIconProps extends IconProps {
   onAccountIconClick: () => void
+  isCSR: boolean
 }
 
-const AccountIcon = ({ size, isElementVisible, onAccountIconClick }: AccountIconProps) => {
+const AccountIcon = ({ size, isElementVisible, isCSR, onAccountIconClick }: AccountIconProps) => {
   const { isAuthenticated, user } = useAuthContext()
   const { t } = useTranslation('common')
 
   return (
     <HeaderAction
-      title={isAuthenticated && user?.firstName ? `${t('hi')}, ${user?.firstName}` : ''}
-      subtitle={isAuthenticated ? t('go-to-my-account') : t('log-in')}
+      title={(isAuthenticated || isCSR) && user?.firstName ? `${t('hi')}, ${user?.firstName}` : ''}
+      subtitle={isAuthenticated || isCSR ? t('go-to-my-account') : t('log-in')}
       icon={AccountCircleIcon}
       iconFontSize={size}
       isElementVisible={isElementVisible}

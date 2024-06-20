@@ -125,10 +125,10 @@ const HamburgerMenu = (props: HamburgerMenuProps) => {
           </Box>
           <Box sx={{ ...styles.spacer }}></Box>
           <List sx={{ ...styles.navLinksList }}>
-            {navLinks?.map((nav) => (
-              <Box key={nav.text}>
-                <MuiLink underline="none">
-                  {!isCSR && isCSR === undefined && (
+            {!isCSR &&
+              navLinks?.map((nav) => (
+                <Box key={nav.text}>
+                  <MuiLink underline="none">
                     <ListItem button sx={{ paddingInline: 4 }}>
                       <ListItemText
                         primary={
@@ -139,11 +139,10 @@ const HamburgerMenu = (props: HamburgerMenuProps) => {
                         onClick={() => handleNavLinks(nav.link)}
                       />
                     </ListItem>
-                  )}
-                </MuiLink>
-                <Divider />
-              </Box>
-            ))}
+                  </MuiLink>
+                  <Divider />
+                </Box>
+              ))}
           </List>
           {requestAccountIconComponent}
         </Box>
