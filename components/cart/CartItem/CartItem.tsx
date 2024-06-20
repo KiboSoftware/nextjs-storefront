@@ -129,8 +129,8 @@ const CartItem = (props: CartItemProps) => {
   const handleLinkAction = (cartItemId: string, fulfillmentMethod: string) => {
     if (fulfillmentMethod === 'PICKUP') {
       onProductPickupLocation(cartItemId)
-    } else if (fulfillmentMethod === 'DELIVERY') {
-      onInstantDelivery && onInstantDelivery(cartItemId)
+    } else if (fulfillmentMethod === 'DELIVERY' && onInstantDelivery) {
+      onInstantDelivery(cartItemId)
     }
   }
   const subscriptionDetails = cartGetters.getSubscriptionDetails(cartItem)
@@ -220,7 +220,7 @@ const CartItem = (props: CartItemProps) => {
                     handleFulfillmentOptionChange(fulfillmentMethod, cartItem?.id as string)
                   }
                   onStoreSetOrUpdate={(fulfillmentMethod: string) =>
-                    handleLinkAction(cartItem?.id as string, fulfillmentMethod as string)
+                    handleLinkAction(cartItem?.id as string, fulfillmentMethod)
                   } // change store: Open storelocator modal. Should not change global store.
                 />
               )}

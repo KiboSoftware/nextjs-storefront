@@ -76,7 +76,8 @@ const CartTemplate = (props: CartTemplateProps) => {
     JSON.parse(localStorage.getItem('instant-delivery') as string)
   const filterCartItems = cartItems?.filter(
     (cartItem) =>
-      cartItem?.product?.productType !== publicRuntimeConfig?.instantDelivery?.productType
+      cartItem?.product?.productType !==
+      publicRuntimeConfig?.DeliverySolutionsDeliveryProductConfig?.productType
   )
   const cartItemCount = !deliveryAddressDateAndWindow
     ? cartGetters.getCartItemCount(cart)
@@ -95,7 +96,9 @@ const CartTemplate = (props: CartTemplateProps) => {
   const { handleDeleteCurrentCart } = useProductCardActions()
   const { updateOrderShippingInfo } = useUpdateOrderShippingInfo()
   const instantDeliveryItem = cartItems.find(
-    (item) => item?.product?.productType === publicRuntimeConfig?.instantDelivery?.productType
+    (item) =>
+      item?.product?.productType ===
+      publicRuntimeConfig?.DeliverySolutionsDeliveryProductConfig?.productType
   )
 
   const handleApplyPromoCode = async (couponCode: string) => {
@@ -163,61 +166,66 @@ const CartTemplate = (props: CartTemplateProps) => {
   }
 
   const handleCheckoutWithRates = async (deliveryFee: any) => {
-    if (!isLoading && deliveryFee && instantDeliveryItem) {
-      const variables = {
-        params: {
-          cartId: cart?.id as string,
-          cartItemId: instantDeliveryItem?.id as string,
-          cartItemInput: {
-            ...(instantDeliveryItem as CrCartItemInput),
-            quantity: instantDeliveryItem?.quantity as number,
-            product: {
-              ...(instantDeliveryItem?.product as any),
-              price: {
-                ...instantDeliveryItem?.product?.price,
-                tenantOverridePrice: deliveryFee,
+    try {
+      if (!isLoading && deliveryFee && instantDeliveryItem) {
+        const variables = {
+          params: {
+            cartId: cart?.id as string,
+            cartItemId: instantDeliveryItem?.id as string,
+            cartItemInput: {
+              ...(instantDeliveryItem as CrCartItemInput),
+              quantity: instantDeliveryItem?.quantity as number,
+              product: {
+                ...(instantDeliveryItem?.product as any),
+                price: {
+                  ...instantDeliveryItem?.product?.price,
+                  tenantOverridePrice: deliveryFee,
+                },
               },
             },
           },
-        },
-      }
-      const response = await fetch('/api/update-cart-item', {
-        method: 'POST',
-        headers: {
-          Accept: 'application/json, text/plain, */*',
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify(variables),
-      })
-
-      const initiateOrderResponse = isMultiShipEnabled
-        ? await initiateCheckout.mutateAsync(cart?.id)
-        : await initiateOrder.mutateAsync({
-            cartId: cart?.id as string,
-          })
-
-      if (initiateOrderResponse?.id) {
-        await updateOrderShippingInfo.mutateAsync({
-          checkout: { ...initiateOrderResponse },
-          contact: {
-            firstName: deliveryAddressDateAndWindow?.contact?.firstName,
-            lastNameOrSurname: deliveryAddressDateAndWindow?.contact?.lastNameOrSurname,
-            id: deliveryAddressDateAndWindow?.contact?.id || DefaultId.ADDRESSID,
-            phoneNumbers: {
-              home: deliveryAddressDateAndWindow?.contact?.phoneNumbers?.home,
-            },
-            address: {
-              address1: deliveryAddressDateAndWindow?.contact?.address?.address1,
-              address2: deliveryAddressDateAndWindow?.contact?.address?.address2,
-              cityOrTown: deliveryAddressDateAndWindow?.contact?.address?.cityOrTown,
-              stateOrProvince: deliveryAddressDateAndWindow?.contact?.address?.stateOrProvince,
-              countryCode: deliveryAddressDateAndWindow?.contact?.address?.countryCode,
-              postalOrZipCode: deliveryAddressDateAndWindow?.contact?.address?.postalOrZipCode,
-            },
+        }
+        const response = await fetch('/api/update-cart-item', {
+          method: 'POST',
+          headers: {
+            Accept: 'application/json, text/plain, */*',
+            'Content-Type': 'application/json',
           },
+          body: JSON.stringify(variables),
         })
-        router.push(`/checkout/${initiateOrderResponse.id}`)
+
+        const initiateOrderResponse = isMultiShipEnabled
+          ? await initiateCheckout.mutateAsync(cart?.id)
+          : await initiateOrder.mutateAsync({
+              cartId: cart?.id as string,
+            })
+
+        if (initiateOrderResponse?.id) {
+          await updateOrderShippingInfo.mutateAsync({
+            checkout: { ...initiateOrderResponse },
+            contact: {
+              firstName: deliveryAddressDateAndWindow?.contact?.firstName,
+              lastNameOrSurname: deliveryAddressDateAndWindow?.contact?.lastNameOrSurname,
+              id: deliveryAddressDateAndWindow?.contact?.id || DefaultId.ADDRESSID,
+              phoneNumbers: {
+                home: deliveryAddressDateAndWindow?.contact?.phoneNumbers?.home,
+              },
+              address: {
+                address1: deliveryAddressDateAndWindow?.contact?.address?.address1,
+                address2: deliveryAddressDateAndWindow?.contact?.address?.address2,
+                cityOrTown: deliveryAddressDateAndWindow?.contact?.address?.cityOrTown,
+                stateOrProvince: deliveryAddressDateAndWindow?.contact?.address?.stateOrProvince,
+                countryCode: deliveryAddressDateAndWindow?.contact?.address?.countryCode,
+                postalOrZipCode: deliveryAddressDateAndWindow?.contact?.address?.postalOrZipCode,
+              },
+            },
+          })
+          router.push(`/checkout/${initiateOrderResponse.id}`)
+        }
       }
+    } catch (e) {
+      console.error(e)
+      setShowLoadingButton(false)
     }
   }
   useEffect(() => {
@@ -281,7 +289,9 @@ const CartTemplate = (props: CartTemplateProps) => {
 
   useEffect(() => {
     const instantDeliveryItem = cartItems.find(
-      (item) => item?.product?.productType === publicRuntimeConfig?.instantDelivery?.productType
+      (item) =>
+        item?.product?.productType ===
+        publicRuntimeConfig?.DeliverySolutionsDeliveryProductConfig?.productType
     )
     if (
       !cartGetters.checkDeliveryItems(cartItems) &&

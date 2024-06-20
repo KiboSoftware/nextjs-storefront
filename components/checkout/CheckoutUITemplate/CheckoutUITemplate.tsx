@@ -55,7 +55,8 @@ const CheckoutUITemplate = <T extends CrOrder | Checkout>(props: CheckoutUITempl
   const handleSubmit = useCallback(() => setStepStatusSubmit(), [])
   const filterCheckoutItems = checkout?.items?.filter(
     (checkoutItem) =>
-      checkoutItem?.product?.productType !== publicRuntimeConfig?.instantDelivery?.productType
+      checkoutItem?.product?.productType !==
+      publicRuntimeConfig?.DeliverySolutionsDeliveryProductConfig?.productType
   )
   const orderSummaryArgs = {
     nameLabel: t('order-summary'),

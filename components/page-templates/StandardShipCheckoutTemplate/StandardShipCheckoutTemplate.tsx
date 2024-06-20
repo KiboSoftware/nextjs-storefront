@@ -96,7 +96,8 @@ const StandardShipCheckoutTemplate = (props: StandardShipCheckoutProps) => {
   const handleAddTip = async (amount: string) => {
     const filterOrderItems = order?.items?.filter(
       (orderItem: any) =>
-        orderItem?.product?.productType !== publicRuntimeConfig?.instantDelivery?.productType
+        orderItem?.product?.productType !==
+        publicRuntimeConfig?.DeliverySolutionsDeliveryProductConfig?.productType
     )
     const packages = cartGetters.getPackagesDetails(filterOrderItems)
     const deliveryAddressDateAndWindow =
@@ -152,7 +153,8 @@ const StandardShipCheckoutTemplate = (props: StandardShipCheckoutProps) => {
   const handleAddDeliveryInstructions = async (deliveryInstructions: string) => {
     const filterOrderItems = order?.items?.filter(
       (orderItem: any) =>
-        orderItem?.product?.productType !== publicRuntimeConfig?.instantDelivery?.productType
+        orderItem?.product?.productType !==
+        publicRuntimeConfig?.DeliverySolutionsDeliveryProductConfig?.productType
     )
     const packages = cartGetters.getPackagesDetails(filterOrderItems)
     const deliveryAddressDateAndWindow =

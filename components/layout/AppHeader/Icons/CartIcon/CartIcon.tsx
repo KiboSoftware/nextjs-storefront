@@ -19,7 +19,8 @@ const CartIcon = ({ size, isElementVisible, mobileIconColor }: IconProps) => {
     JSON.parse(localStorage.getItem('instant-delivery') as string)
   const filterCartItemsTotal = cart?.items?.filter(
     (cartItem) =>
-      cartItem?.product?.productType !== publicRuntimeConfig?.instantDelivery?.productType
+      cartItem?.product?.productType !==
+      publicRuntimeConfig?.DeliverySolutionsDeliveryProductConfig?.productType
   )?.length
   const itemCount = !deliveryAddressDateAndWindow
     ? cartGetters.getCartItemCount(cart)

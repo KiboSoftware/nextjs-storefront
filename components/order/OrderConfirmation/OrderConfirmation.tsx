@@ -40,7 +40,8 @@ const OrderConfirmation = ({ order }: { order: CrOrder }) => {
     subTotalLabel: `${t('subtotal')} (${t('item-quantity', {
       count: order.items?.filter(
         (orderItem) =>
-          orderItem?.product?.productType !== publicRuntimeConfig?.instantDelivery?.productType
+          orderItem?.product?.productType !==
+          publicRuntimeConfig?.DeliverySolutionsDeliveryProductConfig?.productType
       )?.length,
     })})`,
     shippingTotalLabel: t('shipping'),
@@ -78,7 +79,7 @@ const OrderConfirmation = ({ order }: { order: CrOrder }) => {
                   count: order.items?.filter(
                     (orderItem) =>
                       orderItem?.product?.productType !==
-                      publicRuntimeConfig?.instantDelivery?.productType
+                      publicRuntimeConfig?.DeliverySolutionsDeliveryProductConfig?.productType
                   )?.length,
                 })}
               </Typography>

@@ -38,7 +38,6 @@ export const useFormSchema = () => {
       .string()
       .required(t('this-field-is-required'))
       .matches(/^\w+(\s\w+){1,2}$/, t('enter-valid-full-name')),
-    // lastNameOrSurname: yup.string().required(t('this-field-is-required')),
     address: yup.object().shape({
       address1: yup.string().required(t('this-field-is-required')),
       address2: yup.string().nullable(true).notRequired(),
@@ -82,7 +81,6 @@ const mapToContactForm = (internalContact: InternalContactForm): ContactForm => 
 // Component
 const AddressForm = (props: AddressFormProps) => {
   const { publicRuntimeConfig } = getConfig()
-  const { t: translation } = useTranslation('common')
 
   const {
     contact,
@@ -198,28 +196,6 @@ const AddressForm = (props: AddressFormProps) => {
             )}
           />
         </Grid>
-
-        {/* <Grid item xs={12} md={isAddressFormInDialog ? 12 : 6}>
-          <Controller
-            name="lastNameOrSurname"
-            control={control}
-            defaultValue={contact?.lastNameOrSurname}
-            render={({ field }) => (
-              <KiboTextBox
-                {...field}
-                value={field.value || ''}
-                label={t('last-name-or-sur-name')}
-                ref={null}
-                error={!!errors?.lastNameOrSurname}
-                helperText={errors?.lastNameOrSurname?.message}
-                onChange={(_name: string, value: string) => field.onChange(value)}
-                onBlur={field.onBlur}
-                required={true}
-                disabled={isDisabled}
-              />
-            )}
-          />
-        </Grid> */}
 
         <Grid item xs={12}>
           <Controller

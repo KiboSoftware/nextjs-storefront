@@ -354,7 +354,7 @@ const StandardShippingStep = (props: ShippingProps) => {
   }
   const updateFulfillmentLocationCode = (items: any, deliveryAddressDateAndWindow: any) => {
     items.forEach((item: any) => {
-      if (item.fulfillmentMethod === 'Delivery') {
+      if (item.fulfillmentMethod === FulfillmentOptions.DELIVERY) {
         item.fulfillmentLocationCode = deliveryAddressDateAndWindow?.window?.confirmedStoreId
       }
     })
@@ -368,7 +368,8 @@ const StandardShippingStep = (props: ShippingProps) => {
     setLocalIsSuccess(false)
     const deliveryItem = updateOrderResponse?.items?.find(
       (item: any) =>
-        item?.product?.productType === publicRuntimeConfig?.instantDelivery?.productType
+        item?.product?.productType ===
+        publicRuntimeConfig?.DeliverySolutionsDeliveryProductConfig?.productType
     )
     const updateOrderItemPriceVariables = {
       params: {
@@ -388,7 +389,8 @@ const StandardShippingStep = (props: ShippingProps) => {
     const updateOrderItemPriceResponse = await response.json()
     const filterUpdatedOrderItems = updateOrderItemPriceResponse?.items?.filter(
       (orderItem: any) =>
-        orderItem?.product?.productType !== publicRuntimeConfig?.instantDelivery?.productType
+        orderItem?.product?.productType !==
+        publicRuntimeConfig?.DeliverySolutionsDeliveryProductConfig?.productType
     )
     const updatedOrderPackages = cartGetters.getPackagesDetails(filterUpdatedOrderItems)
     await updateOrderShippingInfo.mutateAsync({
@@ -493,7 +495,8 @@ const StandardShippingStep = (props: ShippingProps) => {
           const updateOrderResponseAPI = await updateOrder.mutateAsync(params)
           const updateOrderFilterItems = updateOrderResponseAPI?.items?.filter(
             (orderItem: any) =>
-              orderItem?.product?.productType !== publicRuntimeConfig?.instantDelivery?.productType
+              orderItem?.product?.productType !==
+              publicRuntimeConfig?.DeliverySolutionsDeliveryProductConfig?.productType
           )
           setDeliveryRatesPayload(
             cartGetters.getNormalizedDataForRates(
@@ -526,7 +529,8 @@ const StandardShippingStep = (props: ShippingProps) => {
   const handleSetDeliveryAddress = async () => {
     const filterOrderItems = checkout?.items?.filter(
       (orderItem: any) =>
-        orderItem?.product?.productType !== publicRuntimeConfig?.instantDelivery?.productType
+        orderItem?.product?.productType !==
+        publicRuntimeConfig?.DeliverySolutionsDeliveryProductConfig?.productType
     )
     const packages = cartGetters.getPackagesDetails(filterOrderItems)
     const updateOrderDataVariables = {

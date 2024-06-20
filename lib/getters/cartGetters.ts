@@ -109,7 +109,9 @@ const getNormalizedDeliveryAddress = (deliveryAddress: any) => {
 }
 
 const getNormalizedDataForRates = (cartItems: any, deliveryWindowDateAndTime: any) => {
-  const deliveryItems = cartItems.filter((item: any) => item.fulfillmentMethod === 'Delivery')
+  const deliveryItems = cartItems.filter(
+    (item: any) => item.fulfillmentMethod === FulfillmentOptions.DELIVERY
+  )
   return {
     storeExternalIds: [deliveryWindowDateAndTime?.window?.confirmedStoreId],
     type: 'delivery',
@@ -126,7 +128,9 @@ const getPackagesDetails = (cartItems: any) => {
   let totalHeight = 0
   let totalLength = 0
   let totalWidth = 0
-  const deliveryItems = cartItems.filter((item: any) => item.fulfillmentMethod === 'Delivery')
+  const deliveryItems = cartItems.filter(
+    (item: any) => item.fulfillmentMethod === FulfillmentOptions.DELIVERY
+  )
   deliveryItems?.forEach((item: any) => {
     const quantity = item.quantity
     const measurements = item.product.measurements
@@ -160,7 +164,11 @@ const getPackagesDetails = (cartItems: any) => {
 const checkDeliveryItems = (data: any) => {
   if (data) {
     for (const item of data) {
-      if (item.fulfillmentMethod === 'Delivery' && item.product.productType !== 'DeliveryService') {
+      if (
+        item.fulfillmentMethod === FulfillmentOptions.DELIVERY &&
+        item.product.productType !==
+          publicRuntimeConfig?.DeliverySolutionsDeliveryProductConfig?.productType
+      ) {
         return true // Return true if such an item is found
       }
     }

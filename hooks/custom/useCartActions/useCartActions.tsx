@@ -76,8 +76,10 @@ export const useCartActions = ({ cartItems, purchaseLocation }: UseCartActionsPr
               if (!deliveryAddressDateAndWindowFromLocalStorage) {
                 await addToCart.mutateAsync({
                   product: {
-                    productCode: publicRuntimeConfig?.instantDelivery?.productCode,
-                    variationProductCode: publicRuntimeConfig?.instantDelivery?.productCode,
+                    productCode:
+                      publicRuntimeConfig?.DeliverySolutionsDeliveryProductConfig?.productCode,
+                    variationProductCode:
+                      publicRuntimeConfig?.DeliverySolutionsDeliveryProductConfig?.productCode,
                     fulfillmentMethod: FulfillmentOptions.DELIVERY,
                     options: [],
                     purchaseLocationCode: instantDelivery?.window?.confirmedStoreId as string,
@@ -91,7 +93,8 @@ export const useCartActions = ({ cartItems, purchaseLocation }: UseCartActionsPr
             const refetchCartData = await refetch()
             const updatedCartFilterItems = refetchCartData?.data?.items?.filter(
               (cartItem: any) =>
-                cartItem?.product?.productType !== publicRuntimeConfig?.instantDelivery?.productType
+                cartItem?.product?.productType !==
+                publicRuntimeConfig?.DeliverySolutionsDeliveryProductConfig?.productType
             )
             const packages = cartGetters.getPackagesDetails(updatedCartFilterItems)
             const updateCurrentCartesponse = await updateCurrentCart.mutateAsync({
@@ -216,7 +219,8 @@ export const useCartActions = ({ cartItems, purchaseLocation }: UseCartActionsPr
     try {
       const updatedCartFilterItems = newCartItems?.filter(
         (cartItem: any) =>
-          cartItem?.product?.productType !== publicRuntimeConfig?.instantDelivery?.productType
+          cartItem?.product?.productType !==
+          publicRuntimeConfig?.DeliverySolutionsDeliveryProductConfig?.productType
       )
       const packages = cartGetters.getPackagesDetails(updatedCartFilterItems)
       const response = await updateCurrentCart.mutateAsync({

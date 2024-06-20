@@ -273,8 +273,10 @@ const ProductDetailTemplate = (props: ProductDetailTemplateProps) => {
           if (!deliveryAddressDateAndWindow) {
             await addToCart.mutateAsync({
               product: {
-                productCode: publicRuntimeConfig?.instantDelivery?.productCode,
-                variationProductCode: publicRuntimeConfig?.instantDelivery?.productCode,
+                productCode:
+                  publicRuntimeConfig?.DeliverySolutionsDeliveryProductConfig?.productCode,
+                variationProductCode:
+                  publicRuntimeConfig?.DeliverySolutionsDeliveryProductConfig?.productCode,
                 fulfillmentMethod,
                 options: [],
                 purchaseLocationCode: selectedFulfillmentOption?.location?.code as string,
@@ -283,10 +285,10 @@ const ProductDetailTemplate = (props: ProductDetailTemplateProps) => {
             })
           }
           const updatedCartData = await refetch()
-          console.log('updatedCartData', updatedCartData)
           const updatedCartFilterItems = updatedCartData?.data?.items?.filter(
             (cartItem: any) =>
-              cartItem?.product?.productType !== publicRuntimeConfig?.instantDelivery?.productType
+              cartItem?.product?.productType !==
+              publicRuntimeConfig?.DeliverySolutionsDeliveryProductConfig?.productType
           )
           const packages = cartGetters.getPackagesDetails(updatedCartFilterItems)
           const response = await updateCurrentCart.mutateAsync({

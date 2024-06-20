@@ -194,9 +194,9 @@ module.exports = {
       currency: process.env.NEXT_PUBLIC_PAYPAL_CURRENCY || 'USD',
       intent: 'authorize',
     },
-    instantDelivery: {
-      productCode: 'Delivery',
-      productType: 'DeliveryService',
+    DeliverySolutionsDeliveryProductConfig: {
+      productCode: process.env.DELIVERYSOLUTIONS_PRODUCT_CODE,
+      productType: process.env.DELIVERYSOLUTIONS_PRODUCT_TYPE,
     },
   },
   serverRuntimeConfig: {
@@ -232,7 +232,7 @@ module.exports = {
       url: 'https://sandbox.api.deliverysolutions.co/api/v2/deliveryAssurance',
       baseUrl: ' https://sandbox.api.deliverysolutions.co/api/v2',
       x_api_key: process.env.DELIVERYSOLUTIONS_X_API_KEY,
-      tenantId: process.env.DELIVERYSOLUTIONS_TENANTID || 'kibo',
+      tenantId: process.env.DELIVERYSOLUTIONS_TENANT_ID || 'kibo',
       store_external_id: process.env.DELIVERYSOLUTIONS_STORE_EXTERNAL_ID || '002',
       window_type: process.env.DELIVERYSOLUTIONS_WINDOW_TYPE || 'delivery',
       order_external_id: process.env.DELIVERYSOLUTIONS_ORDER_EXTERNAL_ID || '',
