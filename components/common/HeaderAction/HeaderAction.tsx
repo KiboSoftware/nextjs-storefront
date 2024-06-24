@@ -43,7 +43,7 @@ const HeaderAction = (props: HeaderActionProps) => {
   } = props
   const Icon = props.icon
   return (
-    <Box display="flex" alignItems="center" onClick={onClick}>
+    <Box display="flex" alignItems="center" {...(!isCSR && { onClick: onClick })}>
       {!isElementVisible ? (
         <Tooltip
           title={

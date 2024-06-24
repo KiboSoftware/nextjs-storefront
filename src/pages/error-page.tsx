@@ -16,13 +16,12 @@ export async function getServerSideProps(context: GetServerSidePropsContext) {
     },
   }
 }
-export default function ErrorMessage({
-  errorMessage = '',
-  status,
-}: {
+
+interface ErrorPageProps {
   errorMessage: string
   status: number
-}) {
+}
+export default function ErrorPage({ errorMessage = '', status }: ErrorPageProps) {
   const { t } = useTranslation('common')
 
   return (
