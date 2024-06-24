@@ -82,7 +82,7 @@ const CheckoutUITemplate = <T extends CrOrder | Checkout>(props: CheckoutUITempl
     tipComponent: <Tip onAddTip={handleAddTip} />,
     deliveryInstructionsComponent: (
       <DeliveryInstructions
-        placeHolder="Enter Delivery Instructions"
+        placeHolder={t('enter-delivery-instructions')}
         onAddInstructions={handleAddDeliveryInstructions}
       />
     ),

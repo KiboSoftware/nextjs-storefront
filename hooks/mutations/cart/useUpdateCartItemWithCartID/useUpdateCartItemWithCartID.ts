@@ -10,26 +10,24 @@ import { cartKeys } from '@/lib/react-query/queryKeys'
 import type { CrCartItemInput } from '@/lib/gql/types'
 
 interface UpdateCartItemByCartIDParams {
-  cartId: string
-  cartItemId: string
-  cartItemInput: CrCartItemInput
+  params: {
+    cartId: string
+    cartItemId: string
+    cartItemInput: CrCartItemInput
+  }
 }
 
 const updateCartItemByCartID = async (params: UpdateCartItemByCartIDParams) => {
-  const client = makeGraphQLClient()
-  const { cartId, cartItemId, cartItemInput } = params
-
-  const variables = {
-    cartId,
-    cartItemId,
-    cartItemInput,
-  }
-  const response = await client.request({
-    document: updateCartItemByCartIDMutation,
-    variables,
+  const response = await fetch('/api/update-cart-item', {
+    method: 'POST',
+    headers: {
+      Accept: 'application/json, text/plain, */*',
+      'Content-Type': 'application/json',
+    },
+    body: JSON.stringify(params),
   })
 
-  return response?.updateCartItem
+  return await response.json()
 }
 
 /**

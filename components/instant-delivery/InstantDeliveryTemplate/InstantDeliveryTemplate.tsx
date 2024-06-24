@@ -6,7 +6,7 @@ import { useTranslation } from 'next-i18next'
 import { DeliveryWindow } from '../DeliveryWindow/DeliveryWindow'
 import { AddressForm } from '@/components/common'
 import { DeliveryLocation, useGetStoreServiceBoundary } from '@/hooks'
-import type { ContactForm } from '@/lib/types'
+import type { ContactForm, InstantDelivery } from '@/lib/types'
 
 const stepperStyles = {
   wrapperBox: {
@@ -19,7 +19,7 @@ const stepperStyles = {
   },
 }
 
-type InstantDeliveryStepperProps = {
+interface InstantDeliveryStepperProps {
   currentActiveStep: number
   setCurrentActiveStep: (step: number) => void
   children: any
@@ -72,25 +72,7 @@ const InstantDeliveryStepper = ({
   )
 }
 
-type Window = {
-  pickupTime: { startsAt: number; endsAt?: number }
-  dropoffTime: { startsAt: number; endsAt: number }
-  readable: string
-}
-type InstantDelivery = {
-  contact?: ContactForm
-  storeBoundary?: string[] | undefined | null
-  window?:
-    | {
-        confirmedDate: string
-        confirmedWindow: Window
-        confirmedStoreId: string
-      }
-    | undefined
-  notification?: { isSendSMS: boolean; isSendEmail: boolean }
-}
-
-type InstantDeliveryTemplateProps = {
+interface InstantDeliveryTemplateProps {
   initialInstantDelivery?: InstantDelivery
   onInstantDelivery: (selectedAddress: any) => void
   isAddressDisabled?: boolean

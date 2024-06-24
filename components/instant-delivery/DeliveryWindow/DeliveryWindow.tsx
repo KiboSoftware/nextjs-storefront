@@ -16,47 +16,15 @@ import dayjs from 'dayjs'
 import { useTranslation } from 'next-i18next'
 
 import { useGetDeliveryWindow } from '@/hooks'
-
-interface DeliveryWindow {
-  message: string
-  data: Store[]
-}
-
-interface Store {
-  storeExternalId: string
-  timeZone: string
-  tags: string[]
-  delivery: Delivery[]
-}
-
-interface Delivery {
-  category: string
-  pickAndPack: number
-  date: string
-  windows: DeliveryWindow[]
-}
-
-interface DropoffTime {
-  startsAt: number
-  endsAt: number
-}
-interface DeliveryWindow {
-  pickupTime: {
-    startsAt: number
-  }
-  dropoffTime: DropoffTime
-  tz: string
-  windowId: null | string
-  provider: null | string
-}
-
-export type DeliveryDateAndWindow =
-  | {
-      confirmedDate: string
-      confirmedWindow: Window
-      confirmedStoreId: string
-    }
-  | undefined
+import {
+  Delivery,
+  DeliveryWindowsProps,
+  DropoffTime,
+  InstantDelivery,
+  Notification,
+  Store,
+  Window,
+} from '@/lib/types'
 
 const commonStyles = {
   padding: 1,
@@ -92,7 +60,7 @@ function getDropoffTimesByDate(deliveries: Delivery[], date: string): Window[] |
   const window: Window[] = []
   deliveries.forEach((delivery: Delivery) => {
     if (delivery.date === date) {
-      delivery.windows.forEach((deliveryWindow: DeliveryWindow) => {
+      delivery.windows.forEach((deliveryWindow: DeliveryWindowsProps) => {
         const readable = formatDropoffTime(deliveryWindow.dropoffTime)
 
         window.push({
@@ -135,39 +103,7 @@ const getDate = () => {
   }
 }
 
-type Window = {
-  pickupTime: { startsAt: number; endsAt?: number }
-  dropoffTime: { startsAt: number; endsAt: number }
-  readable: string
-}
-
-type Notification = { isSendSMS: boolean; isSendEmail: boolean }
-
-type InstantDelivery = {
-  address?:
-    | {
-        firstName: string
-        lastName: string
-        phoneNumber: string
-        street: string
-        city: string
-        country: string
-        state: string
-        zipcode: string
-      }
-    | undefined
-  storeBoundary?: string[] | undefined | null
-  window?:
-    | {
-        confirmedDate: string
-        confirmedWindow: Window
-        confirmedStoreId: string
-      }
-    | undefined
-  notification?: Notification
-}
-
-type DeliveryWindowProps = {
+interface DeliveryWindowProps {
   instantDelivery?: InstantDelivery
   setInstantDelivery: (instantDelivery: InstantDelivery) => void
   confirmInstantDelivery: () => void

@@ -15,6 +15,7 @@ import { useTranslation } from 'next-i18next'
 
 import { CartItemActions, CartItemActionsMobile } from '@/components/cart'
 import { FulfillmentOptions, Price, ProductItem, QuantitySelector } from '@/components/common'
+import { FulfillmentOptions as FulfillmentOptionsConstant } from '@/lib/constants'
 import { QuoteStatus } from '@/lib/constants'
 import { cartGetters, productGetters } from '@/lib/getters'
 import { uiHelpers } from '@/lib/helpers'
@@ -126,10 +127,13 @@ const CartItem = (props: CartItemProps) => {
   const handleFulfillmentOptionChange = (fulfillmentMethod: string, cartItemId: string) =>
     onFulfillmentOptionChange(fulfillmentMethod, cartItemId)
   const handleProductPickupLocation = (cartItemId: string) => onProductPickupLocation(cartItemId)
-  const handleLinkAction = (cartItemId: string, fulfillmentMethod: string) => {
-    if (fulfillmentMethod === 'PICKUP') {
+  const handleFulfillmentOptionChangeLinkAction = (
+    cartItemId: string,
+    fulfillmentMethod: string
+  ) => {
+    if (fulfillmentMethod === FulfillmentOptionsConstant.PICKUP) {
       onProductPickupLocation(cartItemId)
-    } else if (fulfillmentMethod === 'DELIVERY' && onInstantDelivery) {
+    } else if (fulfillmentMethod === FulfillmentOptionsConstant.DELIVERY && onInstantDelivery) {
       onInstantDelivery(cartItemId)
     }
   }
@@ -220,7 +224,10 @@ const CartItem = (props: CartItemProps) => {
                     handleFulfillmentOptionChange(fulfillmentMethod, cartItem?.id as string)
                   }
                   onStoreSetOrUpdate={(fulfillmentMethod: string) =>
-                    handleLinkAction(cartItem?.id as string, fulfillmentMethod)
+                    handleFulfillmentOptionChangeLinkAction(
+                      cartItem?.id as string,
+                      fulfillmentMethod
+                    )
                   } // change store: Open storelocator modal. Should not change global store.
                 />
               )}

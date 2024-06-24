@@ -13,20 +13,24 @@ import type { CrOrder, CrOrderInput } from '@/lib/gql/types'
  * @hidden
  */
 export interface UpdateOrderDataParams {
-  orderId: string
-  orderDataId: string
-  undefinedInput: any
+  params: {
+    orderId: string
+    orderDataId: string
+    undefinedInput: any
+  }
 }
 
 const updateOrderData = async (params: UpdateOrderDataParams) => {
-  const client = makeGraphQLClient()
-
-  const response = await client.request({
-    document: updateOrderDataMutation,
-    variables: params,
+  const updateOrderDataResponse = await fetch('/api/update-order-data', {
+    method: 'POST',
+    headers: {
+      Accept: 'application/json, text/plain, */*',
+      'Content-Type': 'application/json',
+    },
+    body: JSON.stringify(params),
   })
 
-  return response?.updateOrderData
+  return await updateOrderDataResponse.json()
 }
 
 /**
@@ -50,7 +54,7 @@ export const useUpdateOrderData = () => {
       mutationFn: updateOrderData,
       onSuccess: () => {
         queryClient.invalidateQueries({ queryKey: cartKeys.all })
-        queryClient.removeQueries({ queryKey: checkoutKeys.all })
+        queryClient.invalidateQueries({ queryKey: checkoutKeys.all })
       },
     }),
   }

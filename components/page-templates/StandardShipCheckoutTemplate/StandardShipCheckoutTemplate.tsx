@@ -1,6 +1,5 @@
 import React, { useState } from 'react'
 
-import { useQueryClient } from '@tanstack/react-query'
 import getConfig from 'next/config'
 import { useRouter } from 'next/router'
 
@@ -23,6 +22,7 @@ import {
   useCreateCustomerCard,
   useCreateCustomerAddress,
   useUpdateOrderShippingInfo,
+  useUpdateOrderData,
 } from '@/hooks'
 import { AccountType, AddressType, DefaultId } from '@/lib/constants'
 import { cartGetters, orderGetters } from '@/lib/getters'
@@ -58,7 +58,7 @@ const StandardShipCheckoutTemplate = (props: StandardShipCheckoutProps) => {
   const { createCustomerAddress } = useCreateCustomerAddress()
   const { createCustomerCard } = useCreateCustomerCard()
   const { updateOrderShippingInfo } = useUpdateOrderShippingInfo()
-  const queryClient = useQueryClient()
+  const { updateOrderData } = useUpdateOrderData()
   const isB2BUser = user?.accountType?.toLowerCase() === AccountType.B2B.toLowerCase()
 
   const { data: customerPurchaseOrderAccount } = useGetCustomerPurchaseOrderAccount(
@@ -94,118 +94,39 @@ const StandardShipCheckoutTemplate = (props: StandardShipCheckoutProps) => {
     }
   }
   const handleAddTip = async (amount: string) => {
-    const filterOrderItems = order?.items?.filter(
-      (orderItem: any) =>
-        orderItem?.product?.productType !==
-        publicRuntimeConfig?.DeliverySolutionsDeliveryProductConfig?.productType
-    )
-    const packages = cartGetters.getPackagesDetails(filterOrderItems)
     const deliveryAddressDateAndWindow =
       typeof localStorage !== 'undefined' &&
       JSON.parse(localStorage.getItem('instant-delivery') as string)
     const updateOrderDataVariables = {
       params: {
-        orderId: order?.id,
+        orderId: order?.id as string,
         orderDataId: 'ds',
-        undefinedInput: {
-          dsDescription: cartGetters.getDSDescription(
-            deliveryAddressDateAndWindow,
-            packages,
-            +amount || 0,
-            orderGetters.getDeliveryInstructions(order as CrOrder)
-          ),
-          dropoffTime: {
-            startsAt:
-              deliveryAddressDateAndWindow?.window?.confirmedWindow?.dropoffTime?.startsAt.toString(),
-            endsAt:
-              deliveryAddressDateAndWindow?.window?.confirmedWindow?.dropoffTime?.endsAt.toString(),
-          },
-          pickupTime: {
-            startsAt:
-              deliveryAddressDateAndWindow?.window?.confirmedWindow?.pickupTime?.startsAt.toString(),
-          },
-          deliveryInstructions: orderGetters.getDeliveryInstructions(order as CrOrder),
-          pickupInstructions: '',
+        undefinedInput: cartGetters.getCustomDataForCartOrOrder({
+          cartOrOrderResponse: order,
+          deliveryDateAndWindow: deliveryAddressDateAndWindow,
           tips: +amount,
-          deliveryContact: {
-            notifySms: deliveryAddressDateAndWindow?.notification?.isSendSMS || false,
-            notifyEmail: deliveryAddressDateAndWindow?.notification?.isSendEmail || false,
-            ...deliveryAddressDateAndWindow?.contact,
-          },
-          packages: [cartGetters.getPackagesDetails(filterOrderItems)],
-          storeId: deliveryAddressDateAndWindow?.window?.confirmedStoreId,
-        },
+        }),
       },
     }
-    const updateOrderDataResponse = await fetch('/api/update-order-data', {
-      method: 'POST',
-      headers: {
-        Accept: 'application/json, text/plain, */*',
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify(updateOrderDataVariables),
-    })
-    const response = await updateOrderDataResponse.json()
-    if (response) {
-      queryClient.invalidateQueries({ queryKey: checkoutKeys.all })
-    }
+    const response = await updateOrderData.mutateAsync(updateOrderDataVariables)
   }
   const handleAddDeliveryInstructions = async (deliveryInstructions: string) => {
-    const filterOrderItems = order?.items?.filter(
-      (orderItem: any) =>
-        orderItem?.product?.productType !==
-        publicRuntimeConfig?.DeliverySolutionsDeliveryProductConfig?.productType
-    )
-    const packages = cartGetters.getPackagesDetails(filterOrderItems)
     const deliveryAddressDateAndWindow =
       typeof localStorage !== 'undefined' &&
       JSON.parse(localStorage.getItem('instant-delivery') as string)
     const updateOrderDataVariables = {
       params: {
-        orderId: order?.id,
+        orderId: order?.id as string,
         orderDataId: 'ds',
-        undefinedInput: {
-          dsDescription: cartGetters.getDSDescription(
-            deliveryAddressDateAndWindow,
-            packages,
-            orderGetters.getTipAmount(order as CrOrder),
-            deliveryInstructions
-          ),
-          dropoffTime: {
-            startsAt:
-              deliveryAddressDateAndWindow?.window?.confirmedWindow?.dropoffTime?.startsAt.toString(),
-            endsAt:
-              deliveryAddressDateAndWindow?.window?.confirmedWindow?.dropoffTime?.endsAt.toString(),
-          },
-          pickupTime: {
-            startsAt:
-              deliveryAddressDateAndWindow?.window?.confirmedWindow?.pickupTime?.startsAt.toString(),
-          },
+        undefinedInput: cartGetters.getCustomDataForCartOrOrder({
+          cartOrOrderResponse: order,
+          deliveryDateAndWindow: deliveryAddressDateAndWindow,
           deliveryInstructions,
-          pickupInstructions: '',
-          tips: orderGetters.getTipAmount(order as CrOrder),
-          deliveryContact: {
-            notifySms: deliveryAddressDateAndWindow?.notification?.isSendSMS || false,
-            notifyEmail: deliveryAddressDateAndWindow?.notification?.isSendEmail || false,
-            ...deliveryAddressDateAndWindow?.contact,
-          },
-          packages: [cartGetters.getPackagesDetails(filterOrderItems)],
-          storeId: deliveryAddressDateAndWindow?.window?.confirmedStoreId,
-        },
+        }),
       },
     }
-    const updateOrderDataResponse = await fetch('/api/update-order-data', {
-      method: 'POST',
-      headers: {
-        Accept: 'application/json, text/plain, */*',
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify(updateOrderDataVariables),
-    })
-    const response = await updateOrderDataResponse.json()
-    if (response) {
-      queryClient.invalidateQueries({ queryKey: checkoutKeys.all })
-    }
+
+    await updateOrderData.mutateAsync(updateOrderDataVariables)
   }
   const { updateOrderPersonalInfo } = useUpdateOrderPersonalInfo()
 

@@ -11,7 +11,6 @@ import {
   Checkbox,
   NoSsr,
 } from '@mui/material'
-import { useQueryClient } from '@tanstack/react-query'
 import getConfig from 'next/config'
 import { useTranslation } from 'next-i18next'
 
@@ -27,6 +26,8 @@ import {
   useUpdateOrder,
   useGetDeliveryRates,
   useGetCurrentOrder,
+  useUpdateOrderItemPrice,
+  useUpdateOrderData,
 } from '@/hooks'
 import { DefaultId, AddressType, CountryCode, FulfillmentOptions } from '@/lib/constants'
 import { cartGetters, orderGetters, userGetters } from '@/lib/getters'
@@ -70,6 +71,8 @@ const StandardShippingStep = (props: ShippingProps) => {
     isMultiship: isMultiShipEnabled,
     initialCheckout: checkoutFromProps,
   })
+  const { updateOrderItemPrice } = useUpdateOrderItemPrice()
+  const { updateOrderData } = useUpdateOrderData()
   const checkout = order as CrOrder
   const checkoutShippingContact = orderGetters.getShippingContact(checkout)
   const checkoutShippingMethodCode = orderGetters.getShippingMethodCode(checkout)
@@ -124,7 +127,6 @@ const StandardShippingStep = (props: ShippingProps) => {
     setStepStatusComplete,
     setStepStatusIncomplete,
   } = useCheckoutStepContext()
-  const queryClient = useQueryClient()
   const { updateOrderShippingInfo } = useUpdateOrderShippingInfo()
   const [deliveryRatesPayload, setDeliveryRatesPayload] = useState<any>()
   const { data: deliveryFee, isLoading, isSuccess } = useGetDeliveryRates(deliveryRatesPayload)
@@ -375,24 +377,12 @@ const StandardShippingStep = (props: ShippingProps) => {
       params: {
         orderId: updateOrderResponse?.id,
         orderItemId: deliveryItem?.id,
-        price: deliveryFee,
+        price: deliveryFee as number,
       },
     }
-    const response = await fetch('/api/update-order-item-price', {
-      method: 'POST',
-      headers: {
-        Accept: 'application/json, text/plain, */*',
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify(updateOrderItemPriceVariables),
-    })
-    const updateOrderItemPriceResponse = await response.json()
-    const filterUpdatedOrderItems = updateOrderItemPriceResponse?.items?.filter(
-      (orderItem: any) =>
-        orderItem?.product?.productType !==
-        publicRuntimeConfig?.DeliverySolutionsDeliveryProductConfig?.productType
+    const updateOrderItemPriceResponse = await updateOrderItemPrice.mutateAsync(
+      updateOrderItemPriceVariables
     )
-    const updatedOrderPackages = cartGetters.getPackagesDetails(filterUpdatedOrderItems)
     await updateOrderShippingInfo.mutateAsync({
       checkout: { ...updateOrderItemPriceResponse },
       contact: {
@@ -414,50 +404,15 @@ const StandardShippingStep = (props: ShippingProps) => {
     })
     const updateOrderDataVariables = {
       params: {
-        orderId: checkout?.id,
+        orderId: checkout?.id as string,
         orderDataId: 'ds',
-        undefinedInput: {
-          dsDescription: cartGetters.getDSDescription(
-            updateDeliveryDateAndWindow,
-            updatedOrderPackages,
-            orderGetters.getTipAmount(updateOrderItemPriceResponse),
-            orderGetters.getDeliveryInstructions(updateOrderItemPriceResponse)
-          ),
-          dropoffTime: {
-            startsAt:
-              updateDeliveryDateAndWindow?.window?.confirmedWindow?.dropoffTime?.startsAt.toString(),
-            endsAt:
-              updateDeliveryDateAndWindow?.window?.confirmedWindow?.dropoffTime?.endsAt.toString(),
-          },
-          pickupTime: {
-            startsAt:
-              updateDeliveryDateAndWindow?.window?.confirmedWindow?.pickupTime?.startsAt.toString(),
-          },
-          deliveryInstructions: orderGetters.getDeliveryInstructions(updateOrderItemPriceResponse),
-          pickupInstructions: '',
-          tips: orderGetters.getTipAmount(updateOrderItemPriceResponse),
-          deliveryContact: {
-            notifySms: updateDeliveryDateAndWindow?.notification?.isSendSMS || false,
-            notifyEmail: updateDeliveryDateAndWindow?.notification?.isSendEmail || false,
-            ...updateDeliveryDateAndWindow?.contact,
-          },
-          packages: [cartGetters.getPackagesDetails(filterUpdatedOrderItems)],
-          storeId: updateDeliveryDateAndWindow?.window?.confirmedStoreId,
-        },
+        undefinedInput: cartGetters.getCustomDataForCartOrOrder({
+          cartOrOrderResponse: updateOrderItemPriceResponse,
+          deliveryDateAndWindow: updateDeliveryDateAndWindow,
+        }),
       },
     }
-    const updateOrderDataResponse = await fetch('/api/update-order-data', {
-      method: 'POST',
-      headers: {
-        Accept: 'application/json, text/plain, */*',
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify(updateOrderDataVariables),
-    })
-    const updateOrderResponseJSON = await updateOrderDataResponse.json()
-    if (updateOrderResponseJSON) {
-      queryClient.invalidateQueries({ queryKey: checkoutKeys.all })
-    }
+    const updateOrderResponseJSON = await updateOrderData.mutateAsync(updateOrderDataVariables)
 
     setSelectedShippingAddressId(updateDeliveryDateAndWindow?.contact?.id || DefaultId.ADDRESSID)
     setDeliveryRatesPayload(null)
@@ -513,87 +468,19 @@ const StandardShippingStep = (props: ShippingProps) => {
       },
     })
   }
-  const [hasRun, setHasRun] = useState(false)
+  const [isProcessed, setIsProcessed] = useState(false)
   useEffect(() => {
-    if (isSuccess && deliveryFee && !hasRun) {
+    if (isSuccess && deliveryFee && !isProcessed) {
       // Data is successfully fetched and hasn't been processed yet
       handleUpdateOrderItemPriceAndFulfillmentInfo()
-      setHasRun(true) // Mark that the function has run for the current data
+      setIsProcessed(true) // Mark that the function has run for the current data
     }
-  }, [isSuccess, deliveryFee, hasRun])
+  }, [isSuccess, deliveryFee, isProcessed])
 
-  // Reset the hasRun state if the data changes
+  // Reset the isProcessed state if the data changes
   useEffect(() => {
-    setHasRun(false)
+    setIsProcessed(false)
   }, [deliveryFee])
-  const handleSetDeliveryAddress = async () => {
-    const filterOrderItems = checkout?.items?.filter(
-      (orderItem: any) =>
-        orderItem?.product?.productType !==
-        publicRuntimeConfig?.DeliverySolutionsDeliveryProductConfig?.productType
-    )
-    const packages = cartGetters.getPackagesDetails(filterOrderItems)
-    const updateOrderDataVariables = {
-      params: {
-        orderId: checkout?.id,
-        orderDataId: 'ds',
-        undefinedInput: {
-          dsDescription: cartGetters.getDSDescription(
-            instantDeliveryObj,
-            packages,
-            orderGetters.getTipAmount(checkout),
-            orderGetters.getDeliveryInstructions(checkout)
-          ),
-          dropoffTime: {
-            startsAt: instantDeliveryObj?.window?.confirmedWindow?.dropoffTime?.startsAt.toString(),
-            endsAt: instantDeliveryObj?.window?.confirmedWindow?.dropoffTime?.endsAt.toString(),
-          },
-          pickupTime: {
-            startsAt: instantDeliveryObj?.window?.confirmedWindow?.pickupTime?.startsAt.toString(),
-          },
-          deliveryInstructions: '',
-          pickupInstructions: '',
-          tips: orderGetters.getTipAmount(checkout),
-          deliveryContact: {
-            notifySms: instantDeliveryObj?.notification?.isSendSMS || false,
-            notifyEmail: instantDeliveryObj?.notification?.isSendEmail || false,
-            ...instantDeliveryObj?.contact,
-          },
-          packages: [cartGetters.getPackagesDetails(filterOrderItems)],
-          storeId: instantDeliveryObj?.window?.confirmedStoreId,
-        },
-      },
-    }
-    const updateOrderDataResponse = await fetch('/api/update-order-data', {
-      method: 'POST',
-      headers: {
-        Accept: 'application/json, text/plain, */*',
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify(updateOrderDataVariables),
-    })
-    await updateOrderShippingInfo.mutateAsync({
-      checkout,
-      contact: {
-        firstName: instantDeliveryObj?.contact?.firstName,
-        lastNameOrSurname: instantDeliveryObj?.contact?.lastNameOrSurname,
-        id: instantDeliveryObj?.contact?.id,
-        phoneNumbers: {
-          home: instantDeliveryObj?.contact?.phoneNumbers?.home,
-        },
-        address: {
-          address1: instantDeliveryObj?.contact?.address?.address1,
-          address2: instantDeliveryObj?.contact?.address?.address2,
-          cityOrTown: instantDeliveryObj?.contact?.address?.cityOrTown,
-          stateOrProvince: instantDeliveryObj?.contact?.address?.stateOrProvince,
-          countryCode: instantDeliveryObj?.contact?.address?.countryCode,
-          postalOrZipCode: instantDeliveryObj?.contact?.address?.postalOrZipCode,
-        },
-      },
-    })
-
-    setSelectedShippingAddressId((instantDeliveryObj?.contact?.id as number) || DefaultId.ADDRESSID)
-  }
 
   useEffect(() => {
     if (isAllItemsDigital || !shipItems.length)

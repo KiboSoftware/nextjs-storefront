@@ -89,47 +89,15 @@ export const useCartActions = ({ cartItems, purchaseLocation }: UseCartActionsPr
               }
               localStorage.setItem('instant-delivery', JSON.stringify(instantDelivery))
             }
-            // queryClient.invalidateQueries({ queryKey: cartKeys.all })
             const refetchCartData = await refetch()
-            const updatedCartFilterItems = refetchCartData?.data?.items?.filter(
-              (cartItem: any) =>
-                cartItem?.product?.productType !==
-                publicRuntimeConfig?.DeliverySolutionsDeliveryProductConfig?.productType
-            )
-            const packages = cartGetters.getPackagesDetails(updatedCartFilterItems)
             const updateCurrentCartesponse = await updateCurrentCart.mutateAsync({
               cartInput: {
                 ...refetchCartData?.data,
                 data: {
-                  ds: {
-                    dropoffTime: {
-                      startsAt:
-                        instantDelivery?.window?.confirmedWindow?.dropoffTime?.startsAt.toString(),
-                      endsAt:
-                        instantDelivery?.window?.confirmedWindow?.dropoffTime?.endsAt.toString(),
-                    },
-                    pickupTime: {
-                      startsAt:
-                        instantDelivery?.window?.confirmedWindow?.pickupTime?.startsAt.toString(),
-                    },
-                    deliveryInstructions:
-                      orderGetters.getDeliveryInstructions(refetchCartData?.data) || '',
-                    pickupInstructions: '',
-                    tips: orderGetters.getTipAmount(refetchCartData?.data) || 0,
-                    deliveryContact: {
-                      notifySms: instantDelivery?.notification?.isSendSMS || false,
-                      notifyEmail: instantDelivery?.notification?.isSendEmail || false,
-                      ...instantDelivery?.contact,
-                    },
-                    packages: [cartGetters.getPackagesDetails(updatedCartFilterItems)],
-                    storeId: instantDelivery?.window?.confirmedStoreId,
-                    dsDescription: cartGetters.getDSDescription(
-                      instantDelivery,
-                      packages,
-                      orderGetters.getTipAmount(refetchCartData?.data) || 0,
-                      orderGetters.getDeliveryInstructions(refetchCartData?.data)
-                    ),
-                  },
+                  ds: cartGetters.getCustomDataForCartOrOrder({
+                    cartOrOrderResponse: refetchCartData?.data,
+                    deliveryDateAndWindow: instantDelivery,
+                  }),
                 },
               },
             })

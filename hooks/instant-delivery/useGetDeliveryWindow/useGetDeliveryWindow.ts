@@ -62,6 +62,16 @@ const getDeliveryWindow = async (
     return null
   }
 }
+/**
+ * [hook] useGetDeliveryWindow uses the custom api get-delivery window
+ *
+ * <b>getDeliveryWindow(storeExtenalIds, futureDate)</b>
+ *
+ * Description : Get delivery windows based on storeExternalsIds or futureDate
+ *
+ * Parameters passed to function getDeliveryWindow(storeExtenalIds, futureDate) => expects object of type storeExtenalIds and futureDate
+ *
+ */
 
 export const useGetDeliveryWindow = (
   storeExternalIds: string[] | undefined | null,

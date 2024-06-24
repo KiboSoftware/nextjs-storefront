@@ -40,7 +40,7 @@ const Tip = (props: TipProps) => {
         name="tip"
         type="number"
         value={tip}
-        placeholder="Enter your tip amount here"
+        placeholder={t('enter-tip-amount')}
         sx={styles.textBoxStyle}
         onChange={(_name, value) => setTip(value)}
         data-testid="tip-input"

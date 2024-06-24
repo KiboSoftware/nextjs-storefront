@@ -285,47 +285,14 @@ const ProductDetailTemplate = (props: ProductDetailTemplateProps) => {
             })
           }
           const updatedCartData = await refetch()
-          const updatedCartFilterItems = updatedCartData?.data?.items?.filter(
-            (cartItem: any) =>
-              cartItem?.product?.productType !==
-              publicRuntimeConfig?.DeliverySolutionsDeliveryProductConfig?.productType
-          )
-          const packages = cartGetters.getPackagesDetails(updatedCartFilterItems)
           const response = await updateCurrentCart.mutateAsync({
             cartInput: {
               ...updatedCartData?.data,
               data: {
-                ds: {
-                  dropoffTime: {
-                    startsAt:
-                      selectedFulfillmentOption?.location?.window?.confirmedWindow?.dropoffTime?.startsAt.toString(),
-                    endsAt:
-                      selectedFulfillmentOption?.location?.window?.confirmedWindow?.dropoffTime?.endsAt.toString(),
-                  },
-                  pickupTime: {
-                    startsAt:
-                      selectedFulfillmentOption?.location?.window?.confirmedWindow?.pickupTime?.startsAt.toString(),
-                  },
-                  deliveryInstructions:
-                    orderGetters.getDeliveryInstructions(updatedCartData?.data) || '',
-                  pickupInstructions: '',
-                  tips: orderGetters.getTipAmount(updatedCartData?.data) || 0,
-                  deliveryContact: {
-                    notifySms:
-                      selectedFulfillmentOption?.location?.notification?.isSendSMS || false,
-                    notifyEmail:
-                      selectedFulfillmentOption?.location?.notification?.isSendEmail || false,
-                    ...selectedFulfillmentOption?.location?.contact,
-                  },
-                  packages: [cartGetters.getPackagesDetails(updatedCartFilterItems)],
-                  storeId: selectedFulfillmentOption?.location?.window?.confirmedStoreId,
-                  dsDescription: cartGetters.getDSDescription(
-                    selectedFulfillmentOption?.location,
-                    packages,
-                    orderGetters.getTipAmount(updatedCartData?.data) || 0,
-                    orderGetters.getDeliveryInstructions(updatedCartData?.data)
-                  ),
-                },
+                ds: cartGetters.getCustomDataForCartOrOrder({
+                  cartOrOrderResponse: updatedCartData?.data,
+                  deliveryDateAndWindow: selectedFulfillmentOption?.location,
+                }),
               },
             },
           })

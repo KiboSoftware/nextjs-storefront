@@ -135,8 +135,6 @@ const CartTemplate = (props: CartTemplateProps) => {
     await deleteCartItem.mutateAsync({ cartItemId })
   }
 
-  // const handleDeleteCartItem = async (cartItemId: string) => {}
-
   const handleItemActions = () => {
     // your code here
   }
@@ -185,14 +183,7 @@ const CartTemplate = (props: CartTemplateProps) => {
             },
           },
         }
-        const response = await fetch('/api/update-cart-item', {
-          method: 'POST',
-          headers: {
-            Accept: 'application/json, text/plain, */*',
-            'Content-Type': 'application/json',
-          },
-          body: JSON.stringify(variables),
-        })
+        const response = await updateCartItemByCartID.mutateAsync(variables)
 
         const initiateOrderResponse = isMultiShipEnabled
           ? await initiateCheckout.mutateAsync(cart?.id)

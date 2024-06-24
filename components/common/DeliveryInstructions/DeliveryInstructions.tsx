@@ -5,7 +5,7 @@ import { useState } from 'react'
 import { Button, Stack, TextField } from '@mui/material'
 import { useTranslation } from 'next-i18next'
 
-export interface DeliveryInstructionsProps {
+interface DeliveryInstructionsProps {
   placeHolder?: string
   onAddInstructions: (instructions: string) => void
 }

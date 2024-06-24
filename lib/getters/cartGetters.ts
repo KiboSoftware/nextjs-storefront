@@ -1,5 +1,6 @@
 import getConfig from 'next/config'
 
+import { orderGetters } from './orderGetters'
 import { productGetters } from './productGetters'
 import { subscriptionGetters } from './subscriptionGetters'
 import { FulfillmentOptions } from '../constants'
@@ -267,6 +268,50 @@ const convertIntoLocalStorageObject = (ds: any) => {
 
   return output
 }
+const getCustomDataForCartOrOrder = ({
+  cartOrOrderResponse,
+  deliveryDateAndWindow,
+  tips,
+  deliveryInstructions,
+}: {
+  cartOrOrderResponse: any
+  deliveryDateAndWindow: any
+  tips?: any
+  deliveryInstructions?: any
+}) => {
+  const filterCartOrOrderResponse = cartOrOrderResponse?.items?.filter(
+    (orderItem: any) =>
+      orderItem?.product?.productType !==
+      publicRuntimeConfig?.DeliverySolutionsDeliveryProductConfig?.productType
+  )
+  const cartOrOrderPackages = getPackagesDetails(filterCartOrOrderResponse)
+  return {
+    dsDescription: getDSDescription(
+      deliveryDateAndWindow,
+      cartOrOrderPackages,
+      tips || orderGetters.getTipAmount(cartOrOrderResponse),
+      deliveryInstructions || orderGetters.getDeliveryInstructions(cartOrOrderResponse)
+    ),
+    dropoffTime: {
+      startsAt: deliveryDateAndWindow?.window?.confirmedWindow?.dropoffTime?.startsAt.toString(),
+      endsAt: deliveryDateAndWindow?.window?.confirmedWindow?.dropoffTime?.endsAt.toString(),
+    },
+    pickupTime: {
+      startsAt: deliveryDateAndWindow?.window?.confirmedWindow?.pickupTime?.startsAt.toString(),
+    },
+    deliveryInstructions:
+      deliveryInstructions || orderGetters.getDeliveryInstructions(cartOrOrderResponse),
+    pickupInstructions: '',
+    tips: tips || orderGetters.getTipAmount(cartOrOrderResponse),
+    deliveryContact: {
+      notifySms: deliveryDateAndWindow?.notification?.isSendSMS || false,
+      notifyEmail: deliveryDateAndWindow?.notification?.isSendEmail || false,
+      ...deliveryDateAndWindow?.contact,
+    },
+    packages: [getPackagesDetails(filterCartOrOrderResponse)],
+    storeId: deliveryDateAndWindow?.window?.confirmedStoreId,
+  }
+}
 
 export const cartGetters = {
   getCartItemCount,
@@ -281,4 +326,5 @@ export const cartGetters = {
   formatTimestamp,
   getDSDescription,
   convertIntoLocalStorageObject,
+  getCustomDataForCartOrOrder,
 }
