@@ -185,17 +185,11 @@ describe('[component] KiboHeader component', () => {
     await waitFor(() => {
       expect(screen.queryByTestId('Store-FinderIcon')).not.toBeInTheDocument()
     })
-  })
-  it('should hide AccountIcon when cookie isCSR has value true', async () => {
-    setCookie('isCSR', 'true')
-    render(<Common {...Common.args} />)
+
     await waitFor(() => {
       expect(screen.queryByTestId('Account-Icon')).not.toBeInTheDocument()
     })
-  })
-  it('should hide AccountRequestIcon when cookie isCSR has value true', async () => {
-    setCookie('isCSR', 'true')
-    render(<Common {...Common.args} />)
+
     await waitFor(() => {
       expect(screen.queryByTestId('Account-Request-Icon')).not.toBeInTheDocument()
     })
