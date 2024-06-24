@@ -14,6 +14,7 @@ interface HeaderActionProps {
   showTitleInMobile?: boolean
   iconFontSize?: 'small' | 'medium' | 'large'
   isElementVisible?: boolean
+  isCSR?: boolean
 }
 const StyledBadge = styled(Badge)(() => ({
   '& .MuiBadge-badge': {
@@ -38,15 +39,11 @@ const HeaderAction = (props: HeaderActionProps) => {
     mobileIconColor = 'white',
     showTitleInMobile = false,
     iconFontSize = 'large',
+    isCSR,
   } = props
   const Icon = props.icon
   return (
-    <Box
-      display="flex"
-      alignItems="center"
-      sx={{ cursor: 'pointer', marginX: 1 }}
-      onClick={onClick}
-    >
+    <Box display="flex" alignItems="center" onClick={onClick}>
       {!isElementVisible ? (
         <Tooltip
           title={
@@ -72,6 +69,7 @@ const HeaderAction = (props: HeaderActionProps) => {
                   color: mobileIconColor,
                 },
               })}
+              padding-right={'19px'}
             ></Icon>
           </StyledBadge>
         </Tooltip>
@@ -109,7 +107,7 @@ const HeaderAction = (props: HeaderActionProps) => {
               component="span"
               fontWeight="bold"
               color="text.primary"
-              sx={{ display: 'block', ...styles.hoverOver }}
+              sx={isCSR ? { display: 'block' } : { display: 'block', ...styles.hoverOver }}
             >
               {title}
             </Typography>

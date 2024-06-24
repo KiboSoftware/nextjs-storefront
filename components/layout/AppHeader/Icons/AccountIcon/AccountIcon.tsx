@@ -32,6 +32,7 @@ const AccountIcon = ({ size, isElementVisible, isCSR, onAccountIconClick }: Acco
           icon={AccountCircleIcon}
           iconFontSize={size}
           isElementVisible={isElementVisible}
+          isCSR={isCSR}
         />
       )}
     </>
