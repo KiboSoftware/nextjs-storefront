@@ -19,7 +19,7 @@ const AccountIcon = ({ size, isElementVisible, isCSR, onAccountIconClick }: Acco
       <HeaderAction
         isCSR={isCSR}
         title={isAuthenticated || isCSR ? `${t('hi')}, ${user?.firstName || ''}` : ''}
-        subtitle={isAuthenticated && !isCSR ? t('go-to-my-account') : t('log-in')}
+        subtitle={isCSR ? '' : isAuthenticated ? t('go-to-my-account') : t('log-in')}
         icon={AccountCircleIcon}
         iconFontSize={size}
         isElementVisible={isElementVisible}

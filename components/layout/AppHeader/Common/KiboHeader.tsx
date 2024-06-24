@@ -10,6 +10,7 @@ import {
   useTheme,
   styled,
   Theme,
+  NoSsr,
 } from '@mui/material'
 import { getCookie } from 'cookies-next'
 import getConfig from 'next/config'
@@ -87,32 +88,33 @@ const HeaderActionArea = (props: HeaderActionAreaProps) => {
             <KiboLogo />
           </Link>
         </Box>
-
-        <Box display="flex" flex={1} justifyContent={'flex-end'} gap={1}>
-          {!isCSR && (
-            <>
-              <StoreFinderIcon
-                size={isHeaderSmall ? 'small' : 'medium'}
-                data-testid="Store-FinderIcon"
-              />
-              <AccountRequestIcon
-                onClick={onAccountRequestClick}
-                isElementVisible={false}
-                iconProps={{ fontSize: isHeaderSmall ? 'small' : 'medium' }}
-                buttonText={t('b2b-account-request')}
-                data-testid="Account-Request-Icon"
-              />
-            </>
-          )}
-          <AccountIcon
-            size={isHeaderSmall ? 'small' : 'medium'}
-            onAccountIconClick={onAccountIconClick}
-            data-testid="Account-Icon"
-            isElementVisible={isCSR ? true : false}
-            isCSR={Boolean(isCSR)}
-          />
-          <CartIcon size={isHeaderSmall ? 'small' : 'medium'} />
-        </Box>
+        <NoSsr>
+          <Box display="flex" flex={1} justifyContent={'flex-end'} gap={1}>
+            {!isCSR && (
+              <>
+                <StoreFinderIcon
+                  size={isHeaderSmall ? 'small' : 'medium'}
+                  data-testid="Store-FinderIcon"
+                />
+                <AccountRequestIcon
+                  onClick={onAccountRequestClick}
+                  isElementVisible={false}
+                  iconProps={{ fontSize: isHeaderSmall ? 'small' : 'medium' }}
+                  buttonText={t('b2b-account-request')}
+                  data-testid="Account-Request-Icon"
+                />
+              </>
+            )}
+            <AccountIcon
+              size={isHeaderSmall ? 'small' : 'medium'}
+              onAccountIconClick={onAccountIconClick}
+              data-testid="Account-Icon"
+              isElementVisible={isCSR ? true : false}
+              isCSR={Boolean(isCSR)}
+            />
+            <CartIcon size={isHeaderSmall ? 'small' : 'medium'} />
+          </Box>
+        </NoSsr>
       </Container>
     </Box>
   )
@@ -129,18 +131,20 @@ const TopHeader = ({ navLinks }: { navLinks: NavigationLink[] }) => {
   return (
     <Box sx={{ ...topHeaderStyles.wrapper }} data-testid="top-bar">
       <Container maxWidth="xl" sx={{ ...topHeaderStyles.container }}>
-        <Box display="flex" justifyContent="flex-end" alignItems="center" gap={5}>
-          {!isCSR &&
-            navLinks?.map((nav, index) => {
-              return (
-                <Box key={index}>
-                  <StyledLink href={nav.link} passHref>
-                    {t(`${nav.text}`)}
-                  </StyledLink>
-                </Box>
-              )
-            })}
-        </Box>
+        <NoSsr>
+          <Box display="flex" justifyContent="flex-end" alignItems="center" gap={5}>
+            {!isCSR &&
+              navLinks?.map((nav, index) => {
+                return (
+                  <Box key={index}>
+                    <StyledLink href={nav.link} passHref>
+                      {t(`${nav.text}`)}
+                    </StyledLink>
+                  </Box>
+                )
+              })}
+          </Box>
+        </NoSsr>
       </Container>
     </Box>
   )

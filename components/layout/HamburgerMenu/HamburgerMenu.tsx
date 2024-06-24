@@ -107,19 +107,20 @@ const HamburgerMenu = (props: HamburgerMenuProps) => {
               onCategoryClick={handleCategoryClick}
             >
               <Box width="100%">
-                {!isCSR && isCSR === undefined && (
-                  <HeaderAction
-                    title={isAuthenticated ? `${t('hi')}, ${user?.firstName}` : t('my-account')}
-                    subtitle={isAuthenticated ? t('go-to-my-account') : t('log-in')}
-                    icon={AccountCircle}
-                    mobileIconColor="black"
-                    iconFontSize="large"
-                    showTitleInMobile={true}
-                    onClick={onAccountIconClick}
-                    isElementVisible={true}
-                    data-testid="Account-Icon"
-                  />
-                )}
+                <HeaderAction
+                  title={
+                    isAuthenticated || isCSR ? `${t('hi')}, ${user?.firstName}` : t('my-account')
+                  }
+                  subtitle={isCSR ? '' : isAuthenticated ? t('go-to-my-account') : t('log-in')}
+                  icon={AccountCircle}
+                  mobileIconColor="black"
+                  iconFontSize="large"
+                  showTitleInMobile={true}
+                  onClick={onAccountIconClick}
+                  isElementVisible={true}
+                  data-testid="Account-Icon"
+                  isCSR={Boolean(isCSR)}
+                />
               </Box>
             </CategoryNestedNavigation>
           </Box>

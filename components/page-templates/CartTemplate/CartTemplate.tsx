@@ -11,6 +11,7 @@ import {
   useTheme,
   Divider,
   useMediaQuery,
+  NoSsr,
 } from '@mui/material'
 import { getCookie } from 'cookies-next'
 import { useRouter } from 'next/router'
@@ -44,6 +45,7 @@ export interface CartTemplateProps {
 const isCSR = getCookie('isCSR')
 const CartTemplate = (props: CartTemplateProps) => {
   const { isMultiShipEnabled } = props
+  console.log('props?.cart', props?.cart)
   const { data: cart } = useGetCart(props?.cart)
 
   const { t } = useTranslation('common')
@@ -204,31 +206,33 @@ const CartTemplate = (props: CartTemplateProps) => {
           {/* Order Summary */}
           <Grid item xs={12} md={4} sx={{ paddingRight: { xs: 0, md: 2 } }}>
             <OrderSummary {...orderSummaryArgs}>
-              <Stack direction="column" gap={2}>
-                {!isCSR && isCSR === undefined && (
-                  <LoadingButton
+              <NoSsr>
+                <Stack direction="column" gap={2}>
+                  {!isCSR && isCSR === undefined && (
+                    <LoadingButton
+                      variant="contained"
+                      color="primary"
+                      name="goToCart"
+                      fullWidth
+                      onClick={handleGotoCheckout}
+                      loading={showLoadingButton}
+                      disabled={!cartItemCount || showLoadingButton}
+                    >
+                      {t('go-to-checkout')}
+                    </LoadingButton>
+                  )}
+                  <Button
                     variant="contained"
-                    color="primary"
-                    name="goToCart"
+                    color="secondary"
+                    name="clearCart"
                     fullWidth
-                    onClick={handleGotoCheckout}
-                    loading={showLoadingButton}
-                    disabled={!cartItemCount || showLoadingButton}
+                    onClick={openClearCartConfirmation}
+                    disabled={!cartItemCount}
                   >
-                    {t('go-to-checkout')}
-                  </LoadingButton>
-                )}
-                <Button
-                  variant="contained"
-                  color="secondary"
-                  name="clearCart"
-                  fullWidth
-                  onClick={openClearCartConfirmation}
-                  disabled={!cartItemCount}
-                >
-                  {t('clear-cart')}
-                </Button>
-              </Stack>
+                    {t('clear-cart')}
+                  </Button>
+                </Stack>
+              </NoSsr>
             </OrderSummary>
           </Grid>
         </>

@@ -41,7 +41,7 @@ export default function ErrorPage({ errorMessage = '', status }: ErrorPageProps)
           padding: '2rem',
         }}
       >
-        {status && errorMessage && (
+        {Boolean(status && errorMessage) && (
           <Box display={'flex'} gap={2}>
             <Box pr={2} borderRight={'1px solid rgba(0, 0,0,0.5)'}>
               <Typography variant="h4">{status}</Typography>
