@@ -45,6 +45,12 @@ const CartIcon = ({ size, isElementVisible, mobileIconColor }: IconProps) => {
     }
   }, [cartGetters.checkDeliveryItems(cart?.items)])
 
+  useEffect(() => {
+    if (cart?.items?.length === 0) {
+      localStorage.removeItem('instant-delivery')
+    }
+  }, [cart?.items?.length])
+
   return (
     <HeaderAction
       subtitle={t('cart')}

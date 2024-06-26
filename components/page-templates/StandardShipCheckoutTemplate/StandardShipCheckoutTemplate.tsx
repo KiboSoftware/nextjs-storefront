@@ -23,6 +23,7 @@ import {
   useCreateCustomerAddress,
   useUpdateOrderShippingInfo,
   useUpdateOrderData,
+  useDeleteCurrentCart,
 } from '@/hooks'
 import { AccountType, AddressType, DefaultId } from '@/lib/constants'
 import { cartGetters, orderGetters } from '@/lib/getters'
@@ -59,6 +60,7 @@ const StandardShipCheckoutTemplate = (props: StandardShipCheckoutProps) => {
   const { createCustomerCard } = useCreateCustomerCard()
   const { updateOrderShippingInfo } = useUpdateOrderShippingInfo()
   const { updateOrderData } = useUpdateOrderData()
+  const { deleteCurrentCart } = useDeleteCurrentCart()
   const isB2BUser = user?.accountType?.toLowerCase() === AccountType.B2B.toLowerCase()
 
   const { data: customerPurchaseOrderAccount } = useGetCustomerPurchaseOrderAccount(
@@ -211,6 +213,8 @@ const StandardShipCheckoutTemplate = (props: StandardShipCheckoutProps) => {
       await createCustomerCard.mutateAsync(cardParams)
     }
 
+    await deleteCurrentCart.mutateAsync()
+    localStorage.removeItem('instant-delivery')
     router.push(
       { pathname: '/order-confirmation', query: { checkoutId: order.id } },
       { pathname: '/order-confirmation' }

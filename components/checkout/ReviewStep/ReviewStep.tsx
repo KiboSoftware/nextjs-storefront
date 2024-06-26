@@ -170,7 +170,6 @@ const ReviewStep = (props: ReviewStepProps) => {
       }
 
       await onCreateOrder(checkout)
-      localStorage.removeItem('instant-delivery')
       setStepStatusComplete()
       setStepNext()
     } catch (e) {
