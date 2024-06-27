@@ -54,6 +54,8 @@ interface HeaderActionAreaProps {
 }
 
 const isCSR = getCookie('isCSR')
+const customerName = getCookie('customer')?.toString() || ''
+
 const HeaderActionArea = (props: HeaderActionAreaProps) => {
   const { isHeaderSmall, onAccountIconClick, onAccountRequestClick } = props
   const { headerState, toggleSearchBar } = useHeaderContext()
@@ -111,6 +113,7 @@ const HeaderActionArea = (props: HeaderActionAreaProps) => {
               data-testid="Account-Icon"
               isElementVisible={isCSR ? true : false}
               isCSR={Boolean(isCSR)}
+              customerName={customerName}
             />
             <CartIcon size={isHeaderSmall ? 'small' : 'medium'} />
           </Box>
@@ -223,6 +226,8 @@ const KiboHeader = (props: KiboHeaderProps) => {
             setIsDrawerOpen={() => toggleHamburgerMenu()}
             navLinks={navLinks}
             onAccountIconClick={handleAccountIconClick}
+            isCSR={Boolean(isCSR)}
+            customerName={customerName}
           />
         </MobileHeader>
       )

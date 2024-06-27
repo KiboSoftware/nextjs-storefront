@@ -46,10 +46,11 @@ const loadUser = async () => {
  * @returns 'response?.customerAccount, which contains customer's account details'
  */
 
-export const useGetCurrentCustomer = (): UserResultType => {
+export const useGetCurrentCustomer = (isCSR?: boolean): UserResultType => {
   const { data, isLoading, isSuccess, isError, error } = useQuery({
     queryKey: loginKeys.user,
     queryFn: loadUser,
+    enabled: !isCSR,
   })
 
   return {

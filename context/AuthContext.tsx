@@ -1,7 +1,7 @@
 import { ReactNode, createContext, useState, useContext, useEffect } from 'react'
 
 import { useQueryClient } from '@tanstack/react-query'
-import { deleteCookie } from 'cookies-next'
+import { deleteCookie, getCookie } from 'cookies-next'
 import { useRouter } from 'next/router'
 
 import { useSnackbarContext } from './RQNotificationContext/RQNotificationContext'
@@ -49,7 +49,7 @@ export const AuthContextProvider = ({ children }: AuthContextProviderProps) => {
   const [isAuthenticated, setIsAuthenticated] = useState<boolean>(false)
   const [user, setUser] = useState<CustomerAccountWithRole | undefined>(undefined)
   const { showSnackbar } = useSnackbarContext()
-
+  const isCSR = getCookie('isCSR')
   const router = useRouter()
 
   const { mutate } = useLogin()
@@ -147,7 +147,7 @@ export const AuthContextProvider = ({ children }: AuthContextProviderProps) => {
     }
   }
 
-  const { data: customerAccount } = useGetCurrentCustomer()
+  const { data: customerAccount } = useGetCurrentCustomer(Boolean(isCSR))
 
   const values = {
     isAuthenticated,

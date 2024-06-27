@@ -51,6 +51,8 @@ async function cartTakeoverHandler(req: NextApiRequestWithLogger, res: NextApiRe
         getAuthCookieName() + '=' + prepareSetCookieValue({ ...cookieValue }) + ';HttpOnly;path=/'
       )
       setCookie('isCSR', 'true', options)
+      setCookie('customer', authTicket?.value?.customerAccount?.firstName, options)
+
       const redirectUrl = `/cart`
       res.redirect(redirectUrl)
     }

@@ -31,9 +31,10 @@ interface HamburgerMenuProps {
   setIsDrawerOpen: (isDrawerOpen: boolean) => void
   onAccountIconClick: () => void
   requestAccountIconComponent?: React.ReactNode
+  isCSR: boolean
+  customerName: string
 }
 
-const isCSR = getCookie('isCSR')
 const styles = {
   container: {
     width: '80vw',
@@ -69,11 +70,14 @@ const HamburgerMenu = (props: HamburgerMenuProps) => {
     navLinks,
     onAccountIconClick,
     requestAccountIconComponent,
+    isCSR,
+    customerName,
   } = props
   const { getCategoryLink } = uiHelpers()
   const { t } = useTranslation('common')
   const { isAuthenticated, user } = useAuthContext()
   const router = useRouter()
+  const userName = isAuthenticated ? user?.firstName : isCSR ? customerName : ''
 
   const toggleDrawer = (open: boolean) => {
     setIsDrawerOpen(open)
@@ -108,9 +112,7 @@ const HamburgerMenu = (props: HamburgerMenuProps) => {
             >
               <Box width="100%">
                 <HeaderAction
-                  title={
-                    isAuthenticated || isCSR ? `${t('hi')}, ${user?.firstName}` : t('my-account')
-                  }
+                  title={userName ? `${t('hi')}, ${userName}` : t('my-account')}
                   subtitle={isCSR ? '' : isAuthenticated ? t('go-to-my-account') : t('log-in')}
                   icon={AccountCircle}
                   mobileIconColor="black"

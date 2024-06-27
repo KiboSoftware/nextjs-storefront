@@ -45,7 +45,6 @@ export interface CartTemplateProps {
 const isCSR = getCookie('isCSR')
 const CartTemplate = (props: CartTemplateProps) => {
   const { isMultiShipEnabled } = props
-  console.log('props?.cart', props?.cart)
   const { data: cart } = useGetCart(props?.cart)
 
   const { t } = useTranslation('common')
