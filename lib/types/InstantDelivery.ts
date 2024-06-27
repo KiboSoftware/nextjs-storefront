@@ -4,6 +4,7 @@ export interface Window {
   pickupTime: { startsAt: number; endsAt?: number }
   dropoffTime: { startsAt: number; endsAt: number }
   readable: string
+  tz: string
 }
 
 export interface InstantDelivery {

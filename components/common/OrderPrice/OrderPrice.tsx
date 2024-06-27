@@ -60,8 +60,11 @@ const OrderPrice = <T extends CrCart | CrOrder | Checkout>(props: OrderPriceProp
       : orderGetters.getSubtotal(orderDetails)
   const itemTaxTotal = orderGetters.getItemTaxTotal(orderDetails as CrOrder)
   const discountedSubtotal =
-    orderGetters.getDiscountedSubtotal(orderDetails as CrOrder | CrCart) ||
-    checkoutGetters.getDiscountedSubtotal(orderDetails as Checkout)
+    deliveryAddressDateAndWindow || deliveryItemPrice
+      ? (orderGetters.getDiscountedSubtotal(orderDetails as CrOrder | CrCart) ||
+          checkoutGetters.getDiscountedSubtotal(orderDetails as Checkout)) - deliveryItemPrice
+      : orderGetters.getDiscountedSubtotal(orderDetails as CrOrder | CrCart) ||
+        checkoutGetters.getDiscountedSubtotal(orderDetails as Checkout)
   const orderDiscounts = orderGetters.getOrderDiscounts(orderDetails as CrOrder)
   const lineItemSubtotal =
     deliveryAddressDateAndWindow || deliveryItemPrice

@@ -36,7 +36,7 @@ const commonTabStyles = {
   border: '1px solid grey',
 }
 
-function formatDropoffTime(dropoffTime: DropoffTime): string {
+function formatDropoffTime(dropoffTime: DropoffTime, timeZone: string): string {
   const startTime = new Date(dropoffTime.startsAt)
   const endTime = new Date(dropoffTime.endsAt)
 
@@ -44,11 +44,13 @@ function formatDropoffTime(dropoffTime: DropoffTime): string {
     hour: '2-digit',
     minute: '2-digit',
     hour12: true,
+    timeZone: timeZone,
   })
   const formattedEndTime = endTime.toLocaleTimeString('en-US', {
     hour: '2-digit',
     minute: '2-digit',
     hour12: true,
+    timeZone: timeZone,
   })
 
   return `${formattedStartTime} - ${formattedEndTime}`
@@ -61,12 +63,13 @@ function getDropoffTimesByDate(deliveries: Delivery[], date: string): Window[] |
   deliveries.forEach((delivery: Delivery) => {
     if (delivery.date === date) {
       delivery.windows.forEach((deliveryWindow: DeliveryWindowsProps) => {
-        const readable = formatDropoffTime(deliveryWindow.dropoffTime)
+        const readable = formatDropoffTime(deliveryWindow.dropoffTime, deliveryWindow?.tz)
 
         window.push({
           pickupTime: deliveryWindow.pickupTime,
           dropoffTime: deliveryWindow.dropoffTime,
           readable,
+          tz: deliveryWindow.tz,
         })
       })
     }

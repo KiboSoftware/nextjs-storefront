@@ -176,58 +176,38 @@ const checkDeliveryItems = (data: any) => {
   }
   return false // Return false if no such item is found
 }
-const formatTimestamp = (startTime: any, endTime = null) => {
-  // Create Date objects using the timestamps
-  const startDate = new Date(startTime)
-  const endDate = endTime ? new Date(endTime) : null
 
-  // Function to get the month name
-  const getMonthName = (monthIndex: any) => {
-    const monthNames = [
-      'January',
-      'February',
-      'March',
-      'April',
-      'May',
-      'June',
-      'July',
-      'August',
-      'September',
-      'October',
-      'November',
-      'December',
-    ]
-    return monthNames[monthIndex]
-  }
+function formatDateRangeInTimeZone(startDate: any, endDate: any, timeZone: any) {
+  const startMs = parseInt(startDate)
+  const startDateObj = new Date(startMs)
+  const formattedStartDate = startDateObj.toLocaleDateString('en-US', {
+    year: 'numeric',
+    month: 'long',
+    day: 'numeric',
+    hour: '2-digit',
+    minute: '2-digit',
+    hour12: true,
+    timeZone: timeZone,
+  })
 
-  const formatTime = (date: any) => {
-    let hours = date.getHours()
-    const minutes = String(date.getMinutes()).padStart(2, '0')
-    const ampm = hours >= 12 ? 'PM' : 'AM'
-    hours = hours % 12
-    hours = hours ? hours : 12
-    return `${hours}:${minutes} ${ampm}`
-  }
+  // Check if end date is provided
+  if (endDate) {
+    const endMs = parseInt(endDate)
+    const endDateObj = new Date(endMs)
 
-  const startMonthName = getMonthName(startDate.getMonth())
-  const startDay = startDate.getDate()
-  const startFormattedTime = formatTime(startDate)
-
-  let formattedDate
-  if (endDate && !isNaN(endDate.getTime())) {
-    const endMonthName = getMonthName(endDate.getMonth())
-    const endDay = endDate.getDate()
-    const endFormattedTime = formatTime(endDate)
-
-    if (startDay === endDay && startMonthName === endMonthName) {
-      formattedDate = `${startMonthName} ${startDay} ${startFormattedTime} - ${endFormattedTime}`
-    } else {
-      formattedDate = `${startMonthName} ${startDay} ${startFormattedTime} - ${endMonthName} ${endDay} ${endFormattedTime}`
-    }
+    const formattedEndDate = endDateObj.toLocaleDateString('en-US', {
+      year: 'numeric',
+      month: 'long',
+      day: 'numeric',
+      hour: '2-digit',
+      minute: '2-digit',
+      hour12: true,
+      timeZone: timeZone,
+    })
+    return `${formattedStartDate} - ${formattedEndDate}`
   } else {
-    formattedDate = `${startMonthName} ${startDay} ${startFormattedTime}`
+    return `${formattedStartDate}`
   }
-  return formattedDate
 }
 
 const getDSDescription = (
@@ -236,11 +216,14 @@ const getDSDescription = (
   tipAmount: any,
   deliveryInstructions: any
 ) => {
-  return `<div><table><tr><td style="vertical-align:top"><div><b>Dropoff:</b> ${formatTimestamp(
+  return `<div><table><tr><td style="vertical-align:top"><div><b>Dropoff:</b> ${formatDateRangeInTimeZone(
     deliveryDateAndWindow?.window?.confirmedWindow?.dropoffTime?.startsAt,
-    deliveryDateAndWindow?.window?.confirmedWindow?.dropoffTime?.endsAt
-  )}</div><div><b>Pickup:</b> ${formatTimestamp(
-    deliveryDateAndWindow?.window?.confirmedWindow?.pickupTime?.startsAt
+    deliveryDateAndWindow?.window?.confirmedWindow?.dropoffTime?.endsAt,
+    deliveryDateAndWindow?.window?.confirmedWindow?.tz
+  )}</div><div><b>Pickup:</b> ${formatDateRangeInTimeZone(
+    deliveryDateAndWindow?.window?.confirmedWindow?.pickupTime?.startsAt,
+    null,
+    deliveryDateAndWindow?.window?.confirmedWindow?.tz
   )}</div><div><b>Tip:</b> $${tipAmount || 0}</div><div><b>Delivery Instructions:</b> ${
     deliveryInstructions || 'Please deliver to the front desk'
   }</div><div><b>Send SMS Notification:</b> ${
@@ -323,7 +306,6 @@ export const cartGetters = {
   getNormalizedDataForRates,
   getPackagesDetails,
   checkDeliveryItems,
-  formatTimestamp,
   getDSDescription,
   convertIntoLocalStorageObject,
   getCustomDataForCartOrOrder,
