@@ -1,9 +1,17 @@
 import { QueryClient, MutationCache, QueryCache } from '@tanstack/react-query'
+import { getCookie } from 'cookies-next'
+
+const isCSR = getCookie('isCSR')
 
 const getErrorMessage = (code: string, message: string) => {
   const messages: any = {
     GRAPHQL_VALIDATION_FAILED: 'Something went wrong',
     UNAUTHENTICATED: 'Invalid Credentials',
+    CART_NOT_FOUND: 'Cart was not found',
+  }
+
+  if (isCSR && message.includes(messages.CART_NOT_FOUND)) {
+    return (message || messages[code]) + ` Please close the window and re-visit the cart takeover.`
   }
 
   return message || messages[code] || 'Unable to connect server'
