@@ -1,24 +1,23 @@
 import React, { useEffect, useState } from 'react'
 
 import { yupResolver } from '@hookform/resolvers/yup'
-import CheckIcon from '@mui/icons-material/Check'
-import ClearIcon from '@mui/icons-material/Clear'
 import { LoadingButton } from '@mui/lab'
-import { Box, Grid, Stack, useMediaQuery, useTheme } from '@mui/material'
+import { Grid, Stack } from '@mui/material'
 import getConfig from 'next/config'
 import { useTranslation } from 'next-i18next'
 import { useForm, Controller } from 'react-hook-form'
 import * as yup from 'yup'
 
-import userFormStyles from './UserForm.styles'
+import GroupTransferList from '../../GroupTransferText/GroupTransferList'
 import { KiboRadio, KiboSwitch, KiboTextBox } from '@/components/common'
+import { useGetGroups } from '@/hooks/queries/groups/useGetGroups/useGetGroups'
 
 import { B2BUser, B2BUserInput } from '@/lib/gql/types'
 
 interface UserFormProps {
   isEditMode: boolean
   isUserFormInDialog?: boolean
-  b2BUser?: B2BUser | any
+  b2BUser?: B2BUser
   onClose: () => void
   onSave: (formValues: B2BUserInput, b2BUser?: B2BUser) => void
 }
@@ -36,21 +35,18 @@ export const useFormSchema = () => {
 }
 
 const UserForm = (props: UserFormProps) => {
-  const { isEditMode, isUserFormInDialog, b2BUser, onClose, onSave } = props
+  const { isEditMode, b2BUser, onClose, onSave } = props
 
   const { publicRuntimeConfig } = getConfig()
 
-  const classes = userFormStyles()
   const { t } = useTranslation('common')
-  const theme = useTheme()
-  const mdScreen = useMediaQuery(theme.breakpoints.up('md'))
   const userSchema = useFormSchema()
   const userFormRadioOptions = publicRuntimeConfig.userFormRadioOptions
 
   const [isLoading, setLoading] = useState(false)
 
-  const isDesktopView = !isEditMode && mdScreen
-  const isDesktopEditView = isEditMode && mdScreen
+  const { data: groups } = useGetGroups()
+
   const {
     getValues,
     handleSubmit,
@@ -78,11 +74,11 @@ const UserForm = (props: UserFormProps) => {
     if (!b2BUser) return
     const { firstName, lastName, emailAddress, isActive, roles } = b2BUser
     reset({
-      emailAddress,
-      firstName,
-      lastName,
-      isActive,
-      role: roles?.length ? roles[0]?.roleName : '',
+      emailAddress: emailAddress as string,
+      firstName: firstName as string,
+      lastName: lastName as string,
+      isActive: isActive as boolean,
+      role: roles?.length ? roles[0]?.roleName as string : '',
     })
   }, [b2BUser])
 
@@ -102,19 +98,13 @@ const UserForm = (props: UserFormProps) => {
       >
         <Grid
           container
-          spacing={8}
-          style={{
-            marginTop: '5px',
-            marginLeft: 0,
-            display: 'flex',
-            justifyContent: 'space-between',
-          }}
+          rowSpacing={1}
+          columnSpacing={1}
         >
           <Grid
             item
             xs={12}
-            md={isUserFormInDialog ? 12 : isDesktopEditView ? 3 : 3.5}
-            className={classes.textBoxGridStyle}
+            md={12}
           >
             <Controller
               name="emailAddress"
@@ -140,8 +130,7 @@ const UserForm = (props: UserFormProps) => {
           <Grid
             item
             xs={12}
-            md={isUserFormInDialog ? 12 : isDesktopEditView ? 1.5 : 2}
-            className={classes.textBoxGridStyle}
+            md={6}
           >
             <Controller
               name="firstName"
@@ -161,8 +150,7 @@ const UserForm = (props: UserFormProps) => {
           <Grid
             item
             xs={12}
-            md={isUserFormInDialog ? 12 : isDesktopEditView ? 1.5 : 2}
-            className={classes.textBoxGridStyle}
+            md={6}
           >
             <Controller
               name="lastName"
@@ -179,7 +167,8 @@ const UserForm = (props: UserFormProps) => {
               )}
             />
           </Grid>
-          <Grid item xs={12} md={isUserFormInDialog ? 12 : 2} className={classes.textBoxGridStyle}>
+        
+          <Grid item xs={12} md={12}>
             <Controller
               name="role"
               control={control}
@@ -188,6 +177,7 @@ const UserForm = (props: UserFormProps) => {
                 <KiboRadio
                   {...field}
                   align="center"
+                  row
                   onChange={(value) => field.onChange(value)}
                   title={t('role')}
                   radioOptions={userFormRadioOptions}
@@ -196,12 +186,16 @@ const UserForm = (props: UserFormProps) => {
               )}
             />
           </Grid>
+
+          <Grid item xs={12} md={12}>
+            <GroupTransferList groupsList={groups?.filter((group: any) => !(b2BUser as any)?.groups.includes(group.code))} selectedGroups={groups?.filter((group: any) => (b2BUser as any)?.groups.includes(group.code))}  />
+          </Grid>
+
           {isEditMode && (
             <Grid
               item
               xs={12}
-              md={isUserFormInDialog ? 12 : isDesktopEditView ? 1.7 : 1}
-              className={classes.kiboSwitchGridStyle}
+              md={12}
             >
               <Controller
                 name="isActive"
@@ -221,7 +215,7 @@ const UserForm = (props: UserFormProps) => {
           <Grid
             item
             xs={12}
-            md={isUserFormInDialog ? 12 : isDesktopEditView ? 1.1 : 1.4}
+            md={12}
             sx={{ paddingLeft: '0 !important', paddingTop: { xs: '15px !important' } }}
           >
             <Stack
@@ -240,7 +234,7 @@ const UserForm = (props: UserFormProps) => {
                 onClick={cancelAction}
                 sx={{ marginTop: { xs: 1.5, md: 0 } }}
               >
-                {isDesktopEditView && !isUserFormInDialog ? <ClearIcon /> : t('cancel')}
+                {t('cancel')}
               </LoadingButton>
 
               <LoadingButton
@@ -251,9 +245,7 @@ const UserForm = (props: UserFormProps) => {
                 loading={isLoading}
                 disabled={isLoading}
               >
-                {(isDesktopEditView && !isUserFormInDialog && <CheckIcon />) ||
-                  (isDesktopView && t('add-user')) ||
-                  t('save')}
+                {(isEditMode ? t('save') : t('add-user'))}
               </LoadingButton>
             </Stack>
           </Grid>
