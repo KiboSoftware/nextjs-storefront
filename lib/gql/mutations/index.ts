@@ -84,3 +84,7 @@ export { default as createQuoteFromCartMutation } from './b2b/quotes/create-quot
 export { default as addItemsToCurrentCartMutation } from './cart/add-items-to-current-cart'
 export { default as updateQuoteCouponMutation } from './b2b/quotes/update-quote-coupon'
 export { default as deleteQuoteCouponMutation } from './b2b/quotes/delete-quote-coupon'
+
+//groups
+export { default as addUserToGroupMutation } from './groups/add-user-to-group'
+export { default as removeUserFromGroupMutation } from './groups/remove-user-from-group'

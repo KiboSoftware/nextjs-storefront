@@ -36,3 +36,6 @@ export { default as getQuotes } from './b2b/get-quotes'
 export { default as getQuoteByIDQuery } from './quotes/get-quote-by-id'
 export { default as getQuoteShippingMethodsQuery } from './quotes/get-quote-shipping-rates'
 export { default as getB2BAccount } from './b2b/get-b2b-account'
+
+//groups
+export { default as getGroups } from './groups/get-groups'
