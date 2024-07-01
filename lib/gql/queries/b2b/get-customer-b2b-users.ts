@@ -23,6 +23,7 @@ const getCustomerB2BAccountUsersQuery = /* GraphQL */ `
         lastName
         isActive
         userId
+        groups
         roles {
           roleId
           roleName

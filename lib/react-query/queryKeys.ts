@@ -71,6 +71,10 @@ export const cartKeys = {
   all: ['cart'] as const,
 }
 
+export const groupsKeys = {
+  all: ['groups'] as const,
+}
+
 export const customerAccountCardsKeys = {
   all: ['customerAccountCards'] as const,
   cardById: (accountId: number) => [...customerAccountCardsKeys.all, accountId] as const,
