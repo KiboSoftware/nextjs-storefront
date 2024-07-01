@@ -21,12 +21,14 @@ import {
 } from '@mui/material'
 import getConfig from 'next/config'
 import Link from 'next/link'
+import { useRouter } from 'next/router'
 import { useTranslation } from 'next-i18next'
 
 import { UsersTemplateStyle } from './UsersTemplate.styles'
 import { UserTable, UserForm } from '@/components/b2b'
 import { SearchBar } from '@/components/common'
 import { ConfirmationDialog, UserFormDialog } from '@/components/dialogs'
+import { MobileB2BLayout } from '@/components/layout'
 import { useAuthContext, useModalContext } from '@/context'
 import {
   useAddRoleToCustomerB2bAccountMutation,
@@ -83,6 +85,7 @@ const UsersTemplate = () => {
   const userRoles = b2bUserRoles
 
   const theme = useTheme()
+  const router = useRouter()
   const { user } = useAuthContext()
   const { t } = useTranslation('common')
   const { showModal, closeModal } = useModalContext()
@@ -110,6 +113,13 @@ const UsersTemplate = () => {
   const { addRoleToCustomerB2bAccount } = useAddRoleToCustomerB2bAccountMutation()
   const { updateCustomerB2bUser } = useUpdateCustomerB2bUserMutation()
   const { deleteB2bAccountUserRole } = useDeleteB2bAccountRoleMutation()
+
+  const breadcrumbList = [{ key: 'users', backText: t('my-account'), redirectURL: '/my-account' }]
+  const activeBreadCrumb = breadcrumbList.filter((item) => item.key === 'users')[0]
+
+  const onBackClick = () => {
+    router.push(activeBreadCrumb.redirectURL)
+  }
 
   const handleDelete = (id: string | undefined | null) => {
     showModal({
@@ -227,19 +237,16 @@ const UsersTemplate = () => {
   }
 
   return (
-    <Grid>
-      <Grid item style={{ marginTop: '10px', marginBottom: '20px' }}>
-        <Box sx={UsersTemplateStyle.heading}>
-          <BackButtonLink aria-label={t('my-account')} href="/my-account">
-            <ChevronLeftIcon />
-            {mdScreen && <Typography variant="body1">{t('my-account')}</Typography>}
-          </BackButtonLink>
-          <Typography variant={mdScreen ? 'h1' : 'h2'}>{t('users')}</Typography>
-        </Box>
-        <NoSsr>
-          {hasPermission(actions.CREATE_ACCOUNT) && (
-            <Grid container>
-              <Grid item xs={12} md={12}>
+    <Grid container gap={3}>
+       <MobileB2BLayout
+          headerText={t('users')}
+          backText={activeBreadCrumb?.backText}
+          onBackClick={onBackClick}
+      />
+      <NoSsr>
+        {hasPermission(actions.CREATE_ACCOUNT) && (
+            <Grid item xs={12}>
+              <Box width={'100%'}>
                 <Button
                   variant="contained"
                   color="inherit"
@@ -249,23 +256,23 @@ const UsersTemplate = () => {
                   id="formOpenButton"
                   startIcon={<AddCircleOutlineIcon />}
                   sx={{ width: { xs: '100%', md: 118 } }}
+                  {...(!mdScreen && { fullWidth: true })}
                 >
                   {t('add-user')}
                 </Button>
-              </Grid>
-            </Grid>
-          )}
-        </NoSsr>
-      </Grid>
-      <Grid item>
-        <SearchBoxContainer>
-          <SearchBar
-            onSearch={handleSearch}
-            placeHolder={t('user-search-placeholder')}
-            searchTerm={paginationState.searchTerm}
-            showClearButton={true}
-          />
-        </SearchBoxContainer>
+              </Box>
+          </Grid>
+        )}
+      </NoSsr>
+      <Grid item xs={12}>
+          <Box width="100%" mb={2}>
+            <SearchBar
+              onSearch={handleSearch}
+              placeHolder={t('user-search-placeholder')}
+              searchTerm={paginationState.searchTerm}
+              showClearButton={true}
+            />
+          </Box>
 
         {isLoading ? (
           <Box style={{ width: '100%', display: 'flex', justifyContent: 'center' }}>

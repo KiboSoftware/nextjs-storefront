@@ -7,9 +7,11 @@ import {
   Box,
   IconButton,
   NoSsr,
+  Paper,
   Table,
   TableBody,
   TableCell,
+  TableContainer,
   TableHead,
   TableRow,
   Typography,
@@ -70,99 +72,89 @@ const UserTable = (props: UserTableProps) => {
   }
 
   return (
-    <Table>
-      {!b2bUsers?.length ? (
-        <caption style={{ textAlign: 'center' }}>{t('no-record-found')}</caption>
-      ) : null}
-      <TableHead>
-        <TableRow style={{ backgroundColor: theme.palette.grey[100] }}>
-          <TableCell
-            colSpan={2}
-            sx={{ flex: 1, width: { xs: '150px' }, overflow: { xs: 'hidden' } }}
-          >
-            {t('email')}
-          </TableCell>
-          {mdScreen && (
-            <>
-              <TableCell>{t('first-name')}</TableCell>
-              <TableCell>{t('last-name-or-sur-name')}</TableCell>
-            </>
-          )}
-          <TableCell>{t('role')}</TableCell>
-          {mdScreen && <TableCell>{t('status')}</TableCell>}
-          <NoSsr>{hasPermission(actions.EDIT_USERS) && <TableCell></TableCell>}</NoSsr>
-        </TableRow>
-      </TableHead>
-      <TableBody>
-        {b2bUsers?.map((b2bUser: B2BUser) =>
-          editUserId && editUserId === b2bUser?.userId ? (
-            <TableRow key={b2bUser?.userId}>
-              <TableCell colSpan={7} style={{ width: '100%', padding: 0 }}>
-                <UserForm
-                  isEditMode={true}
-                  b2BUser={b2bUser}
-                  onClose={() => setEditUserId(undefined)}
-                  onSave={(formValues: B2BUserInput) => onSave?.(formValues, b2bUser)}
-                />
-              </TableCell>
-            </TableRow>
-          ) : (
-            <TableRow key={b2bUser?.userId} onClick={() => !mdScreen && onView?.(b2bUser)}>
-              <TableCell colSpan={2} sx={style.emailAddressCell}>
-                {userGetters.getEmailAddress(b2bUser)}
-              </TableCell>
-              {mdScreen && (
-                <>
-                  <TableCell sx={{ flex: 1 }}>{userGetters.getFirstName(b2bUser)}</TableCell>
-                  <TableCell sx={{ flex: 1 }}>{userGetters.getLastName(b2bUser)}</TableCell>
-                </>
-              )}
-              <TableCell sx={{ flex: 1 }}>{userGetters.getRole(b2bUser)}</TableCell>
-              {mdScreen && (
-                <TableCell sx={{ flex: 1 }}>
-                  <Box
-                    sx={{ display: 'flex', justifyContent: 'start', alignItems: 'center', gap: 1 }}
-                  >
-                    {b2bUser?.isActive ? (
-                      <CircleIcon sx={{ fontSize: '14px' }} color="success" />
-                    ) : (
-                      <CircleIcon sx={{ fontSize: '14px' }} color="disabled" />
-                    )}
-                    <Typography>
-                      {userGetters.getStatus(b2bUser) ? t('active') : t('in-active')}
-                    </Typography>
-                  </Box>
+    <TableContainer component={Paper}>
+      <Table sx={{ maxWidth: '100%' }} aria-label="b2b users table">
+        {!b2bUsers?.length ? (
+          <caption style={{ textAlign: 'center' }}>{t('no-record-found')}</caption>
+        ) : null}
+        <TableHead>
+          <TableRow style={{ backgroundColor: theme.palette.grey[100] }}>
+            <TableCell
+              colSpan={2}
+              sx={{ flex: 1, width: { xs: '150px' }, overflow: { xs: 'hidden' } }}
+            >
+              {t('email')}
+            </TableCell>
+            {mdScreen && (
+              <>
+                <TableCell>{t('first-name')}</TableCell>
+                <TableCell>{t('last-name-or-sur-name')}</TableCell>
+              </>
+            )}
+            <TableCell>{t('role')}</TableCell>
+            {mdScreen && <TableCell>{t('status')}</TableCell>}
+            <NoSsr>{hasPermission(actions.EDIT_USERS) && <TableCell></TableCell>}</NoSsr>
+          </TableRow>
+        </TableHead>
+        <TableBody>
+          {b2bUsers?.map((b2bUser: B2BUser) =>(
+              <TableRow key={b2bUser?.userId} onClick={() => !mdScreen && onView?.(b2bUser)}>
+                <TableCell colSpan={2} sx={style.emailAddressCell}>
+                  {userGetters.getEmailAddress(b2bUser)}
                 </TableCell>
-              )}
-              <NoSsr>
-                {hasPermission(actions.EDIT_USERS) && (
+                {mdScreen && (
+                  <>
+                    <TableCell sx={{ flex: 1 }}>{userGetters.getFirstName(b2bUser)}</TableCell>
+                    <TableCell sx={{ flex: 1 }}>{userGetters.getLastName(b2bUser)}</TableCell>
+                  </>
+                )}
+                <TableCell sx={{ flex: 1 }}>{userGetters.getRole(b2bUser)}</TableCell>
+                {mdScreen && (
                   <TableCell sx={{ flex: 1 }}>
-                    {showActionButtons && (
-                      <Box sx={{ display: 'flex', justifyContent: 'end', alignItems: 'center' }}>
-                        <IconButton
-                          aria-label="item-edit"
-                          name="item-edit"
-                          onClick={() => onEditUserButtonClick(b2bUser)}
-                        >
-                          <EditIcon />
-                        </IconButton>
-                        <IconButton
-                          aria-label="item-delete"
-                          name="item-delete"
-                          onClick={() => onDelete?.(b2bUser?.userId as string)}
-                        >
-                          <DeleteIcon />
-                        </IconButton>
-                      </Box>
-                    )}
+                    <Box
+                      sx={{ display: 'flex', justifyContent: 'start', alignItems: 'center', gap: 1 }}
+                    >
+                      {b2bUser?.isActive ? (
+                        <CircleIcon sx={{ fontSize: '14px' }} color="success" />
+                      ) : (
+                        <CircleIcon sx={{ fontSize: '14px' }} color="disabled" />
+                      )}
+                      <Typography>
+                        {userGetters.getStatus(b2bUser) ? t('active') : t('in-active')}
+                      </Typography>
+                    </Box>
                   </TableCell>
                 )}
-              </NoSsr>
-            </TableRow>
-          )
-        )}
-      </TableBody>
-    </Table>
+                <NoSsr>
+                  {hasPermission(actions.EDIT_USERS) && (
+                    <TableCell sx={{ flex: 1 }}>
+                      {showActionButtons && (
+                        <Box sx={{ display: 'flex', justifyContent: 'end', alignItems: 'center' }}>
+                          <IconButton
+                            aria-label="item-edit"
+                            name="item-edit"
+                            onClick={() => onEditUserButtonClick(b2bUser)}
+                          >
+                            <EditIcon />
+                          </IconButton>
+                          <IconButton
+                            aria-label="item-delete"
+                            name="item-delete"
+                            onClick={() => onDelete?.(b2bUser?.userId as string)}
+                          >
+                            <DeleteIcon />
+                          </IconButton>
+                        </Box>
+                      )}
+                    </TableCell>
+                  )}
+                </NoSsr>
+              </TableRow>
+            )
+          )}
+        </TableBody>
+      </Table>
+    </TableContainer>
   )
 }
 

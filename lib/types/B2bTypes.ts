@@ -1,3 +1,5 @@
+import { CuAuditInfo } from "../gql/types"
+
 export interface SortingValues {
   value: string
   id: string
@@ -15,4 +17,11 @@ export interface QuoteFilters {
   name?: string
   number?: string
   others?: string
+}
+
+export type TenantGroup = {
+  code: string
+  name: string
+  description: string
+  auditInfo: CuAuditInfo
 }

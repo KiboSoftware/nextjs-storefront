@@ -2,21 +2,20 @@ import { GetServerSidePropsContext, NextApiRequest, NextApiResponse, NextPage } 
 import { serverSideTranslations } from 'next-i18next/serverSideTranslations'
 
 import { UsersTemplate } from '@/components/page-templates'
-import { getGroups } from '@/lib/api/operations'
+// import { getGroups } from '@/lib/api/operations'
 
 export async function getServerSideProps(context: GetServerSidePropsContext) {
   const { locale } = context
-  const response = await getGroups(context.req as NextApiRequest, context.res as NextApiResponse)
+  // const response = await getGroups(context.req as NextApiRequest, context.res as NextApiResponse)
   return {
     props: {
       ...(await serverSideTranslations(locale as string, ['common'])),
-      response,
+      // response,
     },
   }
 }
 
 const B2BUsersPage: NextPage = (props: any) => {
-  console.log('data', props?.response)
   return (
     <>
       <UsersTemplate {...props} />

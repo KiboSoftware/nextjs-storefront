@@ -1,24 +1,45 @@
-import { getGroups } from '../operations'
-import { NextApiRequestWithLogger } from '@/lib/types'
+import { NextApiRequest, NextApiResponse } from 'next'
 
-import type { NextApiResponse } from 'next'
-
-export default async function getGroupsHandler(
-  req: NextApiRequestWithLogger,
-  res: NextApiResponse
-) {
+import { getCart } from '@/lib/api/operations'
+import { fetcher, getAdditionalHeader } from '@/lib/api/util'
+import { gqlFetch } from '@/lib/api/util/fetch-gql'
+import { getGroups } from '@/lib/gql/queries'
+// Configure your GraphQL endpoint
+const handler = async (req: NextApiRequest, res: NextApiResponse) => {
+  if (req.method !== 'POST') {
+    return res.status(405).json({ message: 'Method Not Allowed' })
+  }
+  let correlationId: any = ''
   try {
-    res.setHeader('Cache-Control', 'public, s-maxage=10, stale-while-revalidate=59')
-    const response = await getGroups(req, res)
-    if (response?.errors) {
-      throw {
-        message: response?.errors[0]?.extensions?.response?.body?.message,
-        code: response?.errors[0].extensions.response.status,
-      }
+    // Extract the body from the incoming POST request
+    const { params } = req.body
+    // Prepare the GraphQL mutation
+    const headers = req ? getAdditionalHeader(req) : {}
+    const removeUserFromGroupResponse: any = await gqlFetch(
+      {
+        query: getGroups,
+        variables: {},
+      },
+      { headers }
+    )
+    // Execute the mutation
+    correlationId =
+      removeUserFromGroupResponse.headers.get('X-Vol-Correlation') ||
+      removeUserFromGroupResponse.headers.get('x-vol-correlation')
+    res.setHeader('x-vol-correlation', correlationId)
+    // Send the GraphQL response back to the client
+    if (removeUserFromGroupResponse.status > 499) {
+      throw new Error('Internal Server Error')
     }
-    res.status(200).json(response)
-  } catch (error: any) {
-    res.status(error?.code).json({ message: error?.message })
-    req.logger.error('Error in Category-tree handler', error)
+    const result = await removeUserFromGroupResponse.json()
+    if (removeUserFromGroupResponse.ok) {
+      return res.status(200).json(result.data.getGroups)
+    } else {
+      return res.status(removeUserFromGroupResponse.status).json(result)
+    }
+  } catch (error) {
+    console.error('Error handling request:', error)
+    res.status(500).json({ message: 'Internal Server Error' })
   }
 }
+export default handler

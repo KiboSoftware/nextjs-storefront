@@ -3,14 +3,11 @@
  */
 import { useQuery } from '@tanstack/react-query'
 
-import { makeGraphQLClient } from '@/lib/gql/client'
 import { groupsKeys } from '@/lib/react-query/queryKeys'
 
 /**
  * @hidden
  */
-
-const client = makeGraphQLClient()
 
 const getGroups = async () => {
   const response = await fetch('/api/get-groups', {
