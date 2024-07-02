@@ -530,5 +530,6 @@
   "digital-products": "Digital Products",
   "menu": "Menu",
   "remove-payPal": "Remove PayPal",
-  "loading-paypal": "Loading PayPal..."
+  "loading-paypal": "Loading PayPal...",
+  "groups": "Groups"
 }

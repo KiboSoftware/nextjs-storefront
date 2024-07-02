@@ -32,11 +32,13 @@ import { MobileB2BLayout } from '@/components/layout'
 import { useAuthContext, useModalContext } from '@/context'
 import {
   useAddRoleToCustomerB2bAccountMutation,
+  useAddUserToGroup,
   useCreateCustomerB2bUserMutation,
   useDebounce,
   useDeleteB2bAccountRoleMutation,
   useGetB2BUserQueries,
   useRemoveCustomerB2bUserMutation,
+  useRemoveUserFromGroup,
   useUpdateCustomerB2bUserMutation,
 } from '@/hooks'
 import {
@@ -47,9 +49,10 @@ import {
   getPerPageItemText,
   hasPermission,
 } from '@/lib/helpers'
+import type { UserGroupParam } from '@/lib/types'
 import { B2BUserInput, CustomerB2BUserRole } from '@/lib/types/CustomerB2BUser'
 
-import { B2BUser } from '@/lib/gql/types'
+import type { B2BUser } from '@/lib/gql/types'
 
 const BackButtonLink = styled(Link)(({ theme }: { theme: Theme }) => ({
   typography: 'body2',
@@ -113,6 +116,8 @@ const UsersTemplate = () => {
   const { addRoleToCustomerB2bAccount } = useAddRoleToCustomerB2bAccountMutation()
   const { updateCustomerB2bUser } = useUpdateCustomerB2bUserMutation()
   const { deleteB2bAccountUserRole } = useDeleteB2bAccountRoleMutation()
+  const { addUserToGroup } = useAddUserToGroup()
+  const { removeUserFromGroup } = useRemoveUserFromGroup()
 
   const breadcrumbList = [{ key: 'users', backText: t('my-account'), redirectURL: '/my-account' }]
   const activeBreadCrumb = breadcrumbList.filter((item) => item.key === 'users')[0]
@@ -213,6 +218,39 @@ const UsersTemplate = () => {
       }
     }
     addRoleToB2bUser(updateUserResponse, formValues)
+
+    if (formValues?.groups?.addGroups?.length > 0) addGroupsToB2bUser(b2BUser, formValues)
+    if (formValues?.groups?.removeGroups?.length > 0) removeGroupsToB2bUser(b2BUser, formValues)
+  }
+
+  const addGroupsToB2bUser = async (b2BUser: B2BUser | undefined, formValues: B2BUserInput) => {
+    const addGroupsWithMutation = formValues?.groups.addGroups.map((group: any) => {
+      const params: UserGroupParam = {
+        params: {
+          accountId: user?.id as number,
+          userId: b2BUser?.userId as string,
+          groupCode: group.code,
+        },
+      }
+      addUserToGroup.mutateAsync(params)
+    })
+
+    await Promise.all(addGroupsWithMutation)
+  }
+
+  const removeGroupsToB2bUser = async (b2BUser: B2BUser | undefined, formValues: B2BUserInput) => {
+    const removeGroupsWithMutation = formValues?.groups.removeGroups.map((group: any) => {
+      const params: UserGroupParam = {
+        params: {
+          accountId: user?.id as number,
+          userId: b2BUser?.userId as string,
+          groupCode: group.code,
+        },
+      }
+      removeUserFromGroup.mutateAsync(params)
+    })
+
+    await Promise.all(removeGroupsWithMutation)
   }
 
   const handleAddUserButtonClick = () => {
@@ -238,41 +276,41 @@ const UsersTemplate = () => {
 
   return (
     <Grid container gap={3}>
-       <MobileB2BLayout
-          headerText={t('users')}
-          backText={activeBreadCrumb?.backText}
-          onBackClick={onBackClick}
+      <MobileB2BLayout
+        headerText={t('users')}
+        backText={activeBreadCrumb?.backText}
+        onBackClick={onBackClick}
       />
       <NoSsr>
         {hasPermission(actions.CREATE_ACCOUNT) && (
-            <Grid item xs={12}>
-              <Box width={'100%'}>
-                <Button
-                  variant="contained"
-                  color="inherit"
-                  disabled={isUserFormOpen}
-                  onClick={handleAddUserButtonClick}
-                  disableElevation
-                  id="formOpenButton"
-                  startIcon={<AddCircleOutlineIcon />}
-                  sx={{ width: { xs: '100%', md: 118 } }}
-                  {...(!mdScreen && { fullWidth: true })}
-                >
-                  {t('add-user')}
-                </Button>
-              </Box>
+          <Grid item xs={12}>
+            <Box width={'100%'}>
+              <Button
+                variant="contained"
+                color="inherit"
+                disabled={isUserFormOpen}
+                onClick={handleAddUserButtonClick}
+                disableElevation
+                id="formOpenButton"
+                startIcon={<AddCircleOutlineIcon />}
+                sx={{ width: { xs: '100%', md: 118 } }}
+                {...(!mdScreen && { fullWidth: true })}
+              >
+                {t('add-user')}
+              </Button>
+            </Box>
           </Grid>
         )}
       </NoSsr>
       <Grid item xs={12}>
-          <Box width="100%" mb={2}>
-            <SearchBar
-              onSearch={handleSearch}
-              placeHolder={t('user-search-placeholder')}
-              searchTerm={paginationState.searchTerm}
-              showClearButton={true}
-            />
-          </Box>
+        <Box width="100%" mb={2}>
+          <SearchBar
+            onSearch={handleSearch}
+            placeHolder={t('user-search-placeholder')}
+            searchTerm={paginationState.searchTerm}
+            showClearButton={true}
+          />
+        </Box>
 
         {isLoading ? (
           <Box style={{ width: '100%', display: 'flex', justifyContent: 'center' }}>

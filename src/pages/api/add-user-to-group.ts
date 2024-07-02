@@ -1,7 +1,6 @@
 import { NextApiRequest, NextApiResponse } from 'next'
 
-import { getCart } from '@/lib/api/operations'
-import { fetcher, getAdditionalHeader } from '@/lib/api/util'
+import { getAdditionalHeader } from '@/lib/api/util'
 import { gqlFetch } from '@/lib/api/util/fetch-gql'
 import { addUserToGroupMutation } from '@/lib/gql/mutations'
 
@@ -36,7 +35,7 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
       throw new Error('Internal Server Error')
     }
     const result = await addUserToGroupResponse.json()
-    console.log('result', JSON.stringify(result))
+
     if (addUserToGroupResponse.ok) {
       return res.status(200).json(result.data.addUserToGroup)
     } else {

@@ -7,6 +7,7 @@ export interface B2BUserInput {
   localeCode?: string | null
   isActive?: boolean | null
   role?: string | null
+  groups?: any | null
 }
 
 export interface QueryB2BUserArgs {

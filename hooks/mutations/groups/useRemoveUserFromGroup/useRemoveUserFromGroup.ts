@@ -3,17 +3,10 @@
  */
 import { useMutation, useQueryClient } from '@tanstack/react-query'
 
-import { groupsKeys } from '@/lib/react-query/queryKeys'
+import { customerB2BUserKeys, groupsKeys } from '@/lib/react-query/queryKeys'
+import type { UserGroupParam } from '@/lib/types'
 
-interface RemoveUserFromGroupParams {
-  params: {
-    accountId: number
-    userId: string
-    groupCode: string
-  }
-}
-
-const removeUserFromGroup = async (params: RemoveUserFromGroupParams) => {
+const removeUserFromGroup = async (params: UserGroupParam) => {
   const response = await fetch('/api/remove-user-from-group', {
     method: 'POST',
     headers: {
@@ -33,7 +26,7 @@ const removeUserFromGroup = async (params: RemoveUserFromGroupParams) => {
  *
  * Description : remove user from particular group
  *
- * Parameters passed to function removeUserFromGroup(params: RemoveUserFromGroupParams) => expects object of type 'RemoveUserFromGroupParams' containing accountId,userId and groupCode
+ * Parameters passed to function removeUserFromGroup(params: UserGroup) => expects object of type 'RemoveUserFromGroupParams' containing accountId,userId and groupCode
  *
  * On success, calls invalidateQueries on groupKeys and fetches the updated result
  *
@@ -45,7 +38,7 @@ export const useRemoveUserFromGroup = () => {
     removeUserFromGroup: useMutation({
       mutationFn: removeUserFromGroup,
       onSuccess: () => {
-        queryClient.invalidateQueries({ queryKey: groupsKeys.all })
+        queryClient.invalidateQueries({ queryKey: [groupsKeys.all, customerB2BUserKeys.all] })
       },
     }),
   }

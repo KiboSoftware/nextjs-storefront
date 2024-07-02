@@ -1,4 +1,4 @@
-import { CuAuditInfo } from "../gql/types"
+import { CuAuditInfo } from '../gql/types'
 
 export interface SortingValues {
   value: string
@@ -24,4 +24,21 @@ export type TenantGroup = {
   name: string
   description: string
   auditInfo: CuAuditInfo
+}
+
+export interface B2BUserGroup {
+  name: string
+  code: string
+  accountId: number
+  description: string
+}
+
+export interface UserGroupParam {
+  params: UserGroupCode
+}
+
+interface UserGroupCode {
+  accountId: number
+  userId: string
+  groupCode: string
 }
