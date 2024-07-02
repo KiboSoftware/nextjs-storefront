@@ -1,4 +1,5 @@
 import * as React from 'react'
+import { useEffect } from 'react'
 
 import { Box } from '@mui/material'
 import Button from '@mui/material/Button'
@@ -7,38 +8,48 @@ import List from '@mui/material/List'
 import ListItemButton from '@mui/material/ListItemButton'
 import ListItemText from '@mui/material/ListItemText'
 import Paper from '@mui/material/Paper'
+import { useTranslation } from 'next-i18next'
 
-function not(a: readonly Group[], b: readonly Group[]) {
+import type { B2BUserGroup } from '@/lib/types'
+
+function not(a: readonly B2BUserGroup[], b: readonly B2BUserGroup[]) {
   return a.filter((value) => b.findIndex((group) => group.code === value.code) === -1)
 }
 
-function intersection(a: readonly Group[], b: readonly Group[]) {
+function intersection(a: readonly B2BUserGroup[], b: readonly B2BUserGroup[]) {
   return a.filter((value) => b.findIndex((group) => group.code === value.code) !== -1)
 }
-
-type Group = {
-  name: 'string'
-  code: 'string'
-  accountId: number
-  description: 'string'
-}
-
 interface GroupTransferListProps {
-  groupsList: any[]
-  selectedGroups: any[]
+  groupsList: B2BUserGroup[]
+  selectedGroups: B2BUserGroup[]
+  isSubmitting: boolean
+  onAddRemoveGroups: (groups: { addGroups: any; removeGroups: any }) => void
 }
 
-export default function GroupTransferList({ groupsList, selectedGroups }: GroupTransferListProps) {
-  const [checked, setChecked] = React.useState<readonly Group[]>([])
-  const [left, setLeft] = React.useState<readonly Group[]>(groupsList)
-  const [right, setRight] = React.useState<readonly Group[]>(selectedGroups)
+export default function GroupTransferList({
+  groupsList,
+  selectedGroups,
+  isSubmitting,
+  onAddRemoveGroups,
+}: GroupTransferListProps) {
+  const { t } = useTranslation('common')
+  const [checked, setChecked] = React.useState<readonly B2BUserGroup[]>([])
+  const [left, setLeft] = React.useState<readonly B2BUserGroup[]>(groupsList)
+  const [right, setRight] = React.useState<readonly B2BUserGroup[]>(selectedGroups)
+
+  useEffect(() => {
+    if (isSubmitting) {
+      const updatedGroups = handleAddRemoveGroups()
+      onAddRemoveGroups(updatedGroups)
+    }
+  }, [isSubmitting])
 
   if (!groupsList || !selectedGroups) return null
 
   const leftChecked = intersection(checked, left)
   const rightChecked = intersection(checked, right)
 
-  const handleToggle = (value: Group) => () => {
+  const handleToggle = (value: B2BUserGroup) => () => {
     const currentIndex = checked.findIndex((each) => each.code === value.code)
     const newChecked = [...checked]
 
@@ -73,8 +84,18 @@ export default function GroupTransferList({ groupsList, selectedGroups }: GroupT
     setRight([])
   }
 
-  const customList = (items: readonly Group[]) => (
-    <Paper sx={{ overflow: 'auto', minHeight: 150 }}>
+  const handleAddRemoveGroups = () => {
+    const addGroups = right.filter(
+      (group) => selectedGroups.findIndex((each) => each.code === group.code) === -1
+    )
+    const removeGroups = selectedGroups.filter(
+      (group) => right.findIndex((each) => each.code === group.code) === -1
+    )
+    return { addGroups, removeGroups }
+  }
+
+  const customList = (items: readonly B2BUserGroup[]) => (
+    <Paper sx={{ overflow: 'auto', minHeight: 160, maxHeight: 160 }}>
       <List dense component="div" role="list">
         {items?.map((value) => {
           const labelId = `transfer-list-item-${value.code}-label`
@@ -96,6 +117,9 @@ export default function GroupTransferList({ groupsList, selectedGroups }: GroupT
 
   return (
     <Grid container spacing={1} justifyContent="center" alignItems="flex-start">
+      <Grid item xs={12} sm={12}>
+        {t('groups')}
+      </Grid>
       <Grid item xs={12} sm={5}>
         {customList(left)}
       </Grid>

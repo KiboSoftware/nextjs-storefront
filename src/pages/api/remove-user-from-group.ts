@@ -1,7 +1,6 @@
 import { NextApiRequest, NextApiResponse } from 'next'
 
-import { getCart } from '@/lib/api/operations'
-import { fetcher, getAdditionalHeader } from '@/lib/api/util'
+import { getAdditionalHeader } from '@/lib/api/util'
 import { gqlFetch } from '@/lib/api/util/fetch-gql'
 import { removeUserFromGroupMutation } from '@/lib/gql/mutations'
 

@@ -3,17 +3,10 @@
  */
 import { useMutation, useQueryClient } from '@tanstack/react-query'
 
-import { groupsKeys } from '@/lib/react-query/queryKeys'
+import { customerB2BUserKeys, groupsKeys } from '@/lib/react-query/queryKeys'
+import type { UserGroupParam } from '@/lib/types'
 
-interface AddUserToGroupParams {
-  params: {
-    accountId: number
-    userId: string
-    groupCode: string
-  }
-}
-
-const addUserToGroup = async (params: AddUserToGroupParams) => {
+const addUserToGroup = async (params: UserGroupParam) => {
   const response = await fetch('/api/add-user-to-group', {
     method: 'POST',
     headers: {
@@ -33,7 +26,7 @@ const addUserToGroup = async (params: AddUserToGroupParams) => {
  *
  * Description : add user to particular group
  *
- * Parameters passed to function addUserToGroup(params: AddUserToGroupParams) => expects object of type 'AddUserToGroupParams' containing accountId,userId and groupCode
+ * Parameters passed to function addUserToGroup(params: UserGroup) => expects object of type 'AddUserToGroupParams' containing accountId,userId and groupCode
  *
  * On success, calls invalidateQueries on groupKeys and fetches the updated result
  *
@@ -45,7 +38,7 @@ export const useAddUserToGroup = () => {
     addUserToGroup: useMutation({
       mutationFn: addUserToGroup,
       onSuccess: () => {
-        queryClient.invalidateQueries({ queryKey: groupsKeys.all })
+        queryClient.invalidateQueries({ queryKey: [groupsKeys.all, customerB2BUserKeys.all] })
       },
     }),
   }

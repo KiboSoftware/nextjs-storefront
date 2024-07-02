@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react'
 
 import { yupResolver } from '@hookform/resolvers/yup'
 import { LoadingButton } from '@mui/lab'
-import { Grid, Stack } from '@mui/material'
+import { Box, CircularProgress, Grid, Stack } from '@mui/material'
 import getConfig from 'next/config'
 import { useTranslation } from 'next-i18next'
 import { useForm, Controller } from 'react-hook-form'
@@ -45,16 +45,23 @@ const UserForm = (props: UserFormProps) => {
 
   const [isLoading, setLoading] = useState(false)
 
-  const { data: groups } = useGetGroups()
+  const { data: groups, isLoading: groupsLoading } = useGetGroups()
 
   const {
     getValues,
     handleSubmit,
-    formState: { errors },
+    formState: { errors, isSubmitting },
     control,
     reset,
   } = useForm({
-    defaultValues: { role: 'Admin', emailAddress: '', firstName: '', lastName: '', isActive: true },
+    defaultValues: {
+      role: 'Admin',
+      emailAddress: '',
+      firstName: '',
+      lastName: '',
+      isActive: true,
+      groups: { addGroups: [], removeGroups: [] },
+    },
     resolver: yupResolver(userSchema),
   })
   const onSubmit = async () => {
@@ -78,13 +85,21 @@ const UserForm = (props: UserFormProps) => {
       firstName: firstName as string,
       lastName: lastName as string,
       isActive: isActive as boolean,
-      role: roles?.length ? roles[0]?.roleName as string : '',
+      role: roles?.length ? (roles[0]?.roleName as string) : '',
     })
   }, [b2BUser])
 
   const cancelAction = () => {
     onClose()
     reset()
+  }
+
+  const b2bUserGroups = () => {
+    return groups?.filter((group: any) => !(b2BUser as any)?.groups.includes(group.code))
+  }
+
+  const b2bUserSelectedGroups = () => {
+    return groups?.filter((group: any) => (b2BUser as any)?.groups.includes(group.code))
   }
 
   return (
@@ -96,16 +111,8 @@ const UserForm = (props: UserFormProps) => {
         data-testid="user-form"
         style={{ display: 'flex' }}
       >
-        <Grid
-          container
-          rowSpacing={1}
-          columnSpacing={1}
-        >
-          <Grid
-            item
-            xs={12}
-            md={12}
-          >
+        <Grid container rowSpacing={1} columnSpacing={1}>
+          <Grid item xs={12} md={12}>
             <Controller
               name="emailAddress"
               control={control}
@@ -127,11 +134,7 @@ const UserForm = (props: UserFormProps) => {
               )}
             />
           </Grid>
-          <Grid
-            item
-            xs={12}
-            md={6}
-          >
+          <Grid item xs={12} md={6}>
             <Controller
               name="firstName"
               control={control}
@@ -147,11 +150,7 @@ const UserForm = (props: UserFormProps) => {
               )}
             />
           </Grid>
-          <Grid
-            item
-            xs={12}
-            md={6}
-          >
+          <Grid item xs={12} md={6}>
             <Controller
               name="lastName"
               control={control}
@@ -167,7 +166,7 @@ const UserForm = (props: UserFormProps) => {
               )}
             />
           </Grid>
-        
+
           <Grid item xs={12} md={12}>
             <Controller
               name="role"
@@ -186,17 +185,28 @@ const UserForm = (props: UserFormProps) => {
               )}
             />
           </Grid>
-
-          <Grid item xs={12} md={12}>
-            <GroupTransferList groupsList={groups?.filter((group: any) => !(b2BUser as any)?.groups.includes(group.code))} selectedGroups={groups?.filter((group: any) => (b2BUser as any)?.groups.includes(group.code))}  />
-          </Grid>
-
+          {groupsLoading ? (
+            <Box sx={{ display: 'flex', justifyContent: 'center' }}>
+              <CircularProgress />
+            </Box>
+          ) : (
+            <Grid item xs={12} md={12}>
+              <Controller
+                name="groups"
+                control={control}
+                render={({ field }) => (
+                  <GroupTransferList
+                    groupsList={b2bUserGroups()}
+                    selectedGroups={b2bUserSelectedGroups()}
+                    isSubmitting={isSubmitting}
+                    onAddRemoveGroups={(value) => field.onChange(value)}
+                  />
+                )}
+              />
+            </Grid>
+          )}
           {isEditMode && (
-            <Grid
-              item
-              xs={12}
-              md={12}
-            >
+            <Grid item xs={12} md={12}>
               <Controller
                 name="isActive"
                 control={control}
@@ -245,7 +255,7 @@ const UserForm = (props: UserFormProps) => {
                 loading={isLoading}
                 disabled={isLoading}
               >
-                {(isEditMode ? t('save') : t('add-user'))}
+                {isEditMode ? t('save') : t('add-user')}
               </LoadingButton>
             </Stack>
           </Grid>

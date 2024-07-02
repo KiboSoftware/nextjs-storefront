@@ -286,6 +286,7 @@ export type B2BUser = {
   roles?: Maybe<Array<Maybe<UserRole>>>
   userId?: Maybe<Scalars['String']>
   userName?: Maybe<Scalars['String']>
+  groups?: Maybe<Array<Maybe<'String'>>>
 }
 
 export type B2BUser_GetArgs = {
