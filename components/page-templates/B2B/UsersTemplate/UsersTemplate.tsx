@@ -219,8 +219,10 @@ const UsersTemplate = () => {
     }
     addRoleToB2bUser(updateUserResponse, formValues)
 
-    if (formValues?.groups?.addGroups?.length > 0) addGroupsToB2bUser(b2BUser, formValues)
-    if (formValues?.groups?.removeGroups?.length > 0) removeGroupsToB2bUser(b2BUser, formValues)
+    if (formValues?.groups?.addGroups?.length > 0) await addGroupsToB2bUser(b2BUser, formValues)
+    if (formValues?.groups?.removeGroups?.length > 0)
+      await removeGroupsToB2bUser(b2BUser, formValues)
+    closeModal()
   }
 
   const addGroupsToB2bUser = async (b2BUser: B2BUser | undefined, formValues: B2BUserInput) => {

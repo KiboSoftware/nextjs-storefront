@@ -8,7 +8,7 @@ import { useTranslation } from 'next-i18next'
 import { useForm, Controller } from 'react-hook-form'
 import * as yup from 'yup'
 
-import GroupTransferList from '../../GroupTransferText/GroupTransferList'
+import GroupTransferList from '../GroupTransferText/GroupTransferList'
 import { KiboRadio, KiboSwitch, KiboTextBox } from '@/components/common'
 import { useGetGroups } from '@/hooks/queries/groups/useGetGroups/useGetGroups'
 
@@ -74,7 +74,7 @@ const UserForm = (props: UserFormProps) => {
       await onSave(formValues)
     }
     setLoading(false)
-    cancelAction()
+    reset()
   }
 
   useEffect(() => {
@@ -185,42 +185,44 @@ const UserForm = (props: UserFormProps) => {
               )}
             />
           </Grid>
-          {groupsLoading ? (
-            <Box sx={{ display: 'flex', justifyContent: 'center' }}>
-              <CircularProgress />
-            </Box>
-          ) : (
-            <Grid item xs={12} md={12}>
-              <Controller
-                name="groups"
-                control={control}
-                render={({ field }) => (
-                  <GroupTransferList
-                    groupsList={b2bUserGroups()}
-                    selectedGroups={b2bUserSelectedGroups()}
-                    isSubmitting={isSubmitting}
-                    onAddRemoveGroups={(value) => field.onChange(value)}
-                  />
-                )}
-              />
-            </Grid>
-          )}
           {isEditMode && (
-            <Grid item xs={12} md={12}>
-              <Controller
-                name="isActive"
-                control={control}
-                render={({ field }) => (
-                  <KiboSwitch
-                    checked={field.value}
-                    onLabel={t('active')}
-                    offLabel={t('in-active')}
-                    title={t('status')}
-                    onChange={(value) => field.onChange(value)}
+            <>
+              {groupsLoading ? (
+                <Box sx={{ display: 'flex', justifyContent: 'center' }}>
+                  <CircularProgress />
+                </Box>
+              ) : (
+                <Grid item xs={12} md={12}>
+                  <Controller
+                    name="groups"
+                    control={control}
+                    render={({ field }) => (
+                      <GroupTransferList
+                        groupsList={b2bUserGroups()}
+                        selectedGroups={b2bUserSelectedGroups()}
+                        isSubmitting={isSubmitting}
+                        onAddRemoveGroups={(value) => field.onChange(value)}
+                      />
+                    )}
                   />
-                )}
-              />
-            </Grid>
+                </Grid>
+              )}
+              <Grid item xs={12} md={12}>
+                <Controller
+                  name="isActive"
+                  control={control}
+                  render={({ field }) => (
+                    <KiboSwitch
+                      checked={field.value}
+                      onLabel={t('active')}
+                      offLabel={t('in-active')}
+                      title={t('status')}
+                      onChange={(value) => field.onChange(value)}
+                    />
+                  )}
+                />
+              </Grid>
+            </>
           )}
           <Grid
             item

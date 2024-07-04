@@ -532,5 +532,7 @@
   "remove-payPal": "Remove PayPal",
   "loading-paypal": "Loading PayPal...",
   "error-cartTakeover": "Error while fetching the cart. Please close the window and try again.",
-  "groups": "Groups"
+  "groups": "Groups",
+  "all-groups": "All Groups",
+  "selected-groups": "Selected Groups"
 }
