@@ -124,7 +124,7 @@ export default function GroupTransferList({
 
   return (
     <Grid container spacing={1} justifyContent="center" alignItems="flex-start">
-      <Grid item xs={12} sm={5}>
+      <Grid item xs={12} sm={5} data-testid="allGroups">
         {t('all-groups')}
         {customList(left)}
       </Grid>
@@ -186,7 +186,7 @@ export default function GroupTransferList({
           </Button>
         </Grid>
       </Grid>
-      <Grid item xs={12} sm={5}>
+      <Grid item xs={12} sm={5} data-testid="selectedGroups">
         {t('selected-groups')}
         {customList(right)}
       </Grid>
