@@ -437,6 +437,7 @@
   "name": "Name",
   "number": "Number",
   "edit-quote": "Edit Quote",
+  "approve-quote": "Approve Quote",
   "email-quote": "Email Quote",
   "delete-quote": "Delete Quote",
   "pending": "Pending",
@@ -534,5 +535,7 @@
   "error-cartTakeover": "Error while fetching the cart. Please close the window and try again.",
   "groups": "Groups",
   "all-groups": "All Groups",
-  "selected-groups": "Selected Groups"
+  "selected-groups": "Selected Groups",
+  "groups": "Groups",
+  "task-executed-message": "Task Executed successfully!"
 }
