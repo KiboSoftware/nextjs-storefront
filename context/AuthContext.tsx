@@ -59,6 +59,7 @@ export const AuthContextProvider = ({ children }: AuthContextProviderProps) => {
       path: '/',
     })
     router.push('/')
+    localStorage.removeItem('instant-delivery')
     queryClient.removeQueries({ queryKey: cartKeys.all })
     queryClient.removeQueries({ queryKey: loginKeys.user })
   })

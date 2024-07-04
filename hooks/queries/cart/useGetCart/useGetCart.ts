@@ -16,6 +16,7 @@ export interface UseCartType {
   data: CrCart
   isLoading: boolean
   isSuccess: boolean
+  refetch: () => any
 }
 
 const getCurrentCart = async () => {
@@ -48,6 +49,7 @@ export const useGetCart = (initialData?: CrCart): UseCartType => {
       data = {},
       isLoading,
       isSuccess,
+      refetch,
     } = useQuery({
       queryKey: cartKeys.all,
       queryFn: getCurrentCart,
@@ -55,7 +57,7 @@ export const useGetCart = (initialData?: CrCart): UseCartType => {
       refetchOnWindowFocus: false,
     })
 
-    return { data, isLoading, isSuccess }
+    return { data, isLoading, isSuccess, refetch }
   } catch (err) {
     throw new Error()
   }

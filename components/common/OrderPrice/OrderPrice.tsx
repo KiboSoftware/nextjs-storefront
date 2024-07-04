@@ -17,6 +17,9 @@ export interface OrderPriceProps<T extends CrCart | CrOrder | Checkout> {
   orderDetails: T
   isShippingTaxIncluded?: boolean
   promoComponent?: ReactNode
+  tipComponent?: ReactNode
+  deliveryInstructionsComponent?: ReactNode
+  isCart?: boolean
 }
 
 const styles = {
@@ -33,18 +36,40 @@ const OrderPrice = <T extends CrCart | CrOrder | Checkout>(props: OrderPriceProp
     handlingLabel,
 
     promoComponent,
+    tipComponent,
+    deliveryInstructionsComponent,
     isShippingTaxIncluded = true,
     orderDetails,
+    isCart,
   } = props
 
-  const total = orderGetters.getTotal(orderDetails)
-  const subTotal = orderGetters.getSubtotal(orderDetails)
+  const deliveryAddressDateAndWindow =
+    typeof localStorage !== 'undefined' &&
+    JSON.parse(localStorage.getItem('instant-delivery') as string)
+
+  const deliveryItemPrice = orderGetters.getDeliveryItemPrice(orderDetails as CrOrder) || 0
+  const tipAmount = orderGetters.getTipAmount(orderDetails as CrOrder)
+
+  const total =
+    isCart && (deliveryAddressDateAndWindow || deliveryItemPrice)
+      ? orderGetters.getTotal(orderDetails) - deliveryItemPrice
+      : orderGetters.getTotal(orderDetails) + tipAmount
+  const subTotal =
+    deliveryAddressDateAndWindow || deliveryItemPrice
+      ? orderGetters.getSubtotal(orderDetails) - deliveryItemPrice
+      : orderGetters.getSubtotal(orderDetails)
   const itemTaxTotal = orderGetters.getItemTaxTotal(orderDetails as CrOrder)
   const discountedSubtotal =
-    orderGetters.getDiscountedSubtotal(orderDetails as CrOrder | CrCart) ||
-    checkoutGetters.getDiscountedSubtotal(orderDetails as Checkout)
+    deliveryAddressDateAndWindow || deliveryItemPrice
+      ? (orderGetters.getDiscountedSubtotal(orderDetails as CrOrder | CrCart) ||
+          checkoutGetters.getDiscountedSubtotal(orderDetails as Checkout)) - deliveryItemPrice
+      : orderGetters.getDiscountedSubtotal(orderDetails as CrOrder | CrCart) ||
+        checkoutGetters.getDiscountedSubtotal(orderDetails as Checkout)
   const orderDiscounts = orderGetters.getOrderDiscounts(orderDetails as CrOrder)
-  const lineItemSubtotal = orderGetters.getLineItemSubtotal(orderDetails as CrOrder)
+  const lineItemSubtotal =
+    deliveryAddressDateAndWindow || deliveryItemPrice
+      ? orderGetters.getLineItemSubtotal(orderDetails as CrOrder) - deliveryItemPrice
+      : orderGetters.getLineItemSubtotal(orderDetails as CrOrder)
 
   const shippingTotal = orderGetters.getShippingTotal(orderDetails as CrOrder)
   const shippingSubTotal = orderGetters.getShippingSubTotal(orderDetails)
@@ -85,6 +110,30 @@ const OrderPrice = <T extends CrCart | CrOrder | Checkout>(props: OrderPriceProp
               taxTotal={handlingTaxTotal}
               discounts={handlingDiscounts}
             />
+            <Box sx={{ ...styles.priceTotalRow }}>
+              <Typography sx={{ ...styles.priceLabel }} variant="body1" fontWeight="bold">
+                {t('delivery-fee')}
+              </Typography>
+              <Price
+                variant="body1"
+                fontWeight="bold"
+                price={t('currency', { val: deliveryItemPrice })}
+              />
+            </Box>
+            {(deliveryAddressDateAndWindow !== null || deliveryItemPrice !== undefined) &&
+              tipAmount !== undefined &&
+              tipAmount !== 0 && (
+                <Box sx={{ ...styles.priceTotalRow }}>
+                  <Typography sx={{ ...styles.priceLabel }} variant="body1" fontWeight="bold">
+                    {t('tip')}
+                  </Typography>
+                  <Price
+                    variant="body1"
+                    fontWeight="bold"
+                    price={t('currency', { val: tipAmount })}
+                  />
+                </Box>
+              )}
           </>
         )}
 
@@ -114,9 +163,11 @@ const OrderPrice = <T extends CrCart | CrOrder | Checkout>(props: OrderPriceProp
         )}
       </>
       <Divider sx={{ margin: '0 0.438rem' }} />
-
       {promoComponent && <Box>{promoComponent}</Box>}
-
+      {deliveryAddressDateAndWindow && tipComponent && <Box>{tipComponent}</Box>}
+      {deliveryAddressDateAndWindow && deliveryInstructionsComponent && (
+        <Box>{deliveryInstructionsComponent}</Box>
+      )}
       <Box sx={{ ...styles.priceTotalRow }}>
         <Typography sx={{ ...styles.priceLabel }} variant="body1" fontWeight="bold">
           {totalLabel}

@@ -3,7 +3,26 @@ export const checkoutItemProductFragment = /* GraphQL */ `
     productCode
     name
     description
+    productType
     imageUrl
+    measurements {
+      height {
+        unit
+        value
+      }
+      width {
+        unit
+        value
+      }
+      length {
+        unit
+        value
+      }
+      weight {
+        unit
+        value
+      }
+    }
     options {
       attributeFQN
       name
@@ -20,6 +39,7 @@ export const checkoutItemProductFragment = /* GraphQL */ `
     price {
       price
       salePrice
+      tenantOverridePrice
     }
     categories {
       id
@@ -149,6 +169,7 @@ export const baseCheckoutFragment = /* GraphQL */ `
     fulfillmentInfo {
       shippingMethodCode
       shippingMethodName
+      data
       fulfillmentContact {
         id
         email
@@ -205,6 +226,7 @@ export const fullfillmentInfoFragment = /* GraphQL */ `
   fragment fullfillmentInfoFragment on CrFulfillmentInfo {
     shippingMethodCode
     shippingMethodName
+    data
     fulfillmentContact {
       address {
         address1

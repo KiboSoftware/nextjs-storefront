@@ -19,6 +19,24 @@ interface UseProductDetailTemplateProps {
   purchaseLocation: Location
 }
 
+interface DeliveryAddressDateAndWindow {
+  code?: string
+  name?: string
+  deliveryAddressDateAndWindow?: {
+    deliveryAddress: {
+      street: string
+      city: string
+      country: string
+      state: string
+      zipcode: string
+    }
+    deliveryDateAndWindow: {
+      confirmedDate: string
+      confirmedWindow: string
+      confirmedStoreId: string
+    }
+  }
+}
 interface SelectedFulfillmentOption<T extends Location | LocationCustom> {
   method: string
   location?: T
@@ -44,7 +62,7 @@ export const useProductDetailTemplate = (props: UseProductDetailTemplateProps) =
   >([])
   const [quantity, setQuantity] = useState<number>(1)
   const [selectedFulfillmentOption, setSelectedFulfillmentOption] = useState<
-    SelectedFulfillmentOption<Location>
+    SelectedFulfillmentOption<any>
   >({
     method: '',
     location: {},

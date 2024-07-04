@@ -11,6 +11,7 @@ import type { Maybe, CrOrderItem, CrShippingRate } from '@/lib/gql/types'
 export type ShippingMethodProps = {
   shipItems?: Maybe<CrOrderItem>[]
   pickupItems?: Maybe<CrOrderItem>[]
+  deliveryItems?: Maybe<CrOrderItem>[]
   handlingAmount?: number
   orderShipmentMethods?: Maybe<CrShippingRate>[]
   selectedShippingMethodCode?: string
@@ -29,6 +30,13 @@ export type PickupItemListProps = {
   isShipItemsPresent: boolean
   pickupItems: Maybe<CrOrderItem>[]
   onClickChangeStore?: () => void
+}
+export type DeliveryItemListProps = {
+  deliveryItems: Maybe<CrOrderItem>[]
+  handlingAmount?: number
+  orderShipmentMethods?: Maybe<CrShippingRate>[]
+  selectedShippingMethodCode?: string
+  onShippingMethodChange?: (value: string, name?: string) => void
 }
 const styles = {
   shippingType: {
@@ -77,6 +85,7 @@ const ShipItemList = (shipProps: ShipItemListProps) => {
     </Box>
   )
 }
+
 const PickupItemList = (pickupProps: PickupItemListProps) => {
   const { isShipItemsPresent, pickupItems, onClickChangeStore } = pickupProps
   const { t } = useTranslation('common')
@@ -115,10 +124,28 @@ const PickupItemList = (pickupProps: PickupItemListProps) => {
     </Box>
   )
 }
+
+const DeliveryItemList = (deliveryProps: DeliveryItemListProps) => {
+  const { deliveryItems } = deliveryProps
+  const { t } = useTranslation('common')
+
+  return (
+    <Box data-testid="ship-items">
+      <Typography sx={styles.shippingType} py={2} data-testid="ship-title">
+        {t('delivery-products')}
+      </Typography>
+      <Box pt={3}>
+        <ProductItemList items={deliveryItems} />
+      </Box>
+    </Box>
+  )
+}
+
 const ShippingMethod = (props: ShippingMethodProps) => {
   const {
     shipItems,
     pickupItems,
+    deliveryItems,
     orderShipmentMethods,
     showTitle = true,
     selectedShippingMethodCode,
@@ -140,7 +167,7 @@ const ShippingMethod = (props: ShippingMethodProps) => {
 
   return (
     <Box data-testid="shipping-method" ref={shippingMethodRef}>
-      {showTitle && (
+      {showTitle && !deliveryItems && (
         <Typography variant="h2" component="h2" pt={2}>
           {t('shipping-method')}
         </Typography>
@@ -158,6 +185,15 @@ const ShippingMethod = (props: ShippingMethodProps) => {
           isShipItemsPresent={Boolean(shipItems?.length)}
           pickupItems={pickupItems}
           onClickChangeStore={onStoreLocatorClick}
+        />
+      ) : null}
+
+      {deliveryItems?.length ? (
+        <DeliveryItemList
+          {...(onShippingMethodChange && { onShippingMethodChange })}
+          {...(orderShipmentMethods && { orderShipmentMethods })}
+          selectedShippingMethodCode={selectedShippingMethodCode}
+          deliveryItems={deliveryItems}
         />
       ) : null}
     </Box>

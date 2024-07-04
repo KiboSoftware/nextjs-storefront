@@ -1,4 +1,7 @@
+import { useEffect } from 'react'
+
 import ShoppingCartIcon from '@mui/icons-material/ShoppingCart'
+import getConfig from 'next/config'
 import { useRouter } from 'next/router'
 import { useTranslation } from 'next-i18next'
 
@@ -9,15 +12,44 @@ import type { IconProps } from '@/lib/types'
 
 const CartIcon = ({ size, isElementVisible, mobileIconColor }: IconProps) => {
   const { t } = useTranslation('common')
-
+  const { publicRuntimeConfig } = getConfig()
   const { data: cart } = useGetCart()
-  const itemCount = cartGetters.getCartItemCount(cart)
+  const deliveryAddressDateAndWindow =
+    typeof localStorage !== 'undefined' &&
+    JSON.parse(localStorage.getItem('instant-delivery') as string)
+  const filterCartItemsTotal = cart?.items?.filter(
+    (cartItem) =>
+      cartItem?.product?.productType !==
+      publicRuntimeConfig?.DeliverySolutionsDeliveryProductConfig?.productType
+  )?.length
+  const itemCount = !deliveryAddressDateAndWindow
+    ? cartGetters.getCartItemCount(cart)
+    : filterCartItemsTotal
 
   const router = useRouter()
 
   const gotoCart = () => {
     router.push('/cart')
   }
+
+  useEffect(() => {
+    if (
+      cartGetters.checkDeliveryItems(cart?.items) &&
+      cart?.data &&
+      !deliveryAddressDateAndWindow
+    ) {
+      localStorage.setItem(
+        'instant-delivery',
+        JSON.stringify(cartGetters.convertIntoLocalStorageObject(cart?.data?.ds))
+      )
+    }
+  }, [cartGetters.checkDeliveryItems(cart?.items)])
+
+  useEffect(() => {
+    if (cart?.items?.length === 0) {
+      localStorage.removeItem('instant-delivery')
+    }
+  }, [cart?.items?.length])
 
   return (
     <HeaderAction

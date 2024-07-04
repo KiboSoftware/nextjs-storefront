@@ -232,7 +232,10 @@ const validateAddToCartForOneTime = (product: ProductCustom): boolean => {
   ) {
     return Boolean(product?.purchasableState?.isPurchasable)
   }
-  if (product.fulfillmentMethod === FulfillmentOptions.PICKUP) {
+  if (
+    product.fulfillmentMethod === FulfillmentOptions.PICKUP ||
+    product.fulfillmentMethod === FulfillmentOptions.DELIVERY
+  ) {
     return (
       Boolean(product?.purchasableState?.isPurchasable) &&
       Boolean(product.fulfillmentMethod) &&
@@ -312,6 +315,7 @@ const getProductFulfillmentOptions = (
         return product?.inventoryInfo?.onlineStockAvailable
           ? option.details
           : option.unavailableDetails // checking if Directship
+      if (option.shortName === FulfillmentOptions.DELIVERY) return ''
       if (purchaseLocation?.name)
         return `${
           productLocationInventoryData && productLocationInventoryData[0]?.stockAvailable
@@ -350,7 +354,10 @@ const getAvailableItemCount = (
   const allVariantSelected = isProductVariationsSelected(product)
   const qtyLeft = { value: 0 }
   if (allVariantSelected) {
-    if (fulfillmentOptionValue === FulfillmentOptions.PICKUP) {
+    if (
+      fulfillmentOptionValue === FulfillmentOptions.PICKUP ||
+      fulfillmentOptionValue === FulfillmentOptions.DELIVERY
+    ) {
       qtyLeft.value = productLocationInventoryData[0]?.stockAvailable
         ? productLocationInventoryData[0]?.stockAvailable
         : 0

@@ -27,6 +27,7 @@ module.exports = {
       'cdn.builder.io',
       'cdn-sb.euw1.kibocommerce.com',
       'cdn-sb.sandbox.kibong-qa.com',
+      'd3bca3vmgp4vu9.cloudfront.net',
     ],
     deviceSizes: [
       100, 240, 340, 380, 400, 450, 500, 550, 600, 640, 750, 828, 1080, 1200, 1920, 2048, 3840,
@@ -116,6 +117,16 @@ module.exports = {
         isRequired: false,
         shortName: 'Pickup',
       },
+      {
+        value: 'Delivery',
+        name: 'Instant Delivery',
+        code: 'ID',
+        label: 'Instant Delivery',
+        isRequired: false,
+        shortName: 'Delivery',
+        disabled: false,
+        details: '',
+      },
     ],
     storeLocator: {
       defaultRange: '160934',
@@ -178,6 +189,15 @@ module.exports = {
         value: 'Nonpurchaser',
       },
     ],
+    paypal: {
+      clientId: 'Kibo Commerce',
+      currency: process.env.NEXT_PUBLIC_PAYPAL_CURRENCY || 'USD',
+      intent: 'authorize',
+    },
+    DeliverySolutionsDeliveryProductConfig: {
+      productCode: process.env.DELIVERYSOLUTIONS_PRODUCT_CODE,
+      productType: process.env.DELIVERYSOLUTIONS_PRODUCT_TYPE,
+    },
   },
   serverRuntimeConfig: {
     userCookieKey: process.env.KIBO_USER_COOKIE_KEY || 'kibo_at',
@@ -207,6 +227,15 @@ module.exports = {
       clientId: 'Kibo Commerce',
       currency: process.env.NEXT_PUBLIC_PAYPAL_CURRENCY || 'USD',
       intent: 'authorize',
+    },
+    deliverySolutions: {
+      url: 'https://sandbox.api.deliverysolutions.co/api/v2/deliveryAssurance',
+      baseUrl: ' https://sandbox.api.deliverysolutions.co/api/v2',
+      x_api_key: process.env.DELIVERYSOLUTIONS_X_API_KEY,
+      tenantId: process.env.DELIVERYSOLUTIONS_TENANT_ID || 'kibo',
+      store_external_id: process.env.DELIVERYSOLUTIONS_STORE_EXTERNAL_ID || '002',
+      window_type: process.env.DELIVERYSOLUTIONS_WINDOW_TYPE || 'delivery',
+      order_external_id: process.env.DELIVERYSOLUTIONS_ORDER_EXTERNAL_ID || '',
     },
   },
   staticPageGenerationTimeout: 1000,

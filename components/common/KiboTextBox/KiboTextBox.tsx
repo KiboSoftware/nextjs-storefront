@@ -67,9 +67,12 @@ const KiboTextBox = (props: KiboTextBoxProps) => {
 
   return (
     <FormControl variant="standard" error={error} required={required} {...rest} fullWidth>
-      <InputLabel shrink htmlFor="kibo-input">
-        {label}
-      </InputLabel>
+      {label && (
+        <InputLabel shrink htmlFor="kibo-input">
+          {label}
+        </InputLabel>
+      )}
+
       <KiboInput
         sx={{
           borderColor: error ? 'error.main' : 'text.secondary',
