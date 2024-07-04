@@ -573,5 +573,6 @@
   "add": "Add",
   "no-delivery-window": "No Delivery window found",
   "enter-delivery-instructions": "Enter Delivery Instructions",
-  "enter-tip-amount": "Enter your tip amount here"
+  "enter-tip-amount": "Enter your tip amount here",
+  "no-store-boundary": "No Store Boundaries Found"
 }

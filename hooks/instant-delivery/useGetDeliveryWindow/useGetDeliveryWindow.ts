@@ -81,7 +81,7 @@ export const useGetDeliveryWindow = (
     queryKey: deliverySolutionsKeys.deliveryWindow(storeExternalIds, futureDate),
     queryFn: () => getDeliveryWindow(storeExternalIds, futureDate),
     refetchOnWindowFocus: false,
-    enabled: !!storeExternalIds,
+    enabled: (storeExternalIds && storeExternalIds?.length > 0) || false,
   })
 
   return { data, isLoading, isSuccess }

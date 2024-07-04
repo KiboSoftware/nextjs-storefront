@@ -2,6 +2,7 @@ import React from 'react'
 
 import ArrowBackIos from '@mui/icons-material/ArrowBackIos'
 import { Divider, Grid, Typography, Box, Stack, Button } from '@mui/material'
+import getConfig from 'next/config'
 import { useTranslation } from 'next-i18next'
 
 import { AddressCard, OrderSummary, ProductItemList, KeyValueDisplay } from '@/components/common'
@@ -55,11 +56,13 @@ const ViewOrderDetails = (props: ViewOrderDetailsProps) => {
     onReturnItemsVisible,
   } = props
   const { t } = useTranslation('common')
+  const { publicRuntimeConfig } = getConfig()
 
   const orderNumber = orderGetters.getOrderNumber(order)
-  const orderTotal = orderGetters.getTotal(order)
+  const orderTotal = orderGetters.getTotal(order) + orderGetters.getTipAmount(order)
   const submittedDate = orderGetters.getSubmittedDate(order)
   const pickupItems = orderGetters.getPickupItems(order)
+  const deliveryItems = orderGetters.getDeliveryItems(order)
   const shipItems = orderGetters.getShipItems(order)
   const fulfillmentContactAddress = orderGetters.getShippingAddress(order)
   const payment = orderGetters.getFinalOrderPayment(order)
@@ -84,7 +87,13 @@ const ViewOrderDetails = (props: ViewOrderDetailsProps) => {
 
   const orderSummeryArgs = {
     nameLabel: t('order-summary'),
-    subTotalLabel: `${t('subtotal')} (${t('item-quantity', { count: order.items?.length })})`,
+    subTotalLabel: `${t('subtotal')} (${t('item-quantity', {
+      count: order.items?.filter(
+        (orderItem) =>
+          orderItem?.product?.productType !==
+          publicRuntimeConfig?.DeliverySolutionsDeliveryProductConfig?.productType
+      )?.length,
+    })})`,
     shippingTotalLabel: t('shipping'),
     taxLabel: t('estimated-tax'),
     totalLabel: t('total-price'),
@@ -132,7 +141,11 @@ const ViewOrderDetails = (props: ViewOrderDetailsProps) => {
               option={{
                 name: t('order-total'),
                 value: `${t('currency', { val: orderTotal })} (${t('item-quantity', {
-                  count: order.items?.length,
+                  count: order.items?.filter(
+                    (orderItem) =>
+                      orderItem?.product?.productType !==
+                      publicRuntimeConfig?.DeliverySolutionsDeliveryProductConfig?.productType
+                  )?.length,
                 })})`,
               }}
               variant="body1"
@@ -190,6 +203,15 @@ const ViewOrderDetails = (props: ViewOrderDetailsProps) => {
                 />
               </Box>
               <Divider sx={{ ...styles.divider }} />
+            </Box>
+          )}
+          {/* Instant Delivery */}
+          {deliveryItems && deliveryItems.length > 0 && (
+            <Box sx={{ paddingBlock: 2 }}>
+              <Typography variant="h3" fontWeight={700} gutterBottom>
+                {t('delivery-products')}
+              </Typography>
+              <ProductItemList items={deliveryItems} />
             </Box>
           )}
 

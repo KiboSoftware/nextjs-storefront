@@ -351,7 +351,7 @@ const getOrderHistoryDetails = (order: CrOrder) => {
   const orderNumber = getOrderNumber(order)
   const submittedDate = getSubmittedDate(order)
   const productNames = getProductNames(order)
-  const orderTotal = getOrderTotal(order)
+  const orderTotal = getOrderTotal(order) + getTipAmount(order)
   const orderStatus = getOrderStatus(order)
   const orderPayments = getNewOrderPayments(order)
   const shipTo = getShippedTo(order)

@@ -16,7 +16,7 @@ const OrderConfirmation = ({ order }: { order: CrOrder }) => {
   const { t } = useTranslation('common')
   const componentRef = useRef(null)
   const { publicRuntimeConfig } = getConfig()
-  const orderTotal = orderGetters.getTotal(order)
+  const orderTotal = orderGetters.getTotal(order) + orderGetters.getTipAmount(order)
   const orderNumber = orderGetters.getOrderNumber(order)
   const submittedDate = orderGetters.getSubmittedDate(order)
   const pickupItems = orderGetters.getPickupItems(order)

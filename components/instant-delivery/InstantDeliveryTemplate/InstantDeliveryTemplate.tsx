@@ -116,6 +116,7 @@ const InstantDeliveryTemplate = ({
   const { data: storeBoundary } = useGetStoreServiceBoundary(deliveryAddress)
 
   const showErrorMessage = isSubmitClicked && storeBoundary === null
+  const showEmptyStorBoundaryMessage = (isSubmitClicked && storeBoundary?.length === 0) || false
 
   const handleSaveAddress = ({ contact }: { contact: ContactForm }) => {
     setInstantDelivery({ ...instantDelivery, contact })
@@ -145,14 +146,14 @@ const InstantDeliveryTemplate = ({
   }
 
   useEffect(() => {
-    if (isSubmitClicked && storeBoundary) {
+    if (isSubmitClicked && storeBoundary && storeBoundary?.length > 0) {
       setInstantDelivery({ ...instantDelivery, storeBoundary })
       if (currentActiveStep === 0) setCurrentActiveStep(1)
     }
   }, [storeBoundary])
 
   useEffect(() => {
-    if (initialInstantDelivery?.storeBoundary) setCurrentActiveStep(1)
+    if ((initialInstantDelivery?.storeBoundary?.length as number) > 0) setCurrentActiveStep(1)
   }, [initialInstantDelivery?.storeBoundary])
 
   return (
@@ -162,13 +163,20 @@ const InstantDeliveryTemplate = ({
         setCurrentActiveStep={handleStepChange}
       >
         <div>
-          <Box sx={{ display: 'flex', justifyContent: 'center' }}>
-            {showErrorMessage && (
+          {showErrorMessage && (
+            <Box sx={{ display: 'flex', justifyContent: 'center' }}>
               <Typography variant="caption" component="h2">
                 {t('delivery-address-error-message')}
               </Typography>
-            )}
-          </Box>
+            </Box>
+          )}
+          {showEmptyStorBoundaryMessage && (
+            <Box sx={{ display: 'flex', justifyContent: 'center' }}>
+              <Typography variant="caption" component="h2">
+                {t('no-store-boundary')}
+              </Typography>
+            </Box>
+          )}
           <Stack>
             <AddressForm
               contact={instantDelivery?.contact}

@@ -56,7 +56,7 @@ const OrderReturnItems = (props: OrderReturnItemsProps) => {
   const { createReturnItems } = useCreateOrderReturn()
 
   const orderNumber = orderGetters.getOrderNumber(order)
-  const orderTotal = orderGetters.getTotal(order)
+  const orderTotal = orderGetters.getTotal(order) + orderGetters.getTipAmount(order)
   const submittedDate = orderGetters.getSubmittedDate(order)
   const pickupItems = orderGetters.getPickupItems(order)
   const shipItems = orderGetters.getShipItems(order)
