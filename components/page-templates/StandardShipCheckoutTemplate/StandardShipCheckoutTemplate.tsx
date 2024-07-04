@@ -21,10 +21,14 @@ import {
   useGetCustomerPurchaseOrderAccount,
   useCreateCustomerCard,
   useCreateCustomerAddress,
+  useUpdateOrderShippingInfo,
+  useUpdateOrderData,
+  useDeleteCurrentCart,
 } from '@/hooks'
-import { AccountType, AddressType } from '@/lib/constants'
-import { orderGetters } from '@/lib/getters'
+import { AccountType, AddressType, DefaultId } from '@/lib/constants'
+import { cartGetters, orderGetters } from '@/lib/getters'
 import { buildCreateCustomerCardParam, buildAddressParams } from '@/lib/helpers'
+import { cartKeys, checkoutKeys } from '@/lib/react-query/queryKeys'
 import type { PersonalDetails } from '@/lib/types'
 
 import type { CrOrder, CrOrderInput, PaymentActionInput } from '@/lib/gql/types'
@@ -54,6 +58,9 @@ const StandardShipCheckoutTemplate = (props: StandardShipCheckoutProps) => {
   const { data: cardCollection } = useGetCards(user?.id as number)
   const { createCustomerAddress } = useCreateCustomerAddress()
   const { createCustomerCard } = useCreateCustomerCard()
+  const { updateOrderShippingInfo } = useUpdateOrderShippingInfo()
+  const { updateOrderData } = useUpdateOrderData()
+  const { deleteCurrentCart } = useDeleteCurrentCart()
   const isB2BUser = user?.accountType?.toLowerCase() === AccountType.B2B.toLowerCase()
 
   const { data: customerPurchaseOrderAccount } = useGetCustomerPurchaseOrderAccount(
@@ -88,7 +95,41 @@ const StandardShipCheckoutTemplate = (props: StandardShipCheckoutProps) => {
       console.error(err)
     }
   }
+  const handleAddTip = async (amount: string) => {
+    const deliveryAddressDateAndWindow =
+      typeof localStorage !== 'undefined' &&
+      JSON.parse(localStorage.getItem('instant-delivery') as string)
+    const updateOrderDataVariables = {
+      params: {
+        orderId: order?.id as string,
+        orderDataId: 'ds',
+        undefinedInput: cartGetters.getCustomDataForCartOrOrder({
+          cartOrOrderResponse: order,
+          deliveryDateAndWindow: deliveryAddressDateAndWindow,
+          tips: +amount,
+        }),
+      },
+    }
+    const response = await updateOrderData.mutateAsync(updateOrderDataVariables)
+  }
+  const handleAddDeliveryInstructions = async (deliveryInstructions: string) => {
+    const deliveryAddressDateAndWindow =
+      typeof localStorage !== 'undefined' &&
+      JSON.parse(localStorage.getItem('instant-delivery') as string)
+    const updateOrderDataVariables = {
+      params: {
+        orderId: order?.id as string,
+        orderDataId: 'ds',
+        undefinedInput: cartGetters.getCustomDataForCartOrOrder({
+          cartOrOrderResponse: order,
+          deliveryDateAndWindow: deliveryAddressDateAndWindow,
+          deliveryInstructions,
+        }),
+      },
+    }
 
+    await updateOrderData.mutateAsync(updateOrderDataVariables)
+  }
   const { updateOrderPersonalInfo } = useUpdateOrderPersonalInfo()
 
   const updateCheckoutPersonalInfo = async (formData: PersonalDetails) => {
@@ -172,13 +213,17 @@ const StandardShipCheckoutTemplate = (props: StandardShipCheckoutProps) => {
       await createCustomerCard.mutateAsync(cardParams)
     }
 
+    await deleteCurrentCart.mutateAsync()
+    localStorage.removeItem('instant-delivery')
     router.push(
       { pathname: '/order-confirmation', query: { checkoutId: order.id } },
       { pathname: '/order-confirmation' }
     )
   }
 
-  const { shipItems, pickupItems, digitalItems } = orderGetters.getCheckoutDetails(order as CrOrder)
+  const { shipItems, pickupItems, digitalItems, deliveryItems } = orderGetters.getCheckoutDetails(
+    order as CrOrder
+  )
 
   return (
     <>
@@ -186,16 +231,20 @@ const StandardShipCheckoutTemplate = (props: StandardShipCheckoutProps) => {
         checkout={order as CrOrder}
         handleApplyCouponCode={handleApplyCouponCode}
         handleRemoveCouponCode={handleRemoveCouponCode}
+        handleAddTip={handleAddTip}
+        handleAddDeliveryInstructions={handleAddDeliveryInstructions}
         promoError={promoError}
       >
         <DetailsStep
           checkout={order as CrOrder}
           updateCheckoutPersonalInfo={updateCheckoutPersonalInfo}
+          isMultiShipEnabled={isMultiShipEnabled}
         />
         <StandardShippingStep
           checkout={order as CrOrder}
           savedUserAddressData={addressCollection}
           isAuthenticated={isAuthenticated}
+          isMultiShipEnabled={isMultiShipEnabled}
         />
         <PaymentStep
           checkout={order as CrOrder}
@@ -212,6 +261,7 @@ const StandardShipCheckoutTemplate = (props: StandardShipCheckoutProps) => {
           shipItems={shipItems}
           pickupItems={pickupItems}
           digitalItems={digitalItems}
+          deliveryItems={deliveryItems}
           personalDetails={personalDetails}
           orderSummaryProps={orderDetails?.orderSummary}
           onCreateOrder={handleCreateOrder}

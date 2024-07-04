@@ -8,7 +8,7 @@ import { useTranslation } from 'next-i18next'
 import { ReCaptchaProvider } from 'next-recaptcha-v3'
 
 import { KiboStepper, OrderReview } from '@/components/checkout'
-import { OrderSummary, PromoCodeBadge } from '@/components/common'
+import { DeliveryInstructions, OrderSummary, PromoCodeBadge, Tip } from '@/components/common'
 import { useCheckoutStepContext, STEP_STATUS } from '@/context'
 import { checkoutGetters, orderGetters } from '@/lib/getters'
 
@@ -20,6 +20,8 @@ interface CheckoutUITemplateProps<T> {
   isMultiShipEnabled?: boolean
   handleApplyCouponCode: (couponCode: string) => void
   handleRemoveCouponCode: (couponCode: string) => void
+  handleAddTip: (tip: string) => void
+  handleAddDeliveryInstructions: (deliveryInstructions: string) => void
   children?: React.ReactNode
 }
 const buttonStyle = {
@@ -32,10 +34,13 @@ const CheckoutUITemplate = <T extends CrOrder | Checkout>(props: CheckoutUITempl
     checkout,
     handleApplyCouponCode,
     handleRemoveCouponCode,
+    handleAddTip,
+    handleAddDeliveryInstructions,
     promoError,
     isMultiShipEnabled = false,
     children,
   } = props
+  const { publicRuntimeConfig } = getConfig()
   const { t } = useTranslation('common')
   const { activeStep, stepStatus, steps, setStepStatusSubmit, setStepBack } =
     useCheckoutStepContext()
@@ -48,10 +53,14 @@ const CheckoutUITemplate = <T extends CrOrder | Checkout>(props: CheckoutUITempl
   )
   const handleBack = () => setStepBack()
   const handleSubmit = useCallback(() => setStepStatusSubmit(), [])
-
+  const filterCheckoutItems = checkout?.items?.filter(
+    (checkoutItem) =>
+      checkoutItem?.product?.productType !==
+      publicRuntimeConfig?.DeliverySolutionsDeliveryProductConfig?.productType
+  )
   const orderSummaryArgs = {
     nameLabel: t('order-summary'),
-    subTotalLabel: `Cart Subtotal of (${checkout?.items?.length} items)`,
+    subTotalLabel: `Cart Subtotal of (${filterCheckoutItems?.length} items)`,
     shippingTotalLabel: t('standard-shipping'),
     taxLabel: t('tax'),
     totalLabel: t('order-total'),
@@ -70,10 +79,16 @@ const CheckoutUITemplate = <T extends CrOrder | Checkout>(props: CheckoutUITempl
         helpText={promoError}
       />
     ),
+    tipComponent: <Tip onAddTip={handleAddTip} />,
+    deliveryInstructionsComponent: (
+      <DeliveryInstructions
+        placeHolder={t('enter-delivery-instructions')}
+        onAddInstructions={handleAddDeliveryInstructions}
+      />
+    ),
   }
   const showCheckoutSteps = activeStep !== steps.length
 
-  const { publicRuntimeConfig } = getConfig()
   const reCaptchaKey = publicRuntimeConfig.recaptcha.reCaptchaKey
 
   const commonElements = showCheckoutSteps ? (
@@ -130,6 +145,7 @@ const CheckoutUITemplate = <T extends CrOrder | Checkout>(props: CheckoutUITempl
             handleApplyCouponCode={handleApplyCouponCode}
             handleRemoveCouponCode={handleRemoveCouponCode}
             promoError={promoError}
+            handleAddTip={handleAddTip}
           />
         )}
       </Box>

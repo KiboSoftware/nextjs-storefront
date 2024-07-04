@@ -1,19 +1,26 @@
 /** @format */
 import { ReactNode } from 'react'
 
-import { Card, Typography, Box, CardContent, Divider } from '@mui/material'
+import { Card, Typography, Box, CardContent, Divider, Button, Stack } from '@mui/material'
+import { format } from 'date-fns'
+import { useTranslation } from 'next-i18next'
 
 import { OrderPriceProps } from '../OrderPrice/OrderPrice'
-import { OrderPrice } from '@/components/common'
+import { KiboImage, OrderPrice } from '@/components/common'
+import { AddressCard } from '@/components/common'
+import Clock from '@/public/clock-thin.svg'
+import DeliveryImage from '@/public/delivery.svg'
 
 import type { Checkout, CrCart, CrOrder } from '@/lib/gql/types'
-
 interface OrderSummaryProps<T extends CrCart | CrOrder | Checkout> extends OrderPriceProps<T> {
   nameLabel: string
   backLabel?: string
   checkoutLabel?: string
   shippingLabel?: string
   children?: ReactNode
+  deliveryAddressDateAndWindow?: any
+  isCart?: boolean
+  onHandleInstantDelivery?: (deliveryAddressDateAndWindow: any) => void
 }
 
 const styles = {
@@ -39,7 +46,13 @@ const OrderSummary = <T extends CrCart | CrOrder | Checkout>(props: OrderSummary
 
     isShippingTaxIncluded,
     promoComponent,
+    tipComponent,
+    deliveryInstructionsComponent,
+    deliveryAddressDateAndWindow,
+    isCart,
+    onHandleInstantDelivery,
   } = props
+  const { t } = useTranslation('common')
 
   const orderPriceProps: OrderPriceProps<T> = {
     subTotalLabel,
@@ -48,8 +61,11 @@ const OrderSummary = <T extends CrCart | CrOrder | Checkout>(props: OrderSummary
     handlingLabel,
 
     promoComponent,
+    tipComponent,
+    deliveryInstructionsComponent,
     isShippingTaxIncluded,
     orderDetails,
+    isCart,
   }
   return (
     <Card sx={{ bgcolor: 'grey.100' }}>
@@ -62,8 +78,122 @@ const OrderSummary = <T extends CrCart | CrOrder | Checkout>(props: OrderSummary
       </CardContent>
       <Divider />
       <CardContent>
+        {deliveryAddressDateAndWindow && deliveryAddressDateAndWindow?.contact?.address && (
+          <Stack
+            direction="row"
+            sx={{
+              display: 'flex',
+              alignItems: 'center',
+              backgroundColor: 'white',
+              padding: '1rem',
+            }}
+          >
+            <Box
+              sx={{
+                border: '1px solid #B4BAC1',
+                borderRadius: '50%',
+                display: 'block',
+                width: '40px',
+                height: '40px',
+                position: 'relative',
+                marginRight: '0.5rem',
+              }}
+            >
+              <Box sx={{ top: '20%', left: '20%', position: 'relative' }}>
+                <KiboImage src={DeliveryImage} alt={'delivery'} width={24} height={24} />
+              </Box>
+            </Box>
+            <Box>
+              <Typography>{t('delivery-to')}</Typography>
+              <AddressCard
+                address1={deliveryAddressDateAndWindow?.contact?.address?.address1 as string}
+                address2={deliveryAddressDateAndWindow?.contact?.address?.address2 as string}
+                cityOrTown={deliveryAddressDateAndWindow?.contact?.address?.cityOrTown as string}
+                stateOrProvince={
+                  deliveryAddressDateAndWindow?.contact?.address?.stateOrProvince as string
+                }
+                postalOrZipCode={
+                  deliveryAddressDateAndWindow?.contact?.address?.postalOrZipCode as string
+                }
+              />
+            </Box>
+            <Box sx={{ marginLeft: 'auto' }}>
+              <Button
+                data-testid="change-address-button"
+                variant="contained"
+                onClick={() =>
+                  onHandleInstantDelivery &&
+                  onHandleInstantDelivery({
+                    deliveryAddress: deliveryAddressDateAndWindow?.contact,
+                  })
+                }
+              >
+                {t('change')}
+              </Button>
+            </Box>
+          </Stack>
+        )}
+        {deliveryAddressDateAndWindow && deliveryAddressDateAndWindow?.window && (
+          <Stack direction="row" sx={{ backgroundColor: 'white', padding: '1rem' }} mt={2}>
+            <Box mr={1}>
+              <KiboImage src={Clock} alt={'delivery'} width={24} height={24} />
+            </Box>
+            <Stack>
+              <Typography fontWeight="bold">{t('delivery-time')}</Typography>
+              <Typography>
+                {format(
+                  new Date(deliveryAddressDateAndWindow?.window?.confirmedDate),
+                  'EEEE, MMMM dd, yyyy'
+                )}
+              </Typography>
+              <Typography>
+                {deliveryAddressDateAndWindow?.window?.confirmedWindow?.readable}
+              </Typography>
+              <Typography
+                variant="caption"
+                onClick={() =>
+                  onHandleInstantDelivery &&
+                  onHandleInstantDelivery({
+                    deliveryAddress: deliveryAddressDateAndWindow?.contact,
+                    deliveryStoreBoundary: deliveryAddressDateAndWindow?.storeBoundary,
+                    deliveryNotification: deliveryAddressDateAndWindow?.notification,
+                    deliveryWindow: deliveryAddressDateAndWindow?.window,
+                  })
+                }
+                sx={{ textDecoration: 'underline', cursor: 'pointer' }}
+              >
+                {t('change-delivery-time')}
+              </Typography>
+            </Stack>
+          </Stack>
+        )}
+        {deliveryAddressDateAndWindow && !deliveryAddressDateAndWindow?.window && (
+          <Stack direction="row" sx={{ backgroundColor: 'white', padding: '1rem' }} mt={2}>
+            <Box mr={1}>
+              <KiboImage src={Clock} alt={'delivery'} width={24} height={24} />
+            </Box>
+            <Stack>
+              <Typography>{t('no-delivery-window')}</Typography>
+              <Typography
+                variant="caption"
+                onClick={() =>
+                  onHandleInstantDelivery &&
+                  onHandleInstantDelivery({
+                    deliveryAddress: deliveryAddressDateAndWindow?.contact,
+                    deliveryStoreBoundary: deliveryAddressDateAndWindow?.storeBoundary,
+                    deliveryNotification: deliveryAddressDateAndWindow?.notification,
+                  })
+                }
+                sx={{ textDecoration: 'underline', cursor: 'pointer' }}
+              >
+                {t('select-delivery-window')}
+              </Typography>
+            </Stack>
+          </Stack>
+        )}
         <OrderPrice {...orderPriceProps} />
       </CardContent>
+
       <CardContent>
         <Box textAlign="center">{props.children}</Box>
       </CardContent>

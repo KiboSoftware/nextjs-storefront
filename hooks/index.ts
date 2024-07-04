@@ -101,9 +101,12 @@ export * from './mutations/cart/useAddCartItem/useAddCartItem'
 export * from './mutations/cart/useDeleteCurrentCart/useDeleteCurrentCart'
 export * from './mutations/cart/useDeleteCartItem/useDeleteCartItem'
 export * from './mutations/cart/useUpdateCartItem/useUpdateCartItem'
+export * from './mutations/cart/useUpdateCartItemWithCartID/useUpdateCartItemWithCartID'
 export * from './mutations/cart/useUpdateCartItemQuantity/useUpdateCartItemQuantity'
 export * from './mutations/cart/useUpdateCartCoupon/useUpdateCartCoupon'
 export * from './mutations/cart/useDeleteCartCoupon/useDeleteCartCoupon'
+export * from './mutations/cart/useUpdateCurrentCart/useUpdateCurrentCart'
+export * from './mutations/cart/useUpdateCart/useUpdateCart'
 
 // Multiship
 // Destinations
@@ -142,6 +145,10 @@ export * from './mutations/standardCheckout/useInitiateOrder/useInitiateOrder'
 export * from './mutations/standardCheckout/useUpdateOrderCoupon/useUpdateOrderCoupon'
 export * from './mutations/standardCheckout/useDeleteOrderCoupon/useDeleteOrderCoupon'
 export * from './mutations/standardCheckout/useUpdateUserOrder/useUpdateUserOrder'
+export * from './mutations/standardCheckout/useUpdateOrder/useUpdateOrder'
+export * from './mutations/standardCheckout/useUpdateOrderData/useUpdateOrderData'
+export * from './mutations/standardCheckout/useUpdateOrderItemPrice/useUpdateOrderItemPrice'
+export * from './mutations/standardCheckout/useUpdateOrderData/useUpdateOrderData'
 
 // Wishlist
 export * from './mutations/wishlist/useAddToWishlistItem/useAddToWishlistItem'
@@ -186,3 +193,8 @@ export * from './mutations/b2b/quotes/useUpdateQuote/useUpdateQuote'
 export * from './mutations/b2b/quotes/useAddQuoteComment/useAddQuoteComment'
 export * from './mutations/b2b/quotes/useUpdateQuoteCoupon/useUpdateQuoteCoupon'
 export * from './mutations/b2b/quotes/useDeleteQuoteCoupon/useDeleteQuoteCoupon'
+
+// Delivery Solutions
+export * from './instant-delivery/useGetStoreServiceBoundary/useGetStoreServiceBoundary'
+export * from './instant-delivery/useGetDeliveryWindow/useGetDeliveryWindow'
+export * from './instant-delivery/useGetDeliveryRates/useGetDeliveryRates'

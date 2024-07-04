@@ -11,6 +11,7 @@ export interface CheckoutShippingParams {
   email?: string
   shippingMethodCode?: string
   shippingMethodName?: string
+  data?: any
 }
 
 export const buildCheckoutShippingParams = (params: CheckoutShippingParams): ShippingParams => {

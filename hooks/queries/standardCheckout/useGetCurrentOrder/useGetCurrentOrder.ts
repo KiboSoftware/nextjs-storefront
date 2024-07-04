@@ -7,11 +7,11 @@ import { makeGraphQLClient } from '@/lib/gql/client'
 import { getCheckoutQuery } from '@/lib/gql/queries'
 import { checkoutKeys } from '@/lib/react-query/queryKeys'
 
-import type { CrOrder } from '@/lib/gql/types'
-interface UseCheckout {
+import type { Checkout, CrOrder } from '@/lib/gql/types'
+interface UseCheckout<T> {
   checkoutId?: string
   isMultiship?: boolean
-  initialCheckout?: CrOrder
+  initialCheckout?: T
 }
 
 /**
@@ -51,11 +51,11 @@ const getCheckout = async (checkoutId?: string | null) => {
  * @returns 'response?.checkout' which contains checkout details
  */
 
-export const useGetCurrentOrder = ({
+export const useGetCurrentOrder = <T extends CrOrder | Checkout>({
   checkoutId,
   isMultiship,
   initialCheckout,
-}: UseCheckout): UseCheckoutResponse => {
+}: UseCheckout<T>): UseCheckoutResponse => {
   const id = checkoutId as string
 
   const {
@@ -66,7 +66,7 @@ export const useGetCurrentOrder = ({
     queryKey: checkoutKeys.detail(id),
     queryFn: () => getCheckout(checkoutId),
     initialData: initialCheckout,
-    enabled: !isMultiship,
+    enabled: !isMultiship && !!checkoutId,
   })
 
   return { data, isLoading, isSuccess }

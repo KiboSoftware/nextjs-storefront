@@ -15,7 +15,7 @@ import {
 } from '@mui/material'
 import { useTranslation } from 'next-i18next'
 
-import { AddressCard, KeyValueDisplay, KiboImage, PromoCodeBadge } from '@/components/common'
+import { AddressCard, KeyValueDisplay, KiboImage, PromoCodeBadge, Tip } from '@/components/common'
 import { useCheckoutStepContext } from '@/context'
 import { checkoutGetters, orderGetters } from '@/lib/getters'
 import { getCreditCardLogo } from '@/lib/helpers'
@@ -28,6 +28,7 @@ interface OrderReviewProps {
   promoError: string
   handleApplyCouponCode: (couponCode: string) => void
   handleRemoveCouponCode: (couponCode: string) => void
+  handleAddTip: (tipAmount: string) => void
 }
 
 interface OrderInfoHeaderProps {
@@ -99,6 +100,7 @@ const OrderReview = (props: OrderReviewProps) => {
     isMultiShipEnabled,
     handleApplyCouponCode,
     handleRemoveCouponCode,
+    handleAddTip,
     promoError,
   } = props
 
@@ -145,6 +147,9 @@ const OrderReview = (props: OrderReviewProps) => {
   const multiShippingAddressesList = checkoutGetters.getOrderAddresses(
     checkout as Checkout
   ) as CustomerContact[]
+  const deliveryAddressDateAndWindow =
+    typeof localStorage !== 'undefined' &&
+    JSON.parse(localStorage.getItem('instant-delivery') as string)
 
   return (
     <Accordion
@@ -296,6 +301,7 @@ const OrderReview = (props: OrderReviewProps) => {
             promoError={!!promoError}
             helpText={promoError}
           />
+          {deliveryAddressDateAndWindow && <Tip onAddTip={handleAddTip} />}
         </StyledOrderReview>
       </AccordionDetails>
     </Accordion>

@@ -2,6 +2,7 @@ import React, { useRef } from 'react'
 
 import Print from '@mui/icons-material/Print'
 import { Box, Container, Divider, Grid, IconButton, Stack, Typography } from '@mui/material'
+import getConfig from 'next/config'
 import { useTranslation } from 'next-i18next'
 import { useReactToPrint } from 'react-to-print'
 
@@ -14,12 +15,13 @@ import type { CrOrder } from '@/lib/gql/types'
 const OrderConfirmation = ({ order }: { order: CrOrder }) => {
   const { t } = useTranslation('common')
   const componentRef = useRef(null)
-
-  const orderTotal = orderGetters.getTotal(order)
+  const { publicRuntimeConfig } = getConfig()
+  const orderTotal = orderGetters.getTotal(order) + orderGetters.getTipAmount(order)
   const orderNumber = orderGetters.getOrderNumber(order)
   const submittedDate = orderGetters.getSubmittedDate(order)
   const pickupItems = orderGetters.getPickupItems(order)
   const shipItems = orderGetters.getShipItems(order)
+  const deliveryItems = orderGetters.getDeliveryItems(order)
   const email = orderGetters.getEmail(order)
 
   const options = [
@@ -35,7 +37,13 @@ const OrderConfirmation = ({ order }: { order: CrOrder }) => {
 
   const orderSummeryArgs = {
     nameLabel: t('order-summary'),
-    subTotalLabel: `${t('subtotal')} (${t('item-quantity', { count: order.items?.length })})`,
+    subTotalLabel: `${t('subtotal')} (${t('item-quantity', {
+      count: order.items?.filter(
+        (orderItem) =>
+          orderItem?.product?.productType !==
+          publicRuntimeConfig?.DeliverySolutionsDeliveryProductConfig?.productType
+      )?.length,
+    })})`,
     shippingTotalLabel: t('shipping'),
     taxLabel: t('estimated-tax'),
     totalLabel: t('total-price'),
@@ -67,7 +75,13 @@ const OrderConfirmation = ({ order }: { order: CrOrder }) => {
             <Typography variant="h1">{t('thank-you')}</Typography>
             <Box display="flex" gap={3}>
               <Typography variant="h2" fontWeight={'normal'}>
-                {t('item-quantity', { count: order.items?.length })}
+                {t('item-quantity', {
+                  count: order.items?.filter(
+                    (orderItem) =>
+                      orderItem?.product?.productType !==
+                      publicRuntimeConfig?.DeliverySolutionsDeliveryProductConfig?.productType
+                  )?.length,
+                })}
               </Typography>
               <Typography variant="h2">{t('currency', { val: orderTotal })}</Typography>
             </Box>
@@ -129,6 +143,15 @@ const OrderConfirmation = ({ order }: { order: CrOrder }) => {
                   {t('pickup')}
                 </Typography>
                 <ProductItemList items={pickupItems} />
+              </Box>
+            )}
+            {/* Instant Delivery */}
+            {deliveryItems && deliveryItems.length > 0 && (
+              <Box sx={{ paddingBlock: 2 }}>
+                <Typography variant="h3" fontWeight={700} gutterBottom>
+                  {t('delivery-products')}
+                </Typography>
+                <ProductItemList items={deliveryItems} />
               </Box>
             )}
           </Container>

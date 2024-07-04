@@ -50,6 +50,14 @@ describe('useCartActions', () => {
     expect(showModalMock).toHaveBeenCalled()
   })
 
+  it('should handle instant delivery selection', () => {
+    const { result } = setup()
+
+    result.current.handleInstantDelivery()
+
+    expect(showModalMock).toHaveBeenCalled()
+  })
+
   it('should handle fulfillment option change', () => {
     const { result } = setup()
 
@@ -94,6 +102,13 @@ describe('useCartActions', () => {
 
     act(() => {
       response.current.onFulfillmentOptionChange(fulfillmentMethodPickup2, pickupCartItemId2)
+    })
+
+    // Test case where fulfillment option is delivery
+    const fulfillmentMethodDelivery = FulfillmentOptions.DELIVERY
+
+    act(() => {
+      response.current.onFulfillmentOptionChange(fulfillmentMethodDelivery, cartItemId)
     })
 
     expect(showModalMock).toHaveBeenCalled()

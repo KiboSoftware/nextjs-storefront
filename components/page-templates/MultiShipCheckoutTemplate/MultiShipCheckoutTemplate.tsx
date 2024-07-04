@@ -188,6 +188,8 @@ const MultiShipCheckoutTemplate = (props: MultiShipCheckoutProps) => {
         handleRemoveCouponCode={handleRemoveCouponCode}
         promoError={promoError}
         isMultiShipEnabled={true}
+        handleAddTip={() => null}
+        handleAddDeliveryInstructions={() => null}
       >
         <DetailsStep
           checkout={checkout as Checkout}

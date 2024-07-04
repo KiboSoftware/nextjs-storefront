@@ -1,4 +1,5 @@
 import { format } from 'date-fns'
+import getConfig from 'next/config'
 
 import { addressGetters } from './addressGetters'
 import { cardGetters } from './cardGetters'
@@ -25,6 +26,8 @@ import type {
   CuAddress,
   Checkout,
 } from '@/lib/gql/types'
+
+const { publicRuntimeConfig } = getConfig()
 
 const getCheckoutItemCount = (order: CrOrder) => order?.items?.length
 
@@ -96,6 +99,13 @@ const getPickupItems = (order: CrOrder): CrOrderItem[] => {
 }
 const getShipItems = (order: CrOrder): CrOrderItem[] =>
   getItemsByFulfillment(order, FulfillmentOptions.SHIP)
+
+const getDeliveryItems = (order: CrOrder): CrOrderItem[] =>
+  getItemsByFulfillment(order, FulfillmentOptions.DELIVERY)?.filter(
+    (item) =>
+      item?.product?.productType !==
+      publicRuntimeConfig?.DeliverySolutionsDeliveryProductConfig?.productType
+  )
 
 const getDigitalItems = (order: CrOrder): CrOrderItem[] =>
   getItemsByFulfillment(order, FulfillmentOptions.DIGITAL)
@@ -217,6 +227,7 @@ const getOrderSummary = (order: CrOrder): OrderSummary => {
 const getCheckoutDetails = (order: CrOrder): CheckoutDetails => {
   return {
     shipItems: getShipItems(order),
+    deliveryItems: getDeliveryItems(order),
     pickupItems: getPickupItems(order),
     digitalItems: getDigitalItems(order),
     orderSummary: getOrderSummary(order),
@@ -340,7 +351,7 @@ const getOrderHistoryDetails = (order: CrOrder) => {
   const orderNumber = getOrderNumber(order)
   const submittedDate = getSubmittedDate(order)
   const productNames = getProductNames(order)
-  const orderTotal = getOrderTotal(order)
+  const orderTotal = getOrderTotal(order) + getTipAmount(order)
   const orderStatus = getOrderStatus(order)
   const orderPayments = getNewOrderPayments(order)
   const shipTo = getShippedTo(order)
@@ -374,6 +385,28 @@ const isPayPalPaymentMethodActive = (order: CrOrder) => {
 
   const { id, paymentType, status } = activePayment
   return id && paymentType === PaymentType.PAYPALEXPRESS2 && status === 'New'
+}
+
+const getDeliveryItemPrice = (order: CrOrder) => {
+  const filterItem = order?.items?.find(
+    (item) =>
+      item?.product?.productType ===
+      publicRuntimeConfig?.DeliverySolutionsDeliveryProductConfig?.productType
+  )
+
+  const filterItemPrice =
+    filterItem?.product?.price?.tenantOverridePrice ||
+    filterItem?.product?.price?.salePrice ||
+    filterItem?.product?.price?.price
+  return filterItemPrice
+}
+
+const getTipAmount = (order: CrCart | CrOrder) => {
+  return order?.data?.ds?.tips || 0
+}
+
+const getDeliveryInstructions = (order: CrCart | CrOrder) => {
+  return order?.data?.ds?.deliveryInstructions || ''
 }
 
 export const orderGetters = {
@@ -420,4 +453,8 @@ export const orderGetters = {
   getShippingDiscounts,
   getItemTaxTotal,
   getDigitalItems,
+  getDeliveryItems,
+  getDeliveryItemPrice,
+  getTipAmount,
+  getDeliveryInstructions,
 }

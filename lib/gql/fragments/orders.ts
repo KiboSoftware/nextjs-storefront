@@ -2,6 +2,7 @@ export const orderItemProductFragment = /* GraphQL */ `
   fragment orderItemProductFragment on CrProduct {
     productCode
     variationProductCode
+    productType
     name
     description
     imageUrl
@@ -21,6 +22,7 @@ export const orderItemProductFragment = /* GraphQL */ `
     price {
       price
       salePrice
+      tenantOverridePrice
     }
     categories {
       id
@@ -83,6 +85,7 @@ export const baseOrderFragment = /* GraphQL */ `
     handlingSubTotal
     handlingTotal
     handlingTaxTotal
+    data
     handlingDiscounts {
       impact
       discount {

@@ -21,6 +21,7 @@ interface CartItemListProps {
   onCartItemActionSelection: () => void
   onFulfillmentOptionChange: (fulfillmentMethod: string, cartItemId: string) => void
   onProductPickupLocation: (cartItemId: string) => void
+  onInstantDelivery?: (cartItemId: string) => void
 }
 
 const CartItemList = (props: CartItemListProps) => {
@@ -36,6 +37,7 @@ const CartItemList = (props: CartItemListProps) => {
     onCartItemActionSelection,
     onFulfillmentOptionChange,
     onProductPickupLocation,
+    onInstantDelivery,
   } = props
 
   const handleQuantityUpdate = (cartItemId: string, quantity: number) =>
@@ -77,6 +79,7 @@ const CartItemList = (props: CartItemListProps) => {
             fulfillmentOptions={handleSupportedFulfillmentOptions(item as CrCartItem)}
             onFulfillmentOptionChange={onFulfillmentOptionChange}
             onProductPickupLocation={onProductPickupLocation}
+            onInstantDelivery={onInstantDelivery}
           />
           <Box sx={{ display: { xs: 'block', sm: 'block', md: 'none' } }}>
             <FullWidthDivider />

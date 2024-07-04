@@ -16,6 +16,7 @@ import {
   Theme,
   MenuItem,
 } from '@mui/material'
+import getConfig from 'next/config'
 import Link from 'next/link'
 import { useTranslation } from 'next-i18next'
 
@@ -28,7 +29,7 @@ import {
 } from '@/components/common'
 import SkeletonWrapper from '@/components/common/SkeletonWrapper/SkeletonWrapper'
 import { KiboBreadcrumbs, ImageGallery } from '@/components/core'
-import { AddToCartDialog, StoreLocatorDialog } from '@/components/dialogs'
+import { AddToCartDialog, InstantDeliveryDialog, StoreLocatorDialog } from '@/components/dialogs'
 import {
   ColorSelector,
   ProductInformation,
@@ -38,7 +39,7 @@ import {
   ProductQuickViewDialog,
   ProductVariantSizeSelector,
 } from '@/components/product'
-import { useModalContext } from '@/context'
+import { useAuthContext, useModalContext } from '@/context'
 import {
   useProductDetailTemplate,
   useGetPurchaseLocation,
@@ -46,9 +47,19 @@ import {
   useWishlist,
   useGetProductInventory,
   usePriceRangeFormatter,
+  useGetCustomerAddresses,
+  useGetCart,
+  useUpdateCurrentCart,
 } from '@/hooks'
 import { FulfillmentOptions as FulfillmentOptionsConstant, PurchaseTypes } from '@/lib/constants'
-import { productGetters, subscriptionGetters, wishlistGetters } from '@/lib/getters'
+import {
+  cartGetters,
+  orderGetters,
+  productGetters,
+  subscriptionGetters,
+  userGetters,
+  wishlistGetters,
+} from '@/lib/getters'
 import { uiHelpers } from '@/lib/helpers'
 import type { ProductCustom, BreadCrumb, LocationCustom } from '@/lib/types'
 
@@ -58,6 +69,7 @@ import type {
   ProductOption,
   ProductOptionValue,
   CrProduct,
+  CustomerContact,
 } from '@/lib/gql/types'
 
 interface ProductDetailTemplateProps {
@@ -101,6 +113,7 @@ const StyledLink = styled(Link)(({ theme }: { theme: Theme }) => ({
 }))
 
 const ProductDetailTemplate = (props: ProductDetailTemplateProps) => {
+  const { publicRuntimeConfig } = getConfig()
   const { getProductLink } = uiHelpers()
   const {
     product,
@@ -133,6 +146,13 @@ const ProductDetailTemplate = (props: ProductDetailTemplateProps) => {
   const { data: purchaseLocation } = useGetPurchaseLocation()
 
   const { addOrRemoveWishlistItem, checkProductInWishlist, isWishlistLoading } = useWishlist()
+
+  const { isAuthenticated, user } = useAuthContext()
+  const { data: addressCollection } = useGetCustomerAddresses(user?.id as number)
+  const defaultShippingAddress =
+    userGetters.getDefaultShippingAddress(
+      addressCollection?.items as unknown as CustomerContact[]
+    ) || null
 
   const {
     currentProduct,
@@ -189,6 +209,9 @@ const ProductDetailTemplate = (props: ProductDetailTemplateProps) => {
     },
     locationInventory
   )
+  const deliveryAddressDateAndWindow =
+    typeof localStorage !== 'undefined' &&
+    JSON.parse(localStorage.getItem('instant-delivery') as string)
 
   const isValidForAddToCart = () => {
     if (purchaseType === PurchaseTypes.SUBSCRIPTION) {
@@ -220,7 +243,8 @@ const ProductDetailTemplate = (props: ProductDetailTemplateProps) => {
       disabled: isSubscriptionOnly,
     },
   ]
-
+  const { data: cart, refetch } = useGetCart()
+  const { updateCurrentCart } = useUpdateCurrentCart()
   const addToCartPayload = {
     product: {
       productCode,
@@ -245,6 +269,39 @@ const ProductDetailTemplate = (props: ProductDetailTemplateProps) => {
       const cartResponse = await addToCart.mutateAsync(addToCartPayload)
 
       if (cartResponse.id && !isB2B) {
+        if (addToCartPayload?.product?.fulfillmentMethod === FulfillmentOptionsConstant.DELIVERY) {
+          if (!deliveryAddressDateAndWindow) {
+            await addToCart.mutateAsync({
+              product: {
+                productCode:
+                  publicRuntimeConfig?.DeliverySolutionsDeliveryProductConfig?.productCode,
+                variationProductCode:
+                  publicRuntimeConfig?.DeliverySolutionsDeliveryProductConfig?.productCode,
+                fulfillmentMethod,
+                options: [],
+                purchaseLocationCode: selectedFulfillmentOption?.location?.code as string,
+              },
+              quantity: 1,
+            })
+          }
+          const updatedCartData = await refetch()
+          const response = await updateCurrentCart.mutateAsync({
+            cartInput: {
+              ...updatedCartData?.data,
+              data: {
+                ds: cartGetters.getCustomDataForCartOrOrder({
+                  cartOrOrderResponse: updatedCartData?.data,
+                  deliveryDateAndWindow: selectedFulfillmentOption?.location,
+                }),
+              },
+            },
+          })
+
+          localStorage.setItem(
+            'instant-delivery',
+            JSON.stringify(selectedFulfillmentOption?.location)
+          )
+        }
         showModal({
           Component: AddToCartDialog,
           props: {
@@ -257,6 +314,36 @@ const ProductDetailTemplate = (props: ProductDetailTemplateProps) => {
     }
   }
 
+  const handleInstantDelivery = () => {
+    if (deliveryAddressDateAndWindow) {
+      setSelectedFulfillmentOption({
+        location: {
+          code: deliveryAddressDateAndWindow?.window?.confirmedStoreId,
+          ...deliveryAddressDateAndWindow,
+        },
+        method: FulfillmentOptionsConstant.DELIVERY,
+      })
+    } else {
+      showModal({
+        Component: InstantDeliveryDialog,
+        props: {
+          instantDelivery: {
+            contact: defaultShippingAddress ? defaultShippingAddress : null,
+          },
+          handleInstantDelivery: async (instantDelivery: any) => {
+            setSelectedFulfillmentOption({
+              location: {
+                code: instantDelivery?.window?.confirmedStoreId,
+                ...instantDelivery,
+              },
+              method: FulfillmentOptionsConstant.DELIVERY,
+            })
+            closeModal()
+          },
+        },
+      })
+    }
+  }
   const handleFulfillmentOptionChange = (value: string) => {
     if (
       value === FulfillmentOptionsConstant.SHIP ||
@@ -265,8 +352,11 @@ const ProductDetailTemplate = (props: ProductDetailTemplateProps) => {
     ) {
       setSelectedFulfillmentOption({
         ...selectedFulfillmentOption,
+        location: {},
         method: value,
       })
+    } else if (value === FulfillmentOptionsConstant.DELIVERY) {
+      handleInstantDelivery()
     } else {
       handleProductPickupLocation()
     }
