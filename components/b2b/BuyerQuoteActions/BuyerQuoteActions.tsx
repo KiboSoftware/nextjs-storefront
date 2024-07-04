@@ -11,11 +11,14 @@ interface BuyerQuoteActionsProps {
   mode: string
   status: string
   isSubmitForApprovalEnabled: boolean
+  groups?: string[]
+  assignedBuyerGroupCode?: string
   handleClearChanges: () => void
   handleEditQuote: () => void
   handleSubmitForApproval: () => void
   handleGotoCheckout: () => void
   handlePrint: () => void
+  handleApproveQuote: () => void
 }
 
 export default function BuyerQuoteActions({
@@ -23,11 +26,14 @@ export default function BuyerQuoteActions({
   mode,
   status,
   isSubmitForApprovalEnabled,
+  groups,
+  assignedBuyerGroupCode,
   handleClearChanges,
   handleEditQuote,
   handleSubmitForApproval,
   handleGotoCheckout,
   handlePrint,
+  handleApproveQuote,
 }: BuyerQuoteActionsProps) {
   const { t } = useTranslation()
 
@@ -66,6 +72,22 @@ export default function BuyerQuoteActions({
                 onClick={handleEditQuote}
               >
                 {t('edit-quote')}
+              </LoadingButton>
+            )}
+            {!mode && QuoteStatus[status] === QuoteStatus.PendingBuyerApproval && (
+              <LoadingButton
+                variant="contained"
+                color="secondary"
+                sx={{ width: { xs: '50%', md: '100%' } }}
+                disabled={
+                  !quoteGetters.isApproveQuoteDisabled(
+                    groups as string[],
+                    assignedBuyerGroupCode as string
+                  )
+                }
+                onClick={handleApproveQuote}
+              >
+                {t('approve-quote')}
               </LoadingButton>
             )}
             <LoadingButton

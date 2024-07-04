@@ -66,6 +66,7 @@ import {
   PersonalInfo,
   useUpdateQuoteCoupon,
   useDeleteQuoteCoupon,
+  useExecuteTask,
 } from '@/hooks'
 import { useQuoteActions } from '@/hooks/custom/useQuoteActions/useQuoteActions'
 import {
@@ -140,6 +141,11 @@ const QuoteDetailsTemplate = (props: QuoteDetailsTemplateProps) => {
   const [promoError, setPromoError] = useState<string>('')
 
   const accountName = b2bAccount?.companyOrOrganization ?? '-'
+  const groups = user?.groups
+  const assignedBuyerGroupCode = quote?.buyerWorkflowState?.assignedGroupCode
+  const taskName = quote?.buyerWorkflowState?.tasks?.find((task) => task?.isActive === true)
+    ?.taskName as string
+
   const { number, quoteId, status, createdDate, expirationDate } =
     quoteGetters.getQuoteDetails(quote)
   const quoteItems = (quote?.items as CrOrderItem[]) ?? []
@@ -184,6 +190,7 @@ const QuoteDetailsTemplate = (props: QuoteDetailsTemplateProps) => {
   const { updateQuoteAdjustments } = useUpdateQuoteAdjustments()
   const { updateQuoteCoupon } = useUpdateQuoteCoupon()
   const { deleteQuoteCoupon } = useDeleteQuoteCoupon()
+  const { executeTask } = useExecuteTask()
 
   const addItemToQuote = async (
     quoteId: string,
@@ -632,6 +639,23 @@ const QuoteDetailsTemplate = (props: QuoteDetailsTemplateProps) => {
     }
   }
 
+  const handleApproveQuote = async (quoteId: string) => {
+    try {
+      const executeTaskResponse = await executeTask.mutateAsync({
+        params: {
+          quoteId,
+          taskName: '',
+        },
+      })
+      if (executeTaskResponse) {
+        router.push('/my-account/b2b/quotes')
+        showSnackbar(t('task-executed-message'), 'success')
+      }
+    } catch (e) {
+      console.error(e)
+    }
+  }
+
   useEffect(() => {
     if (!!selectedShippingMethodCode) {
       handleUpdateQuoteFulfillmentInfo()
@@ -701,12 +725,15 @@ const QuoteDetailsTemplate = (props: QuoteDetailsTemplateProps) => {
                 hasDraft={quote?.hasDraft as boolean}
                 mode={mode as string}
                 status={status}
+                groups={groups}
+                assignedBuyerGroupCode={assignedBuyerGroupCode as string}
                 isSubmitForApprovalEnabled={isSubmitForApprovalEnabled}
                 handleClearChanges={handleClearChanges}
                 handleEditQuote={() => handleEditQuote(quoteId)}
                 handleSubmitForApproval={handleSubmitForApproval}
                 handleGotoCheckout={handleGotoCheckout}
                 handlePrint={handlePrint}
+                handleApproveQuote={() => handleApproveQuote(quoteId)}
               />
             )}
           </Stack>
@@ -798,7 +825,7 @@ const QuoteDetailsTemplate = (props: QuoteDetailsTemplateProps) => {
         <Grid
           item
           xs={12}
-          md={10}
+          md={12}
           sx={{
             ...quoteDetailsTemplateStyles.quoteDetails,
             ...quoteDetailsTemplateStyles.gridPaddingTop,
@@ -1232,12 +1259,15 @@ const QuoteDetailsTemplate = (props: QuoteDetailsTemplateProps) => {
                 hasDraft={quote?.hasDraft as boolean}
                 mode={mode as string}
                 status={status}
+                groups={groups}
+                assignedBuyerGroupCode={assignedBuyerGroupCode as string}
                 isSubmitForApprovalEnabled={isSubmitForApprovalEnabled}
                 handleClearChanges={handleClearChanges}
                 handleEditQuote={() => handleEditQuote(quoteId)}
                 handleSubmitForApproval={handleSubmitForApproval}
                 handleGotoCheckout={handleGotoCheckout}
                 handlePrint={handlePrint}
+                handleApproveQuote={() => handleApproveQuote(quoteId)}
               />
             )}
           </Stack>

@@ -11810,6 +11810,28 @@ export type QueryWishlistsArgs = {
   startIndex?: InputMaybe<Scalars['Int']>
 }
 
+export type BpmTask = {
+  _get?: Maybe<Scalars['AnyScalar']>
+  _root?: Maybe<BpmTask>
+  taskInstanceId?: Maybe<Scalars['Int']>
+  taskName?: Maybe<Scalars['String']>
+  isActive?: Maybe<Scalars['Boolean']>
+  inputMappings?: Maybe<Scalars['Object']>
+  inputValues?: Maybe<Scalars['Object']>
+  outputMappings?: Maybe<Scalars['Object']>
+}
+
+export type QuoteWorkflowState = {
+  _get?: Maybe<Scalars['AnyScalar']>
+  _root?: Maybe<QuoteWorkflowState>
+  containerId?: Maybe<Scalars['String']>
+  processDefinitionId?: Maybe<Scalars['String']>
+  processInstanceId?: Maybe<Scalars['Int']>
+  tasks?: Maybe<Array<Maybe<BpmTask>>>
+  processVariables?: Maybe<Scalars['Object']>
+  assignedGroupCode?: Maybe<Scalars['String']>
+}
+
 export type Quote = {
   __typename?: 'Quote'
   _get?: Maybe<Scalars['AnyScalar']>
@@ -11876,6 +11898,8 @@ export type Quote = {
   userId?: Maybe<Scalars['String']>
   visitId?: Maybe<Scalars['String']>
   webSessionId?: Maybe<Scalars['String']>
+  buyerWorkflowState?: Maybe<QuoteWorkflowState>
+  workflowState?: Maybe<QuoteWorkflowState>
 }
 
 export type Quote_GetArgs = {

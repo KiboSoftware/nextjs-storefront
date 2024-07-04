@@ -88,3 +88,5 @@ export { default as deleteQuoteCouponMutation } from './b2b/quotes/delete-quote-
 //groups
 export { default as addUserToGroupMutation } from './groups/add-user-to-group'
 export { default as removeUserFromGroupMutation } from './groups/remove-user-from-group'
+
+export { default as executeTaskMutation } from './b2b/quotes/execute-task'
