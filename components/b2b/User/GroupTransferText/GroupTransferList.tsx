@@ -95,7 +95,14 @@ export default function GroupTransferList({
   }
 
   const customList = (items: readonly B2BUserGroup[]) => (
-    <Paper sx={{ overflow: 'auto', minHeight: 160, maxHeight: 160 }}>
+    <Paper
+      sx={{
+        overflow: 'auto',
+        minHeight: 160,
+        maxHeight: 160,
+        border: '1px solid rgba(0,0,0,0.12)',
+      }}
+    >
       <List dense component="div" role="list">
         {items?.map((value) => {
           const labelId = `transfer-list-item-${value.code}-label`
@@ -117,10 +124,8 @@ export default function GroupTransferList({
 
   return (
     <Grid container spacing={1} justifyContent="center" alignItems="flex-start">
-      <Grid item xs={12} sm={12}>
-        {t('groups')}
-      </Grid>
       <Grid item xs={12} sm={5}>
+        {t('all-groups')}
         {customList(left)}
       </Grid>
       <Grid item xs={12} sm={2}>
@@ -129,6 +134,7 @@ export default function GroupTransferList({
           direction={{ xs: 'row', sm: 'column' }}
           alignItems="center"
           justifyContent="center"
+          pt={3}
         >
           <Button
             sx={{ m: 0.5 }}
@@ -181,6 +187,7 @@ export default function GroupTransferList({
         </Grid>
       </Grid>
       <Grid item xs={12} sm={5}>
+        {t('selected-groups')}
         {customList(right)}
       </Grid>
     </Grid>

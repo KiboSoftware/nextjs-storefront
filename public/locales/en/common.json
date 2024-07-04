@@ -531,5 +531,6 @@
   "menu": "Menu",
   "remove-payPal": "Remove PayPal",
   "loading-paypal": "Loading PayPal...",
-  "groups": "Groups"
+  "all-groups": "All Groups",
+  "selected-groups": "Selected Groups"
 }
