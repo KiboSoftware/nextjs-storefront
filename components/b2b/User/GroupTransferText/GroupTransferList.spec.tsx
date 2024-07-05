@@ -12,14 +12,14 @@ describe('[component] Group Transfer List', () => {
     const user = userEvent.setup()
     const mockOnAddRemoveGroups = jest.fn()
 
-    render(
+    const { rerender } = render(
       <Common
         {...Common?.args}
         isSubmitting={isSubmitted}
         onAddRemoveGroups={mockOnAddRemoveGroups}
       />
     )
-    return { user, mockOnAddRemoveGroups }
+    return { user, rerender, mockOnAddRemoveGroups }
   }
 
   it('should render group transfer list', () => {
@@ -96,12 +96,16 @@ describe('[component] Group Transfer List', () => {
   })
 
   it('submits added and removed groups correctly when submitting', async () => {
-    const { user, mockOnAddRemoveGroups } = setup(true)
+    const { user, rerender, mockOnAddRemoveGroups } = setup()
     const group1Item = screen.getByText('Admin')
     await user.click(group1Item)
 
     const moveSelectedRightButton = screen.getByRole('button', { name: 'move selected right' })
     await user.click(moveSelectedRightButton)
+
+    rerender(
+      <Common {...Common?.args} isSubmitting={true} onAddRemoveGroups={mockOnAddRemoveGroups} />
+    )
 
     const addGroups = [{ accountId: 1100, code: 'admin', name: 'Admin', description: 'admin' }]
     await waitFor(() => {
