@@ -6,7 +6,8 @@ import { cleanup, render, screen } from '@testing-library/react'
 
 import * as stories from './BuyerQuoteActions.stories'
 
-const { InReview, ReadyForCheckout, Completed, Expired } = composeStories(stories)
+const { InReview, ReadyForCheckout, Completed, Expired, PendingBuyerApproval } =
+  composeStories(stories)
 
 jest.mock('@/lib/helpers/hasPermission', () => ({
   hasPermission: jest.fn(() => true),
@@ -21,6 +22,7 @@ const mockProps = {
   handleSubmitForApproval: jest.fn(),
   handleGotoCheckout: jest.fn(),
   handlePrint: jest.fn(),
+  handleApproveQuote: jest.fn(),
 }
 
 const isHiddenEditQuoteButton = (Status: any, mode: string) => {
@@ -49,6 +51,13 @@ const isDisabledSubmitForApprovalButton = (Status: any) => {
   const submitForApprovalButton = screen.getByText('submit-for-approval')
 
   expect(submitForApprovalButton).toBeDisabled()
+}
+
+const isDisabledApproveQuoteButton = (Status: any) => {
+  render(<Status {...mockProps} mode="" />)
+  const approveQuoteButton = screen.getByText('approve-quote')
+
+  expect(approveQuoteButton).toBeDisabled()
 }
 
 afterEach(() => {
@@ -113,5 +122,10 @@ describe('[components] - BuyerQuoteActions', () => {
     const continueToCheckoutButton = screen.getByText('continue-to-checkout')
 
     expect(continueToCheckoutButton).toBeVisible()
+  })
+
+  it('should show approve quote button if status is in PendingBuyerApproval state', () => {
+    isDisabledApproveQuoteButton(PendingBuyerApproval)
+    cleanup()
   })
 })
