@@ -22,15 +22,15 @@ const getGroups = async () => {
 }
 
 /**
- * [Query hook] useGetB2BAccountHierachyQueries uses the graphQL query
+ * [Query hook] useGetGroups uses the graphQL query
  *
- * <b>getB2BAccountHierarchy(accountId: Int): B2BAccountHierarchyResult</b>
+ * <b>useGetGroups(): groups</b>
  *
- * Description : Fetches the B2B accounts list based on accountId.
+ * Description : Fetches the list of groups associated with B2B account.
  *
- * Parameters passed to function getB2BAccountHierarchy(accountId: number) => expects accountId of type number.
+ * Parameters passed to function useGetGroups(.
  *
- * @returns 'response?.getB2BAccountHierarchy', which contains list of accounts.
+ * @returns 'response?.useGetGroups', which contains list of groups.
  */
 
 export const useGetGroups = (): any => {

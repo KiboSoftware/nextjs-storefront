@@ -3,7 +3,7 @@
  */
 import { useMutation, useQueryClient } from '@tanstack/react-query'
 
-import { customerB2BUserKeys, groupsKeys } from '@/lib/react-query/queryKeys'
+import { customerB2BUserKeys } from '@/lib/react-query/queryKeys'
 import type { UserGroupParam } from '@/lib/types'
 
 const addUserToGroup = async (params: UserGroupParam) => {
@@ -38,7 +38,7 @@ export const useAddUserToGroup = () => {
     addUserToGroup: useMutation({
       mutationFn: addUserToGroup,
       onSuccess: () => {
-        queryClient.invalidateQueries({ queryKey: [groupsKeys.all, customerB2BUserKeys.all] })
+        queryClient.invalidateQueries({ queryKey: [customerB2BUserKeys.all] })
       },
     }),
   }

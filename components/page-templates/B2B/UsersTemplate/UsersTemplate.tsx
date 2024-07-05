@@ -102,7 +102,11 @@ const UsersTemplate = () => {
     startIndex: defaultStartIndex,
   })
 
-  const { data, isLoading } = useGetB2BUserQueries({
+  const {
+    data,
+    isLoading,
+    isFetching: b2bUserFetching,
+  } = useGetB2BUserQueries({
     accountId: user?.id as number,
     filter: defaultFilter,
     pageSize: paginationState.pageSize,
@@ -323,6 +327,7 @@ const UsersTemplate = () => {
             <UserTable
               mdScreen={mdScreen}
               b2bUsers={data?.items as B2BUser[]}
+              b2bUserFetching={b2bUserFetching}
               onSave={handleUpdateUser}
               onDelete={handleDelete}
             />

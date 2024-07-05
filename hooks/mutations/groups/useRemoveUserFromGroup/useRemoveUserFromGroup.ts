@@ -38,7 +38,7 @@ export const useRemoveUserFromGroup = () => {
     removeUserFromGroup: useMutation({
       mutationFn: removeUserFromGroup,
       onSuccess: () => {
-        queryClient.invalidateQueries({ queryKey: [groupsKeys.all, customerB2BUserKeys.all] })
+        queryClient.invalidateQueries({ queryKey: [customerB2BUserKeys.all] })
       },
     }),
   }
