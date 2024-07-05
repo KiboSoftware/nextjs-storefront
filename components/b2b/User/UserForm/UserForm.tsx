@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react'
 
 import { yupResolver } from '@hookform/resolvers/yup'
 import { LoadingButton } from '@mui/lab'
-import { Box, CircularProgress, Grid, Stack } from '@mui/material'
+import { Box, Grid, Skeleton, Stack } from '@mui/material'
 import getConfig from 'next/config'
 import { useTranslation } from 'next-i18next'
 import { useForm, Controller } from 'react-hook-form'
@@ -188,9 +188,7 @@ const UserForm = (props: UserFormProps) => {
           {isEditMode && (
             <>
               {groupsLoading ? (
-                <Box sx={{ display: 'flex', justifyContent: 'center' }}>
-                  <CircularProgress />
-                </Box>
+                <GroupTransferListSkeleton />
               ) : (
                 <Grid item xs={12} md={12}>
                   <Controller
@@ -264,6 +262,40 @@ const UserForm = (props: UserFormProps) => {
         </Grid>
       </form>
     </>
+  )
+}
+
+const GroupTransferListSkeleton = () => {
+  return (
+    <Box
+      sx={{
+        display: 'flex',
+        justifyContent: 'space-between',
+        width: '100%',
+        alignItems: 'center',
+      }}
+    >
+      <Box height={216} width={192}>
+        <Skeleton height={'100%'} width="100%" />
+      </Box>
+      <Box>
+        <Box width={64} height={30} m={0.5}>
+          <Skeleton height={'100%'} width="100%" />
+        </Box>
+        <Box width={64} height={30} m={0.5}>
+          <Skeleton height={'100%'} width="100%" />
+        </Box>
+        <Box width={64} height={30} m={0.5}>
+          <Skeleton height={'100%'} width="100%" />
+        </Box>
+        <Box width={64} height={30} m={0.5}>
+          <Skeleton height={'100%'} width="100%" />
+        </Box>
+      </Box>
+      <Box height={216} width={192}>
+        <Skeleton height={'100%'} width="100%" />
+      </Box>
+    </Box>
   )
 }
 

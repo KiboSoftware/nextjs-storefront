@@ -5,6 +5,7 @@ import DeleteIcon from '@mui/icons-material/Delete'
 import EditIcon from '@mui/icons-material/Edit'
 import {
   Box,
+  CircularProgress,
   IconButton,
   NoSsr,
   Paper,
@@ -19,7 +20,6 @@ import {
 } from '@mui/material'
 import { useTranslation } from 'next-i18next'
 
-import UserForm from '../UserForm/UserForm'
 import { UserFormDialog } from '@/components/dialogs'
 import { useModalContext } from '@/context'
 import { userGetters } from '@/lib/getters'
@@ -31,6 +31,7 @@ import { B2BUser } from '@/lib/gql/types'
 interface UserTableProps {
   mdScreen: boolean
   b2bUsers: B2BUser[] | undefined
+  b2bUserFetching?: boolean
   showActionButtons?: boolean
   onView?: (b2BUser: B2BUser) => void
   onDelete?: (id: string | undefined) => void
@@ -47,7 +48,15 @@ const style = {
 }
 
 const UserTable = (props: UserTableProps) => {
-  const { mdScreen, b2bUsers, showActionButtons = true, onView, onDelete, onSave } = props
+  const {
+    mdScreen,
+    b2bUsers,
+    b2bUserFetching,
+    showActionButtons = true,
+    onView,
+    onDelete,
+    onSave,
+  } = props
 
   const { t } = useTranslation('common')
   const { showModal, closeModal } = useModalContext()
@@ -62,7 +71,10 @@ const UserTable = (props: UserTableProps) => {
         isUserFormInDialog: true,
         formTitle: t('edit-user'),
         b2BUser,
-        onSave: (b2BUserInput: B2BUserInput) => onSave?.(b2BUserInput, b2BUser),
+        onSave: (b2BUserInput: B2BUserInput) => {
+          onSave?.(b2BUserInput, b2BUser)
+          setEditUserId(b2BUser?.userId as string)
+        },
         onClose: () => {
           setEditUserId(undefined)
           closeModal()
@@ -97,39 +109,43 @@ const UserTable = (props: UserTableProps) => {
           </TableRow>
         </TableHead>
         <TableBody>
-          {b2bUsers?.map((b2bUser: B2BUser) =>(
-              <TableRow key={b2bUser?.userId} onClick={() => !mdScreen && onView?.(b2bUser)}>
-                <TableCell colSpan={2} sx={style.emailAddressCell}>
-                  {userGetters.getEmailAddress(b2bUser)}
+          {b2bUsers?.map((b2bUser: B2BUser) => (
+            <TableRow key={b2bUser?.userId} onClick={() => !mdScreen && onView?.(b2bUser)}>
+              <TableCell colSpan={2} sx={style.emailAddressCell}>
+                {userGetters.getEmailAddress(b2bUser)}
+              </TableCell>
+              {mdScreen && (
+                <>
+                  <TableCell sx={{ flex: 1 }}>{userGetters.getFirstName(b2bUser)}</TableCell>
+                  <TableCell sx={{ flex: 1 }}>{userGetters.getLastName(b2bUser)}</TableCell>
+                </>
+              )}
+              <TableCell sx={{ flex: 1 }}>{userGetters.getRole(b2bUser)}</TableCell>
+              {mdScreen && (
+                <TableCell sx={{ flex: 1 }}>
+                  <Box
+                    sx={{ display: 'flex', justifyContent: 'start', alignItems: 'center', gap: 1 }}
+                  >
+                    {b2bUser?.isActive ? (
+                      <CircleIcon sx={{ fontSize: '14px' }} color="success" />
+                    ) : (
+                      <CircleIcon sx={{ fontSize: '14px' }} color="disabled" />
+                    )}
+                    <Typography>
+                      {userGetters.getStatus(b2bUser) ? t('active') : t('in-active')}
+                    </Typography>
+                  </Box>
                 </TableCell>
-                {mdScreen && (
-                  <>
-                    <TableCell sx={{ flex: 1 }}>{userGetters.getFirstName(b2bUser)}</TableCell>
-                    <TableCell sx={{ flex: 1 }}>{userGetters.getLastName(b2bUser)}</TableCell>
-                  </>
-                )}
-                <TableCell sx={{ flex: 1 }}>{userGetters.getRole(b2bUser)}</TableCell>
-                {mdScreen && (
+              )}
+              <NoSsr>
+                {hasPermission(actions.EDIT_USERS) && (
                   <TableCell sx={{ flex: 1 }}>
-                    <Box
-                      sx={{ display: 'flex', justifyContent: 'start', alignItems: 'center', gap: 1 }}
-                    >
-                      {b2bUser?.isActive ? (
-                        <CircleIcon sx={{ fontSize: '14px' }} color="success" />
-                      ) : (
-                        <CircleIcon sx={{ fontSize: '14px' }} color="disabled" />
-                      )}
-                      <Typography>
-                        {userGetters.getStatus(b2bUser) ? t('active') : t('in-active')}
-                      </Typography>
-                    </Box>
-                  </TableCell>
-                )}
-                <NoSsr>
-                  {hasPermission(actions.EDIT_USERS) && (
-                    <TableCell sx={{ flex: 1 }}>
-                      {showActionButtons && (
-                        <Box sx={{ display: 'flex', justifyContent: 'end', alignItems: 'center' }}>
+                    {showActionButtons && (
+                      <Box sx={{ display: 'flex', justifyContent: 'end', alignItems: 'center' }}>
+                        {b2bUserFetching && b2bUser.userId === editUserId && (
+                          <CircularProgress size={20} />
+                        )}
+                        {!(b2bUserFetching && b2bUser.userId === editUserId) && (
                           <IconButton
                             aria-label="item-edit"
                             name="item-edit"
@@ -137,21 +153,21 @@ const UserTable = (props: UserTableProps) => {
                           >
                             <EditIcon />
                           </IconButton>
-                          <IconButton
-                            aria-label="item-delete"
-                            name="item-delete"
-                            onClick={() => onDelete?.(b2bUser?.userId as string)}
-                          >
-                            <DeleteIcon />
-                          </IconButton>
-                        </Box>
-                      )}
-                    </TableCell>
-                  )}
-                </NoSsr>
-              </TableRow>
-            )
-          )}
+                        )}
+                        <IconButton
+                          aria-label="item-delete"
+                          name="item-delete"
+                          onClick={() => onDelete?.(b2bUser?.userId as string)}
+                        >
+                          <DeleteIcon />
+                        </IconButton>
+                      </Box>
+                    )}
+                  </TableCell>
+                )}
+              </NoSsr>
+            </TableRow>
+          ))}
         </TableBody>
       </Table>
     </TableContainer>
