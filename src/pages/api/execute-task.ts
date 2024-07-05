@@ -36,7 +36,6 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
       throw new Error('Internal Server Error')
     }
     const result = await executeTaskResponse.json()
-    console.log('result', JSON.stringify(result))
     if (executeTaskResponse.ok) {
       return res.status(200).json(result.data.executeTask)
     } else {

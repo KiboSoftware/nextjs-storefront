@@ -14,7 +14,6 @@ interface ExecuteTaskParams {
 }
 
 const executeTask = async (params: ExecuteTaskParams) => {
-  console.log('params useexecute task', params)
   const response = await fetch('/api/execute-task', {
     method: 'POST',
     headers: {
