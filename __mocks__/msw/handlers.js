@@ -654,6 +654,39 @@ export const b2bHandlers = [
   graphql.mutation('deleteQuoteCoupon', (_req, res, ctx) => {
     return res(ctx.data({ deleteQuoteCoupon: quoteMock?.items?.[0] }))
   }),
+
+  graphql.query('getGroups', (_req, res, ctx) => {
+    return res(
+      ctx.data({
+        getGroups: [
+          {
+            accountId: 1100,
+            code: 'manager',
+            name: 'Manager',
+            description: 'Manager',
+          },
+          {
+            accountId: 1100,
+            code: 'admin',
+            name: 'Admin',
+            description: 'admin',
+          },
+        ],
+      })
+    )
+  }),
+  //useExecuteTask
+  graphql.mutation('executeTask', (_req, res, ctx) => {
+    return res(ctx.data({ executeTask: quoteMock?.items?.[0] }))
+  }),
+
+  graphql.mutation('addUserToGroup', (_req, res, ctx) => {
+    return res(ctx.data({ addUserToGroup: true }))
+  }),
+
+  graphql.mutation('removeUserFromGroup', (_req, res, ctx) => {
+    return res(ctx.data({ removeUserFromGroup: true }))
+  }),
 ]
 
 export const handlers = [

@@ -1,20 +1,11 @@
-import { renderHook, waitFor } from '@testing-library/react'
+import { renderHook } from '@testing-library/react-hooks'
 
 import { useRemoveUserFromGroup } from './useRemoveUserFromGroup'
 import { createQueryClientWrapper } from '@/__test__/utils/renderWithQueryClient'
 
-const mockFetch = jest.fn(() => {
-  return {
-    json: () => true,
-  }
-}) as any
-
-// Assign the mock fetch implementation to the global object
-global.fetch = mockFetch
-
 describe('[hooks] useRemoveUserFromGroup', () => {
   it('should use useRemoveUserFromGroup', async () => {
-    const { result } = renderHook(() => useRemoveUserFromGroup(), {
+    const { result, waitForNextUpdate } = renderHook(() => useRemoveUserFromGroup(), {
       wrapper: createQueryClientWrapper(),
     })
 
@@ -24,8 +15,7 @@ describe('[hooks] useRemoveUserFromGroup', () => {
       userId: '92edae78199c45ed8c18d90a111b986c',
     })
 
-    await waitFor(() => {
-      expect(result.current.removeUserFromGroup.data).toEqual(true)
-    })
+    await waitForNextUpdate()
+    expect(result.current.removeUserFromGroup.data).toEqual(true)
   })
 })

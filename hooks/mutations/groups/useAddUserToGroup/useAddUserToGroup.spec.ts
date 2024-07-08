@@ -1,20 +1,11 @@
-import { renderHook, waitFor } from '@testing-library/react'
+import { renderHook } from '@testing-library/react-hooks'
 
 import { useAddUserToGroup } from './useAddUserToGroup'
 import { createQueryClientWrapper } from '@/__test__/utils/renderWithQueryClient'
 
-const mockFetch = jest.fn(() => {
-  return {
-    json: () => true,
-  }
-}) as any
-
-// Assign the mock fetch implementation to the global object
-global.fetch = mockFetch
-
 describe('[hooks] useAddUserToGroup', () => {
   it('should use useAddUserToGroup', async () => {
-    const { result } = renderHook(() => useAddUserToGroup(), {
+    const { result, waitForNextUpdate } = renderHook(() => useAddUserToGroup(), {
       wrapper: createQueryClientWrapper(),
     })
 
@@ -23,9 +14,7 @@ describe('[hooks] useAddUserToGroup', () => {
       groupCode: 'director',
       userId: '92edae78199c45ed8c18d90a111b986c',
     })
-
-    await waitFor(() => {
-      expect(result.current.addUserToGroup.data).toEqual(true)
-    })
+    await waitForNextUpdate()
+    expect(result.current.addUserToGroup.data).toEqual(true)
   })
 })
