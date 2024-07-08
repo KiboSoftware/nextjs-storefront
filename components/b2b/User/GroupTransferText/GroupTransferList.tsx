@@ -1,7 +1,7 @@
 import * as React from 'react'
 import { useEffect } from 'react'
 
-import { Box } from '@mui/material'
+import { Box, ListSubheader } from '@mui/material'
 import Button from '@mui/material/Button'
 import Grid from '@mui/material/Grid'
 import List from '@mui/material/List'
@@ -94,7 +94,7 @@ export default function GroupTransferList({
     return { addGroups, removeGroups }
   }
 
-  const customList = (items: readonly B2BUserGroup[]) => (
+  const customList = (items: readonly B2BUserGroup[], subheader: string) => (
     <Paper
       sx={{
         overflow: 'auto',
@@ -103,7 +103,16 @@ export default function GroupTransferList({
         border: '1px solid rgba(0,0,0,0.12)',
       }}
     >
-      <List dense component="div" role="list">
+      <List
+        dense
+        component="div"
+        role="list"
+        subheader={
+          <ListSubheader component="div" id="nested-list-subheader">
+            {subheader}
+          </ListSubheader>
+        }
+      >
         {items?.map((value) => {
           const labelId = `transfer-list-item-${value.code}-label`
 
@@ -125,8 +134,7 @@ export default function GroupTransferList({
   return (
     <Grid container spacing={1} justifyContent="center" alignItems="flex-start">
       <Grid item xs={12} sm={5} data-testid="allGroups">
-        {t('all-groups')}
-        {customList(left)}
+        {customList(left, t('all-groups'))}
       </Grid>
       <Grid item xs={12} sm={2}>
         <Grid
@@ -134,7 +142,7 @@ export default function GroupTransferList({
           direction={{ xs: 'row', sm: 'column' }}
           alignItems="center"
           justifyContent="center"
-          pt={3}
+          pt={0.5}
         >
           <Button
             sx={{ m: 0.5 }}
@@ -187,8 +195,7 @@ export default function GroupTransferList({
         </Grid>
       </Grid>
       <Grid item xs={12} sm={5} data-testid="selectedGroups">
-        {t('selected-groups')}
-        {customList(right)}
+        {customList(right, t('selected-groups'))}
       </Grid>
     </Grid>
   )

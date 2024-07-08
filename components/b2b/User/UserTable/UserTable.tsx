@@ -142,10 +142,9 @@ const UserTable = (props: UserTableProps) => {
                   <TableCell sx={{ flex: 1 }}>
                     {showActionButtons && (
                       <Box sx={{ display: 'flex', justifyContent: 'end', alignItems: 'center' }}>
-                        {b2bUserFetching && b2bUser.userId === editUserId && (
+                        {b2bUserFetching && b2bUser.userId === editUserId ? (
                           <CircularProgress size={20} />
-                        )}
-                        {!(b2bUserFetching && b2bUser.userId === editUserId) && (
+                        ) : (
                           <IconButton
                             aria-label="item-edit"
                             name="item-edit"

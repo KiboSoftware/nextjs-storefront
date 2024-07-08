@@ -39,9 +39,11 @@ describe('[component] Group Transfer List', () => {
 
     const rightGroupContainer = screen.getByTestId('selectedGroups')
     const rightListItems = within(rightGroupContainer).getAllByRole('listitem')
-    await waitFor(() => {
-      expect(rightListItems).toHaveLength(3)
-    })
+
+    expect(rightListItems).toHaveLength(3)
+    expect(rightListItems[0]).toHaveTextContent('Employee')
+    expect(rightListItems[1]).toHaveTextContent('Manager')
+    expect(rightListItems[2]).toHaveTextContent('Admin')
   })
 
   it('moves all items to left when move all left button is clicked', async () => {
@@ -52,9 +54,10 @@ describe('[component] Group Transfer List', () => {
 
     const leftGroupContainer = screen.getByTestId('allGroups')
     const leftListItems = within(leftGroupContainer).getAllByRole('listitem')
-    await waitFor(() => {
-      expect(leftListItems).toHaveLength(3)
-    })
+    expect(leftListItems).toHaveLength(3)
+    expect(leftListItems[0]).toHaveTextContent('Manager')
+    expect(leftListItems[1]).toHaveTextContent('Admin')
+    expect(leftListItems[2]).toHaveTextContent('Employee')
   })
 
   it('moves checked items to left when move selected left button is clicked', async () => {
@@ -71,9 +74,9 @@ describe('[component] Group Transfer List', () => {
 
     const leftGroupContainer = screen.getByTestId('allGroups')
     const leftListItems = within(leftGroupContainer).getAllByRole('listitem')
-    await waitFor(() => {
-      expect(leftListItems).toHaveLength(3)
-    })
+
+    expect(leftListItems).toHaveLength(3)
+    expect(leftListItems[2]).toHaveTextContent('Employee')
   })
 
   it('moves checked items to right when move selected right button is clicked', async () => {
@@ -90,9 +93,9 @@ describe('[component] Group Transfer List', () => {
 
     const rightGroupContainer = screen.getByTestId('selectedGroups')
     const rightListItems = within(rightGroupContainer).getAllByRole('listitem')
-    await waitFor(() => {
-      expect(rightListItems).toHaveLength(2)
-    })
+
+    expect(rightListItems).toHaveLength(2)
+    expect(rightListItems[1]).toHaveTextContent('Manager')
   })
 
   it('submits added and removed groups correctly when submitting', async () => {
