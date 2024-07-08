@@ -32,7 +32,7 @@ describe('[components]  UserFormDialog Dialog', () => {
   })
 
   it('should render save and cancel text on button when isUserFormInDialog is true', () => {
-    render(<Common {...Common.args} isUserFormInDialog={false} />)
+    render(<Common {...Common.args} isUserFormInDialog={false} isEditMode={true} />)
 
     const cancelText = screen.getByText('cancel')
     expect(cancelText).toBeInTheDocument()
