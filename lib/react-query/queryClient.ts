@@ -7,11 +7,13 @@ const getErrorMessage = (code: string, message: string) => {
   const messages: any = {
     GRAPHQL_VALIDATION_FAILED: 'Something went wrong',
     UNAUTHENTICATED: 'Invalid Credentials',
-    CART_NOT_FOUND: 'Cart was not found',
+    USER_NOT_AUTHORIZED: 'User not authorized',
   }
 
-  if (isCSR && message.includes(messages.CART_NOT_FOUND)) {
-    return (message || messages[code]) + ` Please close the window and re-visit the cart takeover.`
+  if (isCSR && message.includes(messages.USER_NOT_AUTHORIZED)) {
+    return (
+      (message || messages[code]) + ` Unauthorized cart access, please re-initiate cart takeover.`
+    )
   }
 
   return message || messages[code] || 'Unable to connect server'
