@@ -3,22 +3,20 @@
  */
 import { useQuery } from '@tanstack/react-query'
 
+import { makeGraphQLClientWithoutUserClaims } from '@/lib/gql/client'
+import { getGroups as getGroupsQuery } from '@/lib/gql/queries'
 import { groupsKeys } from '@/lib/react-query/queryKeys'
-
 /**
  * @hidden
  */
 
 const getGroups = async () => {
-  const response = await fetch('/api/get-groups', {
-    method: 'POST',
-    headers: {
-      Accept: 'application/json, text/plain, */*',
-      'Content-Type': 'application/json',
-    },
+  const client = makeGraphQLClientWithoutUserClaims()
+  const response = await client.request({
+    document: getGroupsQuery,
+    variables: {},
   })
-
-  return await response.json()
+  return response?.getGroups
 }
 
 /**

@@ -3,20 +3,25 @@
  */
 import { useMutation, useQueryClient } from '@tanstack/react-query'
 
+import { makeGraphQLClientWithoutUserClaims } from '@/lib/gql/client'
+import { addUserToGroupMutation } from '@/lib/gql/mutations'
 import { customerB2BUserKeys } from '@/lib/react-query/queryKeys'
-import type { UserGroupParam } from '@/lib/types'
+import type { UserGroupCode } from '@/lib/types'
 
-const addUserToGroup = async (params: UserGroupParam) => {
-  const response = await fetch('/api/add-user-to-group', {
-    method: 'POST',
-    headers: {
-      Accept: 'application/json, text/plain, */*',
-      'Content-Type': 'application/json',
-    },
-    body: JSON.stringify(params),
+import { UserGroup } from '@/lib/gql/types'
+
+const addUserToGroup = async ({
+  accountId,
+  userId,
+  groupCode,
+}: UserGroupCode): Promise<UserGroup> => {
+  const client = makeGraphQLClientWithoutUserClaims()
+  const variables = { accountId, userId, groupCode }
+  const response = await client.request({
+    document: addUserToGroupMutation,
+    variables,
   })
-
-  return await response.json()
+  return response?.addUserToGroup
 }
 
 /**

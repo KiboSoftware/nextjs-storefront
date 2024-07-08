@@ -15783,6 +15783,13 @@ export type UserScopeInput = {
   type?: InputMaybe<Scalars['String']>
 }
 
+export type UserGroup = {
+  _get?: Maybe<Scalars['AnyScalar']>
+  _root?: Maybe<UserGroup>
+  userId?: Maybe<Scalars['String']>
+  accountId?: Maybe<Scalars['String']>
+}
+
 export type ValidationMessage = {
   __typename?: 'ValidationMessage'
   _get?: Maybe<Scalars['AnyScalar']>

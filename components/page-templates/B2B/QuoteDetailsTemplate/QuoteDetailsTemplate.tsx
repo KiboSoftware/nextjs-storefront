@@ -642,10 +642,8 @@ const QuoteDetailsTemplate = (props: QuoteDetailsTemplateProps) => {
   const handleApproveQuote = async (quoteId: string) => {
     try {
       const executeTaskResponse = await executeTask.mutateAsync({
-        params: {
-          quoteId,
-          taskName: '',
-        },
+        quoteId,
+        taskName: '',
       })
       if (executeTaskResponse) {
         router.push('/my-account/b2b/quotes')

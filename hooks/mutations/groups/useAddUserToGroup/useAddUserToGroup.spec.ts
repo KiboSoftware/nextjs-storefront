@@ -14,18 +14,14 @@ global.fetch = mockFetch
 
 describe('[hooks] useAddUserToGroup', () => {
   it('should use useAddUserToGroup', async () => {
-    const param = {
-      accountId: 1041,
-      groupCode: 'director',
-      userId: '92edae78199c45ed8c18d90a111b986c',
-    }
-
     const { result } = renderHook(() => useAddUserToGroup(), {
       wrapper: createQueryClientWrapper(),
     })
 
     result.current.addUserToGroup.mutateAsync({
-      params: param,
+      accountId: 1041,
+      groupCode: 'director',
+      userId: '92edae78199c45ed8c18d90a111b986c',
     })
 
     await waitFor(() => {

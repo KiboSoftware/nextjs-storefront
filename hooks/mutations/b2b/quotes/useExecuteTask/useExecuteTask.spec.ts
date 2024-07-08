@@ -18,7 +18,8 @@ describe('[hooks] useExecuteTask', () => {
     })
 
     await result.current.executeTask.mutateAsync({
-      params: { quoteId: 'quote-id' },
+      quoteId: 'quote-id',
+      taskName: '',
     })
 
     await waitForNextUpdate()

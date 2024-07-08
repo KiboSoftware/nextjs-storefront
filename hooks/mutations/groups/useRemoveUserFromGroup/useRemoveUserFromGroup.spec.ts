@@ -14,18 +14,14 @@ global.fetch = mockFetch
 
 describe('[hooks] useRemoveUserFromGroup', () => {
   it('should use useRemoveUserFromGroup', async () => {
-    const param = {
-      accountId: 1041,
-      groupCode: 'director',
-      userId: '92edae78199c45ed8c18d90a111b986c',
-    }
-
     const { result } = renderHook(() => useRemoveUserFromGroup(), {
       wrapper: createQueryClientWrapper(),
     })
 
     result.current.removeUserFromGroup.mutateAsync({
-      params: param,
+      accountId: 1041,
+      groupCode: 'director',
+      userId: '92edae78199c45ed8c18d90a111b986c',
     })
 
     await waitFor(() => {

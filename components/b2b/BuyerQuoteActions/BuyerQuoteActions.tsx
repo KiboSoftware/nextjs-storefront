@@ -79,12 +79,10 @@ export default function BuyerQuoteActions({
                 variant="contained"
                 color="secondary"
                 sx={{ width: { xs: '50%', md: '100%' } }}
-                disabled={
-                  !quoteGetters.isApproveQuoteDisabled(
-                    groups as string[],
-                    assignedBuyerGroupCode as string
-                  )
-                }
+                disabled={quoteGetters.isApproveQuoteDisabled(
+                  groups as string[],
+                  assignedBuyerGroupCode as string
+                )}
                 onClick={handleApproveQuote}
               >
                 {t('approve-quote')}

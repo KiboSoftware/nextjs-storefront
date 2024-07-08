@@ -217,7 +217,7 @@ const showSelectedAddress = (status: string, mode: string) => {
 }
 
 const isApproveQuoteDisabled = (groups: string[], assignedBuyerGroupCode: string) => {
-  return (
+  return !(
     groups?.some((group) => group.toLowerCase() === assignedBuyerGroupCode?.toLowerCase()) || false
   )
 }

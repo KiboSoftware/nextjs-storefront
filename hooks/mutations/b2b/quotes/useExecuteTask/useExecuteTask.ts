@@ -3,27 +3,25 @@
  */
 import { useMutation, useQueryClient } from '@tanstack/react-query'
 
+import { makeGraphQLClientWithoutUserClaims } from '@/lib/gql/client'
+import { executeTaskMutation } from '@/lib/gql/mutations'
 import { quoteKeys } from '@/lib/react-query/queryKeys'
 
 interface ExecuteTaskParams {
-  params: {
-    quoteId: string
-    taskName?: string
-    object?: object
-  }
+  quoteId: string
+  taskName?: string
+  object?: object
 }
 
 const executeTask = async (params: ExecuteTaskParams) => {
-  const response = await fetch('/api/execute-task', {
-    method: 'POST',
-    headers: {
-      Accept: 'application/json, text/plain, */*',
-      'Content-Type': 'application/json',
-    },
-    body: JSON.stringify(params),
+  const client = makeGraphQLClientWithoutUserClaims()
+  const { quoteId, taskName } = params
+  const variables = { quoteId, taskName }
+  const response = await client.request({
+    document: executeTaskMutation,
+    variables,
   })
-
-  return await response.json()
+  return response?.executeTask
 }
 
 /**

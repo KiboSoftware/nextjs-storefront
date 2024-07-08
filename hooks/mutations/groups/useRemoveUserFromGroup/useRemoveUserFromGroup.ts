@@ -3,20 +3,20 @@
  */
 import { useMutation, useQueryClient } from '@tanstack/react-query'
 
+import { makeGraphQLClientWithoutUserClaims } from '@/lib/gql/client'
+import { removeUserFromGroupMutation } from '@/lib/gql/mutations'
 import { customerB2BUserKeys, groupsKeys } from '@/lib/react-query/queryKeys'
-import type { UserGroupParam } from '@/lib/types'
+import type { UserGroupCode } from '@/lib/types'
 
-const removeUserFromGroup = async (params: UserGroupParam) => {
-  const response = await fetch('/api/remove-user-from-group', {
-    method: 'POST',
-    headers: {
-      Accept: 'application/json, text/plain, */*',
-      'Content-Type': 'application/json',
-    },
-    body: JSON.stringify(params),
+const removeUserFromGroup = async (params: UserGroupCode): Promise<boolean> => {
+  const client = makeGraphQLClientWithoutUserClaims()
+  const { accountId, userId, groupCode } = params
+  const variables = { accountId, userId, groupCode }
+  const response = await client.request({
+    document: removeUserFromGroupMutation,
+    variables,
   })
-
-  return await response.json()
+  return response?.removeUserFromGroup
 }
 
 /**

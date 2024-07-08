@@ -49,7 +49,6 @@ import {
   getPerPageItemText,
   hasPermission,
 } from '@/lib/helpers'
-import type { UserGroupParam } from '@/lib/types'
 import { B2BUserInput, CustomerB2BUserRole } from '@/lib/types/CustomerB2BUser'
 
 import type { B2BUser } from '@/lib/gql/types'
@@ -231,14 +230,11 @@ const UsersTemplate = () => {
 
   const addGroupsToB2bUser = async (b2BUser: B2BUser | undefined, formValues: B2BUserInput) => {
     const addGroupsWithMutation = formValues?.groups.addGroups.map((group: any) => {
-      const params: UserGroupParam = {
-        params: {
-          accountId: user?.id as number,
-          userId: b2BUser?.userId as string,
-          groupCode: group.code,
-        },
-      }
-      addUserToGroup.mutateAsync(params)
+      addUserToGroup.mutateAsync({
+        accountId: user?.id as number,
+        userId: b2BUser?.userId as string,
+        groupCode: group.code,
+      })
     })
 
     await Promise.all(addGroupsWithMutation)
@@ -246,14 +242,11 @@ const UsersTemplate = () => {
 
   const removeGroupsToB2bUser = async (b2BUser: B2BUser | undefined, formValues: B2BUserInput) => {
     const removeGroupsWithMutation = formValues?.groups.removeGroups.map((group: any) => {
-      const params: UserGroupParam = {
-        params: {
-          accountId: user?.id as number,
-          userId: b2BUser?.userId as string,
-          groupCode: group.code,
-        },
-      }
-      removeUserFromGroup.mutateAsync(params)
+      removeUserFromGroup.mutateAsync({
+        accountId: user?.id as number,
+        userId: b2BUser?.userId as string,
+        groupCode: group.code,
+      })
     })
 
     await Promise.all(removeGroupsWithMutation)

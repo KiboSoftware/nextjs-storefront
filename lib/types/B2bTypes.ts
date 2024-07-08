@@ -19,7 +19,7 @@ export interface QuoteFilters {
   others?: string
 }
 
-export type TenantGroup = {
+export interface TenantGroup {
   code: string
   name: string
   description: string
@@ -33,11 +33,7 @@ export interface B2BUserGroup {
   description: string
 }
 
-export interface UserGroupParam {
-  params: UserGroupCode
-}
-
-interface UserGroupCode {
+export interface UserGroupCode {
   accountId: number
   userId: string
   groupCode: string
