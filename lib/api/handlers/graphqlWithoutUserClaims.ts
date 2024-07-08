@@ -64,7 +64,6 @@ export default async function graphQLWithoutUserClaimsHandler(
     const userClaims = await getUserClaimsFromRequest(req, res)
     const headers = getAdditionalHeader(req)
     const response = await fetcher({ query, variables }, { headers })
-    console.log('graphql without user claims', response, variables)
 
     const correlationId = response.headers && response.headers.get(KIBO_HEADERS.CORRELATION_ID)
     correlationId && req.logger.info({ gql: gqlDetails, correlationId })
