@@ -95,11 +95,11 @@ const UserForm = (props: UserFormProps) => {
   }
 
   const b2bUserGroups = () => {
-    return groups?.filter((group: any) => !(b2BUser as any)?.groups.includes(group.code))
+    return groups?.filter((group: any) => !(b2BUser as any)?.groups?.includes(group.code))
   }
 
   const b2bUserSelectedGroups = () => {
-    return groups?.filter((group: any) => (b2BUser as any)?.groups.includes(group.code))
+    return groups?.filter((group: any) => (b2BUser as any)?.groups?.includes(group.code))
   }
 
   return (
