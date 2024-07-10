@@ -6,11 +6,13 @@ import { useQuery } from '@tanstack/react-query'
 import { makeGraphQLClientWithoutUserClaims } from '@/lib/gql/client'
 import { getGroups as getGroupsQuery } from '@/lib/gql/queries'
 import { groupsKeys } from '@/lib/react-query/queryKeys'
+
+import type { TenantGroup } from '@/lib/gql/types'
 /**
  * @hidden
  */
 
-const getGroups = async () => {
+const getGroups = async (): Promise<TenantGroup[]> => {
   const client = makeGraphQLClientWithoutUserClaims()
   const response = await client.request({
     document: getGroupsQuery,

@@ -15610,6 +15610,15 @@ export type TaskInputInput = {
   type?: InputMaybe<Scalars['String']>
 }
 
+export type TenantGroup = {
+  _get?: Maybe<Scalars['AnyScalar']>
+  _root?: Maybe<TenantGroup>
+  code?: Maybe<Scalars['String']>
+  name?: Maybe<Scalars['String']>
+  description?: Maybe<Scalars['String']>
+  auditInfo?: Maybe<CuAuditInfo>
+}
+
 export type Transaction = {
   __typename?: 'Transaction'
   _get?: Maybe<Scalars['AnyScalar']>

@@ -7,13 +7,14 @@ import { makeGraphQLClientWithoutUserClaims } from '@/lib/gql/client'
 import { executeTaskMutation } from '@/lib/gql/mutations'
 import { quoteKeys } from '@/lib/react-query/queryKeys'
 
+import type { Quote } from '@/lib/gql/types'
 interface ExecuteTaskParams {
   quoteId: string
   taskName?: string
   object?: object
 }
 
-const executeTask = async (params: ExecuteTaskParams) => {
+const executeTask = async (params: ExecuteTaskParams): Promise<Quote> => {
   const client = makeGraphQLClientWithoutUserClaims()
   const { quoteId, taskName } = params
   const variables = { quoteId, taskName }
