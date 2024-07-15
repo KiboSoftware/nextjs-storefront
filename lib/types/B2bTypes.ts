@@ -1,3 +1,5 @@
+import { CuAuditInfo } from '../gql/types'
+
 export interface SortingValues {
   value: string
   id: string
@@ -15,4 +17,24 @@ export interface QuoteFilters {
   name?: string
   number?: string
   others?: string
+}
+
+export interface TenantGroup {
+  code: string
+  name: string
+  description: string
+  auditInfo: CuAuditInfo
+}
+
+export interface B2BUserGroup {
+  name: string
+  code: string
+  accountId: number
+  description: string
+}
+
+export interface UserGroupCode {
+  accountId: number
+  userId: string
+  groupCode: string
 }

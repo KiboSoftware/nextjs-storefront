@@ -5,11 +5,14 @@ import DeleteIcon from '@mui/icons-material/Delete'
 import EditIcon from '@mui/icons-material/Edit'
 import {
   Box,
+  CircularProgress,
   IconButton,
   NoSsr,
+  Paper,
   Table,
   TableBody,
   TableCell,
+  TableContainer,
   TableHead,
   TableRow,
   Typography,
@@ -17,7 +20,6 @@ import {
 } from '@mui/material'
 import { useTranslation } from 'next-i18next'
 
-import UserForm from '../UserForm/UserForm'
 import { UserFormDialog } from '@/components/dialogs'
 import { useModalContext } from '@/context'
 import { userGetters } from '@/lib/getters'
@@ -29,6 +31,7 @@ import { B2BUser } from '@/lib/gql/types'
 interface UserTableProps {
   mdScreen: boolean
   b2bUsers: B2BUser[] | undefined
+  b2bUserFetching?: boolean
   showActionButtons?: boolean
   onView?: (b2BUser: B2BUser) => void
   onDelete?: (id: string | undefined) => void
@@ -45,7 +48,15 @@ const style = {
 }
 
 const UserTable = (props: UserTableProps) => {
-  const { mdScreen, b2bUsers, showActionButtons = true, onView, onDelete, onSave } = props
+  const {
+    mdScreen,
+    b2bUsers,
+    b2bUserFetching,
+    showActionButtons = true,
+    onView,
+    onDelete,
+    onSave,
+  } = props
 
   const { t } = useTranslation('common')
   const { showModal, closeModal } = useModalContext()
@@ -60,7 +71,10 @@ const UserTable = (props: UserTableProps) => {
         isUserFormInDialog: true,
         formTitle: t('edit-user'),
         b2BUser,
-        onSave: (b2BUserInput: B2BUserInput) => onSave?.(b2BUserInput, b2BUser),
+        onSave: (b2BUserInput: B2BUserInput) => {
+          onSave?.(b2BUserInput, b2BUser)
+          setEditUserId(b2BUser?.userId as string)
+        },
         onClose: () => {
           setEditUserId(undefined)
           closeModal()
@@ -70,43 +84,32 @@ const UserTable = (props: UserTableProps) => {
   }
 
   return (
-    <Table>
-      {!b2bUsers?.length ? (
-        <caption style={{ textAlign: 'center' }}>{t('no-record-found')}</caption>
-      ) : null}
-      <TableHead>
-        <TableRow style={{ backgroundColor: theme.palette.grey[100] }}>
-          <TableCell
-            colSpan={2}
-            sx={{ flex: 1, width: { xs: '150px' }, overflow: { xs: 'hidden' } }}
-          >
-            {t('email')}
-          </TableCell>
-          {mdScreen && (
-            <>
-              <TableCell>{t('first-name')}</TableCell>
-              <TableCell>{t('last-name-or-sur-name')}</TableCell>
-            </>
-          )}
-          <TableCell>{t('role')}</TableCell>
-          {mdScreen && <TableCell>{t('status')}</TableCell>}
-          <NoSsr>{hasPermission(actions.EDIT_USERS) && <TableCell></TableCell>}</NoSsr>
-        </TableRow>
-      </TableHead>
-      <TableBody>
-        {b2bUsers?.map((b2bUser: B2BUser) =>
-          editUserId && editUserId === b2bUser?.userId ? (
-            <TableRow key={b2bUser?.userId}>
-              <TableCell colSpan={7} style={{ width: '100%', padding: 0 }}>
-                <UserForm
-                  isEditMode={true}
-                  b2BUser={b2bUser}
-                  onClose={() => setEditUserId(undefined)}
-                  onSave={(formValues: B2BUserInput) => onSave?.(formValues, b2bUser)}
-                />
-              </TableCell>
-            </TableRow>
-          ) : (
+    <TableContainer component={Paper}>
+      <Table sx={{ maxWidth: '100%' }} aria-label="b2b users table">
+        {!b2bUsers?.length ? (
+          <caption style={{ textAlign: 'center' }}>{t('no-record-found')}</caption>
+        ) : null}
+        <TableHead>
+          <TableRow style={{ backgroundColor: theme.palette.grey[100] }}>
+            <TableCell
+              colSpan={2}
+              sx={{ flex: 1, width: { xs: '150px' }, overflow: { xs: 'hidden' } }}
+            >
+              {t('email')}
+            </TableCell>
+            {mdScreen && (
+              <>
+                <TableCell>{t('first-name')}</TableCell>
+                <TableCell>{t('last-name-or-sur-name')}</TableCell>
+              </>
+            )}
+            <TableCell>{t('role')}</TableCell>
+            {mdScreen && <TableCell>{t('status')}</TableCell>}
+            <NoSsr>{hasPermission(actions.EDIT_USERS) && <TableCell></TableCell>}</NoSsr>
+          </TableRow>
+        </TableHead>
+        <TableBody>
+          {b2bUsers?.map((b2bUser: B2BUser) => (
             <TableRow key={b2bUser?.userId} onClick={() => !mdScreen && onView?.(b2bUser)}>
               <TableCell colSpan={2} sx={style.emailAddressCell}>
                 {userGetters.getEmailAddress(b2bUser)}
@@ -139,13 +142,17 @@ const UserTable = (props: UserTableProps) => {
                   <TableCell sx={{ flex: 1 }}>
                     {showActionButtons && (
                       <Box sx={{ display: 'flex', justifyContent: 'end', alignItems: 'center' }}>
-                        <IconButton
-                          aria-label="item-edit"
-                          name="item-edit"
-                          onClick={() => onEditUserButtonClick(b2bUser)}
-                        >
-                          <EditIcon />
-                        </IconButton>
+                        {b2bUserFetching && b2bUser.userId === editUserId ? (
+                          <CircularProgress size={20} />
+                        ) : (
+                          <IconButton
+                            aria-label="item-edit"
+                            name="item-edit"
+                            onClick={() => onEditUserButtonClick(b2bUser)}
+                          >
+                            <EditIcon />
+                          </IconButton>
+                        )}
                         <IconButton
                           aria-label="item-delete"
                           name="item-delete"
@@ -159,10 +166,10 @@ const UserTable = (props: UserTableProps) => {
                 )}
               </NoSsr>
             </TableRow>
-          )
-        )}
-      </TableBody>
-    </Table>
+          ))}
+        </TableBody>
+      </Table>
+    </TableContainer>
   )
 }
 

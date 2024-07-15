@@ -19,6 +19,7 @@ export default {
     handleSubmitForApproval: { handleSubmitForApproval: { action: 'handleSubmitForApproval' } },
     handleGotoCheckout: { handleGotoCheckout: { action: 'handleGotoCheckout' } },
     handlePrint: { handlePrint: { action: 'handlePrint' } },
+    handleApproveQuote: { handleApproveQuote: { action: 'handleApproveQuote' } },
     mode: {
       options: ['create', 'edit', ''],
       control: { type: 'radio' },
@@ -59,4 +60,9 @@ export const Expired = Template.bind({})
 Expired.args = {
   ...Pending.args,
   status: 'Expired',
+}
+export const PendingBuyerApproval = Template.bind({})
+PendingBuyerApproval.args = {
+  ...Pending.args,
+  status: 'PendingBuyerApproval',
 }

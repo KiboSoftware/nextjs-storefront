@@ -57,7 +57,7 @@ export const useGetB2BUserQueries = ({
   isB2BUser: boolean
   initialB2BUsers?: B2BUserCollection
 }): B2BUserResultType => {
-  const { isLoading, isSuccess, isError, error, data } = useQuery({
+  const { isLoading, isFetching, isSuccess, isError, error, data } = useQuery({
     queryKey: customerB2BUserKeys.search(
       accountId,
       startIndex as number,
@@ -75,6 +75,7 @@ export const useGetB2BUserQueries = ({
   return {
     data,
     isLoading,
+    isFetching,
     isError,
     error,
     isSuccess,

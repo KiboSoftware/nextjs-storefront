@@ -6,6 +6,12 @@ export function makeGraphQLClient(endpoint?: string) {
   return new GraphQLClient(endpoint)
 }
 
+export function makeGraphQLClientWithoutUserClaims(endpoint?: string) {
+  endpoint =
+    endpoint || `${process.env.NEXT_PUBLIC_URL ? process.env.NEXT_PUBLIC_URL : ''}/api/graphqlWUC`
+  return new GraphQLClient(endpoint)
+}
+
 export const CATEGORY_TREE_ENDPOINT = `${
   process.env.NEXT_PUBLIC_URL ? process.env.NEXT_PUBLIC_URL : ''
 }/api/category-tree`

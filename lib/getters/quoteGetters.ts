@@ -216,6 +216,12 @@ const showSelectedAddress = (status: string, mode: string) => {
   )
 }
 
+const isApproveQuoteDisabled = (groups: string[], assignedBuyerGroupCode: string) => {
+  return !(
+    groups?.some((group) => group.toLowerCase() === assignedBuyerGroupCode?.toLowerCase()) || false
+  )
+}
+
 export const quoteGetters = {
   getQuotes,
   getNumber,
@@ -246,4 +252,5 @@ export const quoteGetters = {
   shouldShowB2BProductSearch,
   isAddressEditable,
   showSelectedAddress,
+  isApproveQuoteDisabled,
 }
