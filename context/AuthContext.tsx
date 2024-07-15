@@ -31,7 +31,7 @@ export interface AuthContextType {
   login: (params: LoginData, onSuccessCallBack: () => void) => any
   createAccount: (params: RegisterAccountInputData, onSuccessCallBack?: () => void) => any
   logout: () => void
-  getAccountsByUser: (accounts: number[]) => void
+  setAccountsByUser: (accounts: number[]) => void
   getSelectedAccountId: (accountId: number) => void
 }
 interface AuthContextProviderProps {
@@ -46,7 +46,7 @@ const initialState = {
   login: () => null,
   createAccount: () => null,
   logout: () => '',
-  getAccountsByUser: () => null,
+  setAccountsByUser: () => null,
   getSelectedAccountId: () => null,
 }
 
@@ -145,7 +145,7 @@ export const AuthContextProvider = ({ children }: AuthContextProviderProps) => {
     mutate(userCredentials, {
       onSuccess: (account: any) => {
         handleOnSuccess(account, onSuccessCallBack)
-        setSelectedAccountId(parseInt(account.customerAccount.accountId))
+        setSelectedAccountId(parseInt(account.customerAccount.id))
       },
     })
   }
@@ -157,10 +157,6 @@ export const AuthContextProvider = ({ children }: AuthContextProviderProps) => {
     } catch (err: any) {
       showSnackbar('Logout Failed', 'error')
     }
-  }
-
-  const getAccountsByUser = (accounts: number[]) => {
-    setAccountsByUser(accounts)
   }
 
   const getSelectedAccountId = (accountId: number) => {
@@ -178,7 +174,7 @@ export const AuthContextProvider = ({ children }: AuthContextProviderProps) => {
     createAccount,
     setUser,
     logout,
-    getAccountsByUser,
+    setAccountsByUser,
     getSelectedAccountId,
   }
 

@@ -16,12 +16,15 @@ import {
   MenuItem,
   Typography,
   InputLabel,
+  CircularProgress,
 } from '@mui/material'
 import { useTranslation } from 'next-i18next'
 import { useForm, Controller } from 'react-hook-form'
 import * as yup from 'yup'
 
 import { KiboSelect, KiboTextBox } from '@/components/common'
+import { useAuthContext, useModalContext } from '@/context'
+import { useGetAccountsByUser } from '@/hooks'
 
 export interface LoginInputs {
   email: string
@@ -36,11 +39,11 @@ export type LoginData = {
 }
 
 export interface LoginContentProps {
-  isLoading: boolean
-  accountsByUser: number[]
-  onLogin: (data: LoginData) => void
+  isLoading?: boolean
+  accountsByUser?: number[]
+  onLogin?: (data: LoginData) => void
   onForgotPasswordClick: () => void
-  onGetAccountsByUser: (email: string) => void
+  onGetAccountsByUser?: (email: string) => void
 }
 
 const styles = {
@@ -53,17 +56,27 @@ const styles = {
 }
 
 const LoginContent = (props: LoginContentProps) => {
-  const { isLoading, accountsByUser, onLogin, onForgotPasswordClick, onGetAccountsByUser } = props
+  const { onForgotPasswordClick } = props
+
+  const { login, setAccountsByUser } = useAuthContext()
+  const { closeModal } = useModalContext()
+
 
   const [showPassword, setShowPassword] = useState<boolean>(false)
   const [isRememberMe, setIsRememberMe] = useState<boolean>(false)
+  const [emailAddress, setEmailAddress] = React.useState('')
+  const { data: accountsByUser, isLoading } = useGetAccountsByUser(emailAddress)
+
+  if(accountsByUser?.length) {
+    setAccountsByUser(accountsByUser)
+  }
 
   const handleClickShowPassword = () => setShowPassword(!showPassword)
 
   const loginInputs = {
     email: '',
     password: '',
-    accountId: accountsByUser ? accountsByUser[0]?.toString() : '',
+    accountId: accountsByUser.length ? accountsByUser[0]?.toString() : '',
   }
 
   const { t } = useTranslation('common')
@@ -75,6 +88,7 @@ const LoginContent = (props: LoginContentProps) => {
         .email(t('email-must-be-a-valid-email'))
         .required(t('this-field-is-required')),
       password: yup.string().required(t('this-field-is-required')),
+      accounts: yup.string().nullable()
     })
   }
 
@@ -94,19 +108,13 @@ const LoginContent = (props: LoginContentProps) => {
   const handleLogin = async (formData: LoginInputs, e: any) => {
     e.preventDefault()
     const inputData = { formData, isRememberMe }
-    onLogin(inputData)
+    login(inputData, closeModal)
   }
 
   const handleForgotPassword = (e: SyntheticEvent<Element, Event>) => {
     e.preventDefault()
     onForgotPasswordClick()
   }
-
-  const handleAccountByUser = (email: string) => {
-    onGetAccountsByUser(email)
-  }
-
-  console.log('isLoading', isLoading)
 
   return (
     <Box
@@ -131,12 +139,21 @@ const LoginContent = (props: LoginContentProps) => {
               sx={{ ...styles.formInput }}
               onBlur={(e) => {
                 field.onBlur()
-                handleAccountByUser(field.value)
+                setEmailAddress(field.value)
               }}
               onChange={(_name, value) => field.onChange(value)}
               error={!!errors?.email}
               helperText={errors?.email?.message}
               autoFocus={true}
+              {
+                ...isLoading && {
+                  icon: (
+                    <Box p={0.5}>
+                      <CircularProgress size={20} />
+                    </Box>
+                  )
+                }
+              }
             />
           )}
         />
@@ -151,11 +168,14 @@ const LoginContent = (props: LoginContentProps) => {
                   name="accounts"
                   label={t('accounts')}
                   sx={{ typography: 'body2', mb: 3 }}
-                  value={field.value || accountsByUser[0].toString()}
+                  value={field.value}
                   error={!!errors?.accountId}
                   helperText={errors?.accountId?.message as string}
                   onChange={(_name, value) => field.onChange(value)}
                 >
+                  <MenuItem sx={{ typography: 'body2' }} value={''}>
+                    Select Account
+                  </MenuItem>
                   {accountsByUser?.map((account) => (
                     <MenuItem sx={{ typography: 'body2' }} key={account} value={account}>
                       {account}

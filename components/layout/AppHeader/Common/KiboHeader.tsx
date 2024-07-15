@@ -1,5 +1,6 @@
 import React, { useState } from 'react'
 
+import { KeyboardArrowDownOutlined, SwitchAccount } from '@mui/icons-material'
 import {
   Collapse,
   Box,
@@ -12,6 +13,7 @@ import {
   Theme,
   NoSsr,
   MenuItem,
+  IconButton,
 } from '@mui/material'
 import { getCookie } from 'cookies-next'
 import getConfig from 'next/config'
@@ -20,6 +22,7 @@ import { useRouter } from 'next/router'
 import { useTranslation } from 'next-i18next'
 
 import { headerActionAreaStyles, kiboHeaderStyles, topHeaderStyles } from './KiboHeader.styles'
+import { SwitchAccountMenu } from '../Icons/SwitchAccountMenu/SwitchAccountMenu'
 import { KiboLogo, KiboSelect } from '@/components/common'
 import { AccountHierarchyFormDialog } from '@/components/dialogs'
 import {
@@ -62,6 +65,18 @@ const HeaderActionArea = (props: HeaderActionAreaProps) => {
   const { headerState, toggleSearchBar } = useHeaderContext()
   const { isMobileSearchPortalVisible, isSearchBarVisible } = headerState
   const { t } = useTranslation('common')
+
+  const [anchorElAccountOptions, setAnchorElAccountOptions] = React.useState<null | HTMLElement>(null);
+  const openAccountOptions = Boolean(anchorElAccountOptions);
+
+  const { selectedAccountId } = useAuthContext()
+  
+  const handleAccountOptionsClick = (event: any) => {
+    setAnchorElAccountOptions(event.currentTarget);
+  };
+  const handleClose = () => {
+    setAnchorElAccountOptions(null);
+  };
 
   const showSearchBarInLargeHeader = !isHeaderSmall || isSearchBarVisible
   return (
@@ -108,14 +123,27 @@ const HeaderActionArea = (props: HeaderActionAreaProps) => {
                 />
               </>
             )}
-            <AccountIcon
-              size={isHeaderSmall ? 'small' : 'medium'}
-              onAccountIconClick={onAccountIconClick}
-              data-testid="Account-Icon"
-              isElementVisible={isCSR ? true : false}
-              isCSR={Boolean(isCSR)}
-              customerName={customerName}
-            />
+            <Box display={"flex"} justifyContent={"center"} alignItems={"center"}> 
+                <AccountIcon
+                  size={isHeaderSmall ? 'small' : 'medium'}
+                  onAccountIconClick={onAccountIconClick}
+                  data-testid="Account-Icon"
+                  isElementVisible={isCSR ? true : false}
+                  isCSR={Boolean(isCSR)}
+                  customerName={customerName}
+                />
+                {selectedAccountId && <KeyboardArrowDownOutlined
+                  onClick={handleAccountOptionsClick} 
+                  aria-controls={openAccountOptions ? 'account-menu' : undefined}
+                  aria-haspopup="true"
+                  aria-expanded={openAccountOptions ? 'true' : undefined}
+                  sx={{
+                    color: 'grey.900',
+                  }}
+                />}
+                <SwitchAccountMenu open={openAccountOptions} handleClose={handleClose} anchorEl={anchorElAccountOptions}/>
+              </Box>
+            
             <CartIcon size={isHeaderSmall ? 'small' : 'medium'} />
           </Box>
         </NoSsr>
@@ -140,12 +168,12 @@ const TopHeader = ({ navLinks }: { navLinks: NavigationLink[] }) => {
           <Box display="flex" justifyContent="flex-end" alignItems="center" gap={5}>
             {!isCSR && (
               <>
-                {accountsByUser && (
+                {/* {accountsByUser && (
                   <KiboSelect
                     name="accounts"
                     placeholder={t('accounts')}
                     sx={{ typography: 'body2', mb: 3 }}
-                    value={selectedAccountId?.toString()}
+                    value={selectedAccountId?.toString() || ''}
                     onChange={(_name, value) => getSelectedAccountId(parseInt(value))}
                   >
                     {accountsByUser.map((account) => (
@@ -154,7 +182,7 @@ const TopHeader = ({ navLinks }: { navLinks: NavigationLink[] }) => {
                       </MenuItem>
                     ))}
                   </KiboSelect>
-                )}
+                )} */}
                 {navLinks?.map((nav, index) => (
                   <Box key={index}>
                     <StyledLink href={nav.link} passHref>

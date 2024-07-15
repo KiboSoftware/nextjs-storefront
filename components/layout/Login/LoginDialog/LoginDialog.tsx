@@ -1,14 +1,12 @@
-import React, { useEffect } from 'react'
+import React from 'react'
 
 import { Stack, Typography, Link, styled } from '@mui/material'
 import { useTranslation } from 'next-i18next'
 
 import { KiboDialog } from '@/components/common'
 import { RegisterAccountDialog, ResetPasswordDialog } from '@/components/layout'
-import LoginContent, { LoginData } from '@/components/layout/Login/LoginContent/LoginContent'
-import { useAuthContext } from '@/context'
+import LoginContent from '@/components/layout/Login/LoginContent/LoginContent'
 import { useModalContext } from '@/context/ModalContext'
-import { useGetAccountsByUser } from '@/hooks'
 
 export interface LoginFooterProps {
   onRegisterNow: () => void
@@ -43,11 +41,8 @@ const LoginFooter = (props: LoginFooterProps) => {
 const LoginDialog = () => {
   const { t } = useTranslation('common')
 
-  const [emailAddress, setEmailAddress] = React.useState('')
 
-  const { login, getAccountsByUser } = useAuthContext()
   const { showModal, closeModal } = useModalContext()
-  const { data: accountsByUser, isLoading } = useGetAccountsByUser(emailAddress)
 
   const onRegisterClick = () => {
     showModal({ Component: RegisterAccountDialog })
@@ -57,30 +52,12 @@ const LoginDialog = () => {
     showModal({ Component: ResetPasswordDialog })
   }
 
-  const handleLogin = (params: LoginData) => {
-    !isLoading && login(params, closeModal)
-  }
-
-  const handleGetAccountByUser = (email: string) => {
-    setEmailAddress(email)
-  }
-
-  useEffect(() => {
-    if (accountsByUser) {
-      getAccountsByUser(accountsByUser)
-    }
-  }, [accountsByUser, getAccountsByUser])
-
   return (
     <KiboDialog
       Title={t('log-in')}
       Content={
         <LoginContent
-          isLoading={isLoading}
-          accountsByUser={accountsByUser}
-          onLogin={handleLogin}
           onForgotPasswordClick={onForgotPassword}
-          onGetAccountsByUser={handleGetAccountByUser}
         />
       }
       Actions={<LoginFooter onRegisterNow={onRegisterClick} />}
