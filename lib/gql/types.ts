@@ -5389,6 +5389,7 @@ export type CustomerSetSite_GetArgs = {
 export type CustomerUserAuthInfoInput = {
   password?: InputMaybe<Scalars['String']>
   username?: InputMaybe<Scalars['String']>
+  account?: InputMaybe<Scalars['Int']>
 }
 
 export type DigitalWalletInput = {

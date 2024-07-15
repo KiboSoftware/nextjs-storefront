@@ -61,6 +61,8 @@ export * from './queries/b2b/useGetCustomerPurchaseOrderAccount/useGetCustomerPu
 export * from './queries/b2b/quotes/useGetQuoteShippingMethods/useGetQuoteShippingMethods'
 export * from './queries/b2b/quotes/useGetQuoteById/useGetQuoteById'
 
+export * from './queries/b2b/useGetAccountsByUser/useGetAccountsByUser'
+
 // Custom hooks
 export * from './custom/useDebounce/useDebounce'
 export * from './custom/useUpdateRoutes/useUpdateRoutes'

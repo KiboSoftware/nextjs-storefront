@@ -62,6 +62,11 @@ export const accountHierarchyKeys = {
   accountHierarchy: (accountId: number) => [...accountHierarchyKeys.all, accountId] as const,
 }
 
+export const accountsByUserKeys = {
+  all: ['accountsByUser'] as any,
+  accountsByUser: (emailAddress: string) => [...accountsByUserKeys.all, emailAddress] as const,
+}
+
 export const productSearchResultKeys = {
   all: ['productSearch'] as const,
   searchParams: (params: CategorySearchParams) => [...productSearchResultKeys.all, params] as const,

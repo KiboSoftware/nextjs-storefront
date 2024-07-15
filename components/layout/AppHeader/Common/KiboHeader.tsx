@@ -11,6 +11,7 @@ import {
   styled,
   Theme,
   NoSsr,
+  MenuItem,
 } from '@mui/material'
 import { getCookie } from 'cookies-next'
 import getConfig from 'next/config'
@@ -19,7 +20,7 @@ import { useRouter } from 'next/router'
 import { useTranslation } from 'next-i18next'
 
 import { headerActionAreaStyles, kiboHeaderStyles, topHeaderStyles } from './KiboHeader.styles'
-import { KiboLogo } from '@/components/common'
+import { KiboLogo, KiboSelect } from '@/components/common'
 import { AccountHierarchyFormDialog } from '@/components/dialogs'
 import {
   AccountIcon,
@@ -130,22 +131,39 @@ const StyledLink = styled(Link)(({ theme }: { theme: Theme }) => ({
 
 const TopHeader = ({ navLinks }: { navLinks: NavigationLink[] }) => {
   const { t } = useTranslation('common')
+  const { accountsByUser, selectedAccountId, getSelectedAccountId } = useAuthContext()
 
   return (
     <Box sx={{ ...topHeaderStyles.wrapper }} data-testid="top-bar">
       <Container maxWidth="xl" sx={{ ...topHeaderStyles.container }}>
         <NoSsr>
           <Box display="flex" justifyContent="flex-end" alignItems="center" gap={5}>
-            {!isCSR &&
-              navLinks?.map((nav, index) => {
-                return (
+            {!isCSR && (
+              <>
+                {accountsByUser && (
+                  <KiboSelect
+                    name="accounts"
+                    placeholder={t('accounts')}
+                    sx={{ typography: 'body2', mb: 3 }}
+                    value={selectedAccountId?.toString()}
+                    onChange={(_name, value) => getSelectedAccountId(parseInt(value))}
+                  >
+                    {accountsByUser.map((account) => (
+                      <MenuItem sx={{ typography: 'body2' }} key={account} value={account}>
+                        {account}
+                      </MenuItem>
+                    ))}
+                  </KiboSelect>
+                )}
+                {navLinks?.map((nav, index) => (
                   <Box key={index}>
                     <StyledLink href={nav.link} passHref>
                       {t(`${nav.text}`)}
                     </StyledLink>
                   </Box>
-                )
-              })}
+                ))}
+              </>
+            )}
           </Box>
         </NoSsr>
       </Container>

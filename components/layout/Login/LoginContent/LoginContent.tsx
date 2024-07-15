@@ -4,16 +4,29 @@ import React, { SyntheticEvent, useState } from 'react'
 import { yupResolver } from '@hookform/resolvers/yup'
 import Visibility from '@mui/icons-material/Visibility'
 import VisibilityOff from '@mui/icons-material/VisibilityOff'
-import { Box, FormControl, Button, Link, Checkbox, FormControlLabel } from '@mui/material'
+import {
+  Box,
+  FormControl,
+  Link,
+  Button,
+  Checkbox,
+  FormControlLabel,
+  Autocomplete,
+  TextField,
+  MenuItem,
+  Typography,
+  InputLabel,
+} from '@mui/material'
 import { useTranslation } from 'next-i18next'
 import { useForm, Controller } from 'react-hook-form'
 import * as yup from 'yup'
 
-import { KiboTextBox } from '@/components/common'
+import { KiboSelect, KiboTextBox } from '@/components/common'
 
 export interface LoginInputs {
   email: string
   password: string
+  accountId: string
   isRememberMe?: boolean
 }
 
@@ -23,8 +36,11 @@ export type LoginData = {
 }
 
 export interface LoginContentProps {
+  isLoading: boolean
+  accountsByUser: number[]
   onLogin: (data: LoginData) => void
   onForgotPasswordClick: () => void
+  onGetAccountsByUser: (email: string) => void
 }
 
 const styles = {
@@ -37,7 +53,7 @@ const styles = {
 }
 
 const LoginContent = (props: LoginContentProps) => {
-  const { onLogin, onForgotPasswordClick } = props
+  const { isLoading, accountsByUser, onLogin, onForgotPasswordClick, onGetAccountsByUser } = props
 
   const [showPassword, setShowPassword] = useState<boolean>(false)
   const [isRememberMe, setIsRememberMe] = useState<boolean>(false)
@@ -47,6 +63,7 @@ const LoginContent = (props: LoginContentProps) => {
   const loginInputs = {
     email: '',
     password: '',
+    accountId: accountsByUser ? accountsByUser[0]?.toString() : '',
   }
 
   const { t } = useTranslation('common')
@@ -85,6 +102,12 @@ const LoginContent = (props: LoginContentProps) => {
     onForgotPasswordClick()
   }
 
+  const handleAccountByUser = (email: string) => {
+    onGetAccountsByUser(email)
+  }
+
+  console.log('isLoading', isLoading)
+
   return (
     <Box
       sx={{ ...styles.contentBox }}
@@ -106,7 +129,10 @@ const LoginContent = (props: LoginContentProps) => {
               ref={null}
               required
               sx={{ ...styles.formInput }}
-              onBlur={field.onBlur}
+              onBlur={(e) => {
+                field.onBlur()
+                handleAccountByUser(field.value)
+              }}
               onChange={(_name, value) => field.onChange(value)}
               error={!!errors?.email}
               helperText={errors?.email?.message}
@@ -114,6 +140,32 @@ const LoginContent = (props: LoginContentProps) => {
             />
           )}
         />
+        {accountsByUser && accountsByUser.length > 0 && (
+          <Controller
+            name="accountId"
+            control={control}
+            defaultValue={loginInputs?.accountId}
+            render={({ field }) => (
+              <>
+                <KiboSelect
+                  name="accounts"
+                  label={t('accounts')}
+                  sx={{ typography: 'body2', mb: 3 }}
+                  value={field.value || accountsByUser[0].toString()}
+                  error={!!errors?.accountId}
+                  helperText={errors?.accountId?.message as string}
+                  onChange={(_name, value) => field.onChange(value)}
+                >
+                  {accountsByUser?.map((account) => (
+                    <MenuItem sx={{ typography: 'body2' }} key={account} value={account}>
+                      {account}
+                    </MenuItem>
+                  ))}
+                </KiboSelect>
+              </>
+            )}
+          />
+        )}
         <Controller
           name="password"
           control={control}
@@ -148,7 +200,7 @@ const LoginContent = (props: LoginContentProps) => {
           variant="contained"
           color="primary"
           sx={{ fontSize: '18px' }}
-          disabled={!isValid}
+          disabled={!isValid || isLoading}
           type="submit"
           form="loginForm"
         >
