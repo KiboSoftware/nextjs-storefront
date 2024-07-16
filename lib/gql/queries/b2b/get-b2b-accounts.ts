@@ -1,12 +1,15 @@
 const getB2bAccounts = /* GraphQL */ `
  
-  query {
+  query customerAccount(
+      $accountId: Int!
+    ) {
     customerAccount(
-      accountId: 1306
+      accountId: $accountId
     ) {
       id
       companyOrOrganization
       emailAddress
+      accountType
     }
   }
 

@@ -74,12 +74,9 @@ export const SwitchAccountMenu = (props: SwitchAccountMenuProps) => {
 
         {activeUsersAccount?.map((account: any) => (
             <MenuItem selected={selectedAccountId === account?.id} sx={{ typography: 'body2' }} key={account?.id} onClick={() => handleMenuItemClick(account?.id)}>
-                {account?.companyOrOrganization} {account?.id}
+                {account?.companyOrOrganization || account?.emailAddress}
             </MenuItem>
         ))}
-        <MenuItem selected={selectedAccountId === user?.id} sx={{ typography: 'body2' }} onClick={() => handleMenuItemClick(user?.id)}>
-                {user?.emailAddress} {user?.id}
-            </MenuItem>
       </Menu>
     )
     }

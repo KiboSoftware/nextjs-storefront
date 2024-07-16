@@ -166,7 +166,7 @@ const LoginContent = (props: LoginContentProps) => {
             />
           )}
         />
-        {activeUsersAccount && activeUsersAccount.length >0 && (
+        {activeUsersAccount && activeUsersAccount.length > 1 && (
           <Controller
             name="accountId"
             control={control}
@@ -182,12 +182,9 @@ const LoginContent = (props: LoginContentProps) => {
                   helperText={errors?.accountId?.message as string}
                   onChange={(_name, value) => field.onChange(value)}
                 >
-                  <MenuItem sx={{ typography: 'body2' }} value={''}>
-                    Select Account
-                  </MenuItem>
                   {activeUsersAccount?.map((account) => (
                     <MenuItem sx={{ typography: 'body2' }} key={account?.id} value={account?.id}>
-                      {account?.companyOrOrganization} {account?.id}
+                      {account?.companyOrOrganization || account?.emailAddress}
                     </MenuItem>
                   ))}
                 </KiboSelect>

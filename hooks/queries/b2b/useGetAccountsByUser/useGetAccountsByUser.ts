@@ -1,7 +1,7 @@
 /**
  * @module useGetB2BUserQuery
  */
-import { useQuery } from '@tanstack/react-query'
+import { useQueries, useQuery } from '@tanstack/react-query'
 
 import { makeGraphQLClient, makeGraphQLClientWithoutUserClaims } from '@/lib/gql/client'
 import { getAccountsByUser, getB2bAccounts } from '@/lib/gql/queries'
@@ -30,13 +30,13 @@ export interface B2bAccountsResponse {
 
 const client = makeGraphQLClientWithoutUserClaims()
 
-const b2bAccounts = async (filter: string): Promise<B2BAccountCollection> => {
+const b2bAccounts = async (id: number): Promise<B2BAccountCollection> => {
   const response = await client.request({
     document: getB2bAccounts,
-    variables: { filter },
+    variables: { accountId: id },
   })
 
-  return response?.b2bAccounts
+  return response?.customerAccount
 }
 
 const accountsByUser = async (emailAddress: string): Promise<[number]> => {
@@ -73,25 +73,39 @@ export const useGetAccountsByUser = (emailAddress: string): AccountsByUserRespon
   })
 
   const filter = `emailAddress eq ${emailAddress}`
-  const {
-    data: b2bAccountsData,
-  } = useQuery({
-    queryKey: accountsByUserKeys.b2bAccounts(filter),
-    queryFn: () => b2bAccounts(filter),
-    enabled: !!emailAddress,
+  const b2bAccountsData = useQueries({
+    queries: accountsByUserData.map((id) => {
+      return {
+        queryKey: accountsByUserKeys.b2bAccounts(id.toString()),
+        queryFn: () => b2bAccounts(id),
+        enabled: !!emailAddress,
+      }
+    })
+    
   })
 
   const activeUsersAccount: any[] = []
-  if(accountsByUserData?.length && b2bAccountsData?.items?.length) {
-    const b2bAccountWithName = b2bAccountsData?.items.filter(item => accountsByUserData.includes(item?.id as number))
-    if(accountsByUserData.length === 1 && b2bAccountWithName.length === 0) {
-      activeUsersAccount.push({ id: accountsByUserData[0], name: '' })
-    } else {
-      activeUsersAccount.push(...b2bAccountWithName)
-    }
-  }
+  b2bAccountsData.map((item) => {
+    activeUsersAccount.push(item.data)
+  })
+
+  
+
+  console.log("activeUsersAccount", activeUsersAccount)
+  console.log("b2bAccountsData", b2bAccountsData)
+
+  // const activeUsersAccount: any[] = []
+  // if(accountsByUserData?.length && b2bAccountsData?.items?.length) {
+  //   const b2bAccountWithName = b2bAccountsData?.items.filter(item => accountsByUserData.includes(item?.id as number))
+  //   if(accountsByUserData.length === 1 && b2bAccountWithName.length === 0) {
+  //     activeUsersAccount.push({ id: accountsByUserData[0], name: '' })
+  //   } else {
+  //     activeUsersAccount.push(...b2bAccountWithName)
+  //   }
+  // }
 
   return {
+    // activeUsersAccount,
     activeUsersAccount,
     isLoading,
     isError,
