@@ -31,8 +31,8 @@ export interface AuthContextType {
   login: (params: LoginData, onSuccessCallBack: () => void) => any
   createAccount: (params: RegisterAccountInputData, onSuccessCallBack?: () => void) => any
   logout: () => void
-  setAccountsByUser: (accounts: number[]) => void
-  getSelectedAccountId: (accountId: number) => void
+  setAccountsByUser: (accounts: any[]) => void
+  setSelectedAccountId: (accountId: number) => void
 }
 interface AuthContextProviderProps {
   children: ReactNode
@@ -47,7 +47,7 @@ const initialState = {
   createAccount: () => null,
   logout: () => '',
   setAccountsByUser: () => null,
-  getSelectedAccountId: () => null,
+  setSelectedAccountId: () => null,
 }
 
 export const AuthContext = createContext(initialState as AuthContextType)
@@ -56,7 +56,7 @@ AuthContext.displayName = 'AuthContext'
 export const AuthContextProvider = ({ children }: AuthContextProviderProps) => {
   const [isAuthenticated, setIsAuthenticated] = useState<boolean>(false)
   const [user, setUser] = useState<CustomerAccountWithRole | undefined>(undefined)
-  const [accountsByUser, setAccountsByUser] = useState<number[]>([])
+  const [accountsByUser, setAccountsByUser] = useState<any[]>([])
   const [selectedAccountId, setSelectedAccountId] = useState<number>(0)
   const { showSnackbar } = useSnackbarContext()
   const isCSR = getCookie('isCSR')
@@ -84,6 +84,7 @@ export const AuthContextProvider = ({ children }: AuthContextProviderProps) => {
     isB2BUser: isB2BUser,
   })
 
+  console.log('auth con accountsByUser', accountsByUser)
   useEffect(() => {
     const roles =
       userAccount &&
@@ -140,7 +141,7 @@ export const AuthContextProvider = ({ children }: AuthContextProviderProps) => {
     const userCredentials = {
       username: params?.formData?.email,
       password: params?.formData?.password,
-      accountId: parseInt(params?.formData?.accountId),
+      accountId: params?.formData?.accountId ? parseInt(params?.formData?.accountId) : 0,
     }
     mutate(userCredentials, {
       onSuccess: (account: any) => {
@@ -159,10 +160,6 @@ export const AuthContextProvider = ({ children }: AuthContextProviderProps) => {
     }
   }
 
-  const getSelectedAccountId = (accountId: number) => {
-    setSelectedAccountId(accountId)
-  }
-
   const { data: customerAccount } = useGetCurrentCustomer(Boolean(isCSR))
 
   const values = {
@@ -175,12 +172,13 @@ export const AuthContextProvider = ({ children }: AuthContextProviderProps) => {
     setUser,
     logout,
     setAccountsByUser,
-    getSelectedAccountId,
+    setSelectedAccountId,
   }
 
   useEffect(() => {
     if (customerAccount) {
       setUser(customerAccount)
+      setSelectedAccountId(customerAccount?.id)
     }
   }, [customerAccount])
 

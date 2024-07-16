@@ -62,6 +62,7 @@ export * from './queries/b2b/quotes/useGetQuoteShippingMethods/useGetQuoteShippi
 export * from './queries/b2b/quotes/useGetQuoteById/useGetQuoteById'
 
 export * from './queries/b2b/useGetAccountsByUser/useGetAccountsByUser'
+export * from './queries/b2b/useGetB2BAccounts/useGetB2BAccounts'
 
 // Custom hooks
 export * from './custom/useDebounce/useDebounce'

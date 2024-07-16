@@ -4,6 +4,7 @@ import {  Menu, MenuItem } from "@mui/material"
 import { useTranslation } from "next-i18next"
 
 import { useAuthContext } from "@/context"
+import { useGetAccountsByUser } from "@/hooks"
 
 
 interface SwitchAccountMenuProps {
@@ -17,12 +18,15 @@ export const SwitchAccountMenu = (props: SwitchAccountMenuProps) => {
 
     const {open, handleClose, anchorEl} = props;
 
-    const { accountsByUser, selectedAccountId } = useAuthContext()
-    
-    const handleMenuItemClick = () => {
+    const { user, accountsByUser, selectedAccountId, setSelectedAccountId } = useAuthContext()
+    const { activeUsersAccount, isLoading, isSuccess } = useGetAccountsByUser(user?.emailAddress as string )
+  
+    const handleMenuItemClick = async (id: any) => {
         // Implementation
-
-        fetch('/api/switch-user')
+       const res = await fetch(`/api/switch-user?id=${id}`)
+        const data = await res.json()
+        console.log(data)
+        setSelectedAccountId(parseInt(id))
     }
     
     return (
@@ -64,11 +68,14 @@ export const SwitchAccountMenu = (props: SwitchAccountMenuProps) => {
         anchorOrigin={{ horizontal: 'right', vertical: 'bottom' }}
       >
 
-        {accountsByUser?.map((account) => (
-            <MenuItem selected={selectedAccountId === account} sx={{ typography: 'body2' }} key={account} onClick={handleMenuItemClick}>
-                {account}
+        {activeUsersAccount?.map((account: any) => (
+            <MenuItem selected={selectedAccountId === account?.id} sx={{ typography: 'body2' }} key={account?.id} onClick={() => handleMenuItemClick(account?.id)}>
+                {account?.companyOrOrganization}
             </MenuItem>
         ))}
+        <MenuItem selected={selectedAccountId === 0} sx={{ typography: 'body2' }} onClick={() => handleMenuItemClick(0)}>
+                {user?.emailAddress}
+            </MenuItem>
       </Menu>
     )
     }

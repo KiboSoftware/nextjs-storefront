@@ -159,7 +159,6 @@ const StyledLink = styled(Link)(({ theme }: { theme: Theme }) => ({
 
 const TopHeader = ({ navLinks }: { navLinks: NavigationLink[] }) => {
   const { t } = useTranslation('common')
-  const { accountsByUser, selectedAccountId, getSelectedAccountId } = useAuthContext()
 
   return (
     <Box sx={{ ...topHeaderStyles.wrapper }} data-testid="top-bar">
@@ -168,21 +167,6 @@ const TopHeader = ({ navLinks }: { navLinks: NavigationLink[] }) => {
           <Box display="flex" justifyContent="flex-end" alignItems="center" gap={5}>
             {!isCSR && (
               <>
-                {/* {accountsByUser && (
-                  <KiboSelect
-                    name="accounts"
-                    placeholder={t('accounts')}
-                    sx={{ typography: 'body2', mb: 3 }}
-                    value={selectedAccountId?.toString() || ''}
-                    onChange={(_name, value) => getSelectedAccountId(parseInt(value))}
-                  >
-                    {accountsByUser.map((account) => (
-                      <MenuItem sx={{ typography: 'body2' }} key={account} value={account}>
-                        {account}
-                      </MenuItem>
-                    ))}
-                  </KiboSelect>
-                )} */}
                 {navLinks?.map((nav, index) => (
                   <Box key={index}>
                     <StyledLink href={nav.link} passHref>

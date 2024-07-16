@@ -4,21 +4,40 @@
 import { useQuery } from '@tanstack/react-query'
 
 import { makeGraphQLClient, makeGraphQLClientWithoutUserClaims } from '@/lib/gql/client'
-import { getAccountsByUser } from '@/lib/gql/queries'
+import { getAccountsByUser, getB2bAccounts } from '@/lib/gql/queries'
 import { accountsByUserKeys } from '@/lib/react-query/queryKeys'
+
+import { B2BAccountCollection } from '@/lib/gql/types'
 
 /**
  * @hidden
  */
 
 export interface AccountsByUserResponse {
-  data: number[]
+  activeUsersAccount: any[]
+  isLoading: boolean
+  isError: boolean
+  isSuccess: boolean
+}
+
+
+export interface B2bAccountsResponse {
+  data: B2BAccountCollection | undefined
   isLoading: boolean
   isError: boolean
   isSuccess: boolean
 }
 
 const client = makeGraphQLClientWithoutUserClaims()
+
+const b2bAccounts = async (filter: string): Promise<B2BAccountCollection> => {
+  const response = await client.request({
+    document: getB2bAccounts,
+    variables: { filter },
+  })
+
+  return response?.b2bAccounts
+}
 
 const accountsByUser = async (emailAddress: string): Promise<[number]> => {
   const response = await client.request({
@@ -46,15 +65,30 @@ export const useGetAccountsByUser = (emailAddress: string): AccountsByUserRespon
     isLoading,
     isSuccess,
     isError,
-    data = [],
+    data: accountsByUserData = [],
   } = useQuery({
     queryKey: accountsByUserKeys.accountsByUser(emailAddress),
     queryFn: () => accountsByUser(emailAddress),
     enabled: !!emailAddress,
   })
 
+  const filter = `emailAddress eq ${emailAddress}`
+  const {
+    data: b2bAccountsData,
+  } = useQuery({
+    queryKey: accountsByUserKeys.b2bAccounts(filter),
+    queryFn: () => b2bAccounts(filter),
+    enabled: !!emailAddress,
+  })
+
+  let activeUsersAccount: any[] = []
+  if(accountsByUserData?.length && b2bAccountsData?.items?.length) {
+    //setAccountsByUser(accountsByUser)
+    activeUsersAccount = b2bAccountsData?.items.filter(item => accountsByUserData.includes(item?.id as number))
+  }
+
   return {
-    data,
+    activeUsersAccount,
     isLoading,
     isError,
     isSuccess,

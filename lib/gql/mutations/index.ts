@@ -84,3 +84,5 @@ export { default as createQuoteFromCartMutation } from './b2b/quotes/create-quot
 export { default as addItemsToCurrentCartMutation } from './cart/add-items-to-current-cart'
 export { default as updateQuoteCouponMutation } from './b2b/quotes/update-quote-coupon'
 export { default as deleteQuoteCouponMutation } from './b2b/quotes/delete-quote-coupon'
+
+export { default as refreshAuthToken } from './user/refreshAuthToken'

@@ -1,3 +1,8 @@
+import { switchUserHandler } from '@/lib/api/handlers'
+import withLogger from '@/lib/api/util/with-logger'
+
+export default withLogger(switchUserHandler as any)
+
 // import { NextApiResponse } from 'next'
 
 // import { shopperAuthClient } from '@/lib/api/util/api-auth-client'

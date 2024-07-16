@@ -1,5 +1,5 @@
 /* eslint-disable  jsx-a11y/no-autofocus */
-import React, { SyntheticEvent, useState } from 'react'
+import React, { SyntheticEvent, useEffect, useState } from 'react'
 
 import { yupResolver } from '@hookform/resolvers/yup'
 import Visibility from '@mui/icons-material/Visibility'
@@ -11,11 +11,7 @@ import {
   Button,
   Checkbox,
   FormControlLabel,
-  Autocomplete,
-  TextField,
   MenuItem,
-  Typography,
-  InputLabel,
   CircularProgress,
 } from '@mui/material'
 import { useTranslation } from 'next-i18next'
@@ -24,12 +20,14 @@ import * as yup from 'yup'
 
 import { KiboSelect, KiboTextBox } from '@/components/common'
 import { useAuthContext, useModalContext } from '@/context'
-import { useGetAccountsByUser } from '@/hooks'
+import { useGetAccountsByUser, useGetB2BAccounts } from '@/hooks'
+
+import type { B2BAccount, Maybe } from '@/lib/gql/types'
 
 export interface LoginInputs {
   email: string
   password: string
-  accountId: string
+  accountId?: string
   isRememberMe?: boolean
 }
 
@@ -65,18 +63,22 @@ const LoginContent = (props: LoginContentProps) => {
   const [showPassword, setShowPassword] = useState<boolean>(false)
   const [isRememberMe, setIsRememberMe] = useState<boolean>(false)
   const [emailAddress, setEmailAddress] = React.useState('')
-  const { data: accountsByUser, isLoading } = useGetAccountsByUser(emailAddress)
+  const { activeUsersAccount, isLoading, isSuccess } = useGetAccountsByUser(emailAddress)
+  //const { data: b2bAccounts, isLoading: isB2BLoading } = useGetB2BAccounts(emailAddress)
 
-  if(accountsByUser?.length) {
-    setAccountsByUser(accountsByUser)
-  }
+  // let activeUsersAccount: Maybe<B2BAccount>[] = []
+  // if(activeUsersAccount?.length) {
+  //   setAccountsByUser(activeUsersAccount)
+  // }
+
+  
 
   const handleClickShowPassword = () => setShowPassword(!showPassword)
 
   const loginInputs = {
     email: '',
     password: '',
-    accountId: accountsByUser.length ? accountsByUser[0]?.toString() : '',
+    accountId: activeUsersAccount.length ? activeUsersAccount[0]?.id.toString() : '',
   }
 
   const { t } = useTranslation('common')
@@ -108,7 +110,12 @@ const LoginContent = (props: LoginContentProps) => {
   const handleLogin = async (formData: LoginInputs, e: any) => {
     e.preventDefault()
     const inputData = { formData, isRememberMe }
-    login(inputData, closeModal)
+    login(inputData, handleAccountsByUser)
+  }
+
+  const handleAccountsByUser = () => {
+    setAccountsByUser(activeUsersAccount)
+    closeModal()
   }
 
   const handleForgotPassword = (e: SyntheticEvent<Element, Event>) => {
@@ -146,7 +153,7 @@ const LoginContent = (props: LoginContentProps) => {
               helperText={errors?.email?.message}
               autoFocus={true}
               {
-                ...isLoading && {
+                ...(isLoading) && {
                   icon: (
                     <Box p={0.5}>
                       <CircularProgress size={20} />
@@ -157,7 +164,7 @@ const LoginContent = (props: LoginContentProps) => {
             />
           )}
         />
-        {accountsByUser && accountsByUser.length > 0 && (
+        {activeUsersAccount && activeUsersAccount.length > 0 && (
           <Controller
             name="accountId"
             control={control}
@@ -176,9 +183,9 @@ const LoginContent = (props: LoginContentProps) => {
                   <MenuItem sx={{ typography: 'body2' }} value={''}>
                     Select Account
                   </MenuItem>
-                  {accountsByUser?.map((account) => (
-                    <MenuItem sx={{ typography: 'body2' }} key={account} value={account}>
-                      {account}
+                  {activeUsersAccount?.map((account) => (
+                    <MenuItem sx={{ typography: 'body2' }} key={account?.id} value={account?.id}>
+                      {account?.companyOrOrganization}
                     </MenuItem>
                   ))}
                 </KiboSelect>
