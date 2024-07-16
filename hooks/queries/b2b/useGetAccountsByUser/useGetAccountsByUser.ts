@@ -81,10 +81,14 @@ export const useGetAccountsByUser = (emailAddress: string): AccountsByUserRespon
     enabled: !!emailAddress,
   })
 
-  let activeUsersAccount: any[] = []
+  const activeUsersAccount: any[] = []
   if(accountsByUserData?.length && b2bAccountsData?.items?.length) {
-    //setAccountsByUser(accountsByUser)
-    activeUsersAccount = b2bAccountsData?.items.filter(item => accountsByUserData.includes(item?.id as number))
+    const b2bAccountWithName = b2bAccountsData?.items.filter(item => accountsByUserData.includes(item?.id as number))
+    if(accountsByUserData.length === 1 && b2bAccountWithName.length === 0) {
+      activeUsersAccount.push({ id: accountsByUserData[0], name: '' })
+    } else {
+      activeUsersAccount.push(...b2bAccountWithName)
+    }
   }
 
   return {

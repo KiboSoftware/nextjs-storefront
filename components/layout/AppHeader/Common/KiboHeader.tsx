@@ -69,7 +69,7 @@ const HeaderActionArea = (props: HeaderActionAreaProps) => {
   const [anchorElAccountOptions, setAnchorElAccountOptions] = React.useState<null | HTMLElement>(null);
   const openAccountOptions = Boolean(anchorElAccountOptions);
 
-  const { selectedAccountId } = useAuthContext()
+  const { selectedAccountId, accountsByUser } = useAuthContext()
   
   const handleAccountOptionsClick = (event: any) => {
     setAnchorElAccountOptions(event.currentTarget);
@@ -132,7 +132,7 @@ const HeaderActionArea = (props: HeaderActionAreaProps) => {
                   isCSR={Boolean(isCSR)}
                   customerName={customerName}
                 />
-                {selectedAccountId && <KeyboardArrowDownOutlined
+                {selectedAccountId && accountsByUser && accountsByUser?.length > 1 && <KeyboardArrowDownOutlined
                   onClick={handleAccountOptionsClick} 
                   aria-controls={openAccountOptions ? 'account-menu' : undefined}
                   aria-haspopup="true"

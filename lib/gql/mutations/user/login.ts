@@ -10,6 +10,7 @@ export const loginMutation = /* GraphQL */ `
         userName
         isAnonymous
         accountType
+        companyOrOrganization
       }
       accessToken
       accessTokenExpiration

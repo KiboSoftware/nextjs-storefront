@@ -1,20 +1,15 @@
 const getB2bAccounts = /* GraphQL */ `
-  query getB2bAccounts(
-      $filter: String
+ 
+  query {
+    customerAccount(
+      accountId: 1306
     ) {
-    b2bAccounts(
-      filter: $filter
-    ) {
-      totalCount
-      startIndex
-      pageSize
-      pageCount
-      items {
-        id
-        companyOrOrganization
-      }
+      id
+      companyOrOrganization
+      emailAddress
     }
   }
+
 `
 
 export default getB2bAccounts

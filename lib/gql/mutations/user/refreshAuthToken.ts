@@ -17,6 +17,7 @@ export const refreshAuthToken = /* GraphQL */ `
           userName
           isAnonymous
           accountType
+          companyOrOrganization
         }
         accessToken
         accessTokenExpiration

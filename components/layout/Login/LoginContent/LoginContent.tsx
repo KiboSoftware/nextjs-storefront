@@ -78,7 +78,7 @@ const LoginContent = (props: LoginContentProps) => {
   const loginInputs = {
     email: '',
     password: '',
-    accountId: activeUsersAccount.length ? activeUsersAccount[0]?.id.toString() : '',
+    accountId: activeUsersAccount?.length ? activeUsersAccount[0]?.id.toString() : '',
   }
 
   const { t } = useTranslation('common')
@@ -109,6 +109,7 @@ const LoginContent = (props: LoginContentProps) => {
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const handleLogin = async (formData: LoginInputs, e: any) => {
     e.preventDefault()
+    console.log('formData', formData)
     const inputData = { formData, isRememberMe }
     login(inputData, handleAccountsByUser)
   }
@@ -123,6 +124,7 @@ const LoginContent = (props: LoginContentProps) => {
     onForgotPasswordClick()
   }
 
+  console.log('activeUsersAccount', activeUsersAccount)
   return (
     <Box
       sx={{ ...styles.contentBox }}
@@ -164,7 +166,7 @@ const LoginContent = (props: LoginContentProps) => {
             />
           )}
         />
-        {activeUsersAccount && activeUsersAccount.length > 0 && (
+        {activeUsersAccount && activeUsersAccount.length >0 && (
           <Controller
             name="accountId"
             control={control}
@@ -185,7 +187,7 @@ const LoginContent = (props: LoginContentProps) => {
                   </MenuItem>
                   {activeUsersAccount?.map((account) => (
                     <MenuItem sx={{ typography: 'body2' }} key={account?.id} value={account?.id}>
-                      {account?.companyOrOrganization}
+                      {account?.companyOrOrganization} {account?.id}
                     </MenuItem>
                   ))}
                 </KiboSelect>

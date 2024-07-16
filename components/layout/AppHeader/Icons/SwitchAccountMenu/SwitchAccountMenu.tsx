@@ -18,7 +18,7 @@ export const SwitchAccountMenu = (props: SwitchAccountMenuProps) => {
 
     const {open, handleClose, anchorEl} = props;
 
-    const { user, accountsByUser, selectedAccountId, setSelectedAccountId } = useAuthContext()
+    const { user, setUser, selectedAccountId, setSelectedAccountId } = useAuthContext()
     const { activeUsersAccount, isLoading, isSuccess } = useGetAccountsByUser(user?.emailAddress as string )
   
     const handleMenuItemClick = async (id: any) => {
@@ -27,6 +27,10 @@ export const SwitchAccountMenu = (props: SwitchAccountMenuProps) => {
         const data = await res.json()
         console.log(data)
         setSelectedAccountId(parseInt(id))
+        if (data?.id) {
+          setUser(data)
+        }
+        console.log('selectedAccountId', selectedAccountId)
     }
     
     return (
@@ -70,11 +74,11 @@ export const SwitchAccountMenu = (props: SwitchAccountMenuProps) => {
 
         {activeUsersAccount?.map((account: any) => (
             <MenuItem selected={selectedAccountId === account?.id} sx={{ typography: 'body2' }} key={account?.id} onClick={() => handleMenuItemClick(account?.id)}>
-                {account?.companyOrOrganization}
+                {account?.companyOrOrganization} {account?.id}
             </MenuItem>
         ))}
-        <MenuItem selected={selectedAccountId === 0} sx={{ typography: 'body2' }} onClick={() => handleMenuItemClick(0)}>
-                {user?.emailAddress}
+        <MenuItem selected={selectedAccountId === user?.id} sx={{ typography: 'body2' }} onClick={() => handleMenuItemClick(user?.id)}>
+                {user?.emailAddress} {user?.id}
             </MenuItem>
       </Menu>
     )

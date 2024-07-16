@@ -33,6 +33,7 @@ export interface AuthContextType {
   logout: () => void
   setAccountsByUser: (accounts: any[]) => void
   setSelectedAccountId: (accountId: number) => void
+  setUser: (user: CustomerAccountWithRole | undefined) => void
 }
 interface AuthContextProviderProps {
   children: ReactNode
@@ -48,6 +49,7 @@ const initialState = {
   logout: () => '',
   setAccountsByUser: () => null,
   setSelectedAccountId: () => null,
+  setUser: () => null,
 }
 
 export const AuthContext = createContext(initialState as AuthContextType)
@@ -141,7 +143,7 @@ export const AuthContextProvider = ({ children }: AuthContextProviderProps) => {
     const userCredentials = {
       username: params?.formData?.email,
       password: params?.formData?.password,
-      accountId: params?.formData?.accountId ? parseInt(params?.formData?.accountId) : 0,
+      accountId: params?.formData?.accountId ? parseInt(params?.formData?.accountId) : 1303,
     }
     mutate(userCredentials, {
       onSuccess: (account: any) => {
