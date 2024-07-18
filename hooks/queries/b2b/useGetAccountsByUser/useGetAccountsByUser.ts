@@ -3,26 +3,18 @@
  */
 import { useQueries, useQuery } from '@tanstack/react-query'
 
-import { makeGraphQLClient, makeGraphQLClientWithoutUserClaims } from '@/lib/gql/client'
-import { getAccountsByUser, getB2bAccounts } from '@/lib/gql/queries'
+import { makeGraphQLClientWithoutUserClaims } from '@/lib/gql/client'
+import { getAccountsByUser, getCustomerAccount } from '@/lib/gql/queries'
 import { accountsByUserKeys } from '@/lib/react-query/queryKeys'
 
-import { B2BAccountCollection } from '@/lib/gql/types'
+import type { CustomerAccount } from '@/lib/gql/types'
 
 /**
  * @hidden
  */
 
 export interface AccountsByUserResponse {
-  activeUsersAccount: any[]
-  isLoading: boolean
-  isError: boolean
-  isSuccess: boolean
-}
-
-
-export interface B2bAccountsResponse {
-  data: B2BAccountCollection | undefined
+  activeUsersAccount: CustomerAccount[]
   isLoading: boolean
   isError: boolean
   isSuccess: boolean
@@ -30,9 +22,9 @@ export interface B2bAccountsResponse {
 
 const client = makeGraphQLClientWithoutUserClaims()
 
-const b2bAccounts = async (id: number): Promise<B2BAccountCollection> => {
+const customerAccount = async (id: number): Promise<CustomerAccount> => {
   const response = await client.request({
-    document: getB2bAccounts,
+    document: getCustomerAccount,
     variables: { accountId: id },
   })
 
@@ -47,6 +39,18 @@ const accountsByUser = async (emailAddress: string): Promise<[number]> => {
 
   return response?.accountsByUser
 }
+
+/**
+ * [Query hook] getCustomerAccount uses the graphQL query
+ *
+ * <b>customerAccount(accountId: Int!, userId: String): CustomerAccount</b>
+ *
+ * Description : Fetches the account's details based on account id.
+ *
+ * Parameters passed to function customerAccount(accountId: string) => expects accountId of type integer.
+ *
+ * @returns 'response?.customerAccount', which contains details of account.
+ */
 
 /**
  * [Query hook] getAccountsByUser uses the graphQL query
@@ -72,40 +76,24 @@ export const useGetAccountsByUser = (emailAddress: string): AccountsByUserRespon
     enabled: !!emailAddress,
   })
 
-  const filter = `emailAddress eq ${emailAddress}`
-  const b2bAccountsData = useQueries({
+  const customerAccountData = useQueries({
     queries: accountsByUserData.map((id) => {
       return {
-        queryKey: accountsByUserKeys.b2bAccounts(id.toString()),
-        queryFn: () => b2bAccounts(id),
+        queryKey: accountsByUserKeys.customerAccount(id.toString()),
+        queryFn: () => customerAccount(id),
         enabled: !!emailAddress,
       }
-    })
-    
+    }),
   })
 
-  const activeUsersAccount: any[] = []
-  b2bAccountsData.map((item) => {
-    activeUsersAccount.push(item.data)
+  const activeUsersAccount: CustomerAccount[] = []
+  customerAccountData.map((item) => {
+    if (item?.data) {
+      activeUsersAccount.push(item.data)
+    }
   })
-
-  
-
-  console.log("activeUsersAccount", activeUsersAccount)
-  console.log("b2bAccountsData", b2bAccountsData)
-
-  // const activeUsersAccount: any[] = []
-  // if(accountsByUserData?.length && b2bAccountsData?.items?.length) {
-  //   const b2bAccountWithName = b2bAccountsData?.items.filter(item => accountsByUserData.includes(item?.id as number))
-  //   if(accountsByUserData.length === 1 && b2bAccountWithName.length === 0) {
-  //     activeUsersAccount.push({ id: accountsByUserData[0], name: '' })
-  //   } else {
-  //     activeUsersAccount.push(...b2bAccountWithName)
-  //   }
-  // }
 
   return {
-    // activeUsersAccount,
     activeUsersAccount,
     isLoading,
     isError,

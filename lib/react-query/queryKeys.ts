@@ -65,10 +65,7 @@ export const accountHierarchyKeys = {
 export const accountsByUserKeys = {
   all: ['accountsByUser'] as any,
   accountsByUser: (emailAddress: string) => [...accountsByUserKeys.all, emailAddress] as const,
-  b2bAccounts: (
-    filter: string
-  ) =>
-    [...accountsByUserKeys.all, filter] as const,
+  customerAccount: (id: string) => [...accountsByUserKeys.all, id] as const,
 }
 
 export const productSearchResultKeys = {

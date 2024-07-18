@@ -31,9 +31,9 @@ export interface AuthContextType {
   login: (params: LoginData, onSuccessCallBack: () => void) => any
   createAccount: (params: RegisterAccountInputData, onSuccessCallBack?: () => void) => any
   logout: () => void
-  setAccountsByUser: (accounts: any[]) => void
-  setSelectedAccountId: (accountId: number) => void
-  setUser: (user: CustomerAccountWithRole | undefined) => void
+  setAccountsByUser?: (accounts: any[]) => void
+  setSelectedAccountId?: (accountId: number) => void
+  setUser?: (user: CustomerAccountWithRole | undefined) => void
 }
 interface AuthContextProviderProps {
   children: ReactNode
@@ -86,7 +86,6 @@ export const AuthContextProvider = ({ children }: AuthContextProviderProps) => {
     isB2BUser: isB2BUser,
   })
 
-  console.log('auth con accountsByUser', accountsByUser)
   useEffect(() => {
     const roles =
       userAccount &&
@@ -143,7 +142,7 @@ export const AuthContextProvider = ({ children }: AuthContextProviderProps) => {
     const userCredentials = {
       username: params?.formData?.email,
       password: params?.formData?.password,
-      accountId: params?.formData?.accountId ? parseInt(params?.formData?.accountId) : 1303,
+      accountId: params?.formData?.accountId && parseInt(params?.formData?.accountId),
     }
     mutate(userCredentials, {
       onSuccess: (account: any) => {

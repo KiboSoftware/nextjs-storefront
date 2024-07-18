@@ -1,6 +1,6 @@
 import React, { useState } from 'react'
 
-import { KeyboardArrowDownOutlined, SwitchAccount } from '@mui/icons-material'
+import { KeyboardArrowDownOutlined } from '@mui/icons-material'
 import {
   Collapse,
   Box,
@@ -12,8 +12,6 @@ import {
   styled,
   Theme,
   NoSsr,
-  MenuItem,
-  IconButton,
 } from '@mui/material'
 import { getCookie } from 'cookies-next'
 import getConfig from 'next/config'
@@ -22,8 +20,7 @@ import { useRouter } from 'next/router'
 import { useTranslation } from 'next-i18next'
 
 import { headerActionAreaStyles, kiboHeaderStyles, topHeaderStyles } from './KiboHeader.styles'
-import { SwitchAccountMenu } from '../Icons/SwitchAccountMenu/SwitchAccountMenu'
-import { KiboLogo, KiboSelect } from '@/components/common'
+import { KiboLogo } from '@/components/common'
 import { AccountHierarchyFormDialog } from '@/components/dialogs'
 import {
   AccountIcon,
@@ -36,6 +33,7 @@ import {
   MobileHeader,
   SearchSuggestions,
   StoreFinderIcon,
+  SwitchAccountMenu,
 } from '@/components/layout'
 import { useAuthContext, useHeaderContext, useModalContext } from '@/context'
 import { useCreateCustomerB2bAccountMutation, useGetCategoryTree } from '@/hooks'
@@ -66,17 +64,19 @@ const HeaderActionArea = (props: HeaderActionAreaProps) => {
   const { isMobileSearchPortalVisible, isSearchBarVisible } = headerState
   const { t } = useTranslation('common')
 
-  const [anchorElAccountOptions, setAnchorElAccountOptions] = React.useState<null | HTMLElement>(null);
-  const openAccountOptions = Boolean(anchorElAccountOptions);
+  const [anchorElAccountOptions, setAnchorElAccountOptions] = React.useState<null | HTMLElement>(
+    null
+  )
+  const openAccountOptions = Boolean(anchorElAccountOptions)
 
   const { selectedAccountId, accountsByUser } = useAuthContext()
-  
+
   const handleAccountOptionsClick = (event: any) => {
-    setAnchorElAccountOptions(event.currentTarget);
-  };
+    setAnchorElAccountOptions(event.currentTarget)
+  }
   const handleClose = () => {
-    setAnchorElAccountOptions(null);
-  };
+    setAnchorElAccountOptions(null)
+  }
 
   const showSearchBarInLargeHeader = !isHeaderSmall || isSearchBarVisible
   return (
@@ -123,27 +123,33 @@ const HeaderActionArea = (props: HeaderActionAreaProps) => {
                 />
               </>
             )}
-            <Box display={"flex"} justifyContent={"center"} alignItems={"center"}> 
-                <AccountIcon
-                  size={isHeaderSmall ? 'small' : 'medium'}
-                  onAccountIconClick={onAccountIconClick}
-                  data-testid="Account-Icon"
-                  isElementVisible={isCSR ? true : false}
-                  isCSR={Boolean(isCSR)}
-                  customerName={customerName}
-                />
-                {selectedAccountId && accountsByUser && accountsByUser?.length > 1 && <KeyboardArrowDownOutlined
-                  onClick={handleAccountOptionsClick} 
+            <Box display={'flex'} justifyContent={'center'} alignItems={'center'}>
+              <AccountIcon
+                size={isHeaderSmall ? 'small' : 'medium'}
+                onAccountIconClick={onAccountIconClick}
+                data-testid="Account-Icon"
+                isElementVisible={isCSR ? true : false}
+                isCSR={Boolean(isCSR)}
+                customerName={customerName}
+              />
+              {selectedAccountId && accountsByUser && accountsByUser?.length > 1 && (
+                <KeyboardArrowDownOutlined
+                  onClick={handleAccountOptionsClick}
                   aria-controls={openAccountOptions ? 'account-menu' : undefined}
                   aria-haspopup="true"
                   aria-expanded={openAccountOptions ? 'true' : undefined}
                   sx={{
                     color: 'grey.900',
                   }}
-                />}
-                <SwitchAccountMenu open={openAccountOptions} handleClose={handleClose} anchorEl={anchorElAccountOptions}/>
-              </Box>
-            
+                />
+              )}
+              <SwitchAccountMenu
+                open={openAccountOptions}
+                handleClose={handleClose}
+                anchorEl={anchorElAccountOptions}
+              />
+            </Box>
+
             <CartIcon size={isHeaderSmall ? 'small' : 'medium'} />
           </Box>
         </NoSsr>

@@ -4,7 +4,7 @@ import { fetcher, getAdditionalHeader } from '@/lib/api/util'
 import { refreshAuthToken as query } from '@/lib/gql/mutations'
 import { decodeParseCookieValue, getAuthCookieName } from '@/lib/helpers'
 
-export default async function refreshCustomerAuthToken(accountId: any, req: NextApiRequest) {
+export default async function refreshCustomerAuthToken(accountId: string, req: NextApiRequest) {
   const cookies = req?.cookies
   const authTicket = decodeParseCookieValue(cookies[getAuthCookieName()])
 
@@ -13,7 +13,7 @@ export default async function refreshCustomerAuthToken(accountId: any, req: Next
   const headers = req ? getAdditionalHeader(req) : {}
   const variables = {
     accountId: parseInt(accountId),
-    refreshToken
+    refreshToken,
   }
   const response = await fetcher({ query, variables }, { headers })
   return response

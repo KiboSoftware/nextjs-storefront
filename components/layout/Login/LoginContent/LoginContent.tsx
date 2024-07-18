@@ -20,10 +20,7 @@ import * as yup from 'yup'
 
 import { KiboSelect, KiboTextBox } from '@/components/common'
 import { useAuthContext, useModalContext } from '@/context'
-import { useGetAccountsByUser, useGetB2BAccounts } from '@/hooks'
-
-import type { B2BAccount, Maybe } from '@/lib/gql/types'
-
+import { useGetAccountsByUser } from '@/hooks'
 export interface LoginInputs {
   email: string
   password: string
@@ -53,33 +50,24 @@ const styles = {
   },
 }
 
+const loginDefaultValues = {
+  email: '',
+  password: '',
+  accountId: '',
+}
+
 const LoginContent = (props: LoginContentProps) => {
   const { onForgotPasswordClick } = props
 
   const { login, setAccountsByUser } = useAuthContext()
   const { closeModal } = useModalContext()
 
-
   const [showPassword, setShowPassword] = useState<boolean>(false)
   const [isRememberMe, setIsRememberMe] = useState<boolean>(false)
   const [emailAddress, setEmailAddress] = React.useState('')
-  const { activeUsersAccount, isLoading, isSuccess } = useGetAccountsByUser(emailAddress)
-  //const { data: b2bAccounts, isLoading: isB2BLoading } = useGetB2BAccounts(emailAddress)
-
-  // let activeUsersAccount: Maybe<B2BAccount>[] = []
-  // if(activeUsersAccount?.length) {
-  //   setAccountsByUser(activeUsersAccount)
-  // }
-
-  
+  const { activeUsersAccount, isLoading } = useGetAccountsByUser(emailAddress)
 
   const handleClickShowPassword = () => setShowPassword(!showPassword)
-
-  const loginInputs = {
-    email: '',
-    password: '',
-    accountId: activeUsersAccount?.length ? activeUsersAccount[0]?.id.toString() : '',
-  }
 
   const { t } = useTranslation('common')
 
@@ -90,7 +78,7 @@ const LoginContent = (props: LoginContentProps) => {
         .email(t('email-must-be-a-valid-email'))
         .required(t('this-field-is-required')),
       password: yup.string().required(t('this-field-is-required')),
-      accounts: yup.string().nullable()
+      accountId: yup.string().nullable(),
     })
   }
 
@@ -98,24 +86,30 @@ const LoginContent = (props: LoginContentProps) => {
     formState: { errors, isValid },
     handleSubmit,
     control,
+    setValue,
   } = useForm({
     mode: 'all',
     reValidateMode: 'onBlur',
-    defaultValues: loginInputs,
+    defaultValues: loginDefaultValues,
     resolver: yupResolver(useLoginInputSchema()),
     shouldFocusError: true,
   })
 
+  useEffect(() => {
+    if (activeUsersAccount?.length) {
+      setValue('accountId', activeUsersAccount[0]?.id.toString())
+    }
+  }, [activeUsersAccount])
+
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const handleLogin = async (formData: LoginInputs, e: any) => {
     e.preventDefault()
-    console.log('formData', formData)
     const inputData = { formData, isRememberMe }
     login(inputData, handleAccountsByUser)
   }
 
   const handleAccountsByUser = () => {
-    setAccountsByUser(activeUsersAccount)
+    setAccountsByUser && setAccountsByUser(activeUsersAccount)
     closeModal()
   }
 
@@ -124,7 +118,6 @@ const LoginContent = (props: LoginContentProps) => {
     onForgotPasswordClick()
   }
 
-  console.log('activeUsersAccount', activeUsersAccount)
   return (
     <Box
       sx={{ ...styles.contentBox }}
@@ -137,7 +130,7 @@ const LoginContent = (props: LoginContentProps) => {
         <Controller
           name="email"
           control={control}
-          defaultValue={loginInputs?.email}
+          defaultValue={loginDefaultValues?.email}
           render={({ field }) => (
             <KiboTextBox
               name="email"
@@ -154,15 +147,13 @@ const LoginContent = (props: LoginContentProps) => {
               error={!!errors?.email}
               helperText={errors?.email?.message}
               autoFocus={true}
-              {
-                ...(isLoading) && {
-                  icon: (
-                    <Box p={0.5}>
-                      <CircularProgress size={20} />
-                    </Box>
-                  )
-                }
-              }
+              {...(isLoading && {
+                icon: (
+                  <Box p={0.5}>
+                    <CircularProgress size={20} />
+                  </Box>
+                ),
+              })}
             />
           )}
         />
@@ -170,11 +161,12 @@ const LoginContent = (props: LoginContentProps) => {
           <Controller
             name="accountId"
             control={control}
-            defaultValue={loginInputs?.accountId}
+            defaultValue={loginDefaultValues?.accountId}
+            {...(loginDefaultValues?.accountId && { value: loginDefaultValues?.accountId })}
             render={({ field }) => (
               <>
                 <KiboSelect
-                  name="accounts"
+                  name="accountId"
                   label={t('accounts')}
                   sx={{ typography: 'body2', mb: 3 }}
                   value={field.value}
@@ -195,7 +187,7 @@ const LoginContent = (props: LoginContentProps) => {
         <Controller
           name="password"
           control={control}
-          defaultValue={loginInputs?.password}
+          defaultValue={loginDefaultValues?.password}
           render={({ field }) => (
             <KiboTextBox
               name="password"

@@ -3,16 +3,19 @@ import { getCookie, setCookie } from 'cookies-next'
 import { NextApiResponse } from 'next'
 
 import refreshCustomerAuthToken from '../operations/refresh-customer-auth-token'
-import { decodeParseCookieValue, getAuthCookieName, prepareSetCookieValue } from '@/lib/helpers/cookieHelper'
+import {
+  decodeParseCookieValue,
+  getAuthCookieName,
+  prepareSetCookieValue,
+} from '@/lib/helpers/cookieHelper'
 import { NextApiRequestWithLogger } from '@/lib/types'
 
 async function switchUserHandler(req: NextApiRequestWithLogger, res: NextApiResponse) {
   try {
-
     const { id } = req.query
 
     const refreshAuthTicketsResponse = await refreshCustomerAuthToken(
-      id,
+      id as string,
       req as NextApiRequestWithLogger
     )
 
@@ -20,19 +23,19 @@ async function switchUserHandler(req: NextApiRequestWithLogger, res: NextApiResp
 
     const authTicket = refreshAuthTicketsResponse?.data?.refreshCustomerAuthTickets
 
-      const customerAccount =  authTicket?.customerAccount
-      delete authTicket?.customerAccount
-      const cookieValue: UserAuthTicket & { accountId: number } = {
-        ...authTicket, 
-        accountId: id,
-      }
+    const customerAccount = authTicket?.customerAccount
+    delete authTicket?.customerAccount
+    const cookieValue: UserAuthTicket & { accountId: number } = {
+      ...authTicket,
+      accountId: id,
+    }
 
-      res.setHeader(
-        'Set-Cookie',
-        getAuthCookieName() + '=' + prepareSetCookieValue({ ...cookieValue }) + ';HttpOnly;path=/'
-      )
+    res.setHeader(
+      'Set-Cookie',
+      getAuthCookieName() + '=' + prepareSetCookieValue({ ...cookieValue }) + ';HttpOnly;path=/'
+    )
 
-      res.status(200).json(customerAccount ? customerAccount : {'success': true })
+    res.status(200).json(customerAccount ? customerAccount : { success: true })
   } catch (error: any) {
     res.redirect(`/error-page?status=500&message=${encodeURIComponent(error.message)}`)
   }

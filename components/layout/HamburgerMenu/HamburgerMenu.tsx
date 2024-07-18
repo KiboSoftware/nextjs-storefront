@@ -1,5 +1,6 @@
 import React from 'react'
 
+import { KeyboardArrowDownOutlined } from '@mui/icons-material'
 import AccountCircle from '@mui/icons-material/AccountCircle'
 import {
   Box,
@@ -11,12 +12,11 @@ import {
   Link as MuiLink,
   Typography,
 } from '@mui/material'
-import { getCookie } from 'cookies-next'
 import { useRouter } from 'next/router'
 import { useTranslation } from 'next-i18next'
 
 import { HeaderAction } from '@/components/common'
-import { CategoryNestedNavigation } from '@/components/layout'
+import { CategoryNestedNavigation, SwitchAccountMenu } from '@/components/layout'
 import { useAuthContext } from '@/context'
 import { uiHelpers } from '@/lib/helpers'
 import type { NavigationLink } from '@/lib/types'
@@ -78,6 +78,10 @@ const HamburgerMenu = (props: HamburgerMenuProps) => {
   const { isAuthenticated, user } = useAuthContext()
   const router = useRouter()
   const userName = isAuthenticated ? user?.firstName : isCSR ? customerName : ''
+  const [anchorElAccountOptions, setAnchorElAccountOptions] = React.useState<null | HTMLElement>(
+    null
+  )
+  const openAccountOptions = Boolean(anchorElAccountOptions)
 
   const toggleDrawer = (open: boolean) => {
     setIsDrawerOpen(open)
@@ -92,6 +96,14 @@ const HamburgerMenu = (props: HamburgerMenuProps) => {
   const handleNavLinks = (link: string) => {
     toggleDrawer(false)
     router.push(link)
+  }
+
+  const handleAccountOptionsClick = (event: any) => {
+    setAnchorElAccountOptions(event.currentTarget)
+  }
+
+  const handleClose = () => {
+    setAnchorElAccountOptions(null)
   }
 
   return (
@@ -110,7 +122,12 @@ const HamburgerMenu = (props: HamburgerMenuProps) => {
               onCloseMenu={toggleDrawer}
               onCategoryClick={handleCategoryClick}
             >
-              <Box width="100%">
+              <Box
+                width="100%"
+                display={'flex'}
+                justifyContent={'space-between'}
+                alignItems={'center'}
+              >
                 <HeaderAction
                   title={userName ? `${t('hi')}, ${userName}` : t('my-account')}
                   subtitle={isCSR ? '' : isAuthenticated ? t('go-to-my-account') : t('log-in')}
@@ -123,6 +140,24 @@ const HamburgerMenu = (props: HamburgerMenuProps) => {
                   data-testid="Account-Icon"
                   isCSR={Boolean(isCSR)}
                 />
+                <Box pr={1.5}>
+                  {
+                    <KeyboardArrowDownOutlined
+                      onClick={handleAccountOptionsClick}
+                      aria-controls={openAccountOptions ? 'account-menu' : undefined}
+                      aria-haspopup="true"
+                      aria-expanded={openAccountOptions ? 'true' : undefined}
+                      sx={{
+                        color: 'grey.900',
+                      }}
+                    />
+                  }
+                  <SwitchAccountMenu
+                    open={openAccountOptions}
+                    handleClose={handleClose}
+                    anchorEl={anchorElAccountOptions}
+                  />
+                </Box>
               </Box>
             </CategoryNestedNavigation>
           </Box>
