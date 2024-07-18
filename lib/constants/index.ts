@@ -17,7 +17,7 @@ export enum PaymentWorkflow {
 export enum PaymentType {
   PURCHASEORDER = 'PurchaseOrder',
   CREDITCARD = 'CreditCard',
-  PAYPALEXPRESS2 = 'PayPalExpress2',
+  PAYPALEXPRESS2 = 'paypal_complete_payments_application',
 }
 
 export enum OrderStatus {

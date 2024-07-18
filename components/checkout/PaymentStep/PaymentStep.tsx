@@ -25,7 +25,7 @@ import PayPalButton from './PayPalButton'
 import { CardDetailsForm, PurchaseOrderForm } from '@/components/checkout'
 import { AddressForm, KiboTextBox, KiboRadio, PaymentBillingCard } from '@/components/common'
 import { useCheckoutStepContext, STEP_STATUS, useAuthContext, useSnackbarContext } from '@/context'
-import { usePaymentTypes, useValidateCustomerAddress, usePayPalBearerToken } from '@/hooks'
+import { usePaymentTypes, useValidateCustomerAddress, useIsPayPalEnabled } from '@/hooks'
 import { CountryCode, CurrencyCode, PaymentType, PaymentWorkflow } from '@/lib/constants'
 import { addressGetters, cardGetters, orderGetters, userGetters } from '@/lib/getters'
 import {
@@ -160,7 +160,7 @@ const PaymentStep = (props: PaymentStepProps) => {
   const { loadPaymentTypes } = usePaymentTypes()
   const paymentTypes = loadPaymentTypes()
   const { validateCustomerAddress } = useValidateCustomerAddress()
-  const paypalBearerToken = usePayPalBearerToken()
+  const isPayPalEnabled = useIsPayPalEnabled()
 
   const newPaymentTypes = paymentTypes
     .map((paymentType: any) =>
@@ -784,7 +784,7 @@ const PaymentStep = (props: PaymentStepProps) => {
         {t('payment-method')}
       </Typography>
 
-      {paypalBearerToken && (
+      {isPayPalEnabled && (
         <PayPalButton
           checkout={checkout as CrOrder}
           setSelectedPaymentTypeRadio={setSelectedPaymentTypeRadio}

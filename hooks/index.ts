@@ -75,6 +75,7 @@ export * from './custom/useCartActions/useCartActions'
 export * from './custom/useB2BQuote/useB2BQuote'
 export * from './custom/useGetB2BUsersEmailAndId/useGetB2BUsersEmailAndId'
 export * from './custom/usePayPalBearerToken/usePayPalBearerToken'
+export * from './custom/useIsPayPalEnabled/useIsPayPalEnabled'
 
 // Mutations
 

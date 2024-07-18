@@ -171,24 +171,24 @@ const PayPalButton = (props: PayPalButtonProps) => {
     intent,
   }
 
-  const createOrder = async () => {
-    const body = {
-      intent: 'AUTHORIZE',
-      purchase_units: [
-        {
-          amount: {
-            currency_code: currency,
-            value: checkout.total,
-            beakdown: breakdown,
-          },
-          shipping: {
-            address: getShippingAddress(checkout),
-          },
+  const body = {
+    intent: 'AUTHORIZE',
+    purchase_units: [
+      {
+        amount: {
+          currency_code: currency,
+          value: checkout.total,
+          beakdown: breakdown,
         },
-      ],
-      payment_source,
-    }
+        shipping: {
+          address: getShippingAddress(checkout),
+        },
+      },
+    ],
+    payment_source,
+  }
 
+  const createOrder = async () => {
     try {
       const response = await fetch(`${url}/api/paypal-create-order`, {
         method: 'POST',
