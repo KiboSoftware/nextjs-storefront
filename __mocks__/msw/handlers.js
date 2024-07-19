@@ -37,7 +37,12 @@ import { subscriptionCollectionMock } from '../stories/subscriptionCollectionMoc
 import { updateCustomerAccountContactMock } from '../stories/updateCustomerAccountContact'
 import { updateOrderBillingInfoMock } from '../stories/updateOrderBillingInfoMock'
 import { userAddressMock } from '../stories/userAddressMock'
-import { userMock, loginUserMock, registerUserMock } from '../stories/userMock'
+import {
+  userMock,
+  loginUserMock,
+  registerUserMock,
+  activeUsersAccountMock,
+} from '../stories/userMock'
 import { wishlistMock } from '../stories/wishlistMock'
 import { subscriptionMock } from '@/__mocks__/stories/subscriptionMock'
 import { LOGOUT_ENDPOINT } from '@/lib/gql/client'
@@ -286,6 +291,14 @@ export const userHandlers = [
 
   rest.post(LOGOUT_ENDPOINT, (_req, res, ctx) => {
     return res(ctx.status(200), ctx.json('true'))
+  }),
+
+  graphql.query('getAccountsByUser', (_req, res, ctx) => {
+    return res(ctx.data({ accountsByUser: [1] }))
+  }),
+
+  graphql.query('customerAccount', (_req, res, ctx) => {
+    return res(ctx.data({ customerAccount: activeUsersAccountMock.activeUsersAccount[0] }))
   }),
 ]
 

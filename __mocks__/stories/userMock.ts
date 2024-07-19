@@ -53,3 +53,10 @@ export const registerUserResponseMock: CustomerAuthTicket = {
 export const registerUserMock: { account: CustomerAuthTicket } = {
   account: registerUserResponseMock,
 }
+
+export const activeUsersAccountMock: { activeUsersAccount: CustomerAccount[] } = {
+  activeUsersAccount: [
+    { id: 1, companyOrOrganization: 'Company 1', emailAddress: 'user1@example.com' },
+    { id: 2, companyOrOrganization: 'Company 2', emailAddress: 'user2@example.com' },
+  ],
+}

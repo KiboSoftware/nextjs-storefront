@@ -57,11 +57,11 @@ const accountsByUser = async (emailAddress: string): Promise<[number]> => {
  *
  * <b>getAccountsByUser(emailAddress: String, userName: String, getAllAccounts: Boolean): [Int]</b>
  *
- * Description : Fetches the B2B accounts list based on emailAddress.
+ * Description : Fetches the B2B and B2C accounts list based on emailAddress.
  *
- * Parameters passed to function getB2BAccountHierarchy(emailAddress: string) => expects emailAddress of type string.
+ * Parameters passed to function getAccountsByUser(emailAddress: string) => expects emailAddress of type string.
  *
- * @returns 'response?.getB2BAccountHierarchy', which contains list of account ids.
+ * @returns 'response?.accountsByUser', which contains list of account ids.
  */
 
 export const useGetAccountsByUser = (emailAddress: string): AccountsByUserResponse => {

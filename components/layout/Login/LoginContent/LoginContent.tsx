@@ -34,11 +34,8 @@ export type LoginData = {
 }
 
 export interface LoginContentProps {
-  isLoading?: boolean
-  accountsByUser?: number[]
   onLogin?: (data: LoginData) => void
   onForgotPasswordClick: () => void
-  onGetAccountsByUser?: (email: string) => void
 }
 
 const styles = {

@@ -2,7 +2,7 @@
 import React from 'react'
 
 import { composeStories } from '@storybook/testing-react'
-import { render, screen, waitFor, act } from '@testing-library/react'
+import { render, screen, waitFor, act, within } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
 
 import * as stories from './LoginContent.stories' // import all stories from the stories file
@@ -11,6 +11,18 @@ const { Common } = composeStories(stories)
 
 const onForgotPasswordClickMock = jest.fn()
 const onLoginMock = jest.fn()
+
+jest.mock('@/hooks', () => ({
+  useGetAccountsByUser: jest.fn(() => {
+    return {
+      activeUsersAccount: [
+        { id: 1, companyOrOrganization: 'Company 1', emailAddress: 'user1@example.com' },
+        { id: 2, companyOrOrganization: 'Company 2', emailAddress: 'user2@example.com' },
+      ],
+      isLoading: false,
+    }
+  }),
+}))
 
 beforeEach(() => jest.resetAllMocks())
 
@@ -124,6 +136,28 @@ describe('[components] (LoginContent)', () => {
 
     await waitFor(() => expect(loginButton).toBeDisabled())
   })
+
+  it('should enable login button and call onLoginMock when user enters valid credentials with account id and clicks on Login button', async () => {
+    const { user } = setup()
+
+    // valid inputs
+    await loginInputs(user)
+
+    const loginButton = screen.getByRole('button', { name: 'log-in' })
+    await waitFor(() => expect(loginButton).toBeEnabled())
+
+    user.click(loginButton)
+    await waitFor(() =>
+      expect(onLoginMock).toHaveBeenCalledWith({
+        formData: {
+          email: 'example@example.com',
+          accountId: '1',
+          password: 'abc', //NOSONAR
+        },
+        isRememberMe: false,
+      })
+    )
+  })
 })
 
 const loginInputs = async (user: any) => {
@@ -132,6 +166,10 @@ const loginInputs = async (user: any) => {
 
   await act(async () => {
     await user.type(emailInput, 'example@example.com')
+    const accountIdInput = within(screen.getByRole('listbox')).getByText('Company 1')
+    await waitFor(() => {
+      user.type(accountIdInput, 1)
+    })
     await waitFor(() => {
       user.type(passwordInput, 'abc')
     })
