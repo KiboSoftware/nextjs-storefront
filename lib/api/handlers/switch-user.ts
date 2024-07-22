@@ -19,8 +19,6 @@ async function switchUserHandler(req: NextApiRequestWithLogger, res: NextApiResp
       req as NextApiRequestWithLogger
     )
 
-    console.log('refreshAuthTicketsResponse', refreshAuthTicketsResponse)
-
     const authTicket = refreshAuthTicketsResponse?.data?.refreshCustomerAuthTickets
 
     const customerAccount = authTicket?.customerAccount

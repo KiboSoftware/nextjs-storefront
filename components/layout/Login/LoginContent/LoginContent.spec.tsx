@@ -110,6 +110,7 @@ describe('[components] LoginContent', () => {
     await waitFor(() => expect(loginButton).toBeEnabled())
 
     user.click(loginButton)
+
     await waitFor(() =>
       expect(mockValues.login).toHaveBeenCalledWith(
         {
@@ -136,23 +137,24 @@ describe('[components] LoginContent', () => {
     })
   })
 
-  // it('should login when user enters valid credentials and press enter key', async () => {
-  //   const { user } = setup()
-  //   await loginInputs(user)
+  it('should login when user enters valid credentials and press enter key', async () => {
+    const { user } = setup()
+    await loginInputs(user, true)
 
-  //   await user.keyboard('{Enter}')
-  //   await waitFor(() => {
-  //     expect(mockValues.login).toHaveBeenCalledWith({
-  //       formData: {
-  //         email: 'user1@example.com',
-  //         accountId: '1',
-  //         password: 'abc', //NOSONAR
-  //       },
-  //       isRememberMe: false,
-  //     },
-  //     expect.any(Function))
-  //   })
-  // })
+    await waitFor(() => {
+      expect(mockValues.login).toHaveBeenCalledWith(
+        {
+          formData: {
+            email: 'user1@example.com',
+            accountId: '1',
+            password: 'abc', //NOSONAR
+          },
+          isRememberMe: false,
+        },
+        expect.any(Function)
+      )
+    })
+  })
 
   it('should keep login button disable when user enters invalid credentials', async () => {
     const { user } = setup()
@@ -173,17 +175,23 @@ describe('[components] LoginContent', () => {
   })
 })
 
-const loginInputs = async (user: any) => {
+const loginInputs = async (user: any, submitWithEnter?: boolean) => {
   const emailInput = screen.getByRole('textbox', { name: 'email' })
   const passwordInput = screen.getByLabelText('password')
 
   await user.type(emailInput, 'user1@example.com')
 
-  await user.type(passwordInput, 'abc')
+  await user.tab()
 
   const dropdownButton = await screen.findByRole('button', { name: /accounts/i })
   await user.click(dropdownButton)
 
   const company1Option = await screen.findByRole('option', { name: 'Company 1' })
   await user.click(company1Option)
+
+  if (submitWithEnter) {
+    await user.type(passwordInput, 'abc{enter}')
+  } else {
+    await user.type(passwordInput, 'abc')
+  }
 }

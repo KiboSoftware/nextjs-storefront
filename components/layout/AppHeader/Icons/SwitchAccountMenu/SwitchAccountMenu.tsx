@@ -9,7 +9,7 @@ import type { CustomerAccount } from '@/lib/gql/types'
 
 interface SwitchAccountMenuProps {
   open: boolean
-  anchorEl: HTMLElement | null
+  anchorEl: any
   handleClose: () => void
 }
 
@@ -20,11 +20,15 @@ export const SwitchAccountMenu = (props: SwitchAccountMenuProps) => {
   const { activeUsersAccount } = useGetAccountsByUser(user?.emailAddress as string)
 
   const handleMenuItemClick = async (id: number) => {
-    const res = await fetch(`/api/switch-user?id=${id}`)
-    const data = await res.json()
-    setSelectedAccountId && setSelectedAccountId(id)
-    if (data?.id) {
-      setUser && setUser(data)
+    try {
+      const res = await fetch(`/api/switch-user?id=${id}`)
+      const data = await res.json()
+      setSelectedAccountId && setSelectedAccountId(id)
+      if (data?.id) {
+        setUser && setUser(data)
+      }
+    } catch (error) {
+      console.error('Error switching account', error)
     }
   }
 

@@ -1,4 +1,5 @@
 /* eslint-disable @typescript-eslint/no-var-requires */
+import { KeyboardArrowDownOutlined } from '@mui/icons-material'
 import { screen, waitFor } from '@testing-library/react'
 import '@testing-library/jest-dom'
 import userEvent from '@testing-library/user-event'
@@ -8,9 +9,19 @@ import SwitchAccountMenu from './SwitchAccountMenu'
 import { renderWithQueryClient } from '@/__test__/utils'
 import { AuthContext, AuthContextType } from '@/context'
 
+const mockFetch = jest.fn(() => {
+  return {
+    json: () => ({ id: 1011 }),
+  }
+}) as any
+
+// Assign the mock fetch implementation to the global object
+global.fetch = mockFetch
+
 const mockValues = mock<AuthContextType>()
-mockValues.setSelectedAccountId = (accountId) => null
+mockValues.setSelectedAccountId = jest.fn()
 mockValues.setUser = jest.fn()
+mockValues.selectedAccountId = 1
 mockValues.user = {
   id: 1,
   firstName: 'John',
@@ -23,9 +34,11 @@ const setup = () => {
 
   const handleCloseMock = jest.fn()
 
+  const el = <KeyboardArrowDownOutlined />
+
   renderWithQueryClient(
     <AuthContext.Provider value={mockValues}>
-      <SwitchAccountMenu open={true} anchorEl={null} handleClose={handleCloseMock} />
+      <SwitchAccountMenu open={true} anchorEl={el} handleClose={handleCloseMock} />
     </AuthContext.Provider>
   )
   return {
@@ -42,27 +55,30 @@ describe('[component] SwitchAccountMenu component', () => {
     expect(menuItems).toHaveLength(2)
     expect(menuItems[0]).toHaveTextContent('Company 1')
     expect(menuItems[1]).toHaveTextContent('Company 2')
-    expect(menuItems[0]).toHaveClass('Mui-selected')
+
+    await waitFor(() => {
+      expect(menuItems[0]).toHaveClass('Mui-selected')
+    })
   })
 
-  // it('should call handleMenuItemClick with correct id when a menu item is clicked', async () => {
-  //   const { user } = setup()
+  it('should call handleMenuItemClick with correct id when a menu item is clicked', async () => {
+    const { user } = setup()
 
-  //   const menu = screen.getByRole('menu')
-  //   user.click(menu)
+    const menu = screen.getByRole('menu')
+    await user.click(menu)
 
-  //   const menuItems = await screen.findAllByRole('menuitem')
-  //   expect(menuItems).toHaveLength(2)
-  //   expect(menuItems[0]).toHaveTextContent('Company 1');
-  //   expect(menuItems[1]).toHaveTextContent('Company 2');
+    const menuItems = await screen.findAllByRole('menuitem')
+    expect(menuItems).toHaveLength(2)
+    expect(menuItems[0]).toHaveTextContent('Company 1')
+    expect(menuItems[1]).toHaveTextContent('Company 2')
 
-  //   await user.click(menuItems[1]);
+    await user.click(menuItems[1])
 
-  //   expect(menu).toHaveTextContent('Company 2');
+    expect(menu).toHaveTextContent('Company 2')
 
-  //   expect(mockValues.setSelectedAccountId).toHaveBeenCalledWith(1)
-  //   expect(mockValues.setUser).toHaveBeenCalled()
-  // })
+    expect(mockValues.setSelectedAccountId).toHaveBeenCalledWith(2)
+    expect(mockValues.setUser).toHaveBeenCalledWith({ id: 1011 })
+  })
 
   it('calls handleClose when the menu is closed', async () => {
     const { user, handleCloseMock } = setup()
