@@ -1,3 +1,4 @@
+import { Buffer } from 'buffer'
 import { NextResponse, NextRequest } from 'next/server'
 
 const checkIsAuthenticated = (req: NextRequest) => {

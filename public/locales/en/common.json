@@ -531,5 +531,9 @@
   "menu": "Menu",
   "remove-payPal": "Remove PayPal",
   "loading-paypal": "Loading PayPal...",
-  "error-cartTakeover": "Error while fetching the cart. Please close the window and try again."
+  "error-cartTakeover": "Error while fetching the cart. Please close the window and try again.",
+
+  "you-are-offline": "You are Offline",
+  "we-could-not-load-this-page-on-this-connection": "We could not load this page on this connection",
+  "please-try-again": "Please try again"
 }
