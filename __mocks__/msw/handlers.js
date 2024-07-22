@@ -294,11 +294,17 @@ export const userHandlers = [
   }),
 
   graphql.query('getAccountsByUser', (_req, res, ctx) => {
-    return res(ctx.data({ accountsByUser: [1] }))
+    return res(
+      ctx.data({
+        accountsByUser: activeUsersAccountMock.activeUsersAccount.map((account) => account.id),
+      })
+    )
   }),
 
   graphql.query('customerAccount', (_req, res, ctx) => {
-    return res(ctx.data({ customerAccount: activeUsersAccountMock.activeUsersAccount[0] }))
+    const id = _req?.variables?.accountId
+    const account = activeUsersAccountMock.activeUsersAccount.find((acc) => acc.id === id)
+    return res(ctx.data({ customerAccount: account }))
   }),
 ]
 

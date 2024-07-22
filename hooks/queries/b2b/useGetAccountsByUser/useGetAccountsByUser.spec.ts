@@ -14,8 +14,8 @@ describe('[hooks] useGetAccountsByUser', () => {
     )
 
     await waitForNextUpdate()
-    expect(result.current.activeUsersAccount).toStrictEqual([
-      activeUsersAccountMock.activeUsersAccount[0],
-    ])
+    expect(result.current.activeUsersAccount).toStrictEqual(
+      activeUsersAccountMock.activeUsersAccount
+    )
   })
 })

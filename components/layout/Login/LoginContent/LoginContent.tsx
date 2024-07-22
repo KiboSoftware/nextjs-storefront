@@ -34,7 +34,6 @@ export type LoginData = {
 }
 
 export interface LoginContentProps {
-  onLogin?: (data: LoginData) => void
   onForgotPasswordClick: () => void
 }
 

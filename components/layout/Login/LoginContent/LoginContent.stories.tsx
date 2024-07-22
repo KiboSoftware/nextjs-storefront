@@ -8,8 +8,6 @@ export default {
   component: LoginContent,
   title: 'Layout/Login/LoginContent',
   argTypes: {
-    onClose: { action: 'onClose' },
-    onLogin: { action: 'login' },
     onForgotPasswordClick: { action: 'clickForgotPassword' },
   },
 } as ComponentMeta<typeof LoginContent>

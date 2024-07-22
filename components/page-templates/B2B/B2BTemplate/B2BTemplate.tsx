@@ -31,11 +31,6 @@ import type { BillingAddress, CardType } from '@/lib/types'
 
 import type { CustomerAccount } from '@/lib/gql/types'
 
-interface B2BTemplateProps {
-  user?: CustomerAccount
-  children?: React.ReactNode
-}
-
 interface B2BTemplateListItemProps {
   heading: string
   onClick?: () => void
@@ -61,15 +56,14 @@ export const B2BTemplateListItem = ({ heading, onClick }: B2BTemplateListItemPro
   )
 }
 
-const B2BTemplate = (props: B2BTemplateProps) => {
-  const { user } = props
+const B2BTemplate = () => {
   const { t } = useTranslation('common')
   const { publicRuntimeConfig } = getConfig()
   const reCaptchaKey = publicRuntimeConfig.recaptcha.reCaptchaKey
   const router = useRouter()
   const theme = useTheme()
   const mdScreen = useMediaQuery(theme.breakpoints.up('md'))
-  const { logout } = useAuthContext()
+  const { logout, user } = useAuthContext()
   const { executeRecaptcha } = useReCaptcha()
   const { showSnackbar } = useSnackbarContext()
 

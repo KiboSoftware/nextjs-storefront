@@ -183,6 +183,7 @@ export const AllAccountActions = {
 
 export enum AccountType {
   B2B = 'B2B',
+  B2C = 'B2C',
 }
 
 export const QuoteStatus: { [key: string]: string } = {

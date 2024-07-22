@@ -66,7 +66,6 @@ export const AuthContextProvider = ({ children }: AuthContextProviderProps) => {
 
   const { mutate } = useLogin()
   const { mutate: logOutUser } = useLogout(() => {
-    setUser(undefined)
     deleteCookie('behaviors', {
       path: '/',
     })

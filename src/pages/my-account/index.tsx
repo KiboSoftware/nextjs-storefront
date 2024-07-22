@@ -52,12 +52,13 @@ const MyAccountPage: NextPage<MyAccountPageProps> = (props) => {
   if (!serverSideIsAuthenticated && !Object.keys(customerAccount).length) return null
 
   const isB2BUser = customerAccount?.accountType?.toLowerCase() === AccountType.B2B.toLowerCase()
+  const isB2CUser = customerAccount?.accountType?.toLowerCase() === AccountType.B2C.toLowerCase()
 
-  const template = isB2BUser ? (
-    <B2BTemplate user={customerAccount} />
-  ) : (
-    <MyAccountTemplate user={customerAccount} />
-  )
+  const template = isB2BUser ? <B2BTemplate /> : isB2CUser ? <MyAccountTemplate /> : null
+
+  if (!template) {
+    return null
+  }
 
   return reCaptchaKey ? (
     <ReCaptchaProvider reCaptchaKey={reCaptchaKey}>{template}</ReCaptchaProvider>

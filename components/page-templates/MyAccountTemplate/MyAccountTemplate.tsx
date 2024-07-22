@@ -30,12 +30,7 @@ import type { BillingAddress, CardType } from '@/lib/types'
 
 import type { CustomerAccount } from '@/lib/gql/types'
 
-interface MyAccountTemplateProps {
-  user?: CustomerAccount
-}
-
-const MyAccountTemplate = (props: MyAccountTemplateProps) => {
-  const { user } = props
+const MyAccountTemplate = () => {
   const { t } = useTranslation('common')
   const { publicRuntimeConfig } = getConfig()
   const isSubscriptionEnabled = publicRuntimeConfig.isSubscriptionEnabled
@@ -43,7 +38,7 @@ const MyAccountTemplate = (props: MyAccountTemplateProps) => {
   const router = useRouter()
   const theme = useTheme()
   const mdScreen = useMediaQuery(theme.breakpoints.up('md'))
-  const { logout } = useAuthContext()
+  const { logout, user } = useAuthContext()
 
   const { cards, contacts, handleSave } = useCardContactActions(user?.id as number)
 
