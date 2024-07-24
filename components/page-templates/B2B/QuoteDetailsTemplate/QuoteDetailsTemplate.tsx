@@ -865,6 +865,12 @@ const QuoteDetailsTemplate = (props: QuoteDetailsTemplateProps) => {
             </Grid>
             <Grid item xs={6} md={2}>
               <InputLabel shrink={true} sx={{ position: 'relative' }}>
+                Approval Group
+              </InputLabel>
+              <Typography>{assignedBuyerGroupCode}</Typography>
+            </Grid>
+            <Grid item xs={6} md={2}>
+              <InputLabel shrink={true} sx={{ position: 'relative' }}>
                 {t('expiration-date')}
               </InputLabel>
               <Typography>{expirationDate}</Typography>

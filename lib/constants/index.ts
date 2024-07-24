@@ -191,7 +191,7 @@ export const QuoteStatus: { [key: string]: string } = {
   ReadyForCheckout: 'Ready For Checkout',
   Completed: 'Completed',
   Expired: 'Expired',
-  PendingBuyerApproval: 'PendingBuyerApproval',
+  PendingBuyerApproval: 'Pending Buyer Approval',
 }
 
 export const StatusColorCode: any = {
