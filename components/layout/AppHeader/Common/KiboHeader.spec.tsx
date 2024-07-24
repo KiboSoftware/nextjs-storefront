@@ -3,10 +3,11 @@ import { composeStories } from '@storybook/testing-react'
 import { render, screen, waitFor } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
 import '@testing-library/jest-dom'
+import { mock } from 'jest-mock-extended'
 import mockRouter from 'next-router-mock'
 
 import * as stories from './KiboHeader.stories' // import all stories from the stories file
-import { AuthContext } from '@/context'
+import { AuthContext, AuthContextType } from '@/context'
 
 const { Common } = composeStories(stories)
 
@@ -39,6 +40,12 @@ jest.mock('@/components/dialogs/b2b/AccountHierarchyFormDialog/AccountHierarchyF
     </div>
   ),
 }))
+
+const SwitchAccountMenuMock = () => <div data-testid="SwitchAccountMenu-component" />
+jest.mock(
+  '@/components/layout/AppHeader/Icons/SwitchAccountMenu/SwitchAccountMenu',
+  () => () => SwitchAccountMenuMock()
+)
 
 describe('[component] KiboHeader component', () => {
   afterEach(() => {
@@ -192,6 +199,27 @@ describe('[component] KiboHeader component', () => {
 
     await waitFor(() => {
       expect(screen.queryByTestId('Account-Request-Icon')).not.toBeInTheDocument()
+    })
+  })
+
+  it('should open switch account menu when user clicks on arrow down icon if user logged in with multiple accounts', async () => {
+    const user = userEvent.setup()
+    const mockValues = mock<AuthContextType>()
+    mockValues.selectedAccountId = 1
+    mockValues.accountsByUser = [1, 2]
+
+    render(
+      <AuthContext.Provider value={mockValues}>
+        <Common {...Common.args} />
+      </AuthContext.Provider>
+    )
+
+    const downArrow = screen.getAllByTestId(/KeyboardArrowDownOutlinedIcon/i)[0]
+    await user.click(downArrow)
+
+    await waitFor(() => {
+      const menu = screen.getByTestId('SwitchAccountMenu-component')
+      expect(menu).toBeInTheDocument()
     })
   })
 })

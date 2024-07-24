@@ -95,7 +95,7 @@ const LoginContent = (props: LoginContentProps) => {
     if (activeUsersAccount?.length) {
       setValue('accountId', activeUsersAccount[0]?.id.toString())
     }
-  }, [activeUsersAccount])
+  }, [activeUsersAccount[0]?.id])
 
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const handleLogin = async (formData: LoginInputs, e: any) => {

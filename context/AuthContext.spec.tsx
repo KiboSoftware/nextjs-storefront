@@ -14,6 +14,7 @@ const mockOnSuccessCallBack = jest.fn()
 const loginInputs = {
   formData: {
     email: 'abcd@eamil.com',
+    accountId: '1',
     password: '',
   },
   isRememberMe: false,
