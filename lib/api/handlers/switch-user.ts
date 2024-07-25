@@ -1,8 +1,8 @@
 import { UserAuthTicket } from '@kibocommerce/graphql-client'
-import { getCookie, setCookie } from 'cookies-next'
-import { NextApiResponse } from 'next'
+import { NextApiRequest, NextApiResponse } from 'next'
 
-import refreshCustomerAuthToken from '../operations/refresh-customer-auth-token'
+import { fetcher, getAdditionalHeader } from '../util'
+import { refreshAuthToken as query } from '@/lib/gql/mutations'
 import {
   decodeParseCookieValue,
   getAuthCookieName,
@@ -37,6 +37,21 @@ async function switchUserHandler(req: NextApiRequestWithLogger, res: NextApiResp
   } catch (error: any) {
     res.redirect(`/error-page?status=500&message=${encodeURIComponent(error.message)}`)
   }
+}
+
+async function refreshCustomerAuthToken(accountId: string, req: NextApiRequest) {
+  const cookies = req?.cookies
+  const authTicket = decodeParseCookieValue(cookies[getAuthCookieName()])
+
+  const refreshToken = authTicket?.refreshToken
+
+  const headers = req ? getAdditionalHeader(req) : {}
+  const variables = {
+    accountId: parseInt(accountId),
+    refreshToken,
+  }
+  const response = await fetcher({ query, variables }, { headers })
+  return response
 }
 
 export default switchUserHandler as any
