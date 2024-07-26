@@ -7,6 +7,7 @@ export interface B2BUserInput {
   localeCode?: string | null
   isActive?: boolean | null
   role?: string | null
+  groups?: any | null
 }
 
 export interface QueryB2BUserArgs {
@@ -29,6 +30,7 @@ export interface CustomerB2BUserRole {
 export interface B2BUserResultType {
   data?: B2BUserCollection
   isLoading: boolean
+  isFetching: boolean
   isSuccess: boolean
   isError: boolean
   error: any

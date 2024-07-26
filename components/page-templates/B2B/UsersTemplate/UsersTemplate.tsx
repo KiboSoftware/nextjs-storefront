@@ -21,20 +21,24 @@ import {
 } from '@mui/material'
 import getConfig from 'next/config'
 import Link from 'next/link'
+import { useRouter } from 'next/router'
 import { useTranslation } from 'next-i18next'
 
 import { UsersTemplateStyle } from './UsersTemplate.styles'
 import { UserTable, UserForm } from '@/components/b2b'
 import { SearchBar } from '@/components/common'
 import { ConfirmationDialog, UserFormDialog } from '@/components/dialogs'
+import { MobileB2BLayout } from '@/components/layout'
 import { useAuthContext, useModalContext } from '@/context'
 import {
   useAddRoleToCustomerB2bAccountMutation,
+  useAddUserToGroup,
   useCreateCustomerB2bUserMutation,
   useDebounce,
   useDeleteB2bAccountRoleMutation,
   useGetB2BUserQueries,
   useRemoveCustomerB2bUserMutation,
+  useRemoveUserFromGroup,
   useUpdateCustomerB2bUserMutation,
 } from '@/hooks'
 import {
@@ -47,7 +51,7 @@ import {
 } from '@/lib/helpers'
 import { B2BUserInput, CustomerB2BUserRole } from '@/lib/types/CustomerB2BUser'
 
-import { B2BUser } from '@/lib/gql/types'
+import type { B2BUser } from '@/lib/gql/types'
 
 const BackButtonLink = styled(Link)(({ theme }: { theme: Theme }) => ({
   typography: 'body2',
@@ -83,6 +87,7 @@ const UsersTemplate = () => {
   const userRoles = b2bUserRoles
 
   const theme = useTheme()
+  const router = useRouter()
   const { user } = useAuthContext()
   const { t } = useTranslation('common')
   const { showModal, closeModal } = useModalContext()
@@ -96,7 +101,11 @@ const UsersTemplate = () => {
     startIndex: defaultStartIndex,
   })
 
-  const { data, isLoading } = useGetB2BUserQueries({
+  const {
+    data,
+    isLoading,
+    isFetching: b2bUserFetching,
+  } = useGetB2BUserQueries({
     accountId: user?.id as number,
     filter: defaultFilter,
     pageSize: paginationState.pageSize,
@@ -110,6 +119,15 @@ const UsersTemplate = () => {
   const { addRoleToCustomerB2bAccount } = useAddRoleToCustomerB2bAccountMutation()
   const { updateCustomerB2bUser } = useUpdateCustomerB2bUserMutation()
   const { deleteB2bAccountUserRole } = useDeleteB2bAccountRoleMutation()
+  const { addUserToGroup } = useAddUserToGroup()
+  const { removeUserFromGroup } = useRemoveUserFromGroup()
+
+  const breadcrumbList = [{ key: 'users', backText: t('my-account'), redirectURL: '/my-account' }]
+  const activeBreadCrumb = breadcrumbList.filter((item) => item.key === 'users')[0]
+
+  const onBackClick = () => {
+    router.push(activeBreadCrumb.redirectURL)
+  }
 
   const handleDelete = (id: string | undefined | null) => {
     showModal({
@@ -203,6 +221,35 @@ const UsersTemplate = () => {
       }
     }
     addRoleToB2bUser(updateUserResponse, formValues)
+
+    if (formValues?.groups?.addGroups?.length > 0) await addGroupsToB2bUser(b2BUser, formValues)
+    if (formValues?.groups?.removeGroups?.length > 0)
+      await removeGroupsToB2bUser(b2BUser, formValues)
+    closeModal()
+  }
+
+  const addGroupsToB2bUser = async (b2BUser: B2BUser | undefined, formValues: B2BUserInput) => {
+    const addGroupsWithMutation = formValues?.groups.addGroups.map((group: any) => {
+      addUserToGroup.mutateAsync({
+        accountId: user?.id as number,
+        userId: b2BUser?.userId as string,
+        groupCode: group.code,
+      })
+    })
+
+    await Promise.all(addGroupsWithMutation)
+  }
+
+  const removeGroupsToB2bUser = async (b2BUser: B2BUser | undefined, formValues: B2BUserInput) => {
+    const removeGroupsWithMutation = formValues?.groups.removeGroups.map((group: any) => {
+      removeUserFromGroup.mutateAsync({
+        accountId: user?.id as number,
+        userId: b2BUser?.userId as string,
+        groupCode: group.code,
+      })
+    })
+
+    await Promise.all(removeGroupsWithMutation)
   }
 
   const handleAddUserButtonClick = () => {
@@ -227,45 +274,42 @@ const UsersTemplate = () => {
   }
 
   return (
-    <Grid>
-      <Grid item style={{ marginTop: '10px', marginBottom: '20px' }}>
-        <Box sx={UsersTemplateStyle.heading}>
-          <BackButtonLink aria-label={t('my-account')} href="/my-account">
-            <ChevronLeftIcon />
-            {mdScreen && <Typography variant="body1">{t('my-account')}</Typography>}
-          </BackButtonLink>
-          <Typography variant={mdScreen ? 'h1' : 'h2'}>{t('users')}</Typography>
-        </Box>
-        <NoSsr>
-          {hasPermission(actions.CREATE_ACCOUNT) && (
-            <Grid container>
-              <Grid item xs={12} md={12}>
-                <Button
-                  variant="contained"
-                  color="inherit"
-                  disabled={isUserFormOpen}
-                  onClick={handleAddUserButtonClick}
-                  disableElevation
-                  id="formOpenButton"
-                  startIcon={<AddCircleOutlineIcon />}
-                  sx={{ width: { xs: '100%', md: 118 } }}
-                >
-                  {t('add-user')}
-                </Button>
-              </Grid>
-            </Grid>
-          )}
-        </NoSsr>
-      </Grid>
-      <Grid item>
-        <SearchBoxContainer>
+    <Grid container gap={3}>
+      <MobileB2BLayout
+        headerText={t('users')}
+        backText={activeBreadCrumb?.backText}
+        onBackClick={onBackClick}
+      />
+      <NoSsr>
+        {hasPermission(actions.CREATE_ACCOUNT) && (
+          <Grid item xs={12}>
+            <Box width={'100%'}>
+              <Button
+                variant="contained"
+                color="inherit"
+                disabled={isUserFormOpen}
+                onClick={handleAddUserButtonClick}
+                disableElevation
+                id="formOpenButton"
+                startIcon={<AddCircleOutlineIcon />}
+                sx={{ width: { xs: '100%', md: 118 } }}
+                {...(!mdScreen && { fullWidth: true })}
+              >
+                {t('add-user')}
+              </Button>
+            </Box>
+          </Grid>
+        )}
+      </NoSsr>
+      <Grid item xs={12}>
+        <Box width="100%" mb={2}>
           <SearchBar
             onSearch={handleSearch}
             placeHolder={t('user-search-placeholder')}
             searchTerm={paginationState.searchTerm}
             showClearButton={true}
           />
-        </SearchBoxContainer>
+        </Box>
 
         {isLoading ? (
           <Box style={{ width: '100%', display: 'flex', justifyContent: 'center' }}>
@@ -276,6 +320,7 @@ const UsersTemplate = () => {
             <UserTable
               mdScreen={mdScreen}
               b2bUsers={data?.items as B2BUser[]}
+              b2bUserFetching={b2bUserFetching}
               onSave={handleUpdateUser}
               onDelete={handleDelete}
             />

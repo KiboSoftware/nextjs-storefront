@@ -1,3 +1,4 @@
+import { TenantGroup } from './B2bTypes'
 import { B2BAccount } from '../gql/types'
 
 export interface AccountHierarchyNode {
@@ -34,6 +35,12 @@ export interface UpdateCustomerB2bAccountParams {
 
 export interface AccountHierarchyResultType {
   b2BAccountHierarchy?: B2BAccountHierarchyResult
+  isLoading: boolean
+  isSuccess: boolean
+  isError: boolean
+}
+export interface B2BGroupsResultType {
+  groups?: TenantGroup[] 
   isLoading: boolean
   isSuccess: boolean
   isError: boolean

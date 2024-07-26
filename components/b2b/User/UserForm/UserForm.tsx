@@ -1,24 +1,23 @@
 import React, { useEffect, useState } from 'react'
 
 import { yupResolver } from '@hookform/resolvers/yup'
-import CheckIcon from '@mui/icons-material/Check'
-import ClearIcon from '@mui/icons-material/Clear'
 import { LoadingButton } from '@mui/lab'
-import { Box, Grid, Stack, useMediaQuery, useTheme } from '@mui/material'
+import { Box, Grid, Skeleton, Stack } from '@mui/material'
 import getConfig from 'next/config'
 import { useTranslation } from 'next-i18next'
 import { useForm, Controller } from 'react-hook-form'
 import * as yup from 'yup'
 
-import userFormStyles from './UserForm.styles'
+import GroupTransferList from '../GroupTransferText/GroupTransferList'
 import { KiboRadio, KiboSwitch, KiboTextBox } from '@/components/common'
+import { useGetGroups } from '@/hooks/queries/groups/useGetGroups/useGetGroups'
 
 import { B2BUser, B2BUserInput } from '@/lib/gql/types'
 
 interface UserFormProps {
   isEditMode: boolean
   isUserFormInDialog?: boolean
-  b2BUser?: B2BUser | any
+  b2BUser?: B2BUser
   onClose: () => void
   onSave: (formValues: B2BUserInput, b2BUser?: B2BUser) => void
 }
@@ -36,29 +35,33 @@ export const useFormSchema = () => {
 }
 
 const UserForm = (props: UserFormProps) => {
-  const { isEditMode, isUserFormInDialog, b2BUser, onClose, onSave } = props
+  const { isEditMode, b2BUser, onClose, onSave } = props
 
   const { publicRuntimeConfig } = getConfig()
 
-  const classes = userFormStyles()
   const { t } = useTranslation('common')
-  const theme = useTheme()
-  const mdScreen = useMediaQuery(theme.breakpoints.up('md'))
   const userSchema = useFormSchema()
   const userFormRadioOptions = publicRuntimeConfig.userFormRadioOptions
 
   const [isLoading, setLoading] = useState(false)
 
-  const isDesktopView = !isEditMode && mdScreen
-  const isDesktopEditView = isEditMode && mdScreen
+  const { data: groups, isLoading: groupsLoading } = useGetGroups()
+
   const {
     getValues,
     handleSubmit,
-    formState: { errors },
+    formState: { errors, isSubmitting },
     control,
     reset,
   } = useForm({
-    defaultValues: { role: 'Admin', emailAddress: '', firstName: '', lastName: '', isActive: true },
+    defaultValues: {
+      role: 'Admin',
+      emailAddress: '',
+      firstName: '',
+      lastName: '',
+      isActive: true,
+      groups: { addGroups: [], removeGroups: [] },
+    },
     resolver: yupResolver(userSchema),
   })
   const onSubmit = async () => {
@@ -71,24 +74,32 @@ const UserForm = (props: UserFormProps) => {
       await onSave(formValues)
     }
     setLoading(false)
-    cancelAction()
+    reset()
   }
 
   useEffect(() => {
     if (!b2BUser) return
     const { firstName, lastName, emailAddress, isActive, roles } = b2BUser
     reset({
-      emailAddress,
-      firstName,
-      lastName,
-      isActive,
-      role: roles?.length ? roles[0]?.roleName : '',
+      emailAddress: emailAddress as string,
+      firstName: firstName as string,
+      lastName: lastName as string,
+      isActive: isActive as boolean,
+      role: roles?.length ? (roles[0]?.roleName as string) : '',
     })
   }, [b2BUser])
 
   const cancelAction = () => {
     onClose()
     reset()
+  }
+
+  const b2bUserGroups = () => {
+    return groups?.filter((group: any) => !(b2BUser as any)?.groups?.includes(group.code))
+  }
+
+  const b2bUserSelectedGroups = () => {
+    return groups?.filter((group: any) => (b2BUser as any)?.groups?.includes(group.code))
   }
 
   return (
@@ -100,22 +111,8 @@ const UserForm = (props: UserFormProps) => {
         data-testid="user-form"
         style={{ display: 'flex' }}
       >
-        <Grid
-          container
-          spacing={8}
-          style={{
-            marginTop: '5px',
-            marginLeft: 0,
-            display: 'flex',
-            justifyContent: 'space-between',
-          }}
-        >
-          <Grid
-            item
-            xs={12}
-            md={isUserFormInDialog ? 12 : isDesktopEditView ? 3 : 3.5}
-            className={classes.textBoxGridStyle}
-          >
+        <Grid container rowSpacing={1} columnSpacing={1}>
+          <Grid item xs={12} md={12}>
             <Controller
               name="emailAddress"
               control={control}
@@ -137,12 +134,7 @@ const UserForm = (props: UserFormProps) => {
               )}
             />
           </Grid>
-          <Grid
-            item
-            xs={12}
-            md={isUserFormInDialog ? 12 : isDesktopEditView ? 1.5 : 2}
-            className={classes.textBoxGridStyle}
-          >
+          <Grid item xs={12} md={6}>
             <Controller
               name="firstName"
               control={control}
@@ -158,12 +150,7 @@ const UserForm = (props: UserFormProps) => {
               )}
             />
           </Grid>
-          <Grid
-            item
-            xs={12}
-            md={isUserFormInDialog ? 12 : isDesktopEditView ? 1.5 : 2}
-            className={classes.textBoxGridStyle}
-          >
+          <Grid item xs={12} md={6}>
             <Controller
               name="lastName"
               control={control}
@@ -179,7 +166,8 @@ const UserForm = (props: UserFormProps) => {
               )}
             />
           </Grid>
-          <Grid item xs={12} md={isUserFormInDialog ? 12 : 2} className={classes.textBoxGridStyle}>
+
+          <Grid item xs={12} md={12}>
             <Controller
               name="role"
               control={control}
@@ -188,6 +176,7 @@ const UserForm = (props: UserFormProps) => {
                 <KiboRadio
                   {...field}
                   align="center"
+                  row
                   onChange={(value) => field.onChange(value)}
                   title={t('role')}
                   radioOptions={userFormRadioOptions}
@@ -197,31 +186,46 @@ const UserForm = (props: UserFormProps) => {
             />
           </Grid>
           {isEditMode && (
-            <Grid
-              item
-              xs={12}
-              md={isUserFormInDialog ? 12 : isDesktopEditView ? 1.7 : 1}
-              className={classes.kiboSwitchGridStyle}
-            >
-              <Controller
-                name="isActive"
-                control={control}
-                render={({ field }) => (
-                  <KiboSwitch
-                    checked={field.value}
-                    onLabel={t('active')}
-                    offLabel={t('in-active')}
-                    title={t('status')}
-                    onChange={(value) => field.onChange(value)}
+            <>
+              {groupsLoading ? (
+                <GroupTransferListSkeleton />
+              ) : (
+                <Grid item xs={12} md={12}>
+                  <Controller
+                    name="groups"
+                    control={control}
+                    render={({ field }) => (
+                      <GroupTransferList
+                        groupsList={b2bUserGroups()}
+                        selectedGroups={b2bUserSelectedGroups()}
+                        isSubmitting={isSubmitting}
+                        onAddRemoveGroups={(value) => field.onChange(value)}
+                      />
+                    )}
                   />
-                )}
-              />
-            </Grid>
+                </Grid>
+              )}
+              <Grid item xs={12} md={12}>
+                <Controller
+                  name="isActive"
+                  control={control}
+                  render={({ field }) => (
+                    <KiboSwitch
+                      checked={field.value}
+                      onLabel={t('active')}
+                      offLabel={t('in-active')}
+                      title={t('status')}
+                      onChange={(value) => field.onChange(value)}
+                    />
+                  )}
+                />
+              </Grid>
+            </>
           )}
           <Grid
             item
             xs={12}
-            md={isUserFormInDialog ? 12 : isDesktopEditView ? 1.1 : 1.4}
+            md={12}
             sx={{ paddingLeft: '0 !important', paddingTop: { xs: '15px !important' } }}
           >
             <Stack
@@ -240,7 +244,7 @@ const UserForm = (props: UserFormProps) => {
                 onClick={cancelAction}
                 sx={{ marginTop: { xs: 1.5, md: 0 } }}
               >
-                {isDesktopEditView && !isUserFormInDialog ? <ClearIcon /> : t('cancel')}
+                {t('cancel')}
               </LoadingButton>
 
               <LoadingButton
@@ -251,15 +255,47 @@ const UserForm = (props: UserFormProps) => {
                 loading={isLoading}
                 disabled={isLoading}
               >
-                {(isDesktopEditView && !isUserFormInDialog && <CheckIcon />) ||
-                  (isDesktopView && t('add-user')) ||
-                  t('save')}
+                {isEditMode ? t('save') : t('add-user')}
               </LoadingButton>
             </Stack>
           </Grid>
         </Grid>
       </form>
     </>
+  )
+}
+
+const GroupTransferListSkeleton = () => {
+  return (
+    <Box
+      sx={{
+        display: 'flex',
+        justifyContent: 'space-between',
+        width: '100%',
+        alignItems: 'center',
+      }}
+    >
+      <Box height={216} width={192}>
+        <Skeleton height={'100%'} width="100%" />
+      </Box>
+      <Box>
+        <Box width={64} height={30} m={0.5}>
+          <Skeleton height={'100%'} width="100%" />
+        </Box>
+        <Box width={64} height={30} m={0.5}>
+          <Skeleton height={'100%'} width="100%" />
+        </Box>
+        <Box width={64} height={30} m={0.5}>
+          <Skeleton height={'100%'} width="100%" />
+        </Box>
+        <Box width={64} height={30} m={0.5}>
+          <Skeleton height={'100%'} width="100%" />
+        </Box>
+      </Box>
+      <Box height={216} width={192}>
+        <Skeleton height={'100%'} width="100%" />
+      </Box>
+    </Box>
   )
 }
 

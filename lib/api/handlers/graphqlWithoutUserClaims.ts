@@ -1,24 +1,21 @@
-import {
-  fetcher,
-  getAdditionalHeader,
-  getOperationDetails,
-  getUserClaimsFromRequest,
-} from '../util'
+import { fetcher, getAdditionalHeader, getOperationDetails } from '../util'
 import { GraphQLError } from '../util/graphql-error-class'
 import { KIBO_HEADERS } from '@/lib/constants'
 import { NextApiRequestWithLogger } from '@/lib/types'
 
 import type { NextApiResponse } from 'next'
 
-export default async function graphQLHandler(req: NextApiRequestWithLogger, res: NextApiResponse) {
+export default async function graphQLWithoutUserClaimsHandler(
+  req: NextApiRequestWithLogger,
+  res: NextApiResponse
+) {
   try {
     const { query, variables, operationName } = req.body
     const gqlDetails = getOperationDetails(query)
     req.logger.info('incoming graphql request', { gql: gqlDetails })
 
-    const userClaims = await getUserClaimsFromRequest(req, res)
-    const headers = getAdditionalHeader(req, userClaims)
-    const response = await fetcher({ query, variables }, { userClaims, headers })
+    const headers = getAdditionalHeader(req)
+    const response = await fetcher({ query, variables }, { headers })
 
     const correlationId = response.headers && response.headers.get(KIBO_HEADERS.CORRELATION_ID)
     correlationId && req.logger.info({ gql: gqlDetails, correlationId })

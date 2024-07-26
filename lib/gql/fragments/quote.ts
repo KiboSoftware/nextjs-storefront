@@ -1,5 +1,5 @@
 import { quoteAuditInfoFragment } from './b2b/quote-audit-info'
-
+import { quoteWorkflowStateFragment } from './b2b/quote-workflow-state'
 export const quoteFragment = `
 fragment quoteFragment on Quote {
         id
@@ -193,6 +193,13 @@ fragment quoteFragment on Quote {
         }
         userId
         customerAccountId
+        workflowState {
+            ...quoteWorkflowStateFragment
+        }
+        buyerWorkflowState {
+            ...quoteWorkflowStateFragment
+        }
   }
   ${quoteAuditInfoFragment}
+  ${quoteWorkflowStateFragment}
 `

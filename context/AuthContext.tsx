@@ -22,6 +22,7 @@ import type { CustomerAccount } from '@/lib/gql/types'
 type CustomerAccountWithRole = CustomerAccount & {
   roleId?: number
   roleName?: string
+  groups?: string[]
 }
 export interface AuthContextType {
   isAuthenticated: boolean
@@ -81,11 +82,13 @@ export const AuthContextProvider = ({ children }: AuthContextProviderProps) => {
       userAccount?.items[0] &&
       userAccount?.items[0]?.roles &&
       userAccount?.items[0]?.roles[0]
+    const groups =
+      userAccount && userAccount?.items && userAccount?.items[0] && userAccount?.items[0]?.groups
 
     if (!roles) return
 
     const { roleId, roleName } = roles
-    const userWithRole = { ...user, roleId, roleName } as CustomerAccountWithRole
+    const userWithRole = { ...user, roleId, roleName, groups } as CustomerAccountWithRole
     setUser(userWithRole)
   }, [userAccount])
 
