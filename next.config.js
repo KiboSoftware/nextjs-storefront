@@ -178,6 +178,11 @@ module.exports = {
         value: 'Nonpurchaser',
       },
     ],
+    paypal: {
+      clientId: process.env.NEXT_PUBLIC_PAYPAL_CLIENT_ID,
+      currency: process.env.NEXT_PUBLIC_PAYPAL_CURRENCY || 'USD',
+      intent: 'authorize',
+    },
   },
   serverRuntimeConfig: {
     userCookieKey: process.env.KIBO_USER_COOKIE_KEY || 'kibo_at',
@@ -202,11 +207,6 @@ module.exports = {
     },
     B2BQuotes: {
       pageSize: 5,
-    },
-    paypal: {
-      clientId: 'Kibo Commerce',
-      currency: process.env.NEXT_PUBLIC_PAYPAL_CURRENCY || 'USD',
-      intent: 'authorize',
     },
   },
   staticPageGenerationTimeout: 1000,

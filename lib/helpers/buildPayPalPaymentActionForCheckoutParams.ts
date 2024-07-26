@@ -18,8 +18,8 @@ export const buildPayPalPaymentActionForCheckoutParams = (
   const billingInfo: CrBillingInfo = {
     billingContact: { ...billingAddress, email: billingAddress?.email || checkout?.email },
     card: null,
-    paymentType: 'PayPalExpress2',
-    paymentWorkflow: 'PayPalExpress2',
+    paymentType: 'paypal_complete_payments_application',
+    paymentWorkflow: 'paypal_complete_payments_application',
     externalTransactionId: externalTransactionId,
     data: {
       paypal: {

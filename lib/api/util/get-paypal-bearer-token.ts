@@ -1,5 +1,3 @@
-import getPaypalCheckoutSettings from './get-paypal-checkout-settings'
-
 let bearerToken: undefined | string
 
 const getPaypalBearerToken = async () => {
@@ -8,9 +6,8 @@ const getPaypalBearerToken = async () => {
       return bearerToken
     }
 
-    const checkoutSettings = await getPaypalCheckoutSettings()
-    const PAYPAL_CLIENT_ID = checkoutSettings?.userName
-    const PAYPAL_CLIENT_SECRET = checkoutSettings?.password
+    const PAYPAL_CLIENT_ID = process.env.PAYPAL_CLIENT_ID
+    const PAYPAL_CLIENT_SECRET = process.env.PAYPAL_CLIENT_SECRET
 
     const url = process.env.NEXT_PUBLIC_PAYPAL_URL || 'https://api-m.sandbox.paypal.com'
 
