@@ -33,6 +33,7 @@ interface HamburgerMenuProps {
   requestAccountIconComponent?: React.ReactNode
   isCSR: boolean
   customerName: string
+  companyOrOrganization?: string
 }
 
 const styles = {
@@ -72,6 +73,7 @@ const HamburgerMenu = (props: HamburgerMenuProps) => {
     requestAccountIconComponent,
     isCSR,
     customerName,
+    companyOrOrganization,
   } = props
   const { getCategoryLink } = uiHelpers()
   const { t } = useTranslation('common')
@@ -106,6 +108,16 @@ const HamburgerMenu = (props: HamburgerMenuProps) => {
     setAnchorElAccountOptions(null)
   }
 
+  const getSubtitle = () => {
+    return isCSR || !companyOrOrganization
+      ? ''
+      : isAuthenticated
+      ? companyOrOrganization
+        ? t('go-to') + companyOrOrganization
+        : t('go-to-my-account')
+      : t('log-in')
+  }
+
   return (
     <>
       <SwipeableDrawer
@@ -130,7 +142,7 @@ const HamburgerMenu = (props: HamburgerMenuProps) => {
               >
                 <HeaderAction
                   title={userName ? `${t('hi')}, ${userName}` : t('my-account')}
-                  subtitle={isCSR ? '' : isAuthenticated ? t('go-to-my-account') : t('log-in')}
+                  subtitle={getSubtitle()}
                   icon={AccountCircle}
                   mobileIconColor="black"
                   iconFontSize="large"

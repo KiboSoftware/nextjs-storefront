@@ -115,7 +115,14 @@ const HeaderAction = (props: HeaderActionProps) => {
               variant="body2"
               component="span"
               color="text.primary"
-              sx={{ display: 'block' }}
+              sx={{
+                display: 'block',
+                whiteSpace: 'nowrap',
+                maxWidth: 120,
+                overflow: 'hidden',
+                textOverflow: 'ellipsis',
+                ...styles.hoverOver,
+              }}
             >
               {subtitle}
             </Typography>

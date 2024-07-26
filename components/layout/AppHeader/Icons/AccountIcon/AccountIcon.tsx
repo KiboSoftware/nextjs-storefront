@@ -9,6 +9,7 @@ interface AccountIconProps extends IconProps {
   onAccountIconClick: () => void
   isCSR: boolean
   customerName: string
+  companyOrOrganization?: string
 }
 
 const AccountIcon = ({
@@ -16,18 +17,28 @@ const AccountIcon = ({
   isElementVisible,
   isCSR,
   customerName,
+  companyOrOrganization,
   onAccountIconClick,
 }: AccountIconProps) => {
   const { isAuthenticated, user } = useAuthContext()
   const { t } = useTranslation('common')
   const userName = isAuthenticated ? user?.firstName : isCSR ? customerName : ''
+  const getSubtitle = () => {
+    return isCSR || !companyOrOrganization
+      ? ''
+      : isAuthenticated
+      ? companyOrOrganization
+        ? t('go-to') + companyOrOrganization
+        : t('go-to-my-account')
+      : t('log-in')
+  }
 
   return (
     <>
       <HeaderAction
         isCSR={isCSR}
         title={userName ? `${t('hi')}, ${userName}` : ''}
-        subtitle={isCSR ? '' : isAuthenticated ? t('go-to-my-account') : t('log-in')}
+        subtitle={getSubtitle()}
         icon={AccountCircleIcon}
         iconFontSize={size}
         isElementVisible={isElementVisible}

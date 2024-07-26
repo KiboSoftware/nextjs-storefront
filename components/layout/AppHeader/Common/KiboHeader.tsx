@@ -69,7 +69,7 @@ const HeaderActionArea = (props: HeaderActionAreaProps) => {
   )
   const openAccountOptions = Boolean(anchorElAccountOptions)
 
-  const { selectedAccountId, accountsByUser } = useAuthContext()
+  const { selectedAccountId, accountsByUser, user } = useAuthContext()
 
   const handleAccountOptionsClick = (event: any) => {
     setAnchorElAccountOptions(event.currentTarget)
@@ -128,9 +128,10 @@ const HeaderActionArea = (props: HeaderActionAreaProps) => {
                 size={isHeaderSmall ? 'small' : 'medium'}
                 onAccountIconClick={onAccountIconClick}
                 data-testid="Account-Icon"
-                isElementVisible={isCSR ? true : false}
+                isElementVisible={true}
                 isCSR={Boolean(isCSR)}
                 customerName={customerName}
+                companyOrOrganization={user?.companyOrOrganization as string}
               />
               {selectedAccountId && accountsByUser && accountsByUser?.length > 1 && (
                 <KeyboardArrowDownOutlined
@@ -193,7 +194,7 @@ const KiboHeader = (props: KiboHeaderProps) => {
   const { navLinks, categoriesTree: initialCategoryTree, isSticky = true } = props
   const { data: categoriesTree } = useGetCategoryTree(initialCategoryTree)
   const { headerState, toggleMobileSearchPortal, toggleHamburgerMenu } = useHeaderContext()
-  const { isAuthenticated } = useAuthContext()
+  const { isAuthenticated, user } = useAuthContext()
   const { showModal, closeModal } = useModalContext()
   const { t } = useTranslation('common')
   const router = useRouter()
@@ -264,6 +265,7 @@ const KiboHeader = (props: KiboHeaderProps) => {
             onAccountIconClick={handleAccountIconClick}
             isCSR={Boolean(isCSR)}
             customerName={customerName}
+            companyOrOrganization={user?.companyOrOrganization as string}
           />
         </MobileHeader>
       )

@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useEffect } from 'react'
 
 import { Menu, MenuItem } from '@mui/material'
 
@@ -16,8 +16,15 @@ interface SwitchAccountMenuProps {
 export const SwitchAccountMenu = (props: SwitchAccountMenuProps) => {
   const { open, handleClose, anchorEl } = props
 
-  const { user, setUser, selectedAccountId, setSelectedAccountId } = useAuthContext()
+  const { user, setUser, selectedAccountId, setSelectedAccountId, setAccountsByUser } =
+    useAuthContext()
   const { activeUsersAccount } = useGetAccountsByUser(user?.emailAddress as string)
+
+  const sortActiveUsersAccountBySelectedId = activeUsersAccount.sort((a, b) => {
+    if (a.id === selectedAccountId) return -1
+    if (b.id === selectedAccountId) return 1
+    return 0
+  })
 
   const handleMenuItemClick = async (id: number) => {
     try {
@@ -31,6 +38,12 @@ export const SwitchAccountMenu = (props: SwitchAccountMenuProps) => {
       console.error('Error switching account', error)
     }
   }
+
+  useEffect(() => {
+    if (activeUsersAccount?.length) {
+      setAccountsByUser && setAccountsByUser(activeUsersAccount)
+    }
+  }, [activeUsersAccount?.length])
 
   return (
     <Menu
@@ -70,10 +83,16 @@ export const SwitchAccountMenu = (props: SwitchAccountMenuProps) => {
       transformOrigin={{ horizontal: 'right', vertical: 'top' }}
       anchorOrigin={{ horizontal: 'right', vertical: 'bottom' }}
     >
-      {activeUsersAccount?.map((account: CustomerAccount) => (
+      {sortActiveUsersAccountBySelectedId?.map((account: CustomerAccount) => (
         <MenuItem
           selected={selectedAccountId === account?.id}
-          sx={{ typography: 'body2' }}
+          sx={{
+            typography: 'body2',
+            '&.Mui-selected': {
+              fontWeight: 'bold',
+              backgroundColor: 'rgba(46, 161, 149, 0.5)',
+            },
+          }}
           key={account?.id}
           onClick={() => handleMenuItemClick(account?.id)}
         >
