@@ -18,7 +18,6 @@ async function switchUserHandler(req: NextApiRequestWithLogger, res: NextApiResp
       id as string,
       req as NextApiRequestWithLogger
     )
-    req.logger.info('refresh auth', JSON.stringify(refreshAuthTicketsResponse))
 
     const authTicket = refreshAuthTicketsResponse?.data?.refreshCustomerAuthTickets
 
@@ -28,7 +27,7 @@ async function switchUserHandler(req: NextApiRequestWithLogger, res: NextApiResp
       ...authTicket,
       accountId: id,
     }
-    req.logger.info('cookieValue', JSON.stringify(cookieValue))
+
     res.setHeader(
       'Set-Cookie',
       getAuthCookieName() + '=' + prepareSetCookieValue({ ...cookieValue }) + ';HttpOnly;path=/'
@@ -40,22 +39,18 @@ async function switchUserHandler(req: NextApiRequestWithLogger, res: NextApiResp
   }
 }
 
-async function refreshCustomerAuthToken(accountId: string, req: NextApiRequestWithLogger) {
+async function refreshCustomerAuthToken(accountId: string, req: NextApiRequest) {
   const cookies = req?.cookies
-  req.logger.info('cookies', cookies)
   const authTicket = decodeParseCookieValue(cookies[getAuthCookieName()])
-  req.logger.info('authTicket', authTicket)
+
   const refreshToken = authTicket?.refreshToken
-  req.logger.info('refreshToken', refreshToken)
+
   const headers = req ? getAdditionalHeader(req) : {}
-  req.logger.info('headers', headers)
   const variables = {
     accountId: parseInt(accountId),
     refreshToken,
   }
-  req.logger.info('variables', variables)
   const response = await fetcher({ query, variables }, { headers })
-  req.logger.info('response', response)
   return response
 }
 

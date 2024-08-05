@@ -28,7 +28,7 @@ export const SwitchAccountMenu = (props: SwitchAccountMenuProps) => {
 
   const handleMenuItemClick = async (id: number) => {
     try {
-      const res = await fetch(`/api/switch-user?id=${id}`)
+      const res = await fetch(`/api/switch-user?id=${id}&t=${new Date().getTime()}`)
       const data = await res.json()
       setSelectedAccountId && setSelectedAccountId(id)
       if (data?.id) {
