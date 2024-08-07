@@ -2,6 +2,7 @@ import { useRouter } from 'next/router'
 import { serverSideTranslations } from 'next-i18next/serverSideTranslations'
 
 import { OrderHistoryTemplate } from '@/components/page-templates'
+import { useAuthContext } from '@/context'
 
 import type { GetServerSideProps, GetServerSidePropsContext, NextPage } from 'next'
 
@@ -24,9 +25,12 @@ const OrderHistoryPage: NextPage = () => {
 
   const handleAccountTitleClick = () => router.push('/my-account')
 
+  const { user } = useAuthContext()
+
   return (
     <>
       <OrderHistoryTemplate
+        key={user?.id}
         queryFilters={queryFilters}
         onAccountTitleClick={handleAccountTitleClick}
       />

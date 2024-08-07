@@ -1,8 +1,11 @@
-import React, { useEffect } from 'react'
+import React, { SyntheticEvent, useEffect } from 'react'
 
 import { Menu, MenuItem } from '@mui/material'
+import { useQueryClient } from '@tanstack/react-query'
+import { useTranslation } from 'next-i18next'
 
-import { useAuthContext } from '@/context'
+import { ConfirmationDialog } from '@/components/dialogs'
+import { useAuthContext, useModalContext } from '@/context'
 import { useGetAccountsByUser } from '@/hooks'
 
 import type { CustomerAccount } from '@/lib/gql/types'
@@ -15,7 +18,9 @@ interface SwitchAccountMenuProps {
 
 export const SwitchAccountMenu = (props: SwitchAccountMenuProps) => {
   const { open, handleClose, anchorEl } = props
-
+  const queryClient = useQueryClient()
+  const { showModal } = useModalContext()
+  const { t } = useTranslation('common')
   const { user, setUser, selectedAccountId, setSelectedAccountId, setAccountsByUser } =
     useAuthContext()
   const { activeUsersAccount } = useGetAccountsByUser(user?.emailAddress as string)
@@ -28,12 +33,22 @@ export const SwitchAccountMenu = (props: SwitchAccountMenuProps) => {
 
   const handleMenuItemClick = async (id: number) => {
     try {
-      const res = await fetch(`/api/switch-user?id=${id}&t=${new Date().getTime()}`)
-      const data = await res.json()
-      setSelectedAccountId && setSelectedAccountId(id)
-      if (data?.id) {
-        setUser && setUser(data)
-      }
+      showModal({
+        Component: ConfirmationDialog,
+        props: {
+          contentText: t('switch-account-message'),
+          primaryButtonText: t('Yes'),
+          onConfirm: async () => {
+            const res = await fetch(`/api/switch-user?id=${id}&t=${new Date().getTime()}`)
+            const data = await res.json()
+            setSelectedAccountId && setSelectedAccountId(id)
+            if (data?.id) {
+              queryClient.removeQueries()
+              setUser && setUser(data)
+            }
+          },
+        },
+      })
     } catch (error) {
       console.error('Error switching account', error)
     }

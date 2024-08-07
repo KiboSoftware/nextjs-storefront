@@ -51,6 +51,7 @@ const OrderStatusTemplate = () => {
         )}
         {!order?.id && (
           <ViewOrderStatus
+            billingEmail={order?.billingInfo?.billingContact?.email as string}
             onOrderStatusSubmit={handleOrderStatusSubmit}
             lookupWarningMessage={pageCount === 0 ? t('no-orders-found') : ''}
           />

@@ -26,6 +26,7 @@ export interface OrderStatusFormDataProps {
 }
 
 export interface ViewOrderStatusProps {
+  billingEmail: string
   lookupErrorMessage?: string
   lookupWarningMessage?: string
   onOrderStatusSubmit: (data: OrderStatusFormDataProps) => void
@@ -54,7 +55,7 @@ const useViewOrderStatusSchema = () => {
 }
 
 const ViewOrderStatus = (props: ViewOrderStatusProps) => {
-  const { onOrderStatusSubmit, lookupErrorMessage, lookupWarningMessage } = props
+  const { onOrderStatusSubmit, lookupErrorMessage, lookupWarningMessage, billingEmail } = props
   const { t } = useTranslation('common')
 
   const theme = useTheme()
@@ -77,7 +78,7 @@ const ViewOrderStatus = (props: ViewOrderStatusProps) => {
   const onValid = async (formData: OrderStatusFormDataProps) =>
     onOrderStatusSubmit({
       ...formData,
-      billingEmail: isAuthenticated ? (user?.emailAddress as string) : formData.billingEmail,
+      billingEmail: isAuthenticated ? billingEmail : formData.billingEmail,
     })
 
   return (

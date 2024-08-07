@@ -533,5 +533,6 @@
   "remove-payPal": "Remove PayPal",
   "loading-paypal": "Loading PayPal...",
   "error-cartTakeover": "Error while fetching the cart. Please close the window and try again.",
-  "accounts": "Accounts"
+  "accounts": "Accounts",
+  "switch-account-message": "Are you sure you want to switch the account?"
 }

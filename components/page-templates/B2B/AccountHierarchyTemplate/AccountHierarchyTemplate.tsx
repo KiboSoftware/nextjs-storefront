@@ -72,7 +72,10 @@ const AccountHierarchyTemplate = (props: AccountHierarchyTemplateProps) => {
     initialData?.accounts as B2BAccount[]
   )
 
-  const { b2BAccountHierarchy } = useGetB2BAccountHierarchy(user?.id as number, initialData)
+  const { b2BAccountHierarchy, isError } = useGetB2BAccountHierarchy(
+    user?.id as number,
+    initialData
+  )
   const { createCustomerB2bAccount } = useCreateCustomerB2bAccountMutation()
   const { updateCustomerB2bAccount } = useUpdateCustomerB2bAccountMutation()
   const { updateCustomerB2bUser } = useUpdateCustomerB2bUserMutation()
@@ -337,7 +340,7 @@ const AccountHierarchyTemplate = (props: AccountHierarchyTemplateProps) => {
             </Box>
           </Grid>
           <Grid item xs={12}>
-            {initialData?.accounts?.length === 0 ? (
+            {accountHierarchy?.accounts?.length === 0 || isError ? (
               <Box>
                 <Typography variant="body2">{t('no-hierarchy-found')}</Typography>
               </Box>
