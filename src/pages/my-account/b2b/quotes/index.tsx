@@ -41,6 +41,7 @@ const QuotesPage: NextPage<QuotesPageProps> = (props) => {
     ...customerAccountFromServer,
     ...customerAccountFromClient,
   }
+
   const { quotesSearchParam, sortingValues, handleQuotesSearchParam } = useB2BQuote({
     accountId: customerAccount?.id,
     quotes,

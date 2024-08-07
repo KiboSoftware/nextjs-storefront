@@ -120,26 +120,24 @@ const ViewOrderStatus = (props: ViewOrderStatusProps) => {
               )}
             />
 
-            {!isAuthenticated && (
-              <Controller
-                name="billingEmail"
-                control={control}
-                render={({ field }) => (
-                  <KiboTextBox
-                    {...field}
-                    value={field.value || ''}
-                    label={t('billing-email')}
-                    ref={null}
-                    error={!!errors?.billingEmail}
-                    helperText={errors?.billingEmail?.message}
-                    onChange={(_name, value) => field.onChange(value)}
-                    onBlur={field.onBlur}
-                    required={true}
-                    sx={{ maxWidth: '421px' }}
-                  />
-                )}
-              />
-            )}
+            <Controller
+              name="billingEmail"
+              control={control}
+              render={({ field }) => (
+                <KiboTextBox
+                  {...field}
+                  value={field.value || ''}
+                  label={t('billing-email')}
+                  ref={null}
+                  error={!!errors?.billingEmail}
+                  helperText={errors?.billingEmail?.message}
+                  onChange={(_name, value) => field.onChange(value)}
+                  onBlur={field.onBlur}
+                  required={true}
+                  sx={{ maxWidth: '421px' }}
+                />
+              )}
+            />
           </Stack>
 
           <Button

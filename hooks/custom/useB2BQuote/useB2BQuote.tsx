@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 
 import getConfig from 'next/config'
 
@@ -25,6 +25,15 @@ export const useB2BQuote = ({
     options: publicRuntimeConfig.B2BQuotes.sortOptions,
     selected: quotesSearchParam.sortBy as string,
   }
+
+  useEffect(() => {
+    if (accountId) {
+      setQuotesSearchParam((prevSearchParam) => ({
+        ...prevSearchParam,
+        filter: `customerAccountId eq ${accountId}`,
+      }))
+    }
+  }, [accountId])
 
   const handleQuotesSearchParam = (param: QueryQuotesArgs) => {
     if (param.filter === quotesSearchParam.filter) return

@@ -1,4 +1,4 @@
-import React, { SyntheticEvent, useEffect } from 'react'
+import React, { useEffect } from 'react'
 
 import { Menu, MenuItem } from '@mui/material'
 import { useQueryClient } from '@tanstack/react-query'
@@ -43,8 +43,8 @@ export const SwitchAccountMenu = (props: SwitchAccountMenuProps) => {
             const data = await res.json()
             setSelectedAccountId && setSelectedAccountId(id)
             if (data?.id) {
-              queryClient.removeQueries()
               setUser && setUser(data)
+              queryClient.removeQueries()
             }
           },
         },
