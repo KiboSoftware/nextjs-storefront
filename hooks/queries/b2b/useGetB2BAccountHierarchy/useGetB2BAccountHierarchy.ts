@@ -45,6 +45,7 @@ export const useGetB2BAccountHierarchy = (
     enabled: !!accountId,
     placeholderData: (previousData) => previousData ?? undefined,
     initialData,
+    retry: 0,
   })
 
   return {

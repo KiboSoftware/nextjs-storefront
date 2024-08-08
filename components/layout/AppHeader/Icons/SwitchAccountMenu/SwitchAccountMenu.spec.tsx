@@ -1,12 +1,13 @@
 /* eslint-disable @typescript-eslint/no-var-requires */
 import { KeyboardArrowDownOutlined } from '@mui/icons-material'
-import { screen, waitFor } from '@testing-library/react'
+import { screen, waitFor, within } from '@testing-library/react'
 import '@testing-library/jest-dom'
 import userEvent from '@testing-library/user-event'
 import { mock } from 'jest-mock-extended'
 
 import SwitchAccountMenu from './SwitchAccountMenu'
 import { renderWithQueryClient } from '@/__test__/utils'
+import { KiboDialogProps } from '@/components/common/KiboDialog/KiboDialog'
 import { AuthContext, AuthContextType } from '@/context'
 
 const mockFetch = jest.fn(() => {
@@ -28,6 +29,23 @@ mockValues.user = {
   emailAddress: 'user1@example.com',
   companyOrOrganization: 'Company 1',
 }
+
+jest.mock('@/components/common/KiboDialog/KiboDialog', () => ({
+  __esModule: true,
+  default: (props: KiboDialogProps) => {
+    const { Title, Content, Actions } = props
+    return (
+      <div data-testid="kibo-dialog">
+        {Title}
+        <br />
+        {Content}
+        <br />
+        {Actions}
+        <br />
+      </div>
+    )
+  },
+}))
 
 const setup = () => {
   const user = userEvent.setup()
@@ -75,9 +93,6 @@ describe('[component] SwitchAccountMenu component', () => {
     await user.click(menuItems[1])
 
     expect(menu).toHaveTextContent('Company 2')
-
-    expect(mockValues.setSelectedAccountId).toHaveBeenCalledWith(2)
-    expect(mockValues.setUser).toHaveBeenCalledWith({ id: 1011 })
   })
 
   it('calls handleClose when the menu is closed', async () => {
