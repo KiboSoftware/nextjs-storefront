@@ -46,11 +46,7 @@ const useViewOrderStatusSchema = () => {
     billingEmail: yup
       .string()
       .email(t('billing-email-must-be-a-valid-email'))
-      .when('$isAuthenticated', (isAuthenticated, schema) => {
-        if (!isAuthenticated) {
-          return schema.required(t('billing-email-is-required'))
-        }
-      }),
+      .required(t('billing-email-is-required')),
   })
 }
 
@@ -78,7 +74,6 @@ const ViewOrderStatus = (props: ViewOrderStatusProps) => {
   const onValid = async (formData: OrderStatusFormDataProps) =>
     onOrderStatusSubmit({
       ...formData,
-      billingEmail: isAuthenticated ? billingEmail : formData.billingEmail,
     })
 
   return (
