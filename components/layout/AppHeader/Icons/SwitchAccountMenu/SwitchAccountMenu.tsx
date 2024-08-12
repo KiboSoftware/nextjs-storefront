@@ -47,7 +47,9 @@ export const SwitchAccountMenu = (props: SwitchAccountMenuProps) => {
             if (data?.id && setUser) {
               setUser(data)
               queryClient.removeQueries()
-              router.push('/my-account')
+              if (router.pathname.startsWith('/my-account')) {
+                router.push('/my-account')
+              }
             }
           },
         },
