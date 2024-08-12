@@ -54,7 +54,11 @@ const MyAccountPage: NextPage<MyAccountPageProps> = (props) => {
   const isB2BUser = customerAccount?.accountType?.toLowerCase() === AccountType.B2B.toLowerCase()
   const isB2CUser = customerAccount?.accountType?.toLowerCase() === AccountType.B2C.toLowerCase()
 
-  const template = isB2BUser ? <B2BTemplate /> : isB2CUser ? <MyAccountTemplate /> : null
+  const template = isB2BUser ? (
+    <B2BTemplate key={customerAccountFromClient?.id} />
+  ) : isB2CUser ? (
+    <MyAccountTemplate key={customerAccountFromClient?.id} />
+  ) : null
 
   if (!template) {
     return null

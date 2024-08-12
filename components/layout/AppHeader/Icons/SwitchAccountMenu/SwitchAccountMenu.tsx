@@ -2,6 +2,7 @@ import React, { useEffect } from 'react'
 
 import { Menu, MenuItem } from '@mui/material'
 import { useQueryClient } from '@tanstack/react-query'
+import { useRouter } from 'next/router'
 import { useTranslation } from 'next-i18next'
 
 import { ConfirmationDialog } from '@/components/dialogs'
@@ -19,6 +20,7 @@ interface SwitchAccountMenuProps {
 export const SwitchAccountMenu = (props: SwitchAccountMenuProps) => {
   const { open, handleClose, anchorEl } = props
   const queryClient = useQueryClient()
+  const router = useRouter()
   const { showModal } = useModalContext()
   const { t } = useTranslation('common')
   const { user, setUser, selectedAccountId, setSelectedAccountId, setAccountsByUser } =
@@ -42,9 +44,10 @@ export const SwitchAccountMenu = (props: SwitchAccountMenuProps) => {
             const res = await fetch(`/api/switch-user?id=${id}&t=${new Date().getTime()}`)
             const data = await res.json()
             setSelectedAccountId && setSelectedAccountId(id)
-            if (data?.id) {
-              setUser && setUser(data)
+            if (data?.id && setUser) {
+              setUser(data)
               queryClient.removeQueries()
+              router.push('/my-account')
             }
           },
         },
