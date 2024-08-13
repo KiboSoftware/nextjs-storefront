@@ -45,6 +45,7 @@ export const SwitchAccountMenu = (props: SwitchAccountMenuProps) => {
             const data = await res.json()
             setSelectedAccountId && setSelectedAccountId(id)
             if (data?.id && setUser) {
+              document.cookie = `behaviors=${data?.behaviors}; path=/`
               setUser(data)
               queryClient.removeQueries()
               if (router.pathname.startsWith('/my-account')) {

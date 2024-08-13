@@ -2,7 +2,9 @@ import { UserAuthTicket } from '@kibocommerce/graphql-client'
 import { NextApiRequest, NextApiResponse } from 'next'
 
 import { fetcher, getAdditionalHeader } from '../util'
+import { getBehaviors } from '../util/get-behaviors'
 import { refreshAuthToken as query } from '@/lib/gql/mutations'
+import { fromBitVectorSetArray } from '@/lib/helpers'
 import {
   decodeParseCookieValue,
   getAuthCookieName,
@@ -27,6 +29,10 @@ async function switchUserHandler(req: NextApiRequestWithLogger, res: NextApiResp
       ...authTicket,
       accountId: id,
     }
+
+    const jwtAccessToken = authTicket?.jwtAccessToken
+
+    customerAccount.behaviors = getBehaviors(jwtAccessToken)
 
     res.setHeader(
       'Set-Cookie',

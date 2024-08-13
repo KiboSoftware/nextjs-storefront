@@ -1,6 +1,7 @@
 import getConfig from 'next/config'
 
 import { fetcher, getAdditionalHeader } from '../util'
+import { getBehaviors } from '../util/get-behaviors'
 import getUserClaimsFromRequest from '../util/getUserClaimsFromRequest'
 import { fromBitVectorSetArray } from '@/lib/helpers'
 import { NextApiRequestWithLogger } from '@/lib/types'
@@ -28,11 +29,8 @@ export default async function loginHandler(req: NextApiRequestWithLogger, res: N
     const account = response?.data?.account
     const userId = response?.data?.account?.customerAccount?.userId
     const jwtAccessToken = response?.data?.account?.jwtAccessToken
-    const decoded = JSON.parse(
-      Buffer.from(jwtAccessToken?.split('.')[1], 'base64').toString('ascii')
-    )
-    const bv = decoded['https://www.kibocommerce.com/user_claims'].bv
-    const behaviors = fromBitVectorSetArray(bv)
+
+    const behaviors = getBehaviors(jwtAccessToken)
     const cookieValue = {
       accessToken: account?.accessToken,
       accessTokenExpiration: account?.accessTokenExpiration,
