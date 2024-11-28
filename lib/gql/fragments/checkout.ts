@@ -8,6 +8,7 @@ export const checkoutItemProductFragment = /* GraphQL */ `
       attributeFQN
       name
       value
+      shopperEnteredValue
     }
     properties {
       attributeFQN
@@ -279,6 +280,7 @@ export const shipmentItemFragment = /* GraphQL */ `
         attributeFQN
         name
         value
+        shopperEnteredValue
       }
     }
   }

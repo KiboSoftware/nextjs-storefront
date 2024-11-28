@@ -35,17 +35,17 @@ const KeyValueDisplay = (prop: KeyValueDisplayProps) => {
       >
         {option?.name}
       </Typography>
-      {typeof option?.value === 'string' ? (
+      {typeof option?.value === 'string' || typeof option?.shopperEnteredValue === 'string' ? (
         <Typography
           variant={variant}
           fontWeight={fontWeight ?? 'normal'}
           component="span"
           color={color}
         >
-          {option?.value}
+          {option?.value || option?.shopperEnteredValue?.toString()}
         </Typography>
       ) : (
-        option?.value
+        option?.value || option?.shopperEnteredValue?.toString()
       )}
     </Box>
   )

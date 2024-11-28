@@ -16,6 +16,7 @@ const addToCartMutation = /* GraphQL */ `
           attributeFQN
           name
           value
+          shopperEnteredValue
         }
         properties {
           attributeFQN

@@ -9,12 +9,22 @@ import type { ProductOptionValue } from '@/lib/gql/types'
 interface ColorSelectorProps {
   attributeFQN: string
   values: ProductOptionValue[]
-  onColorChange: (attributeFQN: string, value: string) => void
+  onColorChange: (
+    attributeFQN: string,
+    value: string,
+    shopperEnteredValue?: string | boolean,
+    isEnabled?: boolean
+  ) => void
 }
 
 interface ColorOptionsProps extends ProductOptionValue {
   attributeFQN: string
-  onColorSelection: (attributeFQN: string, value: string) => void
+  onColorSelection: (
+    attributeFQN: string,
+    value: string,
+    shopperEnteredValue: string | boolean,
+    isEnabled?: boolean
+  ) => void
 }
 
 const styles = {
@@ -58,7 +68,8 @@ const ColorOptions = (props: ColorOptionsProps) => {
           backgroundColor: `${value}`,
         },
       }}
-      {...(!isSelected && isEnabled && { onClick: () => onColorSelection(attributeFQN, value) })}
+      {...(!isSelected &&
+        isEnabled && { onClick: () => onColorSelection(attributeFQN, value, true, isEnabled) })}
       data-testid={`colorvalue-${value}-${isSelected ? 'selected' : ''}`}
     ></Chip>
   )
