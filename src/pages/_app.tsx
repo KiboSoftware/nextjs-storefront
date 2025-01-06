@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useEffect } from 'react'
 
 import { CacheProvider, EmotionCache } from '@emotion/react'
 // eslint-disable-next-line import/order
@@ -8,7 +8,7 @@ import Head from 'next/head'
 import { appWithTranslation } from 'next-i18next'
 import 'next-i18next.config'
 // eslint-disable-next-line import/order
-import Router from 'next/router'
+import Router, { useRouter } from 'next/router'
 import NProgress from 'nprogress'
 
 import { DefaultLayout } from '@/components/layout'
@@ -39,6 +39,39 @@ const App = (props: KiboAppProps) => {
   const getLayout =
     Component.getLayout ?? ((page) => <DefaultLayout pageProps={pageProps}>{page}</DefaultLayout>)
   const pageTitle = `${siteTitle} | ${pageProps?.metaData?.title || defaultTitle}`
+  const [shopperAgent, setShopperAgent] = React.useState<any | null>(null)
+  const router = useRouter()
+  useEffect(() => {
+    const loadShopperAgent = async () => {
+      const { default: KiboShopperAgent } = await import('@/components/chat/kibo-shopper-agent')
+      setShopperAgent(new KiboShopperAgent())
+    }
+    loadShopperAgent()
+  }, [])
+  useEffect(() => {
+    if (shopperAgent && typeof window !== 'undefined') {
+      shopperAgent.defineCustomElements()
+      const registerChatTools = () => shopperAgent.registerChatTools()
+      if (document.readyState === 'loading') {
+        document.addEventListener('DOMContentLoaded', registerChatTools)
+      } else {
+        // DOM is already loaded, execute immediately
+        registerChatTools()
+      }
+
+      // Cleanup the event listener
+      return () => {
+        document.removeEventListener('DOMContentLoaded', registerChatTools)
+      }
+    }
+  }, [shopperAgent])
+  useEffect(() => {
+    if (window && typeof window !== 'undefined') {
+      (window as any).navigationToNextPage = (path: any) => {
+        router.push(path)
+      }
+    }
+  }, [router])
   return (
     <CacheProvider value={emotionCache}>
       <Head>
@@ -54,6 +87,16 @@ const App = (props: KiboAppProps) => {
       <RQNotificationContextProvider>
         {getLayout(<Component {...pageProps} />)}
       </RQNotificationContextProvider>
+      <df-messenger
+        chat-title="KiboShopper"
+        location="us"
+        project-id="kibo-bq-dev-presentation"
+        agent-id="33c36d2a-8171-4f3a-807e-50bafe98c3c1"
+        max-query-length="-1"
+        language-code="en"
+      >
+        <df-messenger-chat-bubble chat-title="Support"></df-messenger-chat-bubble>
+      </df-messenger>
     </CacheProvider>
   )
 }

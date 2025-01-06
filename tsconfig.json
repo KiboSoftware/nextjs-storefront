@@ -24,6 +24,6 @@
       "@/pages/*": ["src/pages/*"]
     }
   },
-  "include": ["next-env.d.ts", "**/*.ts", "**/*.tsx", "next-sitemap.config.js"],
+  "include": ["next-env.d.ts", "**/*.ts", "**/*.tsx", "next-sitemap.config.js", "custom.d.ts"],
   "exclude": ["node_modules"]
 }

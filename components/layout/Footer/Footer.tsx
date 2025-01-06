@@ -67,6 +67,22 @@ export default function Footer(props: any) {
               <KiboImage src={socialItem.iconPath} alt={'content tiles'} width={32} height={32} />
             </Box>
           ))}
+          <Typography
+            variant="subtitle2"
+            onClick={() => {
+              if (typeof window !== 'undefined') {
+                (document.querySelectorAll('df-messenger')?.[0] as any)?.startNewSession()
+              }
+            }}
+            sx={{
+              textTransform: 'uppercase',
+              fontWeight: '600',
+              marginBottom: 1,
+              cursor: 'pointer',
+            }}
+          >
+            Restart Chat Session
+          </Typography>
         </Grid>
       </Grid>
     </Box>

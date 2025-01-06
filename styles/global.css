@@ -130,3 +130,15 @@ body {
   margin: 0;
   padding: 2rem;
 }
+
+df-messenger {
+  z-index: 1400;
+  position: fixed;
+  --df-messenger-font-color: #000;
+  --df-messenger-font-family: Google Sans;
+  --df-messenger-chat-background: #f3f6fc;
+  --df-messenger-message-user-background: #d3e3fd;
+  --df-messenger-message-bot-background: #fff;
+  bottom: 16px;
+  right: 16px;
+}

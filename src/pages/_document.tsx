@@ -3,6 +3,7 @@ import * as React from 'react'
 // eslint-disable-next-line @next/next/no-document-import-in-page
 import createEmotionServer from '@emotion/server/create-instance'
 import Document, { Html, Head, Main, NextScript } from 'next/document'
+import Script from 'next/script'
 
 import createEmotionCache from '../../lib/createEmotionCache'
 import theme from '../../styles/theme'
@@ -14,7 +15,15 @@ export default class MyDocument extends Document {
         <Head>
           {/* PWA primary color */}
           <meta name="theme-color" content={theme.palette.primary.main} />
+          <Script
+            strategy="beforeInteractive"
+            src="https://www.gstatic.com/dialogflow-console/fast/df-messenger/prod/v1/df-messenger.js"
+          ></Script>
           <link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons" />
+          <link
+            rel="stylesheet"
+            href="https://www.gstatic.com/dialogflow-console/fast/df-messenger/prod/v1/themes/df-messenger-default.css"
+          ></link>
         </Head>
         <body>
           <Main />
