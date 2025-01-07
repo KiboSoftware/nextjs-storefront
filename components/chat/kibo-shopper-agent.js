@@ -83,6 +83,8 @@ class KiboShopperAgent {
             console.log('Product Grid End', event)
             resolve({ selectProductCode: event.detail.productCode })
             this.dfMessenger.isWaitingForElement = false
+            this.dfMessenger.children.item(0).setAttribute('chat-height', 560)
+            this.dfMessenger.children.item(0).setAttribute('chat-width', 320)
             window.navigationToNextPage(`/product/${event.detail.productCode}`)
           },
           { once: true }
@@ -123,7 +125,7 @@ class KiboShopperAgent {
       customElements.define('df-messenger-product-card', ProductCard)
       customElements.define('order-item-selector', OrderItemSelector)
     } catch (error) {
-      console.log('Error defining custom elements', error)
+      console.error('Error defining custom elements', error)
     }
   }
 }

@@ -41,12 +41,16 @@ const App = (props: KiboAppProps) => {
   const pageTitle = `${siteTitle} | ${pageProps?.metaData?.title || defaultTitle}`
   const [shopperAgent, setShopperAgent] = React.useState<any | null>(null)
   const router = useRouter()
+
   useEffect(() => {
-    const loadShopperAgent = async () => {
+    
+    if(window && typeof window !== 'undefined'){
+      const loadShopperAgent = async () => {
       const { default: KiboShopperAgent } = await import('@/components/chat/kibo-shopper-agent')
       setShopperAgent(new KiboShopperAgent())
     }
     loadShopperAgent()
+  }
   }, [])
   useEffect(() => {
     if (shopperAgent && typeof window !== 'undefined') {
@@ -87,16 +91,6 @@ const App = (props: KiboAppProps) => {
       <RQNotificationContextProvider>
         {getLayout(<Component {...pageProps} />)}
       </RQNotificationContextProvider>
-      <df-messenger
-        chat-title="KiboShopper"
-        location="us"
-        project-id="kibo-bq-dev-presentation"
-        agent-id="33c36d2a-8171-4f3a-807e-50bafe98c3c1"
-        max-query-length="-1"
-        language-code="en"
-      >
-        <df-messenger-chat-bubble chat-title="Support"></df-messenger-chat-bubble>
-      </df-messenger>
     </CacheProvider>
   )
 }

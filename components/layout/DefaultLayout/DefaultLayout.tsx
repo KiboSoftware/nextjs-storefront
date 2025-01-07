@@ -78,6 +78,16 @@ const DefaultLayout = ({ pageProps, children }: { pageProps: any; children: Reac
                 <Footer content={pageProps.footer} />
                 {router?.isPreview && <Preview />}
               </Stack>
+              <df-messenger
+        chat-title="KiboShopper"
+        location="us"
+        project-id="kibo-bq-dev-presentation"
+        agent-id="33c36d2a-8171-4f3a-807e-50bafe98c3c1"
+        max-query-length="-1"
+        language-code="en"
+      >
+        <df-messenger-chat-bubble chat-title="Shopping Agent"></df-messenger-chat-bubble>
+      </df-messenger>
             </HeaderContextProvider>
           </AuthContextProvider>
         </ModalContextProvider>
