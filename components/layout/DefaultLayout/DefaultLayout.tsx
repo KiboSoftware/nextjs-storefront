@@ -1,4 +1,4 @@
-import React, { ReactElement, useEffect } from 'react'
+import React, { ReactElement, useEffect, useRef } from 'react'
 
 import { Container, Stack } from '@mui/material'
 import CssBaseline from '@mui/material/CssBaseline'
@@ -28,7 +28,7 @@ creditCardType.updateCard('american-express', {
 
 const DefaultLayout = ({ pageProps, children }: { pageProps: any; children: ReactElement }) => {
   const router = useRouter()
-
+  const dfMessengerRef = useRef<any>(null)
   useEffect(() => {
     const handleRouteChange = (url: any) => {
       const isMyAccountPage = url.includes('/my-account')
@@ -43,6 +43,15 @@ const DefaultLayout = ({ pageProps, children }: { pageProps: any; children: Reac
       }
     }
     Router.events.on('routeChangeComplete', handleRouteChange)
+    if(dfMessengerRef.current){
+      dfMessengerRef.current.setAttribute('location', 'us')
+      dfMessengerRef.current.setAttribute("chat-title", "KiboShopper")
+      dfMessengerRef.current.setAttribute("location", "us")
+      dfMessengerRef.current.setAttribute("project-id", "kibo-bq-dev-presentation")
+      dfMessengerRef.current.setAttribute("agent-id", "33c36d2a-8171-4f3a-807e-50bafe98c3c1")
+      dfMessengerRef.current.setAttribute("max-query-length", "-1")
+      dfMessengerRef.current.setAttribute("language-code", "en")
+    }
     return () => {
       Router.events.off('routeChangeComplete', handleRouteChange)
     }
@@ -79,12 +88,8 @@ const DefaultLayout = ({ pageProps, children }: { pageProps: any; children: Reac
                 {router?.isPreview && <Preview />}
               </Stack>
               <df-messenger
-        chat-title="KiboShopper"
-        location="us"
-        project-id="kibo-bq-dev-presentation"
-        agent-id="33c36d2a-8171-4f3a-807e-50bafe98c3c1"
-        max-query-length="-1"
-        language-code="en"
+
+        ref={dfMessengerRef}
       >
         <df-messenger-chat-bubble chat-title="Shopping Agent"></df-messenger-chat-bubble>
       </df-messenger>
