@@ -43,32 +43,17 @@ const App = (props: KiboAppProps) => {
   const router = useRouter()
 
   useEffect(() => {
-    
-    if(window && typeof window !== 'undefined'){
-      const loadShopperAgent = async () => {
-      const { default: KiboShopperAgent } = await import('@/components/chat/kibo-shopper-agent')
-      setShopperAgent(new KiboShopperAgent())
-    }
-    loadShopperAgent()
-  }
-  }, [])
-  useEffect(() => {
-    if (shopperAgent && typeof window !== 'undefined') {
-      shopperAgent.defineCustomElements()
-      const registerChatTools = () => shopperAgent.registerChatTools()
-      if (document.readyState === 'loading') {
-        document.addEventListener('DOMContentLoaded', registerChatTools)
-      } else {
-        // DOM is already loaded, execute immediately
-        registerChatTools()
-      }
 
-      // Cleanup the event listener
-      return () => {
-        document.removeEventListener('DOMContentLoaded', registerChatTools)
+    if (window && typeof window !== 'undefined') {
+      const loadShopperAgent = async () => {
+        const { default: KiboShopperAgent } = await import('@/components/chat/kibo-shopper-agent')
+        const shopperAgent = new KiboShopperAgent()
+        setShopperAgent(shopperAgent)
+        shopperAgent.init()
       }
+      loadShopperAgent()
     }
-  }, [shopperAgent])
+  }, [])
   useEffect(() => {
     if (window && typeof window !== 'undefined') {
       (window as any).navigationToNextPage = (path: any) => {

@@ -128,6 +128,15 @@ class KiboShopperAgent {
       console.error('Error defining custom elements', error)
     }
   }
+  init() {
+    if(!this.dfMessenger){
+      document.body.insertAdjacentHTML('beforeend', `<df-messenger chat-title="KiboShopper" location="us" project-id="kibo-bq-dev-presentation" agent-id="33c36d2a-8171-4f3a-807e-50bafe98c3c1" max-query-length="-1" language-code="en"><df-messenger-chat-bubble chat-title="Shopping Agent"></df-messenger-chat-bubble></df-messenger>`)
+    }
+    setTimeout(() => {
+      this.defineCustomElements()
+      this.registerChatTools()  
+    }, 100)
+  }
 }
 // customElements.define('kibo-shopper-agent', KiboShopperAgent);
 // export function registerChatTools(){
