@@ -71,8 +71,9 @@ export default function Footer(props: any) {
             variant="subtitle2"
             onClick={() => {
               if (typeof window !== 'undefined') {
-                (document.querySelectorAll('df-messenger')?.[0] as any)?.startNewSession()
-              }
+                let w = window as any
+                w?.shopperAgent?.reset(true)
+               }
             }}
             sx={{
               textTransform: 'uppercase',

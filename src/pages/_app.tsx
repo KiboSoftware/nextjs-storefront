@@ -49,6 +49,9 @@ const App = (props: KiboAppProps) => {
         const { default: KiboShopperAgent } = await import('@/components/chat/kibo-shopper-agent')
         const shopperAgent = new KiboShopperAgent()
         setShopperAgent(shopperAgent)
+        if(window){
+          (window as any).shopperAgent = shopperAgent
+        }
         shopperAgent.init()
       }
       loadShopperAgent()

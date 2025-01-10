@@ -111,6 +111,18 @@ class KiboShopperAgent {
       }
     })
   }
+  async setSessionCustomerLocation({ latitude, longitude }) {
+    try {
+
+      const payload = {
+        latitude: `${latitude}`,
+        longitude: `${longitude}`,
+      }
+      await fetch('http://localhost:8000/api/shopper/session/location', { body: JSON.stringify(payload), method: 'POST', headers: { 'Content-Type': 'application/json' } })
+    } catch (error) {
+     console.error('Error setting session location', error) 
+    }
+  }
   registerChatTools() {
     if (this.dfMessenger) {
       for (const tool of this.tools) {
@@ -129,6 +141,7 @@ class KiboShopperAgent {
     }
   }
   init() {
+    this.getCustomerLocation().then(this.setSessionCustomerLocation)
     setTimeout(() => {
 
     if(!this.dfMessenger) {
@@ -138,8 +151,17 @@ class KiboShopperAgent {
       this.defineCustomElements()
       this.registerChatTools()  
     }, 500)
-  }, 1000)
+  }, 200)
 
+  }
+  reset(remount = false) {
+    if(this.dfMessenger){
+      this.dfMessenger.startNewSession()
+      if(remount) {
+        this.dfMessenger.parentNode.removeChild(this.dfMessenger)
+        this.init()
+      }
+    }
   }
 }
 // customElements.define('kibo-shopper-agent', KiboShopperAgent);
