@@ -71,7 +71,7 @@ export default function Footer(props: any) {
             variant="subtitle2"
             onClick={() => {
               if (typeof window !== 'undefined') {
-                let w = window as any
+                const w = window as any
                 w?.shopperAgent?.reset(true)
                }
             }}
