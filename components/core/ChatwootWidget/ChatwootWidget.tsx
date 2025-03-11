@@ -11,15 +11,11 @@ declare global {
   }
 }
 
-interface ChatSessionResponse {
-  kiboChatSessionId: string
-}
-
 const ChatwootWidget = () => {
   const { isAuthenticated, user } = useAuthContext()
   const [isChatwootLoaded, setIsChatwootLoaded] = useState(false)
 
-  const createKiboChatSession = async (): Promise<ChatSessionResponse | null> => {
+  const createKiboChatSession = async (): Promise<string | null> => {
     try {
       const response = await fetch('/api/create-chat-session')
       if (!response.ok) {
@@ -38,7 +34,7 @@ const ChatwootWidget = () => {
     const chatStartConversationHandler = async () => {
       const sessionId = await createKiboChatSession()
       if (sessionId && window.$chatwoot) {
-        window.$chatwoot.setConversationCustomAttributes({
+        await window.$chatwoot.setCustomAttributes({
           'kibo-session-id': sessionId,
         })
       }
@@ -88,7 +84,7 @@ const ChatwootWidget = () => {
         if (scriptElement.parentNode) {
           scriptElement.parentNode.removeChild(scriptElement)
         }
-        window.removeEventListener('chatwoot:on-start-conversation', chatStartConversationHandler)
+        window.removeEventListener('chatwoot:on-start-conversation', () => null)
         window.removeEventListener('chatwoot:ready', () => null)
       }
     }
