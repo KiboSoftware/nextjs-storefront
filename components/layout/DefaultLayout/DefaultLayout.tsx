@@ -8,6 +8,7 @@ import creditCardType from 'credit-card-type'
 import Router, { useRouter } from 'next/router'
 
 import { GlobalFetchingIndicator } from '@/components/common'
+import { ChatWootWidget } from '@/components/core'
 import { Footer, KiboHeader, Preview } from '@/components/layout'
 import {
   AuthContextProvider,
@@ -75,6 +76,7 @@ const DefaultLayout = ({ pageProps, children }: { pageProps: any; children: Reac
                 <Container maxWidth={'xl'} sx={{ py: 2, flex: '1 0 auto' }}>
                   {children}
                 </Container>
+                <ChatWootWidget />
                 <Footer content={pageProps.footer} />
                 {router?.isPreview && <Preview />}
               </Stack>
