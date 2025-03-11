@@ -1,6 +1,8 @@
 import { useEffect, useState } from 'react'
 
-import { useAuthContext } from '@/context'
+import getConfig from 'next/config'
+
+import { useAuthContext } from '@/context' // Replace with your actual context path
 
 declare global {
   interface Window {
@@ -34,17 +36,17 @@ const ChatwootWidget = () => {
     const script = document.querySelector('script[src="https://app.chatwoot.com/packs/js/sdk.js"]')
 
     const chatStartConversationHandler = async () => {
-      const session = await createKiboChatSession()
-      if (session && window.$chatwoot) {
+      const sessionId = await createKiboChatSession()
+      if (sessionId && window.$chatwoot) {
         window.$chatwoot.setConversationCustomAttributes({
-          'kibo-session-id': session.kiboChatSessionId,
+          'kibo-session-id': sessionId,
         })
       }
     }
 
     if (!isAuthenticated) {
-      if (script && window.chatwootSDK) {
-        document.head.removeChild(script)
+      if (window.chatwootSDK) {
+        window.$chatwoot.toggleBubbleVisibility('hide')
         setIsChatwootLoaded(false)
       }
       return
