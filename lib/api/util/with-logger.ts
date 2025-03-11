@@ -51,7 +51,7 @@ const getSite = (req: NextApiRequest) => {
   return site || ''
 }
 
-function requestMetaData(req: NextApiRequest) {
+export function requestMetaData(req: NextApiRequest) {
   return {
     url: req.url,
     tenant: getTenant(req),
