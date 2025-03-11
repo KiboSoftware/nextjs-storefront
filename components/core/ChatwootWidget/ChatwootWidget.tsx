@@ -1,4 +1,4 @@
-import { useEffect } from 'react'
+import { useEffect, useState } from 'react'
 
 import { useAuthContext } from '@/context'
 
@@ -8,37 +8,44 @@ declare global {
     $chatwoot: any
   }
 }
+
 interface ChatSessionResponse {
   kiboChatSessionId: string
 }
+
 const ChatwootWidget = () => {
   const { isAuthenticated, user } = useAuthContext()
+  const [isChatwootLoaded, setIsChatwootLoaded] = useState(false)
 
-  const createKiboChatSession = async () => {
-    const res = await fetch(`/api/create-chat-session`)
-    return res.json()
+  const createKiboChatSession = async (): Promise<ChatSessionResponse | null> => {
+    try {
+      const response = await fetch('/api/create-chat-session')
+      if (!response.ok) {
+        throw new Error(`HTTP error! status: ${response.status}`)
+      }
+      return await response.json()
+    } catch (error) {
+      console.error('Error creating kibo chat session:', error)
+      return null
+    }
   }
 
   useEffect(() => {
     const script = document.querySelector('script[src="https://app.chatwoot.com/packs/js/sdk.js"]')
 
-    const chatStartConversationHandler: (e: Event) => Promise<void> = async () => {
-      const kiboChatSessionId: ChatSessionResponse = await createKiboChatSession()
-      if (kiboChatSessionId) {
+    const chatStartConversationHandler = async () => {
+      const session = await createKiboChatSession()
+      if (session && window.$chatwoot) {
         window.$chatwoot.setConversationCustomAttributes({
-          'kibo-session-id': kiboChatSessionId.kiboChatSessionId,
+          'kibo-session-id': session.kiboChatSessionId,
         })
       }
-      return
     }
 
     if (!isAuthenticated) {
-      // Remove the script and stop the widget if not authenticated ------------> TO-DO
-      if (script) {
+      if (script && window.chatwootSDK) {
         document.head.removeChild(script)
-        if (window.chatwootSDK) {
-          window.chatwootSDK.shutdown()
-        }
+        setIsChatwootLoaded(false)
       }
       return
     }
@@ -55,12 +62,17 @@ const ChatwootWidget = () => {
             websiteToken: 'DKV4TtQx1SCZphbVMhLG8jXg',
             baseUrl: 'https://app.chatwoot.com',
           })
+
           window.addEventListener('chatwoot:ready', () => {
-            if (window.$chatwoot) {
-              window.$chatwoot.setUser(user.userId, { email: user.emailAddress })
-              console.log(user.userId, user.emailAddress)
+            setIsChatwootLoaded(true)
+            if (window.$chatwoot && user) {
+              try {
+                window.$chatwoot.setUser(user.userId, { email: user.emailAddress })
+              } catch (error) {
+                console.error('Error setting Chatwoot user:', error)
+              }
             } else {
-              console.error('Chatwoot SDK not loaded or $chatwoot is undefined')
+              console.error('Chatwoot SDK not loaded or $chatwoot or user is undefined')
             }
           })
 
@@ -71,13 +83,14 @@ const ChatwootWidget = () => {
       document.head.appendChild(scriptElement)
 
       return () => {
-        // Clean up event listener and remove script when component unmounts
-        document.head.removeChild(scriptElement)
+        if (scriptElement.parentNode) {
+          scriptElement.parentNode.removeChild(scriptElement)
+        }
         window.removeEventListener('chatwoot:on-start-conversation', chatStartConversationHandler)
         window.removeEventListener('chatwoot:ready', () => null)
       }
     }
-  }, [isAuthenticated, user])
+  }, [isAuthenticated, user, isChatwootLoaded])
 
   return null
 }
