@@ -1,35 +1,32 @@
 import { NextApiResponse } from 'next'
 
 import { apiAuthClient } from '../util/api-auth-client'
+import { getApiConfig } from '../util/config-helpers'
 import { requestMetaData } from '../util/with-logger'
 import { decodeParseCookieValue, getAuthCookieName } from '@/lib/helpers'
 import { NextApiRequestWithLogger } from '@/lib/types'
 
 async function createChatSession(req: NextApiRequestWithLogger, res: NextApiResponse) {
   const authToken = await apiAuthClient.getAccessToken()
-  const { tenant, site } = requestMetaData(req)
   const cookie = req?.cookies
   const authTicket = decodeParseCookieValue(cookie[getAuthCookieName()])
   try {
-    const response = await fetch(
-      'http://services-tp.gdev10.kube-int-dev.gcp-kibo-dev.int/kibo.agentic.chatruntime.webapi/commerce/chat/sessions/',
-      {
-        method: 'POST',
-        headers: {
-          authorization: 'Bearer ' + authToken,
-          'content-type': 'application/json',
-          'x-vol-site': site as string,
-          'x-vol-tenant': tenant as string,
-          'x-vol-locale': 'en-US',
-        },
-        body: JSON.stringify({
-          userId: authTicket.userId,
-          accountId: authTicket.accountId,
-          data: {},
-          isAnonymous: false,
-        }),
-      }
-    )
+    const apiConfig = getApiConfig()
+
+    const response = await fetch(`https://${apiConfig.apiHost}/api/commerce/chat/sessions/`, {
+      method: 'POST',
+      headers: {
+        authorization: 'Bearer ' + authToken,
+        'content-type': 'application/json',
+        'x-vol-locale': 'en-US',
+      },
+      body: JSON.stringify({
+        userId: authTicket.userId,
+        accountId: authTicket.accountId,
+        data: {},
+        isAnonymous: false,
+      }),
+    })
     const id = await response.json()
     return res.status(200).json(id)
   } catch (error: any) {

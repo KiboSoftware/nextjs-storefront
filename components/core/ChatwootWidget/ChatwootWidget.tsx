@@ -14,7 +14,7 @@ declare global {
 const ChatwootWidget = () => {
   const { isAuthenticated, user } = useAuthContext()
   const [isChatwootLoaded, setIsChatwootLoaded] = useState(false)
-
+  const { publicRuntimeConfig } = getConfig()
   const createKiboChatSession = async (): Promise<string | null> => {
     try {
       const response = await fetch('/api/create-chat-session')
@@ -30,7 +30,9 @@ const ChatwootWidget = () => {
 
   useEffect(() => {
     const script = document.querySelector('script[src="https://app.chatwoot.com/packs/js/sdk.js"]')
-
+    if (!publicRuntimeConfig.chatwootSiteToken) {
+      return
+    }
     const chatStartConversationHandler = async () => {
       const sessionId = await createKiboChatSession()
       if (sessionId && window.$chatwoot) {
@@ -50,15 +52,15 @@ const ChatwootWidget = () => {
 
     if (user && isAuthenticated && !script) {
       const scriptElement = document.createElement('script')
-      scriptElement.src = 'https://app.chatwoot.com/packs/js/sdk.js'
+      scriptElement.src = `${publicRuntimeConfig.chatwootBaseUrl}/packs/js/sdk.js`
       scriptElement.defer = true
       scriptElement.async = true
 
       scriptElement.onload = () => {
         if (window.chatwootSDK) {
           window.chatwootSDK.run({
-            websiteToken: 'DKV4TtQx1SCZphbVMhLG8jXg',
-            baseUrl: 'https://app.chatwoot.com',
+            websiteToken: publicRuntimeConfig.chatwootSiteToken,
+            baseUrl: `${publicRuntimeConfig.chatwootBaseUrl}`,
           })
 
           window.addEventListener('chatwoot:ready', () => {
