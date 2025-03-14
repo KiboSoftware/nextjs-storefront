@@ -1,6 +1,7 @@
 import { useEffect, useState } from 'react'
 
 import getConfig from 'next/config'
+import { useRouter } from 'next/router'
 
 import { useAuthContext } from '@/context' // Replace with your actual context path
 
@@ -22,6 +23,7 @@ const ChatwootWidget = () => {
   const { isAuthenticated, user } = useAuthContext()
   const [isChatwootLoaded, setIsChatwootLoaded] = useState(false)
   const { publicRuntimeConfig } = getConfig()
+  const router = useRouter()
   const createKiboChatSession = async (): Promise<string | null> => {
     try {
       const response = await fetch('/api/create-chat-session')
@@ -32,6 +34,13 @@ const ChatwootWidget = () => {
     } catch (error) {
       console.error('Error creating kibo chat session:', error)
       return null
+    }
+  }
+  const handleChatwootNavigation = (event: any) => {
+    const { link, uri, path } = event.detail
+    const url = link || uri || path
+    if (url) {
+      router.push(url)
     }
   }
 
@@ -96,6 +105,7 @@ const ChatwootWidget = () => {
           })
 
           window.addEventListener('chatwoot:on-start-conversation', chatStartConversationHandler)
+          window.addEventListener('chatwoot:navigate-to', handleChatwootNavigation)
         }
       }
 
