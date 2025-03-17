@@ -47,7 +47,11 @@ import {
   useGetProductInventory,
   usePriceRangeFormatter,
 } from '@/hooks'
-import { FulfillmentOptions as FulfillmentOptionsConstant, PurchaseTypes } from '@/lib/constants'
+import {
+  FulfillmentOptions as FulfillmentOptionsConstant,
+  OutOfStockBehavior,
+  PurchaseTypes,
+} from '@/lib/constants'
 import { productGetters, subscriptionGetters, wishlistGetters } from '@/lib/getters'
 import { uiHelpers } from '@/lib/helpers'
 import type { ProductCustom, BreadCrumb, LocationCustom } from '@/lib/types'
@@ -193,10 +197,20 @@ const ProductDetailTemplate = (props: ProductDetailTemplateProps) => {
   const isValidForAddToCart = () => {
     if (purchaseType === PurchaseTypes.SUBSCRIPTION) {
       return !!selectedFrequency && !(quantityLeft < 1)
-    } else if (isDigitalFulfillment) {
+    }
+
+    if (isDigitalFulfillment) {
       return isValidForOneTime
     }
-    return isValidForOneTime && !(quantityLeft < 1)
+
+    if (!currentProduct?.inventoryInfo?.manageStock) {
+      return isValidForOneTime
+    }
+
+    if (currentProduct?.inventoryInfo?.outOfStockBehavior === OutOfStockBehavior.DisplayMessage) {
+      return isValidForOneTime && !(quantityLeft < 1) && quantity <= quantityLeft
+    }
+    return isValidForOneTime
   }
 
   const isProductInWishlist = checkProductInWishlist({
@@ -351,6 +365,10 @@ const ProductDetailTemplate = (props: ProductDetailTemplateProps) => {
   }
 
   const handleFrequencyChange = async (_name: string, value: string) => setSelectedFrequency(value)
+
+  const handleQuantityUpdate = (newQuantity: number) => {
+    handleQuantity(newQuantity)
+  }
 
   useEffect(() => {
     if (isB2B && (isValidForAddToCart() || isValidForAddToWishlist)) {
@@ -512,6 +530,7 @@ const ProductDetailTemplate = (props: ProductDetailTemplateProps) => {
             quantity={quantity}
             onIncrease={() => handleQuantity(quantity + 1)}
             onDecrease={() => handleQuantity(quantity - 1)}
+            onQuantityUpdate={(newQuantity) => handleQuantityUpdate(newQuantity)}
           />
         </Box>
         {isSubscriptionModeAvailable && (
@@ -556,9 +575,13 @@ const ProductDetailTemplate = (props: ProductDetailTemplateProps) => {
 
         {!addItemToList && (
           <Box pt={2} display="flex" sx={{ justifyContent: 'space-between' }}>
-            <Typography fontWeight="600" variant="body2">
-              {selectedFulfillmentOption?.method && `${quantityLeft} ${t('item-left')}`}
-            </Typography>
+            {currentProduct?.inventoryInfo?.manageStock &&
+              currentProduct?.inventoryInfo?.outOfStockBehavior ===
+                OutOfStockBehavior.DisplayMessage && (
+                <Typography fontWeight="600" variant="body2">
+                  {selectedFulfillmentOption?.method && `${quantityLeft} ${t('item-left')}`}
+                </Typography>
+              )}
             {!isDigitalFulfillment && (
               <MuiLink
                 color="inherit"

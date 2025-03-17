@@ -217,3 +217,9 @@ export const KIBO_HEADERS = {
   TENANT: 'x-vol-tenant',
   SITE: 'x-vol-site',
 }
+
+export const OutOfStockBehavior = {
+  AllowBackOrder: 'AllowBackOrder',
+  DisplayMessage: 'DisplayMessage',
+  HideProduct: 'HideProduct',
+}

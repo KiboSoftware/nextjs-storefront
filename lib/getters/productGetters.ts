@@ -1,6 +1,6 @@
 import getConfig from 'next/config'
 
-import { FulfillmentOptions, ProductAvailabilityStatus } from '../constants'
+import { FulfillmentOptions, OutOfStockBehavior, ProductAvailabilityStatus } from '../constants'
 import { buildBreadcrumbsParams, uiHelpers } from '@/lib/helpers'
 import type { ProductCustom, BreadCrumb, ProductProperties, FulfillmentOption } from '@/lib/types'
 import DefaultImage from '@/public/product_placeholder.svg'
@@ -308,10 +308,21 @@ const getProductFulfillmentOptions = (
         (type) => type.toLowerCase() === option?.value?.toLowerCase()
       ).length === 0,
     details: (() => {
-      if (option.shortName === FulfillmentOptions.SHIP)
-        return product?.inventoryInfo?.onlineStockAvailable
-          ? option.details
-          : option.unavailableDetails // checking if Directship
+      if (option.shortName === FulfillmentOptions.SHIP) {
+        if (!product?.inventoryInfo?.manageStock) {
+          return option.details
+        }
+        if (
+          product?.inventoryInfo?.manageStock &&
+          product?.inventoryInfo?.outOfStockBehavior === OutOfStockBehavior.DisplayMessage
+        ) {
+          return product?.inventoryInfo?.onlineStockAvailable
+            ? option.details
+            : option.unavailableDetails
+        }
+        return ''
+      }
+
       if (purchaseLocation?.name)
         return `${
           productLocationInventoryData && productLocationInventoryData[0]?.stockAvailable
