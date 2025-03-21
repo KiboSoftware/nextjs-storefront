@@ -45,7 +45,8 @@ const ChatwootWidget = () => {
   }
 
   useEffect(() => {
-    const script = document.querySelector('script[src="https://app.chatwoot.com/packs/js/sdk.js"]')
+    const chatwootScriptUrl = `${publicRuntimeConfig.chatwootBaseUrl}/packs/js/sdk.js`
+    const script = document.querySelector(`script[src="${chatwootScriptUrl}"]`)
     if (!publicRuntimeConfig.chatwootSiteToken) {
       return
     }
