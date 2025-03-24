@@ -61,7 +61,9 @@ const ChatwootWidget = () => {
     const resetChatwoot = () => {
       if (window.$chatwoot && user) {
         window.$chatwoot.reset()
-        window.$chatwoot.setUser(user.userId, { email: user.emailAddress })
+        setTimeout(() => {
+          window.$chatwoot.setUser(user.userId, { email: user.emailAddress })
+        }, 1000)
       }
     }
     if (!isAuthenticated) {
