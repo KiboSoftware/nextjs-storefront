@@ -40,7 +40,8 @@ const ChatwootWidget = () => {
     const { link, uri, path } = event.detail
     const url = link || uri || path
     if (url) {
-      router.push(url)
+      const localPath = url.replace('https://chatwoot.gdev10.gcp.kibocommerce.com', '')
+      router.push(localPath)
     }
   }
 
