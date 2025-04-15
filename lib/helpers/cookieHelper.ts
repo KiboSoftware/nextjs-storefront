@@ -5,6 +5,7 @@ import type { UserAuthTicket } from '@kibocommerce/graphql-client'
 
 const config = getConfig()
 const purchaseLocationCookieName = config?.publicRuntimeConfig?.storeLocationCookie
+const eddZipCodeCookieName = config?.publicRuntimeConfig?.eddZipCodeCookie
 
 export const removeClientCookie = (cookieName: string) => {
   const date = new Date(0)
@@ -34,6 +35,19 @@ export const prepareSetCookieValue = (cookie: UserAuthTicket | string): string =
 
 export const setPurchaseLocationCookie = (cookieValue: string) => {
   setCookie(purchaseLocationCookieName, prepareSetCookieValue(cookieValue))
+}
+
+export const setEddZipCodeCookie = (cookieValue: string) => {
+  setCookie(eddZipCodeCookieName, prepareSetCookieValue(cookieValue))
+}
+
+export const getEddZipCodeCookie = () => {
+  const cookieValue = getCookie(eddZipCodeCookieName) as string
+  return decodeParseCookieValue(cookieValue)
+}
+
+export const removeEddZipCodeCookie = () => {
+  removeClientCookie(eddZipCodeCookieName)
 }
 
 export const getPreviewPriceListCookie = () => {

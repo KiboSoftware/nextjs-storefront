@@ -20,7 +20,7 @@ export interface MultiShipPersonalInfo {
 const updatePersonalInfo = async ({ checkout, email }: MultiShipPersonalInfo) => {
   const client = makeGraphQLClient()
 
-  const { items, destinations, ...rest } = checkout
+  const { items, destinations, auditInfo, ...rest } = checkout
   const personalInfo = {
     checkoutId: checkout?.id,
     checkoutInput: {

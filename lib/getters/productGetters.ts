@@ -308,7 +308,10 @@ const getProductFulfillmentOptions = (
         (type) => type.toLowerCase() === option?.value?.toLowerCase()
       ).length === 0,
     details: (() => {
-      if (option.shortName === FulfillmentOptions.SHIP) {
+      if (
+        option.shortName === FulfillmentOptions.SHIP ||
+        option.shortName === FulfillmentOptions.DELIVERY
+      ) {
         if (!product?.inventoryInfo?.manageStock) {
           return option.details
         }

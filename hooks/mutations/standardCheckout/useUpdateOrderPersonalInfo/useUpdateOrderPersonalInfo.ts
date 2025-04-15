@@ -21,11 +21,13 @@ export interface PersonalInfo {
 const updatePersonalInfo = async ({ checkout, email }: PersonalInfo) => {
   const client = makeGraphQLClient()
 
+  const { auditInfo, ...rest } = checkout
+
   const personalInfo = {
     orderId: checkout?.id as string,
     updateMode: CheckoutUpdateMode.APPLY_TO_ORIGINAL,
     orderInput: {
-      ...checkout,
+      ...rest,
       email,
     },
   }

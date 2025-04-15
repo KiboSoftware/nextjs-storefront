@@ -58,7 +58,7 @@ const FulfillmentOptions = (props: FulfillmentOptionsProps) => {
           details={option?.details}
           onStoreSelection={onStoreSetOrUpdate}
           {...(!option?.disabled &&
-            option.shortName !== FulfillmentOptionsConstant.SHIP && {
+            option.shortName === FulfillmentOptionsConstant.PICKUP && {
               storeActionLabel: option?.details ? t('change-store') : t('select-store'),
             })}
         />

@@ -63,6 +63,7 @@ import type {
   ProductOptionValue,
   CrProduct,
 } from '@/lib/gql/types'
+import ExpectedDeliveryDate from '@/components/common/ExpectedDeliveryDate/ExpectedDeliveryDate'
 
 interface ProductDetailTemplateProps {
   product: ProductCustom
@@ -122,7 +123,7 @@ const ProductDetailTemplate = (props: ProductDetailTemplateProps) => {
   } = props
   const { t } = useTranslation('common')
 
-  const isDigitalFulfillment = product?.fulfillmentTypesSupported?.some(
+  const isDigitalFulfillment = product?.fulfillmentTypesSupported?.every(
     (type) => type === FulfillmentOptionsConstant.DIGITAL
   )
 
@@ -370,6 +371,10 @@ const ProductDetailTemplate = (props: ProductDetailTemplateProps) => {
     handleQuantity(newQuantity)
   }
 
+  const handleZipCodeForEdd = (zipCode: string) => {
+    console.log('ZipCode:', zipCode)
+  }
+
   useEffect(() => {
     if (isB2B && (isValidForAddToCart() || isValidForAddToWishlist)) {
       getCurrentProduct?.(
@@ -573,7 +578,11 @@ const ProductDetailTemplate = (props: ProductDetailTemplateProps) => {
             )}
         </Box>
 
-        {!addItemToList && (
+        <Box pt={1} width={'50%'}>
+          <ExpectedDeliveryDate onZipCodeChange={handleZipCodeForEdd} />
+        </Box>
+
+        {/* {!addItemToList && (
           <Box pt={2} display="flex" sx={{ justifyContent: 'space-between' }}>
             {currentProduct?.inventoryInfo?.manageStock &&
               currentProduct?.inventoryInfo?.outOfStockBehavior ===
@@ -593,7 +602,7 @@ const ProductDetailTemplate = (props: ProductDetailTemplateProps) => {
               </MuiLink>
             )}
           </Box>
-        )}
+        )} */}
         {!isB2B && (
           <Box paddingY={1} display="flex" flexDirection={'column'} gap={2}>
             <LoadingButton

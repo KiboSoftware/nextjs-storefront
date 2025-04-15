@@ -19,6 +19,7 @@ import { useTranslation } from 'next-i18next'
 
 import { CartItemList } from '@/components/cart'
 import { PromoCodeBadge, OrderSummary } from '@/components/common'
+import ExpectedDeliveryDate from '@/components/common/ExpectedDeliveryDate/ExpectedDeliveryDate'
 import { ConfirmationDialog } from '@/components/dialogs'
 import { useModalContext } from '@/context'
 import {
@@ -168,6 +169,9 @@ const CartTemplate = (props: CartTemplateProps) => {
           <Typography variant="h1" fontWeight={'normal'}>
             ({t('item-quantity', { count: cartItemCount })})
           </Typography>
+        </Box>
+        <Box paddingY={2} width={'50%'}>
+          <ExpectedDeliveryDate showZipInputOnly />
         </Box>
       </Grid>
       {isMobileViewport && (

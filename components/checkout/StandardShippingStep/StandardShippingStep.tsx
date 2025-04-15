@@ -51,6 +51,7 @@ const StandardShippingStep = (props: ShippingProps) => {
   // const { showSnackbar } = useSnackbarContext()
   const { publicRuntimeConfig } = getConfig()
   const allowInvalidAddresses = publicRuntimeConfig.allowInvalidAddresses
+  const isSplitShippingEnabled = publicRuntimeConfig.isSplitShippingEnabled
 
   const { user } = useAuthContext()
   const checkoutShippingContact = orderGetters.getShippingContact(checkout)
@@ -188,13 +189,18 @@ const StandardShippingStep = (props: ShippingProps) => {
     )?.shippingMethodName as string
 
     try {
-      await updateOrderShippingInfo.mutateAsync({
-        checkout,
-        contact: undefined,
-        email: undefined,
-        shippingMethodCode,
-        shippingMethodName,
-      })
+      if (isSplitShippingEnabled) {
+        // implement updateShippingAndSuggestions Mutation
+      } else {
+        await updateOrderShippingInfo.mutateAsync({
+          checkout,
+          contact: undefined,
+          email: undefined,
+          shippingMethodCode,
+          shippingMethodName,
+        })
+      }
+
       shippingAddressRef.current &&
         (shippingAddressRef.current as Element).scrollIntoView({
           behavior: 'smooth',
@@ -424,6 +430,7 @@ const StandardShippingStep = (props: ShippingProps) => {
           </Stack>
           {shippingMethods.length > 0 && (
             <ShippingMethod
+              isSplitShipping={isSplitShippingEnabled}
               shipItems={shipItems}
               pickupItems={pickupItems}
               orderShipmentMethods={[...shippingMethods]}

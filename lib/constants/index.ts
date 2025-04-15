@@ -8,6 +8,7 @@ export enum FulfillmentOptions {
   SHIP = 'Ship',
   PICKUP = 'Pickup',
   DIGITAL = 'Digital',
+  DELIVERY = 'Delivery',
 }
 
 export enum PaymentWorkflow {
