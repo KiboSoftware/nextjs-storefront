@@ -26,6 +26,7 @@ import {
   Price,
   QuantitySelector,
 } from '@/components/common'
+import ExpectedDeliveryDate from '@/components/common/ExpectedDeliveryDate/ExpectedDeliveryDate'
 import SkeletonWrapper from '@/components/common/SkeletonWrapper/SkeletonWrapper'
 import { KiboBreadcrumbs, ImageGallery } from '@/components/core'
 import { AddToCartDialog, StoreLocatorDialog } from '@/components/dialogs'
@@ -54,6 +55,7 @@ import {
 } from '@/lib/constants'
 import { productGetters, subscriptionGetters, wishlistGetters } from '@/lib/getters'
 import { uiHelpers } from '@/lib/helpers'
+import { getEDDSuggestion } from '@/lib/helpers/getEDDSuggestions'
 import type { ProductCustom, BreadCrumb, LocationCustom } from '@/lib/types'
 
 import type {
@@ -63,7 +65,6 @@ import type {
   ProductOptionValue,
   CrProduct,
 } from '@/lib/gql/types'
-import ExpectedDeliveryDate from '@/components/common/ExpectedDeliveryDate/ExpectedDeliveryDate'
 
 interface ProductDetailTemplateProps {
   product: ProductCustom
@@ -371,8 +372,9 @@ const ProductDetailTemplate = (props: ProductDetailTemplateProps) => {
     handleQuantity(newQuantity)
   }
 
-  const handleZipCodeForEdd = (zipCode: string) => {
-    console.log('ZipCode:', zipCode)
+  const handleZipCodeForEdd = async (zipCode: string) => {
+    // const response= await getEDDSuggestion({shippingAddress: {zipCode}, product: {...currentProduct}})
+    console.log('ZipCode:', zipCode, currentProduct)
   }
 
   useEffect(() => {

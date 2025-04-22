@@ -1,13 +1,17 @@
-import { Box, Button, Divider, Link, Stack, Typography } from '@mui/material'
-import SearchBar from '../SearchBar/SearchBar'
 import { useEffect, useRef, useState } from 'react'
-import { useCardContactActions, useCurrentLocation } from '@/hooks'
+
+import { Box, Button, Divider, Link, Stack, Typography } from '@mui/material'
+import getConfig from 'next/config'
 import { useTranslation } from 'next-i18next'
-import { useAuthContext } from '@/context'
-import { CustomerContact } from '@/lib/gql/types'
+
+import SearchBar from '../SearchBar/SearchBar'
+import { LoginDialog } from '@/components/layout'
+import { useAuthContext, useModalContext } from '@/context'
+import { useCardContactActions, useCurrentLocation } from '@/hooks'
 import { userGetters } from '@/lib/getters'
 import { getEddZipCodeCookie, setEddZipCodeCookie } from '@/lib/helpers'
-import getConfig from 'next/config'
+
+import { CustomerContact } from '@/lib/gql/types'
 
 interface ExpectedDeliveryDateProps {
   showZipInputOnly?: boolean
@@ -23,6 +27,7 @@ const ExpectedDeliveryDate = ({
   const config = getConfig()
 
   const { user } = useAuthContext()
+  const { showModal, closeModal } = useModalContext()
   const isGuest = !user?.id
 
   const { contacts } = useCardContactActions(user?.id as number)
@@ -40,6 +45,11 @@ const ExpectedDeliveryDate = ({
     if (onZipCodeChange) {
       onZipCodeChange(value)
     }
+  }
+
+  const handleSignIn = () => {
+    showModal({ Component: LoginDialog })
+    setIsShowZipInput(false)
   }
 
   const zipResolvedRef = useRef(false)
@@ -113,7 +123,7 @@ const ExpectedDeliveryDate = ({
       return (
         <Box pt={2} display={'flex'} flexDirection={'column'} gap={2} width={'100%'}>
           {isGuest && (
-            <Button size="small" variant="outlined" onClick={() => setIsShowZipInput(false)}>
+            <Button size="small" variant="outlined" onClick={() => handleSignIn()}>
               Sign in to see your addresses
             </Button>
           )}

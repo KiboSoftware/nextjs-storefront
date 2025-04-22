@@ -205,6 +205,7 @@ export const fullfillmentInfoFragment = /* GraphQL */ `
   fragment fullfillmentInfoFragment on CrFulfillmentInfo {
     shippingMethodCode
     shippingMethodName
+    data
     fulfillmentContact {
       address {
         address1

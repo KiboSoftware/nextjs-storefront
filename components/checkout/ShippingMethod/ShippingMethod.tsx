@@ -6,9 +6,9 @@ import { useTranslation } from 'next-i18next'
 import { AddressCard, KiboSelect, Price, ProductItem, ProductItemList } from '@/components/common'
 import { useGetStoreLocations } from '@/hooks'
 import { orderGetters, productGetters, storeLocationGetters } from '@/lib/getters'
+import { uiHelpers } from '@/lib/helpers'
 
 import type { Maybe, CrOrderItem, CrShippingRate, CrProduct } from '@/lib/gql/types'
-import { uiHelpers } from '@/lib/helpers'
 export type ShippingMethodProps = {
   shipItems?: Maybe<CrOrderItem>[]
   pickupItems?: Maybe<CrOrderItem>[]
