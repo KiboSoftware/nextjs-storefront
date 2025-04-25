@@ -228,7 +228,8 @@ const getSegregatedOptions = (product: ProductCustom) => {
 const validateAddToCartForOneTime = (product: ProductCustom): boolean => {
   if (
     product.fulfillmentMethod === FulfillmentOptions.SHIP ||
-    product.fulfillmentMethod === FulfillmentOptions.DIGITAL
+    product.fulfillmentMethod === FulfillmentOptions.DIGITAL ||
+    product.fulfillmentMethod === FulfillmentOptions.DELIVERY
   ) {
     return Boolean(product?.purchasableState?.isPurchasable)
   }
@@ -368,7 +369,10 @@ const getAvailableItemCount = (
       qtyLeft.value = productLocationInventoryData[0]?.stockAvailable
         ? productLocationInventoryData[0]?.stockAvailable
         : 0
-    } else if (fulfillmentOptionValue === FulfillmentOptions.SHIP) {
+    } else if (
+      fulfillmentOptionValue === FulfillmentOptions.SHIP ||
+      fulfillmentOptionValue === FulfillmentOptions.DELIVERY
+    ) {
       qtyLeft.value = product?.inventoryInfo?.onlineStockAvailable
         ? product?.inventoryInfo.onlineStockAvailable
         : 0

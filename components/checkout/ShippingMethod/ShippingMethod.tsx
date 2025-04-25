@@ -17,7 +17,7 @@ export type ShippingMethodProps = {
   selectedShippingMethodCode?: string
   showTitle?: boolean
   isSplitShipping?: boolean
-  onShippingMethodChange?: (value: string, name?: string) => void
+  onShippingMethodChange?: (value: string) => void
   onStoreLocatorClick?: () => void
 }
 export type ShipItemListProps = {
@@ -25,7 +25,7 @@ export type ShipItemListProps = {
   handlingAmount?: number
   orderShipmentMethods?: Maybe<CrShippingRate>[]
   selectedShippingMethodCode?: string
-  onShippingMethodChange?: (value: string, name?: string) => void
+  onShippingMethodChange?: (value: string, id?: string) => void
 }
 export type PickupItemListProps = {
   isShipItemsPresent: boolean
@@ -46,7 +46,7 @@ const ShipToHomeSharedShipping = (shipProps: ShipItemListProps) => {
   const { t } = useTranslation('common')
 
   const handleShippingMethodChange = (name: string, value: string) => {
-    onShippingMethodChange && onShippingMethodChange(value, name)
+    onShippingMethodChange && onShippingMethodChange(value)
   }
   return (
     <Box data-testid="ship-items">
@@ -125,8 +125,8 @@ const ShipToHomeSplitShipping = (shipProps: ShipItemListProps) => {
   const { t } = useTranslation('common')
   const { getProductLink } = uiHelpers()
 
-  const handleShippingMethodChange = (name: string, value: string) => {
-    onShippingMethodChange && onShippingMethodChange(value, name)
+  const handleShippingMethodChange = (value: string, id: string) => {
+    onShippingMethodChange && onShippingMethodChange(value, id)
   }
   return (
     <Box data-testid="ship-items">
@@ -134,15 +134,15 @@ const ShipToHomeSplitShipping = (shipProps: ShipItemListProps) => {
         {t('ship')}
       </Typography>
       <Stack direction="column" divider={<Divider orientation="horizontal" flexItem />} spacing={2}>
-        {shipItems?.map((item: Maybe<CrOrderItem>) => {
+        {shipItems?.map((item: any) => {
           const product = item?.product as CrProduct
           return (
             <Stack key={item?.id}>
               <KiboSelect
                 name="shippingMethodCode"
-                onChange={handleShippingMethodChange}
+                onChange={(_, value) => handleShippingMethodChange(value, item?.id as string)}
                 placeholder="Select Shipping Option"
-                value={selectedShippingMethodCode ?? ''}
+                value={item?.shippingMethodCode ?? ''}
               >
                 {orderShipmentMethods?.map((item) => {
                   return (

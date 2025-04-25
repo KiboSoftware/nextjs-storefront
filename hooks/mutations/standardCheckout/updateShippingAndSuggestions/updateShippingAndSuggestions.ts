@@ -5,26 +5,29 @@ import { useMutation, useQueryClient } from '@tanstack/react-query'
 
 import { makeGraphQLClientWithoutUserClaims } from '@/lib/gql/client'
 import { updateShippingAndSuggestions } from '@/lib/gql/mutations'
-import {
-  buildCheckoutShippingParams,
-  CheckoutShippingParams,
-} from '@/lib/helpers/buildCheckoutShippingParams'
 import { checkoutKeys } from '@/lib/react-query/queryKeys'
 
 import type { CrFulfillmentInfoInput } from '@/lib/gql/types'
+import {
+  BuildUpdateShippingAndSuggestionsParams,
+  buildUpdateShippingAndSuggestionsParams,
+} from '@/lib/helpers/buildUpdateShippingAndSuggestionsParams'
 
 /**
  * @hidden
  */
 export interface ShippingInfo {
   orderId: string
+  orderItemId: string
   fulfillmentInfoInput: CrFulfillmentInfoInput
 }
 
-const updateShippingAndSuggestionsMutation = async (params: CheckoutShippingParams) => {
+const updateShippingAndSuggestionsMutation = async (
+  params: BuildUpdateShippingAndSuggestionsParams
+) => {
   const client = makeGraphQLClientWithoutUserClaims()
 
-  const shippingInfo = buildCheckoutShippingParams(params)
+  const shippingInfo = buildUpdateShippingAndSuggestionsParams(params)
 
   const response = await client.request({
     document: updateShippingAndSuggestions,

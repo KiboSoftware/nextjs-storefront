@@ -35,6 +35,7 @@ import type {
   CustomerContactCollection,
   CuAddress,
 } from '@/lib/gql/types'
+import { useUpdateShippingAndSuggestionsMutation } from '@/hooks/mutations/standardCheckout/updateShippingAndSuggestions/updateShippingAndSuggestions'
 
 interface ShippingProps {
   setAutoFocus?: boolean
@@ -107,6 +108,7 @@ const StandardShippingStep = (props: ShippingProps) => {
     setStepStatusIncomplete,
   } = useCheckoutStepContext()
   const { updateOrderShippingInfo } = useUpdateOrderShippingInfo()
+  const { updateShippingAndSuggestionsMutation } = useUpdateShippingAndSuggestionsMutation()
   const { data: shippingMethods } = useGetShippingMethods(
     checkoutId,
     isNewAddressAdded,
@@ -183,7 +185,7 @@ const StandardShippingStep = (props: ShippingProps) => {
   //   })
   // }
 
-  const handleSaveShippingMethod = async (shippingMethodCode: string) => {
+  const handleSaveShippingMethod = async (shippingMethodCode: string, orderItemId?: string) => {
     const shippingMethodName = shippingMethods.find(
       (method) => method.shippingMethodCode === shippingMethodCode
     )?.shippingMethodName as string
@@ -191,6 +193,12 @@ const StandardShippingStep = (props: ShippingProps) => {
     try {
       if (isSplitShippingEnabled) {
         // implement updateShippingAndSuggestions Mutation
+        updateShippingAndSuggestionsMutation.mutateAsync({
+          shippingMethodCode,
+          shippingMethodName,
+          orderItemId: orderItemId as string,
+          orderId: checkout.id as string,
+        })
       } else {
         await updateOrderShippingInfo.mutateAsync({
           checkout,

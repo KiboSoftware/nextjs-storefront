@@ -40,6 +40,11 @@ const ExpectedDeliveryDate = ({
     setZipCodeLocalState(value)
   }
 
+  const setZipCode = (zip: string) => {
+    setZipCodeLocalState(zip)
+    setEddZipCodeCookieValue(zip)
+  }
+
   const setEddZipCodeCookieValue = (value: string) => {
     setEddZipCodeCookie(value)
     if (onZipCodeChange) {
@@ -65,14 +70,12 @@ const ExpectedDeliveryDate = ({
         if (!zipCode) {
           zipCode = config?.publicRuntimeConfig?.defaultEddLocationZipCode
         }
-        setZipCodeLocalState(zipCode as string)
-        setEddZipCodeCookieValue(zipCode as string)
+        setZipCode(zipCode as string)
       } catch (error) {
         console.error('Error fetching current location:', error)
         // if browser location is not available, use default zip code from config
         const zipCode = config?.publicRuntimeConfig?.defaultEddLocationZipCode
-        setZipCodeLocalState(zipCode as string)
-        setEddZipCodeCookieValue(zipCode as string)
+        setZipCode(zipCode as string)
       }
     }
 
@@ -80,30 +83,41 @@ const ExpectedDeliveryDate = ({
 
     if (latestZipCodeApplied && !zipResolvedRef.current) {
       zipResolvedRef.current = true
-      setZipCodeLocalState(latestZipCodeApplied)
-    }
-
-    if (user && user.id && contacts?.items && contacts.items.length > 0) {
-      const shippingAddresses =
-        userGetters.getUserShippingAddress(contacts?.items as CustomerContact[]) ?? []
-
-      if (shippingAddresses.length > 0 && !zipResolvedRef.current) {
-        zipResolvedRef.current = true
-        const zip = shippingAddresses[0]?.address?.postalOrZipCode as string
-        setZipCodeLocalState(zip)
-        setEddZipCodeCookieValue(zip)
-        setIsShowZipInput(false)
-      }
+      setZipCode(latestZipCodeApplied)
     }
 
     if (!zipResolvedRef.current) {
       getCurrentLocationZipCode()
     }
 
+    if (!latestZipCodeApplied && !zipResolvedRef.current) {
+      setEddZipCodeCookieValue(config?.publicRuntimeConfig?.defaultEddLocationZipCode)
+    }
+
     return () => {
       isComponentUnmounted = true
     }
-  }, [user?.id, contactsItems])
+  }, [])
+
+  useEffect(() => {
+    let isComponentUnmounted = false
+
+    if (user && user.id && contacts?.items && contacts.items.length > 0) {
+      const shippingAddresses =
+        userGetters.getUserShippingAddress(contacts?.items as CustomerContact[]) ?? []
+
+      if (shippingAddresses.length > 0) {
+        zipResolvedRef.current = true
+        const zip = shippingAddresses[0]?.address?.postalOrZipCode as string
+        setZipCode(zip)
+        setIsShowZipInput(false)
+      }
+    }
+
+    return () => {
+      isComponentUnmounted = true
+    }
+  }, [user?.id, JSON.stringify(contacts.items)])
 
   const Template = () => {
     if (showZipInputOnly) {
@@ -155,7 +169,7 @@ const ExpectedDeliveryDate = ({
             color="text.primary"
             onClick={() => setIsShowZipInput(true)}
           >
-            Update Location
+            {`Delivering to ${_zipCodeLocalState} - Update Location`}
           </Link>
         </Stack>
       )

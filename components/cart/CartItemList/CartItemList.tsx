@@ -16,6 +16,7 @@ interface CartItemListProps {
   status?: string
   mode?: string
   isQuote?: boolean
+  eddZipCode?: string
   onCartItemQuantityUpdate: (cartItemId: string, quantity: number) => void
   onCartItemDelete: (cartItemId: string) => void
   onCartItemActionSelection: () => void
@@ -31,6 +32,7 @@ const CartItemList = (props: CartItemListProps) => {
     status,
     mode,
     isQuote,
+    eddZipCode,
     onCartItemQuantityUpdate,
     onCartItemDelete,
     onCartItemActionSelection,
@@ -71,6 +73,7 @@ const CartItemList = (props: CartItemListProps) => {
             status={status}
             mode={mode}
             isQuote={isQuote}
+            eddZipCode={eddZipCode}
             onQuantityUpdate={handleQuantityUpdate}
             onCartItemDelete={handleCartItemDelete}
             onCartItemActionSelection={handleCartItemActionSelection}

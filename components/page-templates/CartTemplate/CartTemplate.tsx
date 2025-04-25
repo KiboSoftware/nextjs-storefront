@@ -38,6 +38,9 @@ import {
 import { orderGetters, cartGetters } from '@/lib/getters'
 
 import type { CrCart, Location, CrCartItem } from '@/lib/gql/types'
+import { getEDDSuggestion } from '@/lib/helpers/getEDDSuggestions'
+import { getClosestEDDSuggestion } from '@/lib/helpers/getClosestEddSuggestion'
+import { formatEDDMessage } from '@/lib/helpers/formatEddMessage'
 
 export interface CartTemplateProps {
   isMultiShipEnabled: boolean
@@ -69,6 +72,7 @@ const CartTemplate = (props: CartTemplateProps) => {
   const { deleteCartCoupon } = useDeleteCartCoupon()
   const [promoError, setPromoError] = useState<string>('')
   const [showLoadingButton, setShowLoadingButton] = useState<boolean>(false)
+  const [eddZipCode, setEddZipCode] = useState<string>('')
   const { handleDeleteCurrentCart } = useProductCardActions()
 
   const handleApplyPromoCode = async (couponCode: string) => {
@@ -158,6 +162,34 @@ const CartTemplate = (props: CartTemplateProps) => {
     })
   }
 
+  const buildEDDSuggestionParams = (zipCode: string) => {
+    // const { products, shippingAddress } = JSON.parse(productAndShippingData)
+
+    return {
+      eddItems: cartItems.map((item, index) => {
+        return {
+          orderItemID: index + 1,
+          quantity: item?.quantity,
+          upc: item?.product?.variationProductCode || item?.product?.productCode,
+          productUsage: item?.product?.productUsage,
+        }
+      }),
+      shippingAddress: {
+        postalCode: zipCode,
+        countryCode: 'US',
+      },
+      orderType: 'DIRECTSHIP',
+      total: cart.total,
+    }
+  }
+
+  const handleZipCodeForEdd = async (zipCode: string) => {
+    // const response: any = await getEDDSuggestion(buildEDDSuggestionParams(zipCode))
+    setEddZipCode(zipCode)
+    // const edd = getClosestEDDSuggestion(response?.eddAssignments[0]?.estimatedDeliveryDates)
+    // setEdd(formatEDDMessage({eddISO: edd.estimatedDeliveryDate, mode: "ship"}))
+  }
+
   return (
     <Grid container>
       {/* Header section */}
@@ -171,7 +203,7 @@ const CartTemplate = (props: CartTemplateProps) => {
           </Typography>
         </Box>
         <Box paddingY={2} width={'50%'}>
-          <ExpectedDeliveryDate showZipInputOnly />
+          <ExpectedDeliveryDate showZipInputOnly onZipCodeChange={handleZipCodeForEdd} />
         </Box>
       </Grid>
       {isMobileViewport && (
@@ -189,6 +221,7 @@ const CartTemplate = (props: CartTemplateProps) => {
                 locations && Object.keys(locations).length ? (locations as Location[]) : []
               }
               purchaseLocation={purchaseLocation}
+              eddZipCode={eddZipCode}
               onCartItemDelete={handleDeleteItem}
               onCartItemQuantityUpdate={handleQuantityUpdate}
               onFulfillmentOptionChange={onFulfillmentOptionChange}

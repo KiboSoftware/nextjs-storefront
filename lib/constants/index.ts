@@ -11,6 +11,18 @@ export enum FulfillmentOptions {
   DELIVERY = 'Delivery',
 }
 
+export interface IEDDFulfillmentOptions {
+  Ship: string
+  Pickup: string
+  delivery: string
+}
+
+export const EDDFulfillmentOptions = {
+  Ship: 'DIRECTSHIP',
+  Pickup: 'BOPIS',
+  Delivery: 'DELIVERY',
+}
+
 export enum PaymentWorkflow {
   MOZU = 'Mozu',
 }

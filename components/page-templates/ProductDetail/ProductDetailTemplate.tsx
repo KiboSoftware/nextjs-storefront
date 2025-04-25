@@ -49,7 +49,9 @@ import {
   usePriceRangeFormatter,
 } from '@/hooks'
 import {
+  EDDFulfillmentOptions,
   FulfillmentOptions as FulfillmentOptionsConstant,
+  IEDDFulfillmentOptions,
   OutOfStockBehavior,
   PurchaseTypes,
 } from '@/lib/constants'
@@ -65,7 +67,9 @@ import type {
   ProductOptionValue,
   CrProduct,
 } from '@/lib/gql/types'
-
+import dayjs from 'dayjs'
+import { formatEDDMessage } from '@/lib/helpers/formatEddMessage'
+import { getClosestEDDSuggestion } from '@/lib/helpers/getClosestEddSuggestion'
 interface ProductDetailTemplateProps {
   product: ProductCustom
   breadcrumbs?: BreadCrumb[]
@@ -106,6 +110,12 @@ const StyledLink = styled(Link)(({ theme }: { theme: Theme }) => ({
   fontSize: theme?.typography.body2.fontSize,
 }))
 
+const EddOrderTypeMap = {
+  [FulfillmentOptionsConstant.SHIP]: EDDFulfillmentOptions.Ship,
+  [FulfillmentOptionsConstant.DELIVERY]: EDDFulfillmentOptions.Delivery,
+  [FulfillmentOptionsConstant.PICKUP]: EDDFulfillmentOptions.Pickup,
+} as any
+
 const ProductDetailTemplate = (props: ProductDetailTemplateProps) => {
   const { getProductLink } = uiHelpers()
   const {
@@ -130,6 +140,8 @@ const ProductDetailTemplate = (props: ProductDetailTemplateProps) => {
 
   const [purchaseType, setPurchaseType] = useState<string>(PurchaseTypes.ONETIMEPURCHASE)
   const [selectedFrequency, setSelectedFrequency] = useState<string>('')
+  const [eddMessage, setEddMessage] = useState<string>('')
+  const [eddZipCode, setEddZipCode] = useState<string>('')
 
   const isSubscriptionModeAvailable = subscriptionGetters.isSubscriptionModeAvailable(product)
   const isSubscriptionOnly = subscriptionGetters.isSubscriptionOnly(product)
@@ -276,6 +288,7 @@ const ProductDetailTemplate = (props: ProductDetailTemplateProps) => {
   const handleFulfillmentOptionChange = (value: string) => {
     if (
       value === FulfillmentOptionsConstant.SHIP ||
+      value === FulfillmentOptionsConstant.DELIVERY ||
       selectedFulfillmentOption?.location?.name ||
       purchaseLocation.code
     ) {
@@ -283,6 +296,8 @@ const ProductDetailTemplate = (props: ProductDetailTemplateProps) => {
         ...selectedFulfillmentOption,
         method: value,
       })
+
+      handleZipCodeForEdd(eddZipCode, EddOrderTypeMap[value])
     } else {
       handleProductPickupLocation()
     }
@@ -372,9 +387,41 @@ const ProductDetailTemplate = (props: ProductDetailTemplateProps) => {
     handleQuantity(newQuantity)
   }
 
-  const handleZipCodeForEdd = async (zipCode: string) => {
-    // const response= await getEDDSuggestion({shippingAddress: {zipCode}, product: {...currentProduct}})
-    console.log('ZipCode:', zipCode, currentProduct)
+  const buildEDDSuggestionParams = (zipCode: string, fulfillmentType: string) => {
+    return {
+      eddItems: [
+        {
+          orderItemID: 1,
+          quantity: quantity,
+          upc: currentProduct?.variationProductCode || currentProduct?.productCode,
+          productUsage: currentProduct?.productUsage,
+        },
+      ],
+      shippingAddress: {
+        postalCode: zipCode,
+        countryCode: 'US',
+      },
+      orderType: fulfillmentType,
+      total: currentProduct?.price?.price,
+    }
+  }
+
+  const handleZipCodeForEdd = async (
+    zipCode: string,
+    fulfillmentType: string = EDDFulfillmentOptions.Ship
+  ) => {
+    const response: any = await getEDDSuggestion(buildEDDSuggestionParams(zipCode, fulfillmentType))
+    if (
+      response?.eddAssignments &&
+      response?.eddAssignments?.length > 0 &&
+      response?.eddAssignments[0]?.estimatedDeliveryDates?.length > 0
+    ) {
+      const edd = getClosestEDDSuggestion(response?.eddAssignments?.[0]?.estimatedDeliveryDates)
+      setEddMessage(formatEDDMessage({ eddISO: edd.estimatedDeliveryDate, mode: 'ship' }))
+      setEddZipCode(zipCode)
+    } else {
+      setEddMessage('Delivery estimate not available at the moment.')
+    }
   }
 
   useEffect(() => {
@@ -581,6 +628,9 @@ const ProductDetailTemplate = (props: ProductDetailTemplateProps) => {
         </Box>
 
         <Box pt={1} width={'50%'}>
+          <Typography variant="body2" fontWeight={600}>
+            {eddMessage}
+          </Typography>
           <ExpectedDeliveryDate onZipCodeChange={handleZipCodeForEdd} />
         </Box>
 
