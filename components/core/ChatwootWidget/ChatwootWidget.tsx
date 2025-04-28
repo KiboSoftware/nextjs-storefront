@@ -44,7 +44,19 @@ const ChatwootWidget = () => {
       router.push(localPath)
     }
   }
-
+  const getChatwootUserMetaData = () => { 
+    const metaData = {
+      email: user?.emailAddress,
+      name: null
+    } as any;
+    const firstName = user?.firstName || '';
+    const lastName = user?.lastName || '';
+    const fullName = [firstName, lastName].filter(Boolean).join(' ');
+    if (fullName) {
+      metaData.name = fullName;
+    }
+    return metaData;
+  }
   useEffect(() => {
     const chatwootScriptUrl = `${publicRuntimeConfig.chatwootBaseUrl}/packs/js/sdk.js`
     const script = document.querySelector(`script[src="${chatwootScriptUrl}"]`)
@@ -63,7 +75,7 @@ const ChatwootWidget = () => {
       if (window.$chatwoot && user) {
         window.$chatwoot.reset()
         setTimeout(() => {
-          window.$chatwoot.setUser(user.userId, { email: user.emailAddress })
+          window.$chatwoot.setUser(user.userId, getChatwootUserMetaData())
         }, 1000)
       }
     }
@@ -92,7 +104,7 @@ const ChatwootWidget = () => {
             setIsChatwootLoaded(true)
             if (window.$chatwoot && user) {
               try {
-                window.$chatwoot.setUser(user.userId, { email: user.emailAddress })
+                window.$chatwoot.setUser(user.userId, getChatwootUserMetaData())
                 const bubbleHolder = document.getElementById('cw-bubble-holder')
                 const resetButton = resetChatwootButton()
                 resetButton.addEventListener('click', (e) => {
