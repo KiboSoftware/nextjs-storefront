@@ -1043,7 +1043,7 @@ const QuoteDetailsTemplate = (props: QuoteDetailsTemplateProps) => {
                             pickupItems={pickupItems}
                             orderShipmentMethods={[...shippingMethods]}
                             selectedShippingMethodCode={selectedShippingMethodCode}
-                            onShippingMethodChange={handleSaveShippingMethod}
+                            onMultiShipShippingMethodChange={handleSaveShippingMethod}
                             // onStoreLocatorClick={handleStoreLocatorClick}
                           />
                         )}
@@ -1171,7 +1171,7 @@ const QuoteDetailsTemplate = (props: QuoteDetailsTemplateProps) => {
                     pickupItems={pickupItems}
                     orderShipmentMethods={[...shippingMethods]}
                     selectedShippingMethodCode={selectedShippingMethodCode}
-                    onShippingMethodChange={handleSaveShippingMethod}
+                    onMultiShipShippingMethodChange={handleSaveShippingMethod}
                     // onStoreLocatorClick={handleStoreLocatorClick}
                   />
                 </Stack>

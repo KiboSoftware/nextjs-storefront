@@ -100,6 +100,9 @@ const getShipItems = (order: CrOrder): CrOrderItem[] =>
 const getDigitalItems = (order: CrOrder): CrOrderItem[] =>
   getItemsByFulfillment(order, FulfillmentOptions.DIGITAL)
 
+const getDeliveryItems = (order: CrOrder): CrOrderItem[] =>
+  getItemsByFulfillment(order, FulfillmentOptions.DELIVERY)
+
 const getCartItemId = (item: CrOrderItem | CrCartItem): string => item?.id || ''
 
 const getProductQuantity = (item: CrOrderItem | CrCartItem): number => item?.quantity || 0
@@ -420,4 +423,5 @@ export const orderGetters = {
   getShippingDiscounts,
   getItemTaxTotal,
   getDigitalItems,
+  getDeliveryItems,
 }

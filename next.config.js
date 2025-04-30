@@ -30,6 +30,7 @@ module.exports = {
       'cdn-sb.sandbox.kibong-qa.com',
       'cdn-sb.mozu.com',
       'cdn.sb.gdev06.gcp.kibocommerce.com',
+      'cdn.sb.gdev02.gcp.kibocommerce.com',
     ],
     deviceSizes: [
       100, 240, 340, 380, 400, 450, 500, 550, 600, 640, 750, 828, 1080, 1200, 1920, 2048, 3840,

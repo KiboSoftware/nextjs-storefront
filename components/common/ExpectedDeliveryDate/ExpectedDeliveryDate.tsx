@@ -27,11 +27,10 @@ const ExpectedDeliveryDate = ({
   const config = getConfig()
 
   const { user } = useAuthContext()
-  const { showModal, closeModal } = useModalContext()
+  const { showModal } = useModalContext()
   const isGuest = !user?.id
 
   const { contacts } = useCardContactActions(user?.id as number)
-  const contactsItems = contacts?.items ?? []
 
   const [_zipCodeLocalState, setZipCodeLocalState] = useState('')
   const [isShowZipInput, setIsShowZipInput] = useState<boolean>()
@@ -81,13 +80,13 @@ const ExpectedDeliveryDate = ({
 
     const latestZipCodeApplied = getEddZipCodeCookie()
 
+    if (!zipResolvedRef.current) {
+      getCurrentLocationZipCode()
+    }
+
     if (latestZipCodeApplied && !zipResolvedRef.current) {
       zipResolvedRef.current = true
       setZipCode(latestZipCodeApplied)
-    }
-
-    if (!zipResolvedRef.current) {
-      getCurrentLocationZipCode()
     }
 
     if (!latestZipCodeApplied && !zipResolvedRef.current) {

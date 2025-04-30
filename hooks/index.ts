@@ -145,6 +145,7 @@ export * from './mutations/standardCheckout/useInitiateOrder/useInitiateOrder'
 export * from './mutations/standardCheckout/useUpdateOrderCoupon/useUpdateOrderCoupon'
 export * from './mutations/standardCheckout/useDeleteOrderCoupon/useDeleteOrderCoupon'
 export * from './mutations/standardCheckout/useUpdateUserOrder/useUpdateUserOrder'
+export * from './mutations/standardCheckout/updateShippingAndSuggestions/updateShippingAndSuggestions'
 
 // Wishlist
 export * from './mutations/wishlist/useAddToWishlistItem/useAddToWishlistItem'

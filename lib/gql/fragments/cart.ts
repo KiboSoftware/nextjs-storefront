@@ -28,6 +28,24 @@ export const cartItemDetails = /* GraphQL */ `
     total
     product {
       productCode
+      measurements {
+        height {
+          unit
+          value
+        }
+        width {
+          unit
+          value
+        }
+        length {
+          unit
+          value
+        }
+        weight {
+          unit
+          value
+        }
+      }
       variationProductCode
       fulfillmentTypesSupported
       name

@@ -23,6 +23,7 @@ import {
   useValidateCustomerAddress,
   useCreateCustomerAddress,
 } from '@/hooks'
+import { useUpdateShippingAndSuggestionsMutation } from '@/hooks'
 import { DefaultId, AddressType, CountryCode, FulfillmentOptions } from '@/lib/constants'
 import { orderGetters, userGetters } from '@/lib/getters'
 import { actions, buildAddressParams, hasPermission } from '@/lib/helpers'
@@ -35,7 +36,6 @@ import type {
   CustomerContactCollection,
   CuAddress,
 } from '@/lib/gql/types'
-import { useUpdateShippingAndSuggestionsMutation } from '@/hooks/mutations/standardCheckout/updateShippingAndSuggestions/updateShippingAndSuggestions'
 
 interface ShippingProps {
   setAutoFocus?: boolean
@@ -67,6 +67,7 @@ const StandardShippingStep = (props: ShippingProps) => {
   const shipItems = orderGetters.getShipItems(checkout)
   const pickupItems = orderGetters.getPickupItems(checkout)
   const digitalItems = orderGetters.getDigitalItems(checkout)
+  const deliveryItems = orderGetters.getDeliveryItems(checkout)
 
   const [isAddressSavedToAccount, setIsAddressSavedToAccount] = useState<boolean>(false)
   const [validateForm, setValidateForm] = useState<boolean>(false)
@@ -185,40 +186,6 @@ const StandardShippingStep = (props: ShippingProps) => {
   //   })
   // }
 
-  const handleSaveShippingMethod = async (shippingMethodCode: string, orderItemId?: string) => {
-    const shippingMethodName = shippingMethods.find(
-      (method) => method.shippingMethodCode === shippingMethodCode
-    )?.shippingMethodName as string
-
-    try {
-      if (isSplitShippingEnabled) {
-        // implement updateShippingAndSuggestions Mutation
-        updateShippingAndSuggestionsMutation.mutateAsync({
-          shippingMethodCode,
-          shippingMethodName,
-          orderItemId: orderItemId as string,
-          orderId: checkout.id as string,
-        })
-      } else {
-        await updateOrderShippingInfo.mutateAsync({
-          checkout,
-          contact: undefined,
-          email: undefined,
-          shippingMethodCode,
-          shippingMethodName,
-        })
-      }
-
-      shippingAddressRef.current &&
-        (shippingAddressRef.current as Element).scrollIntoView({
-          behavior: 'smooth',
-          block: 'start',
-        })
-    } catch (error) {
-      console.error(error)
-    }
-  }
-
   const handleStoreLocatorClick = () => {
     /**/
   }
@@ -279,11 +246,21 @@ const StandardShippingStep = (props: ShippingProps) => {
   }, [stepStatus])
 
   useEffect(() => {
-    // eslint-disable-next-line @typescript-eslint/no-extra-semi
-    ;(selectedShippingAddressId && checkoutShippingMethodCode && shouldShowAddAddressButton) ||
-    (!shipItems.length && (pickupItems.length || digitalItems.length))
-      ? setStepStatusValid()
-      : setStepStatusIncomplete()
+    if (!shipItems.length && (pickupItems.length || digitalItems.length)) {
+      setStepStatusValid()
+      return
+    }
+
+    const isShippingMethodSelected = isSplitShippingEnabled
+      ? shipItems?.every((item) => (item as any)?.shippingMethodCode)
+      : Boolean(checkoutShippingMethodCode)
+
+    if (selectedShippingAddressId && isShippingMethodSelected && shouldShowAddAddressButton) {
+      setStepStatusValid()
+      return
+    }
+
+    setStepStatusIncomplete()
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [selectedShippingAddressId, checkout, shouldShowAddAddressButton])
 
@@ -328,7 +305,7 @@ const StandardShippingStep = (props: ShippingProps) => {
     return <Typography variant="subtitle2">{t('digital-products-shipping-text')}</Typography>
   }
 
-  if (!shipItems.length) {
+  if (!shipItems.length && !deliveryItems.length && !digitalItems.length) {
     return (
       <>
         <Typography variant="h2" component="h2" sx={{ fontWeight: 'bold' }}>
@@ -340,7 +317,6 @@ const StandardShippingStep = (props: ShippingProps) => {
           pickupItems={pickupItems}
           orderShipmentMethods={[...shippingMethods]}
           selectedShippingMethodCode={checkoutShippingMethodCode}
-          onShippingMethodChange={handleSaveShippingMethod}
           onStoreLocatorClick={handleStoreLocatorClick}
         />
       </>
@@ -441,9 +417,10 @@ const StandardShippingStep = (props: ShippingProps) => {
               isSplitShipping={isSplitShippingEnabled}
               shipItems={shipItems}
               pickupItems={pickupItems}
+              deliveryItems={deliveryItems}
+              order={checkout}
               orderShipmentMethods={[...shippingMethods]}
               selectedShippingMethodCode={checkoutShippingMethodCode}
-              onShippingMethodChange={handleSaveShippingMethod}
               onStoreLocatorClick={handleStoreLocatorClick}
             />
           )}

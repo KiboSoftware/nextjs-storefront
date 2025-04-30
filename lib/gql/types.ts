@@ -2766,6 +2766,8 @@ export type CrOrderItem = {
   weightedOrderShippingManualAdjustment?: Maybe<Scalars['Float']>
   weightedOrderShippingTax?: Maybe<Scalars['Float']>
   weightedOrderTax?: Maybe<Scalars['Float']>
+  shippingMethodCode?: Maybe<Scalars['String']>
+  shippingMethodName?: Maybe<Scalars['String']>
 }
 
 export type CrOrderItem_GetArgs = {
@@ -3996,6 +3998,7 @@ export type CrShippingRate = {
   shippingMethodCode?: Maybe<Scalars['String']>
   shippingMethodName?: Maybe<Scalars['String']>
   shippingZoneCode?: Maybe<Scalars['String']>
+  fulfillmentMethod?: Maybe<Scalars['String']>
 }
 
 export type CrShippingRate_GetArgs = {

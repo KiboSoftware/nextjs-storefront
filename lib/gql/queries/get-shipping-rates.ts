@@ -9,6 +9,7 @@ const getShippingRatesQuery = /* GraphQL */ `
       data
       currencyCode
       price
+      fulfillmentMethod
     }
   }
 `

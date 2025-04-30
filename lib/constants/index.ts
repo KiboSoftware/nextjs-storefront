@@ -11,11 +11,7 @@ export enum FulfillmentOptions {
   DELIVERY = 'Delivery',
 }
 
-export interface IEDDFulfillmentOptions {
-  Ship: string
-  Pickup: string
-  delivery: string
-}
+export type EDDFulfillmentOptionKey = 'Ship' | 'Pickup' | 'Delivery'
 
 export const EDDFulfillmentOptions = {
   Ship: 'DIRECTSHIP',

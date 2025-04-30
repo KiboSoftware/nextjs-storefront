@@ -7,31 +7,37 @@ import { makeGraphQLClientWithoutUserClaims } from '@/lib/gql/client'
 import { updateShippingAndSuggestions } from '@/lib/gql/mutations'
 import { checkoutKeys } from '@/lib/react-query/queryKeys'
 
-import type { CrFulfillmentInfoInput } from '@/lib/gql/types'
-import {
-  BuildUpdateShippingAndSuggestionsParams,
-  buildUpdateShippingAndSuggestionsParams,
-} from '@/lib/helpers/buildUpdateShippingAndSuggestionsParams'
+export interface EddSuggestionsParam {
+  locationCode: string
+  suggestionType?: string
+  quantity: number
+  productCode: string
+  futureDate?: string
+}
+export interface UpdateShippingAndSuggestionsParams {
+  orderId: string
+  orderItemId: string
+  itemFulfillmentInfoInput: {
+    shippingMethodCode?: string
+    shippingMethodName?: string
+    expectedDeliveryDate?: string
+    deliveryWindow?: {
+      startTime: string
+      endTime: string
+    }
+    suggestions?: EddSuggestionsParam[]
+  }
+}
 
 /**
  * @hidden
  */
-export interface ShippingInfo {
-  orderId: string
-  orderItemId: string
-  fulfillmentInfoInput: CrFulfillmentInfoInput
-}
-
-const updateShippingAndSuggestionsMutation = async (
-  params: BuildUpdateShippingAndSuggestionsParams
-) => {
+const updateShippingAndSuggestionsMutation = async (params: UpdateShippingAndSuggestionsParams) => {
   const client = makeGraphQLClientWithoutUserClaims()
-
-  const shippingInfo = buildUpdateShippingAndSuggestionsParams(params)
 
   const response = await client.request({
     document: updateShippingAndSuggestions,
-    variables: shippingInfo,
+    variables: params,
   })
 
   return response?.updateShippingAndSuggestions
@@ -44,7 +50,7 @@ const updateShippingAndSuggestionsMutation = async (
  *
  * Description : Updates user shipping(fulfillment) info at checkout
  *
- * Parameters passed to function updateShippingAndSuggestionsMutation(params: CheckoutShippingParams) => expects object of type ' ShippingInfo' containing  orderId, orderItemId and itemFulfillmentInfoInput
+ * Parameters passed to function updateShippingAndSuggestionsMutation(params: UpdateShippingAndSuggestionsParams) => expects object of type ' UpdateShippingAndSuggestionsParams' containing  orderId, orderItemId and itemFulfillmentInfoInput
  *
  * On success, calls invalidateQueries on checkoutKeys and fetches the updated result.
  *

@@ -16,6 +16,7 @@ import {
   Theme,
   MenuItem,
 } from '@mui/material'
+import dayjs from 'dayjs'
 import Link from 'next/link'
 import { useTranslation } from 'next-i18next'
 
@@ -49,14 +50,16 @@ import {
   usePriceRangeFormatter,
 } from '@/hooks'
 import {
+  EDDFulfillmentOptionKey,
   EDDFulfillmentOptions,
   FulfillmentOptions as FulfillmentOptionsConstant,
-  IEDDFulfillmentOptions,
   OutOfStockBehavior,
   PurchaseTypes,
 } from '@/lib/constants'
 import { productGetters, subscriptionGetters, wishlistGetters } from '@/lib/getters'
 import { uiHelpers } from '@/lib/helpers'
+import { formatEDDMessage } from '@/lib/helpers/formatEddMessage'
+import { getClosestEDDSuggestion } from '@/lib/helpers/getClosestEddSuggestion'
 import { getEDDSuggestion } from '@/lib/helpers/getEDDSuggestions'
 import type { ProductCustom, BreadCrumb, LocationCustom } from '@/lib/types'
 
@@ -67,9 +70,6 @@ import type {
   ProductOptionValue,
   CrProduct,
 } from '@/lib/gql/types'
-import dayjs from 'dayjs'
-import { formatEDDMessage } from '@/lib/helpers/formatEddMessage'
-import { getClosestEDDSuggestion } from '@/lib/helpers/getClosestEddSuggestion'
 interface ProductDetailTemplateProps {
   product: ProductCustom
   breadcrumbs?: BreadCrumb[]
@@ -352,6 +352,7 @@ const ProductDetailTemplate = (props: ProductDetailTemplateProps) => {
             method: FulfillmentOptionsConstant.PICKUP,
             location: selectedStore,
           })
+          handleZipCodeForEdd(selectedStore?.zip as string, EDDFulfillmentOptions.Pickup)
         },
       },
     })
@@ -395,12 +396,24 @@ const ProductDetailTemplate = (props: ProductDetailTemplateProps) => {
           quantity: quantity,
           upc: currentProduct?.variationProductCode || currentProduct?.productCode,
           productUsage: currentProduct?.productUsage,
+          dimensionUnit: 'CM', //currentProduct.measurements?.packageLength?.unit,
+          weightUnit: 'GRAMS', //currentProduct.measurements?.packageWeight?.unit,
+          weight: currentProduct.measurements?.packageWeight?.value,
+          length: currentProduct.measurements?.packageLength?.value,
+          width: currentProduct.measurements?.packageWidth?.value,
+          height: currentProduct.measurements?.packageHeight?.value,
         },
       ],
-      shippingAddress: {
-        postalCode: zipCode,
-        countryCode: 'US',
-      },
+      ...(fulfillmentType === EDDFulfillmentOptions.Pickup
+        ? {
+            pickupLocationCode: selectedFulfillmentOption?.location?.code,
+          }
+        : {
+            shippingAddress: {
+              postalCode: zipCode,
+              countryCode: 'US',
+            },
+          }),
       orderType: fulfillmentType,
       total: currentProduct?.price?.price,
     }
@@ -408,7 +421,7 @@ const ProductDetailTemplate = (props: ProductDetailTemplateProps) => {
 
   const handleZipCodeForEdd = async (
     zipCode: string,
-    fulfillmentType: string = EDDFulfillmentOptions.Ship
+    fulfillmentType: (typeof EDDFulfillmentOptions)[EDDFulfillmentOptionKey] = EDDFulfillmentOptions.Ship
   ) => {
     const response: any = await getEDDSuggestion(buildEDDSuggestionParams(zipCode, fulfillmentType))
     if (
@@ -417,7 +430,13 @@ const ProductDetailTemplate = (props: ProductDetailTemplateProps) => {
       response?.eddAssignments[0]?.estimatedDeliveryDates?.length > 0
     ) {
       const edd = getClosestEDDSuggestion(response?.eddAssignments?.[0]?.estimatedDeliveryDates)
-      setEddMessage(formatEDDMessage({ eddISO: edd.estimatedDeliveryDate, mode: 'ship' }))
+      setEddMessage(
+        formatEDDMessage({
+          eddISO: edd.estimatedDeliveryDate,
+          cutoffDate: edd.orderCutoffDate,
+          mode: fulfillmentType,
+        })
+      )
       setEddZipCode(zipCode)
     } else {
       setEddMessage('Delivery estimate not available at the moment.')
@@ -631,7 +650,9 @@ const ProductDetailTemplate = (props: ProductDetailTemplateProps) => {
           <Typography variant="body2" fontWeight={600}>
             {eddMessage}
           </Typography>
-          <ExpectedDeliveryDate onZipCodeChange={handleZipCodeForEdd} />
+          {selectedFulfillmentOption?.method !== FulfillmentOptionsConstant.PICKUP && (
+            <ExpectedDeliveryDate onZipCodeChange={handleZipCodeForEdd} />
+          )}
         </Box>
 
         {/* {!addItemToList && (

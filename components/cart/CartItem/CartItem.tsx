@@ -1,3 +1,5 @@
+import { useEffect, useState } from 'react'
+
 import Delete from '@mui/icons-material/Delete'
 import {
   Box,
@@ -13,7 +15,6 @@ import {
 import { grey } from '@mui/material/colors'
 import { useTranslation } from 'next-i18next'
 
-import { CartItemActions, CartItemActionsMobile } from '@/components/cart'
 import { FulfillmentOptions, Price, ProductItem, QuantitySelector } from '@/components/common'
 import {
   QuoteStatus,
@@ -22,13 +23,12 @@ import {
 } from '@/lib/constants'
 import { cartGetters, productGetters } from '@/lib/getters'
 import { uiHelpers } from '@/lib/helpers'
+import { formatEDDMessage } from '@/lib/helpers/formatEddMessage'
+import { getClosestEDDSuggestion } from '@/lib/helpers/getClosestEddSuggestion'
+import { getEDDSuggestion } from '@/lib/helpers/getEDDSuggestions'
 import type { FulfillmentOption } from '@/lib/types'
 
 import type { CrCartItem as CartItemType, CrOrderItem, CrProduct, Maybe } from '@/lib/gql/types'
-import { useEffect, useState } from 'react'
-import { getEDDSuggestion } from '@/lib/helpers/getEDDSuggestions'
-import { getClosestEDDSuggestion } from '@/lib/helpers/getClosestEddSuggestion'
-import { formatEDDMessage } from '@/lib/helpers/formatEddMessage'
 
 interface CartItemProps {
   cartItem: Maybe<CartItemType> | Maybe<CrOrderItem>
@@ -155,12 +155,24 @@ const CartItem = (props: CartItemProps) => {
           quantity: cartItem?.quantity,
           upc: cartItem?.product?.variationProductCode || cartItem?.product?.productCode,
           productUsage: cartItem?.product?.productUsage,
+          dimensionUnit: 'CM', //|| cartItem?.product?.measurements?.length?.unit,
+          weightUnit: 'GRAMS', //|| cartItem?.product?.measurements?.weight?.unit,
+          length: cartItem?.product?.measurements?.length?.value,
+          weight: cartItem?.product?.measurements?.weight?.value,
+          width: cartItem?.product?.measurements?.width?.value,
+          height: cartItem?.product?.measurements?.height?.value,
         },
       ],
-      shippingAddress: {
-        postalCode: zipCode,
-        countryCode: 'US',
-      },
+      ...(cartItem?.fulfillmentMethod === FulfillmentOptionsConstant.PICKUP
+        ? {
+            pickupLocationCode: cartItem?.fulfillmentLocationCode,
+          }
+        : {
+            shippingAddress: {
+              postalCode: zipCode,
+              countryCode: 'US',
+            },
+          }),
       orderType: EddOrderTypeMap[cartItem?.fulfillmentMethod as string],
       total: cartItem?.product?.price?.price,
     }
@@ -174,20 +186,19 @@ const CartItem = (props: CartItemProps) => {
       response?.eddAssignments[0]?.estimatedDeliveryDates?.length > 0
     ) {
       const edd = getClosestEDDSuggestion(response?.eddAssignments[0]?.estimatedDeliveryDates)
-      setEddMessage(formatEDDMessage({ eddISO: edd.estimatedDeliveryDate, mode: 'ship' }))
+      setEddMessage(
+        formatEDDMessage({
+          eddISO: edd.estimatedDeliveryDate,
+          mode: EddOrderTypeMap[cartItem?.fulfillmentMethod as string],
+        })
+      )
     } else {
       setEddMessage('Delivery estimate not available at the moment.')
     }
   }
 
   useEffect(() => {
-    let isComponentUnmounted = false
-
     getEDDSuggestions()
-
-    return () => {
-      isComponentUnmounted = true
-    }
   }, [eddZipCode, cartItem?.fulfillmentMethod, cartItem?.quantity])
 
   return (

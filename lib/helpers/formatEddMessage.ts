@@ -1,13 +1,20 @@
 import dayjs from 'dayjs'
 
-type FulfillmentMode = 'ship' | 'pickup'
+import { EDDFulfillmentOptionKey, EDDFulfillmentOptions } from '../constants'
 
 interface FormatEDDOptions {
   eddISO: string
-  mode: FulfillmentMode
+  cutoffDate?: string
+  mode: (typeof EDDFulfillmentOptions)[EDDFulfillmentOptionKey]
+  isOrderPlaced?: boolean
 }
 
-export function formatEDDMessage({ eddISO, mode = 'ship' }: FormatEDDOptions): string {
+export function formatEDDMessage({
+  eddISO,
+  cutoffDate,
+  mode = EDDFulfillmentOptions.Ship,
+  isOrderPlaced = false,
+}: FormatEDDOptions): string {
   const edd = dayjs(eddISO)
   const now = dayjs()
 
@@ -17,16 +24,19 @@ export function formatEDDMessage({ eddISO, mode = 'ship' }: FormatEDDOptions): s
   const timeStr = edd.format('h A') // e.g. "4 PM"
   const dateStr = edd.format('MM/DD/YYYY')
 
-  if (mode === 'ship') {
+  if (mode === EDDFulfillmentOptions.Ship || mode === EDDFulfillmentOptions.Delivery) {
+    if (isOrderPlaced) {
+      return `Expected Delivery by ${dateStr},${timeStr}`
+    }
     if (isToday) return `Order Now and Get it by ${timeStr} today`
     if (isTomorrow) return `Order Now and Get it by ${timeStr} tomorrow`
     return `Expected Delivery by ${dateStr}`
   }
 
-  if (mode === 'pickup') {
+  if (mode === EDDFulfillmentOptions.Pickup) {
     if (isToday) return `Available For Pick up after ${timeStr} today`
     if (isTomorrow) return `Available For Pick up after ${timeStr} tomorrow`
-    return `Available For Pick up on ${dateStr}`
+    return `Available For Pick up on ${dateStr}, ${timeStr}`
   }
 
   throw new Error(`Unknown fulfillment mode: ${mode}`)
