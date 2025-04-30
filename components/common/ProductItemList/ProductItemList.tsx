@@ -63,11 +63,12 @@ const ProductItemList = (props: ProductItemListProps) => {
 
   return (
     <Stack direction="column" divider={<Divider orientation="horizontal" flexItem />} spacing={2}>
-      {items?.map((item: Maybe<CrOrderItem>) => {
+      {items?.map((each: Maybe<CrOrderItem>) => {
+        const item = each as CrOrderItem
         const product = item?.product as CrProduct
         return (
           <Stack key={item?.id} data-testid={testId}>
-            <Component order={order} item={item as CrOrderItem} showEdd={showEdd}>
+            <Component {...(showEdd && { order, item: item, showEdd })}>
               <ProductItem
                 id={orderGetters.getCartItemId(item as CrOrderItem)}
                 qty={orderGetters.getProductQuantity(item as CrOrderItem)}
@@ -108,8 +109,8 @@ const EddOrderTypeMap = {
 
 const EDDWrapper = (props: {
   order?: CrOrder
-  item: CrOrderItem
-  showEdd: boolean
+  item?: CrOrderItem
+  showEdd?: boolean
   children: any
 }) => {
   const { order, item, showEdd, children } = props

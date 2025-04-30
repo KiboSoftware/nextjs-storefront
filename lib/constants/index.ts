@@ -4,6 +4,13 @@ export enum FormStates {
   VALIDATE = 'VALIDATE',
 }
 
+export const ProductUsage = {
+  STANDARD: 'STANDARD',
+  CONFIGURABLE: 'CONFIGURABLE',
+  BUNDLE: 'BUNDLE',
+  PRODUCT_WITH_EXTRAS: 'PRODUCT_WITH_EXTRAS',
+}
+
 export enum FulfillmentOptions {
   SHIP = 'Ship',
   PICKUP = 'Pickup',
