@@ -19,6 +19,7 @@ import { useTranslation } from 'next-i18next'
 
 import { CartItemList } from '@/components/cart'
 import { PromoCodeBadge, OrderSummary } from '@/components/common'
+import ExpectedDeliveryDate from '@/components/common/ExpectedDeliveryDate/ExpectedDeliveryDate'
 import { ConfirmationDialog } from '@/components/dialogs'
 import { useModalContext } from '@/context'
 import {
@@ -68,6 +69,7 @@ const CartTemplate = (props: CartTemplateProps) => {
   const { deleteCartCoupon } = useDeleteCartCoupon()
   const [promoError, setPromoError] = useState<string>('')
   const [showLoadingButton, setShowLoadingButton] = useState<boolean>(false)
+  const [eddZipCode, setEddZipCode] = useState<string>('')
   const { handleDeleteCurrentCart } = useProductCardActions()
 
   const handleApplyPromoCode = async (couponCode: string) => {
@@ -157,6 +159,10 @@ const CartTemplate = (props: CartTemplateProps) => {
     })
   }
 
+  const handleZipCodeForEdd = async (zipCode: string) => {
+    setEddZipCode(zipCode)
+  }
+
   return (
     <Grid container>
       {/* Header section */}
@@ -168,6 +174,9 @@ const CartTemplate = (props: CartTemplateProps) => {
           <Typography variant="h1" fontWeight={'normal'}>
             ({t('item-quantity', { count: cartItemCount })})
           </Typography>
+        </Box>
+        <Box paddingY={2} width={'50%'}>
+          <ExpectedDeliveryDate showZipInputOnly onZipCodeChange={handleZipCodeForEdd} />
         </Box>
       </Grid>
       {isMobileViewport && (
@@ -185,6 +194,7 @@ const CartTemplate = (props: CartTemplateProps) => {
                 locations && Object.keys(locations).length ? (locations as Location[]) : []
               }
               purchaseLocation={purchaseLocation}
+              eddZipCode={eddZipCode}
               onCartItemDelete={handleDeleteItem}
               onCartItemQuantityUpdate={handleQuantityUpdate}
               onFulfillmentOptionChange={onFulfillmentOptionChange}

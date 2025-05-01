@@ -61,6 +61,7 @@ const ViewOrderDetails = (props: ViewOrderDetailsProps) => {
   const submittedDate = orderGetters.getSubmittedDate(order)
   const pickupItems = orderGetters.getPickupItems(order)
   const shipItems = orderGetters.getShipItems(order)
+  const deliveryItems = orderGetters.getDeliveryItems(order)
   const fulfillmentContactAddress = orderGetters.getShippingAddress(order)
   const payment = orderGetters.getFinalOrderPayment(order)
   const fulfillmentLocationCodes = orderGetters.getFulfillmentLocationCodes(pickupItems)
@@ -160,7 +161,25 @@ const ViewOrderDetails = (props: ViewOrderDetailsProps) => {
                     {orderGetters.getExpectedDeliveryDate(shipItems)}
                   </Typography>
                 </Box>
-                <ProductItemList items={shipItems} width="15%" />
+                <ProductItemList showEdd={true} order={order} items={shipItems} width="15%" />
+                {fulfillmentContactAddress && <AddressCard {...fulfillmentContactAddress} />}
+              </Box>
+              <Divider sx={{ ...styles.divider }} />
+            </Box>
+          )}
+
+          {deliveryItems && deliveryItems.length > 0 && (
+            <Box>
+              <Box sx={{ ...styles.container }}>
+                <Box sx={{ ...styles.heading }}>
+                  <Typography variant="subtitle2" fontWeight={700}>
+                    {orderStatus}
+                  </Typography>
+                  <Typography variant="body1" color="primary">
+                    {orderGetters.getExpectedDeliveryDate(deliveryItems)}
+                  </Typography>
+                </Box>
+                <ProductItemList showEdd={true} order={order} items={deliveryItems} width="15%" />
                 {fulfillmentContactAddress && <AddressCard {...fulfillmentContactAddress} />}
               </Box>
               <Divider sx={{ ...styles.divider }} />

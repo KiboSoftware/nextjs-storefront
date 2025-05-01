@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useEffect, useState } from 'react'
 
 import ArrowForwardIos from '@mui/icons-material/ArrowForwardIos'
 import {
@@ -19,7 +19,7 @@ import { useSnackbarContext } from '@/context'
 import { useProductCardActions } from '@/hooks'
 import { useAddItemsToCurrentCart } from '@/hooks/mutations/cart/useAddItemsToCurrentCart/useAddItemsToCurrentCart'
 
-import { CrOrderItem } from '@/lib/gql/types'
+import { CrOrder, CrOrderItem } from '@/lib/gql/types'
 
 export interface OrderHistoryItemProps {
   id: string
@@ -28,6 +28,7 @@ export interface OrderHistoryItemProps {
   productNames: string
   orderTotal: number
   orderStatus: string
+  order?: CrOrder
   onHistoryItemClick: (id: string) => void
 }
 
@@ -48,8 +49,16 @@ const styles = {
 }
 
 const OrderHistoryItem = (props: OrderHistoryItemProps) => {
-  const { id, submittedDate, productNames, orderTotal, orderStatus, items, onHistoryItemClick } =
-    props
+  const {
+    id,
+    submittedDate,
+    productNames,
+    orderTotal,
+    orderStatus,
+    items,
+    order,
+    onHistoryItemClick,
+  } = props
   const { t } = useTranslation('common')
   const { showSnackbar } = useSnackbarContext()
 

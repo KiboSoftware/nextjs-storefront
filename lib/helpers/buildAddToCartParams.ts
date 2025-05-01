@@ -1,3 +1,4 @@
+import { FulfillmentOptions } from '../constants'
 import { AddToCartProductInput } from '@/hooks'
 
 import type { CrCartItemInput, CrSubscriptionInfo } from '../gql/types'
@@ -15,7 +16,9 @@ export const buildAddToCartParams = (
     },
     quantity,
     fulfillmentMethod: product?.fulfillmentMethod,
-    fulfillmentLocationCode: product?.purchaseLocationCode,
+    ...(product.fulfillmentMethod === FulfillmentOptions.PICKUP && {
+      fulfillmentLocationCode: product?.purchaseLocationCode,
+    }),
     subscription,
   }
 }

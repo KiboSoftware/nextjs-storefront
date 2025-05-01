@@ -1,3 +1,5 @@
+import { useEffect, useState } from 'react'
+
 import Delete from '@mui/icons-material/Delete'
 import {
   Box,
@@ -13,11 +15,17 @@ import {
 import { grey } from '@mui/material/colors'
 import { useTranslation } from 'next-i18next'
 
-import { CartItemActions, CartItemActionsMobile } from '@/components/cart'
 import { FulfillmentOptions, Price, ProductItem, QuantitySelector } from '@/components/common'
-import { QuoteStatus } from '@/lib/constants'
+import {
+  QuoteStatus,
+  FulfillmentOptions as FulfillmentOptionsConstant,
+  EDDFulfillmentOptions,
+} from '@/lib/constants'
 import { cartGetters, productGetters } from '@/lib/getters'
 import { uiHelpers } from '@/lib/helpers'
+import { formatEDDMessage } from '@/lib/helpers/formatEddMessage'
+import { getClosestEDDSuggestion } from '@/lib/helpers/getClosestEddSuggestion'
+import { getEDDSuggestion } from '@/lib/helpers/getEDDSuggestions'
 import type { FulfillmentOption } from '@/lib/types'
 
 import type { CrCartItem as CartItemType, CrOrderItem, CrProduct, Maybe } from '@/lib/gql/types'
@@ -30,6 +38,7 @@ interface CartItemProps {
   mode?: string
   isQuote?: boolean
   status?: string
+  eddZipCode?: string
   onQuantityUpdate: (cartItemId: string, quantity: number) => void
   onCartItemDelete: (cartItemId: string) => void
   onCartItemActionSelection: () => void
@@ -95,10 +104,17 @@ const styles = {
   } as SxProps<Theme>,
 }
 
+const EddOrderTypeMap = {
+  [FulfillmentOptionsConstant.SHIP]: EDDFulfillmentOptions.Ship,
+  [FulfillmentOptionsConstant.DELIVERY]: EDDFulfillmentOptions.Delivery,
+  [FulfillmentOptionsConstant.PICKUP]: EDDFulfillmentOptions.Pickup,
+} as any
+
 const CartItem = (props: CartItemProps) => {
   const {
     cartItem,
     maxQuantity,
+    eddZipCode,
     actions,
     fulfillmentOptions,
     mode,
@@ -113,18 +129,77 @@ const CartItem = (props: CartItemProps) => {
 
   const theme = useTheme()
   const { t } = useTranslation('common')
+  const [eddMessage, setEddMessage] = useState<string>('')
   const orientationVertical = useMediaQuery(theme.breakpoints.between('xs', 'md'))
   const cartItemQuantity = cartItem?.quantity || 1
   const { getProductLink } = uiHelpers()
 
   const handleDelete = (cartItemId: string) => onCartItemDelete(cartItemId)
-  const handleQuantityUpdate = (quantity: number) =>
+  const handleQuantityUpdate = (quantity: number) => {
     onQuantityUpdate(cartItem?.id as string, quantity)
+  }
+
   const handleActionSelection = () => onCartItemActionSelection()
-  const handleFulfillmentOptionChange = (fulfillmentMethod: string, cartItemId: string) =>
+
+  const handleFulfillmentOptionChange = (fulfillmentMethod: string, cartItemId: string) => {
     onFulfillmentOptionChange(fulfillmentMethod, cartItemId)
+  }
   const handleProductPickupLocation = (cartItemId: string) => onProductPickupLocation(cartItemId)
   const subscriptionDetails = cartGetters.getSubscriptionDetails(cartItem)
+
+  const buildEDDSuggestionParams = (zipCode: string) => {
+    return {
+      eddItems: [
+        {
+          orderItemID: 1,
+          quantity: cartItem?.quantity,
+          upc: cartItem?.product?.variationProductCode || cartItem?.product?.productCode,
+          productUsage: cartItem?.product?.productUsage,
+          dimensionUnit: 'CM', //|| cartItem?.product?.measurements?.length?.unit,
+          weightUnit: 'GRAMS', //|| cartItem?.product?.measurements?.weight?.unit,
+          length: cartItem?.product?.measurements?.length?.value,
+          weight: cartItem?.product?.measurements?.weight?.value,
+          width: cartItem?.product?.measurements?.width?.value,
+          height: cartItem?.product?.measurements?.height?.value,
+        },
+      ],
+      ...(cartItem?.fulfillmentMethod === FulfillmentOptionsConstant.PICKUP
+        ? {
+            pickupLocationCode: cartItem?.fulfillmentLocationCode,
+          }
+        : {
+            shippingAddress: {
+              postalCode: zipCode,
+              countryCode: 'US',
+            },
+          }),
+      orderType: EddOrderTypeMap[cartItem?.fulfillmentMethod as string],
+      total: cartItem?.product?.price?.price,
+    }
+  }
+
+  const getEDDSuggestions = async () => {
+    const response: any = await getEDDSuggestion(buildEDDSuggestionParams(eddZipCode as string))
+    if (
+      response?.eddAssignments &&
+      response?.eddAssignments?.length > 0 &&
+      response?.eddAssignments[0]?.estimatedDeliveryDates?.length > 0
+    ) {
+      const edd = getClosestEDDSuggestion(response?.eddAssignments[0]?.estimatedDeliveryDates)
+      setEddMessage(
+        formatEDDMessage({
+          eddISO: edd.estimatedDeliveryDate,
+          mode: EddOrderTypeMap[cartItem?.fulfillmentMethod as string],
+        })
+      )
+    } else {
+      setEddMessage('Delivery estimate not available at the moment.')
+    }
+  }
+
+  useEffect(() => {
+    getEDDSuggestions()
+  }, [eddZipCode, cartItem?.fulfillmentMethod, cartItem?.quantity])
 
   return (
     <>
@@ -178,6 +253,9 @@ const CartItem = (props: CartItemProps) => {
                       onQuantityUpdate={(q) => handleQuantityUpdate(q)}
                     />
                   )}
+                </Box>
+                <Box sx={{ py: '0.5rem' }}>
+                  <Typography variant="body2">{eddMessage}</Typography>
                 </Box>
               </ProductItem>
 

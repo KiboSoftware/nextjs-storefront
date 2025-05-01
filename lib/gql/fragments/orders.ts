@@ -25,6 +25,24 @@ export const orderItemProductFragment = /* GraphQL */ `
     categories {
       id
     }
+    measurements {
+      height {
+        unit
+        value
+      }
+      width {
+        unit
+        value
+      }
+      length {
+        unit
+        value
+      }
+      weight {
+        unit
+        value
+      }
+    }
   }
 `
 

@@ -29,7 +29,7 @@ describe('[component] - ShippingMethod', () => {
     render(
       <Common
         {...props}
-        onShippingMethodChange={onShippingMethodChangeMock}
+        onMultiShipShippingMethodChange={onShippingMethodChangeMock}
         onStoreLocatorClick={onStoreLocatorClickMock}
       />
     )

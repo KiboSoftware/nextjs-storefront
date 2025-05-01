@@ -16,6 +16,7 @@ import {
   Theme,
   MenuItem,
 } from '@mui/material'
+import dayjs from 'dayjs'
 import Link from 'next/link'
 import { useTranslation } from 'next-i18next'
 
@@ -26,6 +27,7 @@ import {
   Price,
   QuantitySelector,
 } from '@/components/common'
+import ExpectedDeliveryDate from '@/components/common/ExpectedDeliveryDate/ExpectedDeliveryDate'
 import SkeletonWrapper from '@/components/common/SkeletonWrapper/SkeletonWrapper'
 import { KiboBreadcrumbs, ImageGallery } from '@/components/core'
 import { AddToCartDialog, StoreLocatorDialog } from '@/components/dialogs'
@@ -48,12 +50,17 @@ import {
   usePriceRangeFormatter,
 } from '@/hooks'
 import {
+  EDDFulfillmentOptionKey,
+  EDDFulfillmentOptions,
   FulfillmentOptions as FulfillmentOptionsConstant,
   OutOfStockBehavior,
   PurchaseTypes,
 } from '@/lib/constants'
 import { productGetters, subscriptionGetters, wishlistGetters } from '@/lib/getters'
 import { uiHelpers } from '@/lib/helpers'
+import { formatEDDMessage } from '@/lib/helpers/formatEddMessage'
+import { getClosestEDDSuggestion } from '@/lib/helpers/getClosestEddSuggestion'
+import { getEDDSuggestion } from '@/lib/helpers/getEDDSuggestions'
 import type { ProductCustom, BreadCrumb, LocationCustom } from '@/lib/types'
 
 import type {
@@ -63,7 +70,6 @@ import type {
   ProductOptionValue,
   CrProduct,
 } from '@/lib/gql/types'
-
 interface ProductDetailTemplateProps {
   product: ProductCustom
   breadcrumbs?: BreadCrumb[]
@@ -104,6 +110,12 @@ const StyledLink = styled(Link)(({ theme }: { theme: Theme }) => ({
   fontSize: theme?.typography.body2.fontSize,
 }))
 
+const EddOrderTypeMap = {
+  [FulfillmentOptionsConstant.SHIP]: EDDFulfillmentOptions.Ship,
+  [FulfillmentOptionsConstant.DELIVERY]: EDDFulfillmentOptions.Delivery,
+  [FulfillmentOptionsConstant.PICKUP]: EDDFulfillmentOptions.Pickup,
+} as any
+
 const ProductDetailTemplate = (props: ProductDetailTemplateProps) => {
   const { getProductLink } = uiHelpers()
   const {
@@ -122,12 +134,14 @@ const ProductDetailTemplate = (props: ProductDetailTemplateProps) => {
   } = props
   const { t } = useTranslation('common')
 
-  const isDigitalFulfillment = product?.fulfillmentTypesSupported?.some(
+  const isDigitalFulfillment = product?.fulfillmentTypesSupported?.every(
     (type) => type === FulfillmentOptionsConstant.DIGITAL
   )
 
   const [purchaseType, setPurchaseType] = useState<string>(PurchaseTypes.ONETIMEPURCHASE)
   const [selectedFrequency, setSelectedFrequency] = useState<string>('')
+  const [eddMessage, setEddMessage] = useState<string>('')
+  const [eddZipCode, setEddZipCode] = useState<string>('')
 
   const isSubscriptionModeAvailable = subscriptionGetters.isSubscriptionModeAvailable(product)
   const isSubscriptionOnly = subscriptionGetters.isSubscriptionOnly(product)
@@ -274,6 +288,7 @@ const ProductDetailTemplate = (props: ProductDetailTemplateProps) => {
   const handleFulfillmentOptionChange = (value: string) => {
     if (
       value === FulfillmentOptionsConstant.SHIP ||
+      value === FulfillmentOptionsConstant.DELIVERY ||
       selectedFulfillmentOption?.location?.name ||
       purchaseLocation.code
     ) {
@@ -281,6 +296,8 @@ const ProductDetailTemplate = (props: ProductDetailTemplateProps) => {
         ...selectedFulfillmentOption,
         method: value,
       })
+
+      handleZipCodeForEdd(eddZipCode, EddOrderTypeMap[value])
     } else {
       handleProductPickupLocation()
     }
@@ -335,6 +352,7 @@ const ProductDetailTemplate = (props: ProductDetailTemplateProps) => {
             method: FulfillmentOptionsConstant.PICKUP,
             location: selectedStore,
           })
+          handleZipCodeForEdd(selectedStore?.zip as string, EDDFulfillmentOptions.Pickup)
         },
       },
     })
@@ -368,6 +386,61 @@ const ProductDetailTemplate = (props: ProductDetailTemplateProps) => {
 
   const handleQuantityUpdate = (newQuantity: number) => {
     handleQuantity(newQuantity)
+  }
+
+  const buildEDDSuggestionParams = (zipCode: string, fulfillmentType: string) => {
+    return {
+      eddItems: [
+        {
+          orderItemID: 1,
+          quantity: quantity,
+          upc: currentProduct?.variationProductCode || currentProduct?.productCode,
+          productUsage: currentProduct?.productUsage,
+          dimensionUnit: 'CM', //currentProduct.measurements?.packageLength?.unit,
+          weightUnit: 'GRAMS', //currentProduct.measurements?.packageWeight?.unit,
+          weight: currentProduct.measurements?.packageWeight?.value,
+          length: currentProduct.measurements?.packageLength?.value,
+          width: currentProduct.measurements?.packageWidth?.value,
+          height: currentProduct.measurements?.packageHeight?.value,
+        },
+      ],
+      ...(fulfillmentType === EDDFulfillmentOptions.Pickup
+        ? {
+            pickupLocationCode: selectedFulfillmentOption?.location?.code,
+          }
+        : {
+            shippingAddress: {
+              postalCode: zipCode,
+              countryCode: 'US',
+            },
+          }),
+      orderType: fulfillmentType,
+      total: currentProduct?.price?.price,
+    }
+  }
+
+  const handleZipCodeForEdd = async (
+    zipCode: string,
+    fulfillmentType: (typeof EDDFulfillmentOptions)[EDDFulfillmentOptionKey] = EDDFulfillmentOptions.Ship
+  ) => {
+    const response: any = await getEDDSuggestion(buildEDDSuggestionParams(zipCode, fulfillmentType))
+    if (
+      response?.eddAssignments &&
+      response?.eddAssignments?.length > 0 &&
+      response?.eddAssignments[0]?.estimatedDeliveryDates?.length > 0
+    ) {
+      const edd = getClosestEDDSuggestion(response?.eddAssignments?.[0]?.estimatedDeliveryDates)
+      setEddMessage(
+        formatEDDMessage({
+          eddISO: edd.estimatedDeliveryDate,
+          cutoffDate: edd.orderCutoffDate,
+          mode: fulfillmentType,
+        })
+      )
+      setEddZipCode(zipCode)
+    } else {
+      setEddMessage('Delivery estimate not available at the moment.')
+    }
   }
 
   useEffect(() => {
@@ -573,7 +646,16 @@ const ProductDetailTemplate = (props: ProductDetailTemplateProps) => {
             )}
         </Box>
 
-        {!addItemToList && (
+        <Box pt={1} width={'50%'}>
+          <Typography variant="body2" fontWeight={600}>
+            {eddMessage}
+          </Typography>
+          {selectedFulfillmentOption?.method !== FulfillmentOptionsConstant.PICKUP && (
+            <ExpectedDeliveryDate onZipCodeChange={handleZipCodeForEdd} />
+          )}
+        </Box>
+
+        {/* {!addItemToList && (
           <Box pt={2} display="flex" sx={{ justifyContent: 'space-between' }}>
             {currentProduct?.inventoryInfo?.manageStock &&
               currentProduct?.inventoryInfo?.outOfStockBehavior ===
@@ -593,7 +675,7 @@ const ProductDetailTemplate = (props: ProductDetailTemplateProps) => {
               </MuiLink>
             )}
           </Box>
-        )}
+        )} */}
         {!isB2B && (
           <Box paddingY={1} display="flex" flexDirection={'column'} gap={2}>
             <LoadingButton

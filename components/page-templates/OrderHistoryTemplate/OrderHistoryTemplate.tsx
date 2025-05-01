@@ -91,6 +91,7 @@ const OrderHistoryTemplate = (props: OrderHistoryProps) => {
       productNames,
       orderTotal,
       orderStatus,
+      order,
     }
   }
 

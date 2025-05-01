@@ -18,6 +18,7 @@ import { AccountType } from '@/lib/constants'
 import { cartKeys, loginKeys, wishlistKeys } from '@/lib/react-query/queryKeys'
 
 import type { CustomerAccount } from '@/lib/gql/types'
+import { removeEddZipCodeCookie } from '@/lib/helpers'
 
 type CustomerAccountWithRole = CustomerAccount & {
   roleId?: number
@@ -69,6 +70,7 @@ export const AuthContextProvider = ({ children }: AuthContextProviderProps) => {
     deleteCookie('behaviors', {
       path: '/',
     })
+    removeEddZipCodeCookie()
     router.push('/')
     queryClient.removeQueries({ queryKey: cartKeys.all })
     queryClient.removeQueries({ queryKey: loginKeys.user })

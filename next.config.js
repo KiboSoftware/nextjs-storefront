@@ -4,6 +4,7 @@ const { i18n } = require('./next-i18next.config')
 
 const LOCATION_COOKIE = 'kibo_purchase_location'
 const DEFAULT_WISHLIST_NAME = 'default-wishlist'
+const EDD_ZIP_CODE_COOKIE = 'EDD_ZIP_CODE'
 
 module.exports = {
   reactStrictMode: false,
@@ -27,6 +28,9 @@ module.exports = {
       'cdn.builder.io',
       'cdn-sb.euw1.kibocommerce.com',
       'cdn-sb.sandbox.kibong-qa.com',
+      'cdn-sb.mozu.com',
+      'cdn.sb.gdev06.gcp.kibocommerce.com',
+      'cdn.sb.gdev02.gcp.kibocommerce.com',
     ],
     deviceSizes: [
       100, 240, 340, 380, 400, 450, 500, 550, 600, 640, 750, 828, 1080, 1200, 1920, 2048, 3840,
@@ -116,15 +120,29 @@ module.exports = {
         isRequired: false,
         shortName: 'Pickup',
       },
+      {
+        value: 'Delivery',
+        code: 'DEL',
+        name: 'Delivery',
+        label: 'Delivery',
+        details: 'Available to Deliver',
+        unavailableDetails: 'Unavailable to Deliver',
+        isRequired: false,
+        shortName: 'Delivery',
+      },
     ],
     storeLocator: {
       defaultRange: '160934',
     },
     storeLocationCookie: LOCATION_COOKIE,
+    eddZipCodeCookie: EDD_ZIP_CODE_COOKIE,
+    defaultEddLocationZipCode: 51502,
     defaultWishlistName: DEFAULT_WISHLIST_NAME,
     pciHost: process.env.KIBO_PCI_HOST,
     apiHost: process.env.KIBO_API_HOST,
+    baseHost: process.env.KIBO_BASE_PATH,
     isMultiShipEnabled: false,
+    isSplitShippingEnabled: true,
     shipOptions: [
       {
         value: 'ShipToHome',

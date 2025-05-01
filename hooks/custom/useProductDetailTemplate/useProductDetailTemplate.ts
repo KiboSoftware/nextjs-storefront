@@ -38,7 +38,7 @@ interface SelectedFulfillmentOption<T extends Location | LocationCustom> {
 
 export const useProductDetailTemplate = (props: UseProductDetailTemplateProps) => {
   const { product, purchaseLocation } = props
-  const [currentProduct, setCurrentProduct] = useState<ProductCustom>(product)
+  const [currentProduct, setCurrentProduct] = useState<ProductCustom>({ ...product })
   const [updatedShopperEnteredValues, setUpdatedShopperEnteredValues] = useState<
     ProductOptionSelectionInput[]
   >([])
@@ -46,7 +46,7 @@ export const useProductDetailTemplate = (props: UseProductDetailTemplateProps) =
   const [selectedFulfillmentOption, setSelectedFulfillmentOption] = useState<
     SelectedFulfillmentOption<Location>
   >({
-    method: '',
+    method: 'Ship',
     location: {},
   })
 

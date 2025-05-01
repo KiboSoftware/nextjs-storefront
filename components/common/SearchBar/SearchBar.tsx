@@ -9,11 +9,12 @@ import { useTranslation } from 'next-i18next'
 interface SearchProps {
   placeHolder?: string
   searchTerm: string
-  onSearch: (searchText: string) => void
+  onSearch: (searchText: string, event?: any) => void
   onKeyEnter?: (searchText: string) => void
-  showClearButton: boolean
+  showClearButton?: boolean
   childInputRef?: RefObject<HTMLInputElement | undefined>
   inputProps?: any
+  endAdornment?: any
 }
 // MUI
 const style = {
@@ -26,6 +27,10 @@ const style = {
   inputBase: {
     // ml: 1,
     flex: 1,
+
+    '& .MuiInputBase-input': {
+      padding: 0,
+    },
   },
   divider: { height: 20, m: 0.5 },
 }
@@ -39,6 +44,7 @@ const SearchBar = (props: SearchProps) => {
     showClearButton = false,
     inputProps,
     onKeyEnter,
+    endAdornment,
     ...rest
   } = props
   const { t } = useTranslation('common')
@@ -46,7 +52,7 @@ const SearchBar = (props: SearchProps) => {
   const searchInputAriaLabel = t('search-input')
   const clearSearchAriaLabel = t('clear-search')
   const handleSearch = (event: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
-    onSearch(event.target.value)
+    onSearch(event.target.value, event)
   }
   const handleClear = () => {
     onSearch('')
@@ -59,7 +65,7 @@ const SearchBar = (props: SearchProps) => {
         value={searchTerm}
         placeholder={placeHolder}
         onChange={handleSearch}
-        onKeyPress={(e) => {
+        onKeyDown={(e) => {
           if (e.key === 'Enter') {
             e.preventDefault()
             onKeyEnter?.(searchTerm)
@@ -75,8 +81,8 @@ const SearchBar = (props: SearchProps) => {
             <Search fontSize="small" />
           </IconButton>
         }
-        {...(showClearButton && {
-          endAdornment: (
+        {...((showClearButton || endAdornment) && {
+          endAdornment: showClearButton ? (
             <IconButton
               name="clearButton"
               size="small"
@@ -86,6 +92,8 @@ const SearchBar = (props: SearchProps) => {
             >
               <Clear fontSize="medium" />
             </IconButton>
+          ) : (
+            endAdornment
           ),
         })}
         {...rest}

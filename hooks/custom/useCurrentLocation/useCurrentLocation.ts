@@ -15,14 +15,35 @@
  */
 
 export const useCurrentLocation = () => {
-  const getCurrentLocation = (): Promise<GeolocationCoordinates> => {
-    return new Promise((resolve, reject) =>
-      navigator.geolocation.getCurrentPosition(
-        (position: GeolocationPosition) => resolve(position.coords),
-        (error) => reject(error)
-      )
-    )
+  const getCurrentLocation = (
+    returnZipCode?: boolean
+  ): Promise<GeolocationCoordinates & { zipCode?: string }> => {
+    return new Promise((resolve, reject) => {
+      if (navigator.geolocation) {
+        navigator.geolocation.getCurrentPosition(
+          (position: GeolocationPosition) => {
+            const { latitude, longitude } = position.coords
+            if (returnZipCode) {
+              getZipCode(latitude, longitude).then((zipCode) => {
+                resolve({ ...position.coords, zipCode })
+              })
+            } else {
+              resolve(position.coords)
+            }
+          },
+          (error) => reject(error)
+        )
+      }
+    })
   }
 
   return { getCurrentLocation }
+}
+
+const getZipCode = async (latitude: number, longitude: number): Promise<string> => {
+  const response = await fetch(
+    `https://nominatim.openstreetmap.org/reverse?lat=${latitude}&lon=${longitude}&format=json`
+  )
+  const data = await response.json()
+  return data.address.postcode
 }

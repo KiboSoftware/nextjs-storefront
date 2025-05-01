@@ -411,7 +411,7 @@ const MultiShippingStep = (props: MultiShippingStepProps) => {
                     pickupItems={pickupItems}
                     orderShipmentMethods={[...shippingMethods[0]?.shippingRates]}
                     selectedShippingMethodCode={checkoutShippingMethodCode as string}
-                    onShippingMethodChange={handleSaveShippingMethod}
+                    onMultiShipShippingMethodChange={handleSaveShippingMethod}
                     onStoreLocatorClick={handleStoreLocatorClick}
                   />
                 )}

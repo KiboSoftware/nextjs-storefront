@@ -32,7 +32,7 @@ describe('[component] - ShippingMethod', () => {
     render(
       <Common
         {...props}
-        onShippingMethodChange={onChangeMock}
+        onMultiShipShippingMethodChange={onChangeMock}
         onStoreLocatorClick={onStoreLocatorClickMock}
       />
     )
@@ -73,7 +73,7 @@ describe('[component] - ShippingMethod', () => {
       pickupItems: [],
       orderShipmentMethods: shippingRateMock.orderShipmentMethods,
       selectedShippingMethodCode: '',
-      onShippingMethodChange: (value: string, name?: string) => ({ value, name }),
+      onMultiShipShippingMethodChange: (value: string, name?: string) => ({ value, name }),
     }
 
     const { user } = setup(params)
@@ -95,7 +95,7 @@ describe('[component] - ShippingMethod', () => {
       pickupItems: Common.args?.pickupItems as Maybe<CrOrderItem>[],
       orderShipmentMethods: shippingRateMock.orderShipmentMethods,
       selectedShippingMethodCode: '',
-      onShippingMethodChange: (value: string, name?: string) => ({ name, value }),
+      onMultiShipShippingMethodChange: (value: string, name?: string) => ({ name, value }),
     }
 
     setup(params)
@@ -109,7 +109,7 @@ describe('[component] - ShippingMethod', () => {
       pickupItems: Common.args?.pickupItems as Maybe<CrOrderItem>[],
       orderShipmentMethods: shippingRateMock.orderShipmentMethods,
       selectedShippingMethodCode: '',
-      onShippingMethodChange: (value: string, name?: string) => ({ name, value }),
+      onMultiShipShippingMethodChange: (value: string, name?: string) => ({ name, value }),
     }
 
     setup(params)
