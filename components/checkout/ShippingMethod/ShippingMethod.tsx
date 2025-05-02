@@ -118,7 +118,12 @@ const EDDWrapper = (props: {
     if (response?.eddAssignments && response?.eddAssignments?.length > 0) {
       if (response?.eddAssignments[0]?.estimatedDeliveryDates?.length > 0) {
         const edd = getClosestEDDSuggestion(response?.eddAssignments[0]?.estimatedDeliveryDates)
-        setEddMessage(formatEDDMessage({ eddISO: edd.estimatedDeliveryDate, mode: 'ship' }))
+        setEddMessage(
+          formatEDDMessage({
+            eddISO: edd.estimatedDeliveryDate,
+            mode: EddOrderTypeMap[item?.fulfillmentMethod as string],
+          })
+        )
       }
 
       if (response?.eddAssignments[0]?.assignments?.length > 0) {
@@ -294,7 +299,7 @@ const SplitShipping = (shipProps: ShipItemListProps) => {
                 name="shippingMethodCode"
                 onChange={(_, value) => handleShippingMethodChange(value, item?.id as string)}
                 placeholder="Select Shipping Option"
-                value={item?.shippingMethodCode ?? 'dd'}
+                value={item?.shippingMethodCode ?? ''}
               >
                 {orderShipmentMethods?.map((method) => {
                   return (

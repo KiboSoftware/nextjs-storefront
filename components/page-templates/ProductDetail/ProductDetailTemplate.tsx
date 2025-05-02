@@ -296,8 +296,6 @@ const ProductDetailTemplate = (props: ProductDetailTemplateProps) => {
         ...selectedFulfillmentOption,
         method: value,
       })
-
-      handleZipCodeForEdd(eddZipCode, EddOrderTypeMap[value])
     } else {
       handleProductPickupLocation()
     }
@@ -402,6 +400,29 @@ const ProductDetailTemplate = (props: ProductDetailTemplateProps) => {
           length: currentProduct.measurements?.packageLength?.value,
           width: currentProduct.measurements?.packageWidth?.value,
           height: currentProduct.measurements?.packageHeight?.value,
+          ...((currentProduct?.productUsage === 'BUNDLE' ||
+            currentProduct?.productUsage === 'PRODUCT_WITH_EXTRAS') && {
+            productChildItems: currentProduct.bundledProducts?.map((item) => ({
+              upc: item?.productCode,
+              quantity: item?.quantity,
+              eddWeight: {
+                unit: 'GRAMS', //|| currentProduct.measurements?.packageWeight?.unit,
+                value: item?.measurements?.packageWeight?.value,
+              },
+              eddLength: {
+                unit: 'CM', //|| currentProduct.measurements?.packageLength?.unit,
+                value: item?.measurements?.packageLength?.value,
+              },
+              eddWidth: {
+                unit: 'CM', //|| currentProduct.measurements?.packageWidth?.unit,
+                value: item?.measurements?.packageWidth?.value,
+              },
+              eddHeight: {
+                unit: 'CM', //|| currentProduct.measurements?.packageHeight?.unit,
+                value: item?.measurements?.packageHeight?.value,
+              },
+            })),
+          }),
         },
       ],
       ...(fulfillmentType === EDDFulfillmentOptions.Pickup
@@ -423,6 +444,7 @@ const ProductDetailTemplate = (props: ProductDetailTemplateProps) => {
     zipCode: string,
     fulfillmentType: (typeof EDDFulfillmentOptions)[EDDFulfillmentOptionKey] = EDDFulfillmentOptions.Ship
   ) => {
+    if (!zipCode) return
     const response: any = await getEDDSuggestion(buildEDDSuggestionParams(zipCode, fulfillmentType))
     if (
       response?.eddAssignments &&
@@ -442,6 +464,10 @@ const ProductDetailTemplate = (props: ProductDetailTemplateProps) => {
       setEddMessage('Delivery estimate not available at the moment.')
     }
   }
+
+  useEffect(() => {
+    handleZipCodeForEdd(eddZipCode, EddOrderTypeMap[selectedFulfillmentOption?.method])
+  }, [currentProduct.variationProductCode, quantity, eddZipCode, selectedFulfillmentOption?.method])
 
   useEffect(() => {
     if (isB2B && (isValidForAddToCart() || isValidForAddToWishlist)) {

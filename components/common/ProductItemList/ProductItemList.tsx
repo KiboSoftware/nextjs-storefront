@@ -171,7 +171,7 @@ const EDDWrapper = (props: {
         formatEDDMessage({
           eddISO: edd.estimatedDeliveryDate,
           cutoffDate: edd.orderCutoffDate,
-          mode: 'ship',
+          mode: EddOrderTypeMap[item?.fulfillmentMethod as string],
           isOrderPlaced: true,
         })
       )

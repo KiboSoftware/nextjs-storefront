@@ -84,6 +84,28 @@ fragment productInfo on Product {
         isPackagedStandAlone
         fulfillmentTypesSupported
         upc
+        bundledProducts {
+          quantity
+          productCode
+          measurements {
+            packageLength {
+              unit
+              value
+            }
+            packageWidth {
+              unit
+              value
+            }
+            packageHeight {
+              unit
+              value
+            }
+            packageWeight {
+              unit
+              value
+            }
+          }
+        }
         categories {
           categoryCode
           categoryId

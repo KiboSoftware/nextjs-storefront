@@ -535,5 +535,9 @@
   "loading-paypal": "Loading PayPal...",
   "error-cartTakeover": "Error while fetching the cart. Please close the window and try again.",
   "accounts": "Accounts",
-  "switch-account-message": "Are you sure you want to switch the account?"
+  "switch-account-message": "Are you sure you want to switch the account?",
+  "check": "Check",
+  "sign-in-to-see-your-addresses": "Sign in to see your addresses",
+  "or-enter-a-zip-code": "or enter a zip code",
+  "update-location": "Delivering to {{zipCode}} - Update Location"
 }

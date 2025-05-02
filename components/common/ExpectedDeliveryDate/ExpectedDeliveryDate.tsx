@@ -25,135 +25,110 @@ const ExpectedDeliveryDate = ({
   const { getCurrentLocation } = useCurrentLocation()
   const { t } = useTranslation('common')
   const config = getConfig()
-
   const { user } = useAuthContext()
   const { showModal } = useModalContext()
   const isGuest = !user?.id
-
   const { contacts } = useCardContactActions(user?.id as number)
 
   const [_zipCodeLocalState, setZipCodeLocalState] = useState('')
   const [isShowZipInput, setIsShowZipInput] = useState<boolean>()
+  const hasMountedRef = useRef(false)
+  const prevUserIdRef = useRef<number | null>(null)
 
-  const handleSetZipCode = (value: string) => {
-    setZipCodeLocalState(value)
-  }
-
-  const setZipCode = (zip: string) => {
+  const setZip = (zip: string) => {
     setZipCodeLocalState(zip)
-    setEddZipCodeCookieValue(zip)
+    setEddZipCodeCookie(zip)
+    onZipCodeChange?.(zip)
   }
 
-  const setEddZipCodeCookieValue = (value: string) => {
-    setEddZipCodeCookie(value)
-    if (onZipCodeChange) {
-      onZipCodeChange(value)
+  // On first mount: use cookie > location > default
+  useEffect(() => {
+    const initZipCode = async () => {
+      const cookieZip = getEddZipCodeCookie()
+      if (cookieZip) {
+        setZipCodeLocalState(cookieZip)
+        onZipCodeChange?.(cookieZip)
+        return
+      }
+
+      try {
+        let { zipCode } = await getCurrentLocation(true)
+        if (!zipCode) {
+          zipCode = config?.publicRuntimeConfig?.defaultEddLocationZipCode
+        }
+        setZip(zipCode as string)
+      } catch (e) {
+        console.error('Geolocation error:', e)
+        const fallback = config?.publicRuntimeConfig?.defaultEddLocationZipCode
+        setZip(fallback)
+      }
     }
-  }
+
+    initZipCode()
+    hasMountedRef.current = true
+    prevUserIdRef.current = user?.id ?? null
+  }, [])
+
+  // After mount: if user logs in on current page, override with address zip
+  useEffect(() => {
+    const didLogin = user?.id && prevUserIdRef.current !== user?.id
+
+    if (hasMountedRef.current && didLogin && contacts?.items && contacts?.items?.length > 0) {
+      const shippingAddresses = userGetters.getUserShippingAddress(
+        contacts.items as CustomerContact[]
+      )
+      if (shippingAddresses && shippingAddresses?.length > 0) {
+        const zip = shippingAddresses[0]?.address?.postalOrZipCode
+        if (zip) {
+          setZip(zip)
+        }
+      }
+    }
+
+    prevUserIdRef.current = user?.id ?? null
+  }, [user?.id, JSON.stringify(contacts.items)])
 
   const handleSignIn = () => {
     showModal({ Component: LoginDialog })
     setIsShowZipInput(false)
   }
 
-  const zipResolvedRef = useRef(false)
-
-  useEffect(() => {
-    let isComponentUnmounted = false
-
-    const getCurrentLocationZipCode = async () => {
-      try {
-        let { zipCode } = await getCurrentLocation(true)
-        if (isComponentUnmounted) return
-        // if browser location is not available, use default zip code from config
-        if (!zipCode) {
-          zipCode = config?.publicRuntimeConfig?.defaultEddLocationZipCode
-        }
-        setZipCode(zipCode as string)
-      } catch (error) {
-        console.error('Error fetching current location:', error)
-        // if browser location is not available, use default zip code from config
-        const zipCode = config?.publicRuntimeConfig?.defaultEddLocationZipCode
-        setZipCode(zipCode as string)
-      }
-    }
-
-    const latestZipCodeApplied = getEddZipCodeCookie()
-
-    if (!zipResolvedRef.current) {
-      getCurrentLocationZipCode()
-    }
-
-    if (latestZipCodeApplied && !zipResolvedRef.current) {
-      zipResolvedRef.current = true
-      setZipCode(latestZipCodeApplied)
-    }
-
-    if (!latestZipCodeApplied && !zipResolvedRef.current) {
-      setEddZipCodeCookieValue(config?.publicRuntimeConfig?.defaultEddLocationZipCode)
-    }
-
-    return () => {
-      isComponentUnmounted = true
-    }
-  }, [])
-
-  useEffect(() => {
-    let isComponentUnmounted = false
-
-    if (user && user.id && contacts?.items && contacts.items.length > 0) {
-      const shippingAddresses =
-        userGetters.getUserShippingAddress(contacts?.items as CustomerContact[]) ?? []
-
-      if (shippingAddresses.length > 0) {
-        zipResolvedRef.current = true
-        const zip = shippingAddresses[0]?.address?.postalOrZipCode as string
-        setZipCode(zip)
-        setIsShowZipInput(false)
-      }
-    }
-
-    return () => {
-      isComponentUnmounted = true
-    }
-  }, [user?.id, JSON.stringify(contacts.items)])
-
   const Template = () => {
     if (showZipInputOnly) {
       return (
         <SearchBar
-          searchTerm={_zipCodeLocalState as string}
-          onSearch={handleSetZipCode}
-          onKeyEnter={setEddZipCodeCookieValue}
+          searchTerm={_zipCodeLocalState}
+          onSearch={setZipCodeLocalState}
+          onKeyEnter={setZip}
           endAdornment={
-            <Button variant="text" size="small">
-              Check
+            <Button variant="text" size="small" onClick={() => setZip(_zipCodeLocalState)}>
+              {t('check')}
             </Button>
           }
         />
       )
     } else if (isShowZipInput) {
       return (
-        <Box pt={2} display={'flex'} flexDirection={'column'} gap={2} width={'100%'}>
+        <Box pt={2} display="flex" flexDirection="column" gap={2} width="100%">
           {isGuest && (
-            <Button size="small" variant="outlined" onClick={() => handleSignIn()}>
-              Sign in to see your addresses
-            </Button>
-          )}
-          {isGuest && (
-            <Divider orientation="horizontal">
-              <Typography variant="body2" color="text.secondary">
-                or enter a zipcode
-              </Typography>
-            </Divider>
+            <>
+              <Button size="small" variant="outlined" onClick={handleSignIn}>
+                {t('sign-in-to-see-your-addresses')}
+              </Button>
+              <Divider orientation="horizontal">
+                <Typography variant="body2" color="text.secondary">
+                  {t('or-enter-a-zip-code')}
+                </Typography>
+              </Divider>
+            </>
           )}
           <SearchBar
-            searchTerm={_zipCodeLocalState as string}
-            onSearch={handleSetZipCode}
-            onKeyEnter={setEddZipCodeCookieValue}
+            searchTerm={_zipCodeLocalState}
+            onSearch={setZipCodeLocalState}
+            onKeyEnter={setZip}
             endAdornment={
-              <Button variant="text" size="small">
-                Check
+              <Button variant="text" size="small" onClick={() => setZip(_zipCodeLocalState)}>
+                {t('check')}
               </Button>
             }
           />
@@ -161,14 +136,14 @@ const ExpectedDeliveryDate = ({
       )
     } else {
       return (
-        <Stack alignItems={'baseline'}>
+        <Stack alignItems="baseline">
           <Link
             component="button"
             variant="body2"
             color="text.primary"
             onClick={() => setIsShowZipInput(true)}
           >
-            {`Delivering to ${_zipCodeLocalState} - Update Location`}
+            {t('update-location', { zipCode: _zipCodeLocalState })}
           </Link>
         </Stack>
       )

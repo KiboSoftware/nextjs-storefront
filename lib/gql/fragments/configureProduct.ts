@@ -23,6 +23,7 @@ fragment configureProductOptions on ConfiguredProduct {
 export const configureProductInfo = `
 fragment configureProductInfo on ConfiguredProduct {
         productCode
+        upc
         variationProductCode
         priceRange {
           upper {
