@@ -24,6 +24,7 @@ import {
 import { cartGetters, productGetters } from '@/lib/getters'
 import { uiHelpers } from '@/lib/helpers'
 import { formatEDDMessage } from '@/lib/helpers/formatEddMessage'
+import { formatProductMeasurementUnit } from '@/lib/helpers/formatProductMeasurementUnit'
 import { getClosestEDDSuggestion } from '@/lib/helpers/getClosestEddSuggestion'
 import { getEDDSuggestion } from '@/lib/helpers/getEDDSuggestions'
 import type { FulfillmentOption } from '@/lib/types'
@@ -108,6 +109,7 @@ const EddOrderTypeMap = {
   [FulfillmentOptionsConstant.SHIP]: EDDFulfillmentOptions.Ship,
   [FulfillmentOptionsConstant.DELIVERY]: EDDFulfillmentOptions.Delivery,
   [FulfillmentOptionsConstant.PICKUP]: EDDFulfillmentOptions.Pickup,
+  [FulfillmentOptionsConstant.TRANSFER]: EDDFulfillmentOptions.Transfer,
 } as any
 
 const CartItem = (props: CartItemProps) => {
@@ -155,12 +157,14 @@ const CartItem = (props: CartItemProps) => {
           quantity: cartItem?.quantity,
           upc: cartItem?.product?.variationProductCode || cartItem?.product?.productCode,
           productUsage: cartItem?.product?.productUsage,
-          dimensionUnit: 'CM', //|| cartItem?.product?.measurements?.length?.unit,
-          weightUnit: 'GRAMS', //|| cartItem?.product?.measurements?.weight?.unit,
-          length: cartItem?.product?.measurements?.length?.value,
-          weight: cartItem?.product?.measurements?.weight?.value,
-          width: cartItem?.product?.measurements?.width?.value,
-          height: cartItem?.product?.measurements?.height?.value,
+          dimensionUnit:
+            formatProductMeasurementUnit(cartItem?.product?.measurements?.length)?.unit || 'CM',
+          weightUnit:
+            formatProductMeasurementUnit(cartItem?.product?.measurements?.weight)?.unit || 'GRAMS',
+          length: formatProductMeasurementUnit(cartItem?.product?.measurements?.length)?.value,
+          weight: formatProductMeasurementUnit(cartItem?.product?.measurements?.weight)?.value,
+          width: formatProductMeasurementUnit(cartItem?.product?.measurements?.width)?.value,
+          height: formatProductMeasurementUnit(cartItem?.product?.measurements?.height)?.value,
         },
       ],
       ...(cartItem?.fulfillmentMethod === FulfillmentOptionsConstant.PICKUP

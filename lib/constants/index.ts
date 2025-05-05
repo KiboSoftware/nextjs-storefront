@@ -16,6 +16,7 @@ export enum FulfillmentOptions {
   PICKUP = 'Pickup',
   DIGITAL = 'Digital',
   DELIVERY = 'Delivery',
+  TRANSFER = 'Transfer',
 }
 
 export type EDDFulfillmentOptionKey = 'Ship' | 'Pickup' | 'Delivery'
@@ -24,6 +25,7 @@ export const EDDFulfillmentOptions = {
   Ship: 'DIRECTSHIP',
   Pickup: 'BOPIS',
   Delivery: 'DELIVERY',
+  Transfer: 'TRANSFER',
 }
 
 export enum PaymentWorkflow {

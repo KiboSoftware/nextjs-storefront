@@ -59,6 +59,7 @@ import {
 import { productGetters, subscriptionGetters, wishlistGetters } from '@/lib/getters'
 import { uiHelpers } from '@/lib/helpers'
 import { formatEDDMessage } from '@/lib/helpers/formatEddMessage'
+import { formatProductMeasurementUnit } from '@/lib/helpers/formatProductMeasurementUnit'
 import { getClosestEDDSuggestion } from '@/lib/helpers/getClosestEddSuggestion'
 import { getEDDSuggestion } from '@/lib/helpers/getEDDSuggestions'
 import type { ProductCustom, BreadCrumb, LocationCustom } from '@/lib/types'
@@ -114,6 +115,7 @@ const EddOrderTypeMap = {
   [FulfillmentOptionsConstant.SHIP]: EDDFulfillmentOptions.Ship,
   [FulfillmentOptionsConstant.DELIVERY]: EDDFulfillmentOptions.Delivery,
   [FulfillmentOptionsConstant.PICKUP]: EDDFulfillmentOptions.Pickup,
+  [FulfillmentOptionsConstant.TRANSFER]: EDDFulfillmentOptions.Transfer,
 } as any
 
 const ProductDetailTemplate = (props: ProductDetailTemplateProps) => {
@@ -394,32 +396,43 @@ const ProductDetailTemplate = (props: ProductDetailTemplateProps) => {
           quantity: quantity,
           upc: currentProduct?.variationProductCode || currentProduct?.productCode,
           productUsage: currentProduct?.productUsage,
-          dimensionUnit: 'CM', //currentProduct.measurements?.packageLength?.unit,
-          weightUnit: 'GRAMS', //currentProduct.measurements?.packageWeight?.unit,
-          weight: currentProduct.measurements?.packageWeight?.value,
-          length: currentProduct.measurements?.packageLength?.value,
-          width: currentProduct.measurements?.packageWidth?.value,
-          height: currentProduct.measurements?.packageHeight?.value,
+          dimensionUnit:
+            formatProductMeasurementUnit(currentProduct.measurements?.packageLength)?.unit || 'CM',
+          weightUnit:
+            formatProductMeasurementUnit(currentProduct.measurements?.packageWeight)?.unit ||
+            'GRAMS',
+          weight: formatProductMeasurementUnit(currentProduct.measurements?.packageWeight)?.value,
+          length: formatProductMeasurementUnit(currentProduct.measurements?.packageLength)?.value,
+          width: formatProductMeasurementUnit(currentProduct.measurements?.packageWidth)?.value,
+          height: formatProductMeasurementUnit(currentProduct.measurements?.packageHeight)?.value,
           ...((currentProduct?.productUsage === 'BUNDLE' ||
             currentProduct?.productUsage === 'PRODUCT_WITH_EXTRAS') && {
             productChildItems: currentProduct.bundledProducts?.map((item) => ({
               upc: item?.productCode,
               quantity: item?.quantity,
               eddWeight: {
-                unit: 'GRAMS', //|| currentProduct.measurements?.packageWeight?.unit,
-                value: item?.measurements?.packageWeight?.value,
+                unit:
+                  formatProductMeasurementUnit(currentProduct.measurements?.packageWeight)?.unit ||
+                  'GRAMS',
+                value: formatProductMeasurementUnit(item?.measurements?.packageWeight)?.value,
               },
               eddLength: {
-                unit: 'CM', //|| currentProduct.measurements?.packageLength?.unit,
-                value: item?.measurements?.packageLength?.value,
+                unit:
+                  formatProductMeasurementUnit(currentProduct.measurements?.packageLength)?.unit ||
+                  'CM',
+                value: formatProductMeasurementUnit(item?.measurements?.packageLength)?.value,
               },
               eddWidth: {
-                unit: 'CM', //|| currentProduct.measurements?.packageWidth?.unit,
-                value: item?.measurements?.packageWidth?.value,
+                unit:
+                  formatProductMeasurementUnit(currentProduct.measurements?.packageWidth)?.unit ||
+                  'CM',
+                value: formatProductMeasurementUnit(item?.measurements?.packageWidth)?.value,
               },
               eddHeight: {
-                unit: 'CM', //|| currentProduct.measurements?.packageHeight?.unit,
-                value: item?.measurements?.packageHeight?.value,
+                unit:
+                  formatProductMeasurementUnit(currentProduct.measurements?.packageHeight)?.unit ||
+                  'CM',
+                value: formatProductMeasurementUnit(item?.measurements?.packageHeight)?.value,
               },
             })),
           }),

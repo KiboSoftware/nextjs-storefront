@@ -10,6 +10,7 @@ import {
 import { addressGetters, orderGetters, productGetters } from '@/lib/getters'
 import { uiHelpers } from '@/lib/helpers'
 import { formatEDDMessage } from '@/lib/helpers/formatEddMessage'
+import { formatProductMeasurementUnit } from '@/lib/helpers/formatProductMeasurementUnit'
 import { getClosestEDDSuggestion } from '@/lib/helpers/getClosestEddSuggestion'
 import { getEDDSuggestion } from '@/lib/helpers/getEDDSuggestions'
 import type { LocationCustom } from '@/lib/types'
@@ -105,6 +106,7 @@ const EddOrderTypeMap = {
   [FulfillmentOptionsConstant.SHIP]: EDDFulfillmentOptions.Ship,
   [FulfillmentOptionsConstant.DELIVERY]: EDDFulfillmentOptions.Delivery,
   [FulfillmentOptionsConstant.PICKUP]: EDDFulfillmentOptions.Pickup,
+  [FulfillmentOptionsConstant.TRANSFER]: EDDFulfillmentOptions.Transfer,
 } as any
 
 const EDDWrapper = (props: {
@@ -141,12 +143,14 @@ const EDDWrapper = (props: {
           quantity: item?.quantity,
           upc: item?.product?.variationProductCode || item?.product?.productCode,
           productUsage: item?.product?.productUsage,
-          dimensionUnit: 'CM', //|| item?.product?.measurements?.length?.unit,
-          weightUnit: 'GRAMS', //|| item?.product?.measurements?.weight?.unit,
-          length: item?.product?.measurements?.length?.value,
-          weight: item?.product?.measurements?.weight?.value,
-          width: item?.product?.measurements?.width?.value,
-          height: item?.product?.measurements?.height?.value,
+          dimensionUnit:
+            formatProductMeasurementUnit(item?.product?.measurements?.length)?.unit || 'CM',
+          weightUnit:
+            formatProductMeasurementUnit(item?.product?.measurements?.weight)?.unit || 'GRAMS',
+          length: formatProductMeasurementUnit(item?.product?.measurements?.length)?.value,
+          weight: formatProductMeasurementUnit(item?.product?.measurements?.weight)?.value,
+          width: formatProductMeasurementUnit(item?.product?.measurements?.width)?.value,
+          height: formatProductMeasurementUnit(item?.product?.measurements?.height)?.value,
         },
       ],
       shippingAddress: {
