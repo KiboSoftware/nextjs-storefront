@@ -1,7 +1,8 @@
 import React, { useRef } from 'react'
 
 import Print from '@mui/icons-material/Print'
-import { Box, Container, Divider, Grid, IconButton, Stack, Typography } from '@mui/material'
+import { Box, Container, Divider, IconButton, Stack, Typography } from '@mui/material'
+import { Grid } from '@mui/material'
 import { useTranslation } from 'next-i18next'
 import { useReactToPrint } from 'react-to-print'
 
@@ -20,6 +21,8 @@ const OrderConfirmation = ({ order }: { order: CrOrder }) => {
   const submittedDate = orderGetters.getSubmittedDate(order)
   const pickupItems = orderGetters.getPickupItems(order)
   const shipItems = orderGetters.getShipItems(order)
+  const deliveryItems = orderGetters.getDeliveryItems(order)
+  const digitalItems = orderGetters.getDigitalItems(order)
   const email = orderGetters.getEmail(order)
 
   const options = [
@@ -129,6 +132,26 @@ const OrderConfirmation = ({ order }: { order: CrOrder }) => {
                   {t('pickup')}
                 </Typography>
                 <ProductItemList items={pickupItems} />
+              </Box>
+            )}
+
+            {/* Delivery orders */}
+            {deliveryItems && deliveryItems.length > 0 && (
+              <Box sx={{ paddingBlock: 2 }}>
+                <Typography variant="h3" fontWeight={700} gutterBottom>
+                  {t('delivery')}
+                </Typography>
+                <ProductItemList items={deliveryItems} />
+              </Box>
+            )}
+
+            {/* Digital orders */}
+            {digitalItems && digitalItems.length > 0 && (
+              <Box sx={{ paddingBlock: 2 }}>
+                <Typography variant="h3" fontWeight={700} gutterBottom>
+                  {t('digital-products')}
+                </Typography>
+                <ProductItemList items={digitalItems} />
               </Box>
             )}
           </Container>

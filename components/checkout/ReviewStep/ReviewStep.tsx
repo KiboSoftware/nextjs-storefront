@@ -46,6 +46,7 @@ interface ReviewStepProps {
   shipItems?: Maybe<CrOrderItem>[]
   pickupItems?: Maybe<CrOrderItem>[]
   digitalItems?: Maybe<CrOrderItem>[]
+  deliveryItems?: Maybe<CrOrderItem>[]
   personalDetails?: any
   orderSummaryProps: any
   isMultiShipEnabled: boolean
@@ -105,6 +106,7 @@ const ReviewStep = (props: ReviewStepProps) => {
     shipItems,
     pickupItems,
     digitalItems,
+    deliveryItems,
     onCreateOrder,
     isMultiShipEnabled,
   } = props
@@ -277,6 +279,17 @@ const ReviewStep = (props: ReviewStepProps) => {
             {t('shipping-to-home')}
           </Typography>
           <ProductItemList items={shipItems} testId={'review-ship-items'} />
+          <Divider sx={{ mb: '1.438rem' }} />
+        </Stack>
+      )}
+
+      {/* Standard Checkout */}
+      {!isMultiShipEnabled && deliveryItems && deliveryItems.length > 0 && (
+        <Stack gap={4}>
+          <Typography variant="h3" component="h3" sx={{ fontWeight: 'bold' }} color="text.primary">
+            {t('delivery')}
+          </Typography>
+          <ProductItemList items={deliveryItems} testId={'review-ship-items'} />
           <Divider sx={{ mb: '1.438rem' }} />
         </Stack>
       )}

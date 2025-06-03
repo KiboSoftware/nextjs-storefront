@@ -178,7 +178,9 @@ const StandardShipCheckoutTemplate = (props: StandardShipCheckoutProps) => {
     )
   }
 
-  const { shipItems, pickupItems, digitalItems } = orderGetters.getCheckoutDetails(order as CrOrder)
+  const { shipItems, pickupItems, digitalItems, deliveryItems } = orderGetters.getCheckoutDetails(
+    order as CrOrder
+  )
 
   return (
     <>
@@ -212,6 +214,7 @@ const StandardShipCheckoutTemplate = (props: StandardShipCheckoutProps) => {
           shipItems={shipItems}
           pickupItems={pickupItems}
           digitalItems={digitalItems}
+          deliveryItems={deliveryItems}
           personalDetails={personalDetails}
           orderSummaryProps={orderDetails?.orderSummary}
           onCreateOrder={handleCreateOrder}

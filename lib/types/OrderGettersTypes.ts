@@ -36,6 +36,7 @@ export interface CheckoutDetails {
   shipItems: Maybe<CrOrderItem>[]
   pickupItems: Maybe<CrOrderItem>[]
   digitalItems: Maybe<CrOrderItem>[]
+  deliveryItems: Maybe<CrOrderItem>[]
   orderSummary: OrderSummary
   personalDetails: CrContact
   shippingDetails: ShippingDetails

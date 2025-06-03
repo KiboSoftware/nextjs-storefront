@@ -222,6 +222,7 @@ const getCheckoutDetails = (order: CrOrder): CheckoutDetails => {
     shipItems: getShipItems(order),
     pickupItems: getPickupItems(order),
     digitalItems: getDigitalItems(order),
+    deliveryItems: getDeliveryItems(order),
     orderSummary: getOrderSummary(order),
     personalDetails: getPersonalDetails(order),
     shippingDetails: getShippingDetails(order),
