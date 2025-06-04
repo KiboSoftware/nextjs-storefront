@@ -16,9 +16,11 @@ export const getClosestEDDSuggestion = (suggestions: any[], serviceType?: string
 
   const now = dayjs()
 
-  const future = suggestions?.filter((s) => dayjs(s.estimatedDeliveryDate).isSameOrAfter(now))
+  const future = filteredSuggestions?.filter((s) =>
+    dayjs(s.estimatedDeliveryDate).isSameOrAfter(now)
+  )
 
-  const list = future.length > 0 ? future : suggestions
+  const list = future.length > 0 ? future : filteredSuggestions
 
   const closest = list.reduce((min, curr) =>
     dayjs(curr.estimatedDeliveryDate).diff(now) < dayjs(min.estimatedDeliveryDate).diff(now)
