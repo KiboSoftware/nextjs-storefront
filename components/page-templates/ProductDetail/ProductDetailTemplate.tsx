@@ -690,7 +690,11 @@ const ProductDetailTemplate = (props: ProductDetailTemplateProps) => {
             {eddMessage}
           </Typography>
           {selectedFulfillmentOption?.method !== FulfillmentOptionsConstant.PICKUP && (
-            <ExpectedDeliveryDate onZipCodeChange={handleZipCodeForEdd} />
+            <ExpectedDeliveryDate
+              onZipCodeChange={(zip) =>
+                handleZipCodeForEdd(zip, EddOrderTypeMap[selectedFulfillmentOption?.method])
+              }
+            />
           )}
         </Box>
 

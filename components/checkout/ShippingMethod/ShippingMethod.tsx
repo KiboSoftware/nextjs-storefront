@@ -76,10 +76,11 @@ const styles = {
 const EDDWrapper = (props: {
   item: CrOrderItem
   order?: CrOrder
+  shippingMethodCode?: string
   handleEddAssignments: (value: any) => void
   children: any
 }) => {
-  const { item, order, handleEddAssignments, children } = props
+  const { item, order, shippingMethodCode, handleEddAssignments, children } = props
   const { t } = useTranslation('common')
 
   const eddZipCode = orderGetters.getShippingAddress(order as CrOrder).postalOrZipCode
@@ -105,6 +106,9 @@ const EDDWrapper = (props: {
         },
       ],
       shippingAddress: {
+        addressLine1: orderGetters.getShippingAddress(order as CrOrder).address1,
+        city: orderGetters.getShippingAddress(order as CrOrder).cityOrTown,
+        state: orderGetters.getShippingAddress(order as CrOrder).stateOrProvince,
         postalCode: zipCode,
         countryCode: 'US',
       },
@@ -118,7 +122,10 @@ const EDDWrapper = (props: {
     const response: any = await getEDDSuggestion(buildEDDSuggestionParams(eddZipCode as string))
     if (response?.eddAssignments && response?.eddAssignments?.length > 0) {
       if (response?.eddAssignments[0]?.estimatedDeliveryDates?.length > 0) {
-        const edd = getClosestEDDSuggestion(response?.eddAssignments[0]?.estimatedDeliveryDates)
+        const edd = getClosestEDDSuggestion(
+          response?.eddAssignments[0]?.estimatedDeliveryDates,
+          shippingMethodCode
+        )
         setEddMessage(
           formatEDDMessage({
             eddISO: edd.estimatedDeliveryDate,
@@ -136,8 +143,8 @@ const EDDWrapper = (props: {
   }
 
   useEffect(() => {
-    getEDDSuggestions()
-  }, [])
+    shippingMethodCode && getEDDSuggestions()
+  }, [shippingMethodCode])
 
   return (
     <Box>
@@ -324,6 +331,7 @@ const SplitShipping = (shipProps: ShipItemListProps) => {
               <EDDWrapper
                 item={item}
                 order={order}
+                shippingMethodCode={item?.shippingMethodCode}
                 handleEddAssignments={(value) => handleEddAssignments(value, item?.id)}
               >
                 <ProductItem
@@ -373,15 +381,6 @@ const ShippingMethod = (props: ShippingMethodProps) => {
   const deliveryOrderShipmentMethods = orderShipmentMethods?.filter(
     (item) => item?.fulfillmentMethod === FulfillmentOptionsConstant.DELIVERY
   ) as CrShippingRate[]
-
-  // useEffect(() => {
-  //   shippingMethodRef.current &&
-  //     !selectedShippingMethodCode &&
-  //     (shippingMethodRef.current as Element).scrollIntoView({
-  //       behavior: 'smooth',
-  //       block: 'center',
-  //     })
-  // }, [selectedShippingMethodCode])
 
   return (
     <Box data-testid="shipping-method" ref={shippingMethodRef}>

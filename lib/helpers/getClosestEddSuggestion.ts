@@ -3,17 +3,12 @@ import isSameOrAfter from 'dayjs/plugin/isSameOrAfter'
 
 dayjs.extend(isSameOrAfter)
 
-export const getClosestEDDSuggestion = (
-  suggestions: any[],
-  carrier?: string,
-  serviceType?: string
-) => {
+export const getClosestEDDSuggestion = (suggestions: any[], serviceType?: string) => {
   let filteredSuggestions = []
-  if (carrier && serviceType) {
+  if (serviceType) {
     filteredSuggestions = suggestions?.filter((s) => {
-      const carrierMatch = s.carrier === carrier
       const serviceTypeMatch = s.serviceType === serviceType
-      return carrierMatch && serviceTypeMatch
+      return serviceTypeMatch
     })
   } else {
     filteredSuggestions = suggestions
