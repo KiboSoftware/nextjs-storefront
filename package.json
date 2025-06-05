@@ -5,9 +5,9 @@
     "npm": ">=8.3.0"
   },
   "scripts": {
-    "dev": "next dev",
+    "dev": "NODE_OPTIONS='-r next-logger' next dev",
     "build": "next build",
-    "start": "next start",
+    "start": "NODE_OPTIONS='-r next-logger' next start",
     "lint": "next lint",
     "fixlint": "next lint --fix",
     "generate-types": "graphql-codegen",
