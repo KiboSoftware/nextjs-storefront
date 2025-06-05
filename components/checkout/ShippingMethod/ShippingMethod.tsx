@@ -62,6 +62,7 @@ export type ShipItemListProps = {
 export type PickupItemListProps = {
   isShipItemsPresent: boolean
   pickupItems: Maybe<CrOrderItem>[]
+  order?: CrOrder
   onClickChangeStore?: () => void
 }
 const styles = {
@@ -218,7 +219,7 @@ const SharedShipping = (shipProps: ShipItemListProps) => {
 }
 
 const PickupItemList = (pickupProps: PickupItemListProps) => {
-  const { isShipItemsPresent, pickupItems, onClickChangeStore } = pickupProps
+  const { isShipItemsPresent, pickupItems, order, onClickChangeStore } = pickupProps
   const { t } = useTranslation('common')
   const expectedDeliveryDate = orderGetters.getExpectedDeliveryDate(pickupItems as CrOrderItem[])
   const isPickupItem = pickupItems.length > 0
@@ -251,6 +252,7 @@ const PickupItemList = (pickupProps: PickupItemListProps) => {
           showChangeStoreLink={false}
           onClickChangeStore={onClickChangeStore}
           showEdd={true}
+          order={order}
         />
       </Box>
     </Box>
@@ -441,6 +443,7 @@ const ShippingMethod = (props: ShippingMethodProps) => {
           isShipItemsPresent={Boolean(shipItems?.length)}
           pickupItems={pickupItems}
           onClickChangeStore={onStoreLocatorClick}
+          order={order}
         />
       ) : null}
     </Box>
