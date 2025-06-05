@@ -250,6 +250,7 @@ const PickupItemList = (pickupProps: PickupItemListProps) => {
           expectedDeliveryDate={expectedDeliveryDate}
           showChangeStoreLink={false}
           onClickChangeStore={onClickChangeStore}
+          showEdd={true}
         />
       </Box>
     </Box>
