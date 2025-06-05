@@ -160,6 +160,9 @@ const EDDWrapper = (props: {
       orderType: EddOrderTypeMap[item?.fulfillmentMethod as string],
       total: order?.total,
       orderID: order?.orderNumber,
+      ...(item?.fulfillmentMethod === FulfillmentOptionsConstant.PICKUP && {
+        pickupLocationCode: item?.fulfillmentLocationCode,
+      }),
     }
   }
 
