@@ -202,7 +202,7 @@ const CartItem = (props: CartItemProps) => {
   }
 
   useEffect(() => {
-    getEDDSuggestions()
+    eddZipCode && getEDDSuggestions()
   }, [eddZipCode, cartItem?.fulfillmentMethod, cartItem?.quantity])
 
   return (

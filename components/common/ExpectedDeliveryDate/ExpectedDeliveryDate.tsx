@@ -28,7 +28,15 @@ const ExpectedDeliveryDate = ({
   const { user } = useAuthContext()
   const { showModal } = useModalContext()
   const isGuest = !user?.id
-  const { contacts } = useCardContactActions(user?.id as number)
+  // Only call the hook when we have a valid user ID
+  const { contacts } = useCardContactActions(user?.id ? user.id : 0)
+
+  console.log('Component render:', {
+    userId: user?.id,
+    isGuest,
+    contactsData: contacts,
+    contactsItems: contacts?.items?.length,
+  })
 
   const [_zipCodeLocalState, setZipCodeLocalState] = useState('')
   const [isShowZipInput, setIsShowZipInput] = useState<boolean>()
@@ -67,26 +75,48 @@ const ExpectedDeliveryDate = ({
     initZipCode()
     hasMountedRef.current = true
     prevUserIdRef.current = user?.id ?? null
-  }, [])
+  }, []) // After mount: if user logs in on current page, override with address zip
+  // useEffect(() => {
+  //   console.log('UseEffect triggered:', {
+  //     userId: user?.id,
+  //     prevUserId: prevUserIdRef.current,
+  //     contactsItems: contacts?.items?.length,
+  //     hasMounted: hasMountedRef.current
+  //   })
 
-  // After mount: if user logs in on current page, override with address zip
+  //   const didLogin = user?.id && prevUserIdRef.current !== user?.id
+
+  //   if (hasMountedRef.current && didLogin && contacts?.items && contacts?.items?.length > 0) {
+  //     console.log('User logged in, updating zip from contacts')
+  //     const shippingAddresses = userGetters.getUserShippingAddress(
+  //       contacts.items as CustomerContact[]
+  //     )
+  //     if (shippingAddresses && shippingAddresses?.length > 0) {
+  //       const zip = shippingAddresses[0]?.address?.postalOrZipCode
+  //       console.log('Found shipping address zip:', zip)
+  //       if (zip) {
+  //         setZip(zip)
+  //       }
+  //     }
+  //   }    prevUserIdRef.current = user?.id ?? null
+  // }, [user?.id, contacts?.items])
+
+  // Additional effect to handle when contacts data becomes available after login
   useEffect(() => {
-    const didLogin = user?.id && prevUserIdRef.current !== user?.id
-
-    if (hasMountedRef.current && didLogin && contacts?.items && contacts?.items?.length > 0) {
+    if (user?.id && contacts?.items && contacts?.items?.length > 0 && hasMountedRef.current) {
+      console.log('Contacts data available for logged in user')
       const shippingAddresses = userGetters.getUserShippingAddress(
         contacts.items as CustomerContact[]
       )
       if (shippingAddresses && shippingAddresses?.length > 0) {
         const zip = shippingAddresses[0]?.address?.postalOrZipCode
-        if (zip) {
+        console.log('Setting zip from contacts effect:', zip)
+        if (zip && zip !== _zipCodeLocalState) {
           setZip(zip)
         }
       }
     }
-
-    prevUserIdRef.current = user?.id ?? null
-  }, [user?.id, JSON.stringify(contacts.items)])
+  }, [contacts?.items, user?.id, _zipCodeLocalState])
 
   const handleSignIn = () => {
     showModal({ Component: LoginDialog })
