@@ -1,4 +1,4 @@
-import { format } from 'date-fns'
+import format from 'date-fns/format'
 
 import { DateFormat, FulfillmentOptions, QuoteStatus } from '../constants'
 import {

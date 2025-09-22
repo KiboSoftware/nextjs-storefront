@@ -33,9 +33,7 @@ export default async function registerUserHandler(
     const account = response?.data?.account
     const userId = response?.data?.account?.customerAccount?.userId
     const jwtAccessToken = response?.data?.account?.jwtAccessToken
-    const decoded = JSON.parse(
-      Buffer.from(jwtAccessToken.split('.')[1], 'base64').toString('ascii')
-    )
+    const decoded = JSON.parse(Buffer.from(jwtAccessToken.split('.')[1], 'base64').toString('utf8'))
     const bv = decoded['https://www.kibocommerce.com/user_claims'].bv
     const behaviors = fromBitVectorSetArray(bv)
 

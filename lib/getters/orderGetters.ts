@@ -1,4 +1,4 @@
-import { format } from 'date-fns'
+import format from 'date-fns/format'
 
 import { addressGetters } from './addressGetters'
 import { cardGetters } from './cardGetters'
