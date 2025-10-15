@@ -23,3 +23,7 @@ export { default as ListTable } from '@/components/b2b/Lists/ListTable/ListTable
 export { default as ProductViewDialog } from '@/components/b2b/Lists/ProductViewDialog/ProductViewDialog'
 export { default as ViewLists } from '@/components/b2b/Lists/ViewLists/ViewLists'
 export { default as BuyerQuoteActions } from '@/components/b2b/BuyerQuoteActions/BuyerQuoteActions'
+
+// B2B Roles
+export { default as RoleForm } from './Role/RoleForm/RoleForm'
+export type { RoleFormData } from './Role/RoleForm/RoleForm'
