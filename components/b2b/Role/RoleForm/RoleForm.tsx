@@ -88,6 +88,10 @@ const RoleForm: React.FC<RoleFormProps> = ({
   // Initialize apply role to future children mutation
   const { applyRoleToFutureChildren } = useApplyRoleToFutureChildrensAsync()
 
+  // Fetch behavior categories and behaviors
+  const { behaviorCategories, isLoading: categoriesLoading } = useGetBehaviorCategories()
+  const { behaviors, isLoading: behaviorsLoading } = useGetBehaviors()
+
   const roleSchema = useRoleFormSchema()
 
   const {
@@ -97,6 +101,7 @@ const RoleForm: React.FC<RoleFormProps> = ({
     setValue,
     reset,
     watch,
+    getValues,
   } = useForm<RoleFormData>({
     defaultValues: {
       roleName: '',

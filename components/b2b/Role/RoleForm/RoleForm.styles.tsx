@@ -100,6 +100,7 @@ export const roleFormStyles = {
     '&:hover': {
       backgroundColor: theme.palette.action.hover,
     },
+    width: '100%',
   }),
   noSelectionText: {
     padding: '24px 16px',
