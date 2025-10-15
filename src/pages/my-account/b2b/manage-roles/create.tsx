@@ -42,7 +42,7 @@ const CreateRolePage: NextPage<CreateRolePageProps> = (props) => {
   const customerAccount = {
     ...customerAccountFromServer,
     ...customerAccountFromClient,
-  }
+  } as CustomerAccount
 
   const handleBackClick = () => {
     router.push('/my-account/b2b/manage-roles')

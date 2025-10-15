@@ -1,7 +1,9 @@
 import React, { useEffect, useState } from 'react'
 
 import { yupResolver } from '@hookform/resolvers/yup'
+import ChevronRightIcon from '@mui/icons-material/ChevronRight'
 import CloseIcon from '@mui/icons-material/Close'
+import ExpandMoreIcon from '@mui/icons-material/ExpandMore'
 import {
   Box,
   Button,
@@ -24,14 +26,14 @@ import {
   ListItemIcon,
   Stack,
 } from '@mui/material'
-import ExpandMoreIcon from '@mui/icons-material/ExpandMore'
-import ChevronRightIcon from '@mui/icons-material/ChevronRight'
 import { useTranslation } from 'next-i18next'
-import { Controller, useForm, useWatch } from 'react-hook-form'
+import { Controller, useForm, useWatch, ControllerRenderProps } from 'react-hook-form'
 import * as yup from 'yup'
 
 import { roleFormStyles } from './RoleForm.styles'
 import { KiboTextBox, KiboSelect } from '@/components/common'
+import { useGetBehaviorCategories } from '@/hooks/mutations/b2b/manage-roles/useGetBehaviorCategories/useGetBehaviorCategories'
+import { useGetBehaviors } from '@/hooks/mutations/b2b/manage-roles/useGetBehaviors/useGetBehaviors'
 import { HierarchyTree } from '@/lib/types'
 
 import { B2BAccount, CustomerAccount } from '@/lib/gql/types'
@@ -42,7 +44,7 @@ export interface RoleFormData {
   accountScope: string
   applyToFutureChildren: boolean
   selectedAccounts: number[]
-  selectedPermissions: Record<string, string[]>
+  selectedPermissions: Record<number, number[]>
 }
 
 interface RoleFormProps {
@@ -53,46 +55,6 @@ interface RoleFormProps {
   hierarchy?: HierarchyTree[]
 }
 
-// Permission categories and their behaviors based on the screenshot
-const PERMISSION_CATEGORIES = [
-  {
-    category: 'Product',
-    behaviors: ['View Products', 'Create Products', 'Edit Products', 'Delete Products'],
-  },
-  {
-    category: 'Account',
-    behaviors: ['View Accounts', 'Create Accounts', 'Edit Accounts', 'Delete Accounts'],
-  },
-  {
-    category: 'Site',
-    behaviors: ['View Sites', 'Manage Sites'],
-  },
-  {
-    category: 'Discount',
-    behaviors: ['View Discounts', 'Create Discounts', 'Edit Discounts', 'Delete Discounts'],
-  },
-  {
-    category: 'User',
-    behaviors: ['View Users', 'Create Users', 'Edit Users', 'Delete Users'],
-  },
-  {
-    category: 'Customer',
-    behaviors: ['View Customers', 'Create Customers', 'Edit Customers', 'Delete Customers'],
-  },
-  {
-    category: 'Settings/General',
-    behaviors: ['View Settings', 'Edit Settings'],
-  },
-  {
-    category: 'Order',
-    behaviors: ['View Orders', 'Create Orders', 'Edit Orders', 'Delete Orders', 'Cancel Orders'],
-  },
-  {
-    category: 'Shipping',
-    behaviors: ['View Shipping', 'Manage Shipping'],
-  },
-]
-
 const useRoleFormSchema = () => {
   const { t } = useTranslation('common')
   return yup.object({
@@ -102,17 +64,15 @@ const useRoleFormSchema = () => {
   })
 }
 
-export const RoleForm: React.FC<RoleFormProps> = ({
-  onSave,
-  onCancel,
-  user,
-  accounts,
-  hierarchy,
-}) => {
+const RoleForm: React.FC<RoleFormProps> = ({ onSave, onCancel, user, accounts, hierarchy }) => {
   const { t } = useTranslation('common')
   const theme = useTheme()
   const mdScreen = useMediaQuery(theme.breakpoints.up('md'))
   const styles = roleFormStyles
+
+  // Fetch behavior categories and behaviors
+  const { behaviorCategories, isLoading: categoriesLoading } = useGetBehaviorCategories()
+  const { behaviors, isLoading: behaviorsLoading } = useGetBehaviors()
 
   const roleSchema = useRoleFormSchema()
 
@@ -123,6 +83,7 @@ export const RoleForm: React.FC<RoleFormProps> = ({
     setValue,
     reset,
     watch,
+    getValues,
   } = useForm<RoleFormData>({
     defaultValues: {
       roleName: '',
@@ -138,7 +99,6 @@ export const RoleForm: React.FC<RoleFormProps> = ({
   // Update parent account when user data loads
   useEffect(() => {
     if (user?.id) {
-      console.log('Setting default account:', String(user.id), 'User:', user.companyOrOrganization)
       reset({
         roleName: '',
         parentAccount: String(user.id),
@@ -162,22 +122,35 @@ export const RoleForm: React.FC<RoleFormProps> = ({
     console.log('Form parentAccount value changed to:', parentAccountValue)
   }, [parentAccountValue])
 
-  const [selectedCategory, setSelectedCategory] = useState<string>('Product')
-  const [selectedPermissions, setSelectedPermissions] = useState<Record<string, string[]>>({})
+  const [selectedCategory, setSelectedCategory] = useState<number | null>(null)
+  const [selectedPermissions, setSelectedPermissions] = useState<Record<number, number[]>>({})
   const [selectedAccounts, setSelectedAccounts] = useState<number[]>([])
   const [expandedNodes, setExpandedNodes] = useState<Set<number>>(new Set())
+
+  // Set default selected category when categories load
+  useEffect(() => {
+    if (
+      behaviorCategories?.items &&
+      behaviorCategories.items.length > 0 &&
+      selectedCategory === null
+    ) {
+      setSelectedCategory(behaviorCategories.items[0].id || null)
+    }
+  }, [behaviorCategories, selectedCategory])
 
   // Watch accountScope to show/hide hierarchy
   const accountScope = watch('accountScope')
   const parentAccount = watch('parentAccount')
 
   // Handle parent account selection
-  const handleParentAccountChange = (name: string, value: string) => {
-    console.log('handleParentAccountChange called - name:', name, 'value:', value)
+  const handleParentAccountChange = (value: string) => {
+    console.log('handleParentAccountChange called - value:', value)
+    console.log('Current form values before change:', getValues())
     setValue('parentAccount', value)
     // Reset selected accounts when parent changes
     setSelectedAccounts([])
     setValue('selectedAccounts', [])
+    console.log('Form values after change:', getValues())
   }
 
   // Get child accounts for the selected parent
@@ -250,11 +223,11 @@ export const RoleForm: React.FC<RoleFormProps> = ({
     })
   }
 
-  const handleCategorySelect = (category: string) => {
+  const handleCategorySelect = (category: number) => {
     setSelectedCategory(category)
   }
 
-  const handleBehaviorToggle = (category: string, behavior: string) => {
+  const handleBehaviorToggle = (category: number, behavior: number) => {
     setSelectedPermissions((prev) => {
       const categoryPermissions = prev[category] || []
       const isSelected = categoryPermissions.includes(behavior)
@@ -273,7 +246,7 @@ export const RoleForm: React.FC<RoleFormProps> = ({
     })
   }
 
-  const handleRemoveBehavior = (category: string, behavior: string) => {
+  const handleRemoveBehavior = (category: number, behavior: number) => {
     setSelectedPermissions((prev) => ({
       ...prev,
       [category]: (prev[category] || []).filter((b) => b !== behavior),
@@ -354,6 +327,21 @@ export const RoleForm: React.FC<RoleFormProps> = ({
   }
 
   const onSubmit = (data: RoleFormData) => {
+    // Extract all selected behavior IDs from selectedPermissions
+    const allSelectedBehaviorIds: number[] = []
+    Object.values(selectedPermissions).forEach((behaviorIds) => {
+      allSelectedBehaviorIds.push(...behaviorIds)
+    })
+
+    // Create payload in requested format
+    const payload = {
+      name: data.roleName,
+      behaviors: allSelectedBehaviorIds,
+    }
+
+    console.log('Create Role Payload:', payload)
+
+    // Call the original onSave function
     onSave({
       ...data,
       selectedAccounts,
@@ -361,15 +349,15 @@ export const RoleForm: React.FC<RoleFormProps> = ({
     })
   }
 
-  const selectedCategoryData = PERMISSION_CATEGORIES.find(
-    (cat) => cat.category === selectedCategory
-  )
+  // Get behaviors for the selected category
+  const selectedCategoryBehaviors =
+    behaviors?.items?.filter((behavior) => behavior.categoryId === selectedCategory) || []
 
   const getAllSelectedBehaviors = () => {
-    const allBehaviors: Array<{ category: string; behavior: string }> = []
+    const allBehaviors: Array<{ category: number; behavior: number }> = []
     Object.entries(selectedPermissions).forEach(([category, behaviors]) => {
       behaviors.forEach((behavior) => {
-        allBehaviors.push({ category, behavior })
+        allBehaviors.push({ category: Number(category), behavior })
       })
     })
     return allBehaviors
@@ -382,7 +370,7 @@ export const RoleForm: React.FC<RoleFormProps> = ({
           {/* Role Information Section */}
           <Grid item xs={12}>
             <Typography variant="h6" sx={{ mb: 2, fontWeight: 600 }}>
-              {t('role-information') || 'Role Information'}
+              {t('role-information')}
             </Typography>
           </Grid>
 
@@ -391,10 +379,10 @@ export const RoleForm: React.FC<RoleFormProps> = ({
             <Controller
               name="roleName"
               control={control}
-              render={({ field }: any) => (
+              render={({ field }: { field: ControllerRenderProps<RoleFormData, 'roleName'> }) => (
                 <KiboTextBox
                   fullWidth
-                  label={t('role-name') || 'Role Name'}
+                  label={t('role-name')}
                   placeholder={t('role-name-placeholder') || 'e.g. Finance Manager, Order Manager'}
                   value={field.value}
                   onChange={(_name, value) => field.onChange(value)}
@@ -410,41 +398,56 @@ export const RoleForm: React.FC<RoleFormProps> = ({
             <Controller
               name="parentAccount"
               control={control}
-              render={({ field }: any) => (
+              render={({
+                field,
+              }: {
+                field: ControllerRenderProps<RoleFormData, 'parentAccount'>
+              }) => (
                 <KiboSelect
                   name="parentAccount"
-                  label={t('parent-account') || 'Parent Account'}
-                  onChange={handleParentAccountChange}
-                  onBlur={field.onBlur}
+                  label={t('parent-account')}
+                  onChange={(name: string, value: string) => {
+                    console.log('KiboSelect onChange called - name:', name, 'value:', value)
+                    // Call field.onChange first to update React Hook Form
+                    field.onChange(value)
+                    // Then call our custom handler
+                    handleParentAccountChange(value)
+                  }}
+                  onBlur={(name: string, value: string) => {
+                    console.log('KiboSelect onBlur called - name:', name, 'value:', value)
+                    field.onBlur()
+                  }}
                   value={field.value || ''}
                   disabled={!accounts || accounts.length === 0}
-                  placeholder={t('select-parent-account') || 'Select parent account'}
+                  placeholder={t('select-parent-account')}
                   error={!!errors.parentAccount}
                   helperText={errors.parentAccount?.message}
                 >
-                  {accounts && accounts.length > 0 ? (
-                    <>
-                      {user?.id && (
-                        <MenuItem value={String(user.id)}>
-                          {user.companyOrOrganization ||
-                            `${user.firstName || ''} ${user.lastName || ''}`.trim() ||
-                            user.emailAddress ||
-                            t('current-account')}
-                        </MenuItem>
-                      )}
-                      {accounts
-                        .filter((account) => account.id !== user?.id)
-                        .map((account) => (
-                          <MenuItem key={account.id} value={String(account.id)}>
-                            {account.companyOrOrganization || `Account ${account.id}`}
-                          </MenuItem>
-                        ))}
-                    </>
-                  ) : (
-                    <MenuItem value="">
-                      {t('no-accounts-available') || 'No accounts available'}
-                    </MenuItem>
-                  )}
+                  {accounts && accounts.length > 0
+                    ? [
+                        ...(user?.id
+                          ? [
+                              <MenuItem key={`user-${user.id}`} value={String(user.id)}>
+                                {user.companyOrOrganization ||
+                                  `${user.firstName || ''} ${user.lastName || ''}`.trim() ||
+                                  user.emailAddress ||
+                                  t('current-account')}
+                              </MenuItem>,
+                            ]
+                          : []),
+                        ...accounts
+                          .filter((account) => account.id !== user?.id)
+                          .map((account) => (
+                            <MenuItem key={account.id} value={String(account.id)}>
+                              {account.companyOrOrganization || `Account ${account.id}`}
+                            </MenuItem>
+                          )),
+                      ]
+                    : [
+                        <MenuItem key="no-accounts" value="" disabled>
+                          {t('no-accounts-available')}
+                        </MenuItem>,
+                      ]}
                 </KiboSelect>
               )}
             />
@@ -455,17 +458,21 @@ export const RoleForm: React.FC<RoleFormProps> = ({
             <Controller
               name="accountScope"
               control={control}
-              render={({ field }: any) => (
+              render={({
+                field,
+              }: {
+                field: ControllerRenderProps<RoleFormData, 'accountScope'>
+              }) => (
                 <FormControl component="fieldset" fullWidth>
                   <Typography variant="body2" sx={{ mb: 1, fontWeight: 500 }}>
-                    {t('account-hierarchy-scope') || 'Account Hierarchy Scope'}
+                    {t('account-hierarchy-scope')}
                   </Typography>
                   <RadioGroup {...field}>
                     <Box>
                       <FormControlLabel
                         value="all-child"
                         control={<Radio size="small" />}
-                        label={t('apply-to-all-child-accounts') || 'Apply to all child accounts'}
+                        label={t('apply-to-all-child-accounts')}
                       />
                       {/* Checkbox for future children - shown when "all-child" is selected */}
                       {accountScope === 'all-child' && (
@@ -473,7 +480,11 @@ export const RoleForm: React.FC<RoleFormProps> = ({
                           <Controller
                             name="applyToFutureChildren"
                             control={control}
-                            render={({ field: checkboxField }: any) => (
+                            render={({
+                              field: checkboxField,
+                            }: {
+                              field: ControllerRenderProps<RoleFormData, 'applyToFutureChildren'>
+                            }) => (
                               <FormControlLabel
                                 control={
                                   <Checkbox
@@ -484,8 +495,7 @@ export const RoleForm: React.FC<RoleFormProps> = ({
                                 }
                                 label={
                                   <Typography variant="body2">
-                                    {t('apply-to-future-child-accounts') ||
-                                      'Apply to future child accounts'}
+                                    {t('apply-to-future-child-accounts')}
                                   </Typography>
                                 }
                               />
@@ -497,17 +507,12 @@ export const RoleForm: React.FC<RoleFormProps> = ({
                     <FormControlLabel
                       value="specific-child"
                       control={<Radio size="small" />}
-                      label={
-                        t('apply-to-specific-child-accounts') || 'Apply to specific child accounts'
-                      }
+                      label={t('apply-to-specific-child-accounts')}
                     />
                     <FormControlLabel
                       value="all-except"
                       control={<Radio size="small" />}
-                      label={
-                        t('apply-to-all-child-accounts-except') ||
-                        'Apply to all child accounts except selected'
-                      }
+                      label={t('apply-to-all-child-accounts-except')}
                     />
                   </RadioGroup>
                 </FormControl>
@@ -532,8 +537,8 @@ export const RoleForm: React.FC<RoleFormProps> = ({
             >
               <Typography variant="subtitle2" sx={{ fontWeight: 600 }}>
                 {accountScope === 'specific-child'
-                  ? t('select-child-accounts') || 'Select Child Accounts'
-                  : t('select-accounts-to-exclude') || 'Select Accounts to Exclude'}
+                  ? t('select-child-accounts')
+                  : t('select-accounts-to-exclude')}
               </Typography>
               <Box sx={{ display: 'flex', gap: 1 }}>
                 <Button
@@ -545,7 +550,7 @@ export const RoleForm: React.FC<RoleFormProps> = ({
                     setValue('selectedAccounts', [])
                   }}
                 >
-                  {t('deselect-all-accounts') || 'Deselect All'}
+                  {t('deselect-all-accounts')}
                 </Button>
                 <Button
                   size="small"
@@ -563,7 +568,7 @@ export const RoleForm: React.FC<RoleFormProps> = ({
                     setValue('selectedAccounts', allChildIds)
                   }}
                 >
-                  {t('select-all-accounts') || 'Select All'}
+                  {t('select-all-accounts')}
                 </Button>
               </Box>
             </Box>
@@ -571,10 +576,8 @@ export const RoleForm: React.FC<RoleFormProps> = ({
             {selectedAccounts.length > 0 && (
               <Typography variant="caption" color="text.secondary" sx={{ display: 'block', mb: 2 }}>
                 {selectedAccounts.length}{' '}
-                {selectedAccounts.length === 1
-                  ? t('account-singular') || 'account'
-                  : t('accounts-plural') || 'accounts'}{' '}
-                {t('selected-lowercase') || 'selected'}
+                {selectedAccounts.length === 1 ? t('account-singular') : t('accounts-plural')}{' '}
+                {t('selected-lowercase')}
               </Typography>
             )}
 
@@ -596,89 +599,101 @@ export const RoleForm: React.FC<RoleFormProps> = ({
         {/* Permission Configuration Section */}
         <Box sx={{ ...styles.section, mt: 3 }}>
           <Typography variant="h6" sx={styles.sectionHeader}>
-            {t('permission-configuration') || 'Permission Configuration'}
+            {t('permission-configuration')}
           </Typography>
           <Typography sx={styles.sectionDescription}>
-            {t('permission-configuration-description') ||
-              'Select behavior categories and specific behaviors to grant permissions'}
+            {t('permission-configuration-description')}
           </Typography>
 
           <Box sx={styles.permissionContainer}>
             {/* Behavior Category Column */}
             <Box sx={styles.permissionColumn}>
-              <Typography sx={styles.permissionColumnHeader}>
-                {t('behavior-category') || 'Behavior Category'}
-              </Typography>
+              <Typography sx={styles.permissionColumnHeader}>{t('behavior-category')}</Typography>
               <List sx={styles.permissionList}>
-                {PERMISSION_CATEGORIES.map((cat) => (
-                  <ListItemButton
-                    key={cat.category}
-                    onClick={() => handleCategorySelect(cat.category)}
-                    selected={selectedCategory === cat.category}
-                    sx={{
-                      borderBottom: '1px solid #f0f0f0',
-                      '&.Mui-selected': {
-                        backgroundColor: theme.palette.primary.light,
-                        color: theme.palette.primary.main,
-                        '&:hover': {
+                {categoriesLoading ? (
+                  <ListItem>
+                    <Typography variant="body2">{t('loading')}</Typography>
+                  </ListItem>
+                ) : (
+                  behaviorCategories?.items?.map((cat) => (
+                    <ListItemButton
+                      key={cat.id}
+                      onClick={() => handleCategorySelect(cat.id || 0)}
+                      selected={selectedCategory === cat.id}
+                      sx={{
+                        borderBottom: '1px solid #f0f0f0',
+                        '&.Mui-selected': {
                           backgroundColor: theme.palette.primary.light,
+                          color: theme.palette.primary.main,
+                          '&:hover': {
+                            backgroundColor: theme.palette.primary.light,
+                          },
                         },
-                      },
-                    }}
-                  >
-                    <Typography variant="body2">{cat.category}</Typography>
-                  </ListItemButton>
-                ))}
+                      }}
+                    >
+                      <Typography variant="body2">{cat.name}</Typography>
+                    </ListItemButton>
+                  )) || []
+                )}
               </List>
             </Box>
 
             {/* Behavior Name Column */}
             <Box sx={styles.permissionColumn}>
-              <Typography sx={styles.permissionColumnHeader}>
-                {t('behavior-name') || 'Behavior Name'}
-              </Typography>
+              <Typography sx={styles.permissionColumnHeader}>{t('behavior-name')}</Typography>
               <List sx={styles.permissionList}>
-                {selectedCategoryData?.behaviors.map((behavior) => {
-                  const isSelected = selectedPermissions[selectedCategory]?.includes(behavior)
-                  return (
-                    <ListItem key={behavior} disablePadding>
-                      <ListItemButton
-                        onClick={() => handleBehaviorToggle(selectedCategory, behavior)}
-                        sx={styles.behaviorItem(theme)}
-                      >
-                        <Checkbox checked={isSelected} size="small" sx={{ padding: 0 }} />
-                        <Typography variant="body2">{behavior}</Typography>
-                      </ListItemButton>
-                    </ListItem>
-                  )
-                })}
+                {behaviorsLoading ? (
+                  <ListItem>
+                    <Typography variant="body2">{t('loading')}</Typography>
+                  </ListItem>
+                ) : (
+                  selectedCategoryBehaviors.map((behavior) => {
+                    const isSelected = Boolean(
+                      selectedPermissions[selectedCategory || 0]?.includes(behavior.id || 0)
+                    )
+                    return (
+                      <ListItem key={behavior.id} disablePadding>
+                        <ListItemButton
+                          onClick={() =>
+                            handleBehaviorToggle(selectedCategory || 0, behavior.id || 0)
+                          }
+                          sx={styles.behaviorItem(theme)}
+                        >
+                          <Checkbox checked={isSelected} size="small" sx={{ padding: 0 }} />
+                          <Typography variant="body2">{behavior.name}</Typography>
+                        </ListItemButton>
+                      </ListItem>
+                    )
+                  })
+                )}
               </List>
             </Box>
 
             {/* Selected Behavior Column */}
             <Box sx={styles.permissionColumn}>
-              <Typography sx={styles.permissionColumnHeader}>
-                {t('selected-behavior') || 'Selected Behavior'}
-              </Typography>
+              <Typography sx={styles.permissionColumnHeader}>{t('selected-behavior')}</Typography>
               {getAllSelectedBehaviors().length === 0 ? (
-                <Typography sx={styles.noSelectionText}>
-                  {t('no-behaviors-selected') || 'No behaviors selected'}
-                </Typography>
+                <Typography sx={styles.noSelectionText}>{t('no-behaviors-selected')}</Typography>
               ) : (
                 <List sx={styles.permissionList}>
-                  {getAllSelectedBehaviors().map(({ category, behavior }) => (
-                    <ListItem key={`${category}-${behavior}`} disablePadding>
-                      <Box sx={styles.selectedBehaviorItem(theme)}>
-                        <Typography variant="body2">{behavior}</Typography>
-                        <IconButton
-                          size="small"
-                          onClick={() => handleRemoveBehavior(category, behavior)}
-                        >
-                          <CloseIcon fontSize="small" />
-                        </IconButton>
-                      </Box>
-                    </ListItem>
-                  ))}
+                  {getAllSelectedBehaviors().map(({ category, behavior }) => {
+                    const behaviorObj = behaviors?.items?.find((b) => b.id === behavior)
+                    return (
+                      <ListItem key={`${category}-${behavior}`} disablePadding>
+                        <Box sx={styles.selectedBehaviorItem(theme)}>
+                          <Typography variant="body2">
+                            {behaviorObj?.name || `Behavior ${behavior}`}
+                          </Typography>
+                          <IconButton
+                            size="small"
+                            onClick={() => handleRemoveBehavior(category, behavior)}
+                          >
+                            <CloseIcon fontSize="small" />
+                          </IconButton>
+                        </Box>
+                      </ListItem>
+                    )
+                  })}
                 </List>
               )}
             </Box>
@@ -698,3 +713,5 @@ export const RoleForm: React.FC<RoleFormProps> = ({
     </Box>
   )
 }
+
+export default RoleForm

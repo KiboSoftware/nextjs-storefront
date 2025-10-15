@@ -59,7 +59,11 @@ describe('[Page Template] ManageRolesTemplate', () => {
 
     await waitFor(() => {
       expect(screen.getByText('Admin')).toBeInTheDocument()
+    })
+    await waitFor(() => {
       expect(screen.getByText('Admin_Copy')).toBeInTheDocument()
+    })
+    await waitFor(() => {
       expect(screen.queryByText('Purchaser')).not.toBeInTheDocument()
     })
   })
