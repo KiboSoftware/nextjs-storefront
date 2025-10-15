@@ -6,7 +6,7 @@ import { useRouter } from 'next/router'
 import { useTranslation } from 'next-i18next'
 
 import { CreateRoleTemplateStyles } from './CreateRoleTemplate.styles'
-import { RoleForm, RoleFormData } from '@/components/b2b/Role/RoleForm/RoleForm'
+import { RoleForm, RoleFormData } from '@/components/b2b/index'
 import { MobileB2BLayout } from '@/components/layout'
 import { B2BAccountHierarchyResult } from '@/lib/types'
 
