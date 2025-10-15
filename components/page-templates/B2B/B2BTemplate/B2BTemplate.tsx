@@ -128,6 +128,13 @@ const B2BTemplate = () => {
       path: '/my-account/b2b/users',
     },
     {
+      id: 'manage-roles-accordion',
+      controls: 'manage-roles-content',
+      header: t('manage-roles'),
+      component: null,
+      path: '/my-account/b2b/manage-roles',
+    },
+    {
       id: 'address-book-accordion',
       controls: 'address-book-content',
       header: t('address-book'),
