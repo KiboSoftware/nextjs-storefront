@@ -3,9 +3,8 @@ import { Theme } from '@mui/material'
 export const roleFormStyles = {
   container: {
     width: '100%',
-    maxWidth: '1200px',
-    margin: '0 auto',
-    padding: '24px',
+    margin: 0,
+    padding: 0,
   },
   section: {
     backgroundColor: '#f5f7f5',
@@ -67,6 +66,19 @@ export const roleFormStyles = {
     overflow: 'auto',
     padding: 0,
   },
+  permissionBehaviorNameBox: {
+    display: 'flex',
+    alignItems: 'center',
+    marginBottom: 1,
+    backgroundColor: '#fafafa',
+    borderBottom: '1px solid #e0e0e0',
+    paddingLeft: '12px',
+  },
+  permissionBehaviorName: {
+    padding: '12px 16px 12px 0',
+    fontWeight: 600,
+    fontSize: '0.875rem',
+  },
   permissionItem: (theme: Theme) => ({
     padding: '12px 16px',
     cursor: 'pointer',
@@ -115,6 +127,19 @@ export const roleFormStyles = {
     marginTop: '24px',
     paddingTop: '24px',
     borderTop: '1px solid #e0e0e0',
+  },
+  createRoleTitle: {
+    margin: { xs: 'auto' },
+  },
+  wrapIcon: {
+    display: 'flex',
+    alignItems: 'center',
+    flexWrap: 'wrap',
+    cursor: 'pointer',
+    gap: '16px',
+    marginBottom: {
+      xs: '16px',
+    },
   },
 }
 

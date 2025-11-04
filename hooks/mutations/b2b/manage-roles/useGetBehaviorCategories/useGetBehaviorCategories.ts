@@ -61,5 +61,3 @@ export const useGetBehaviorCategories = (initialData?: GetBehaviorCategoriesResp
     error,
   }
 }
-
-export default useGetBehaviorCategories

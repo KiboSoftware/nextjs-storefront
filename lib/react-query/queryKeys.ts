@@ -173,6 +173,10 @@ export const behaviorCategoriesKeys = {
 
 export const behaviorsKeys = {
   all: ['behaviors'] as const,
+  accountUserBehaviors: (accountId: number, userId: string) =>
+    [...behaviorsKeys.all, 'account', accountId, 'user', userId] as const,
+  multipleAccountUserBehaviors: (accountIds: number[], userId: string) =>
+    [...behaviorsKeys.all, 'accounts', accountIds.sort().join(','), 'user', userId] as const,
 }
 
 export const rolesKeys = {

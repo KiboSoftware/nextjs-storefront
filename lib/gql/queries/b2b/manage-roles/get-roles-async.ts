@@ -1,8 +1,8 @@
 import { b2bRole } from '../../../fragments/b2b/b2b-role'
-const getRolesAsyncQuery = /* GraphQL */ `
+const getRolesByAccountIdAsyncQuery = /* GraphQL */ `
   ${b2bRole}
-  query getRolesAsync($accountId: Int!) {
-    getRolesAsync(accountId: $accountId) {
+  query getRolesByAccountIdAsync($accountId: Int!) {
+    getRolesByAccountIdAsync(accountId: $accountId) {
       startIndex
       pageSize
       pageCount
@@ -14,4 +14,4 @@ const getRolesAsyncQuery = /* GraphQL */ `
   }
 `
 
-export default getRolesAsyncQuery
+export default getRolesByAccountIdAsyncQuery

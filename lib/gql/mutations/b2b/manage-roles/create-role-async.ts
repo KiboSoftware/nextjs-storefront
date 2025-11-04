@@ -1,8 +1,8 @@
 import { b2bRole } from '../../../fragments'
 
 const createRoleAsyncMutation = /* GraphQL */ `
-  mutation createRoleAsync($accountId: Int!, $b2BRoleInput: B2BRoleInput) {
-    createRoleAsync(accountId: $accountId, b2BRoleInput: $b2BRoleInput) {
+  mutation createRoleAsync($b2BRoleInput: B2BRoleInput) {
+    createRoleAsync(b2BRoleInput: $b2BRoleInput) {
       ...b2bRole
     }
   }

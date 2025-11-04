@@ -173,6 +173,11 @@ export * from './mutations/b2b/user/useDeleteB2bAccountRole/useDeleteB2bAccountR
 export * from './mutations/b2b/accountHierarchy/useCreateCustomerB2bAccount/useCreateCustomerB2bAccount'
 export * from './mutations/b2b/accountHierarchy/useUpdateCustomerB2bAccount/useUpdateCustomerB2bAccount'
 export * from './mutations/b2b/accountHierarchy/useChangeParentB2bAccount/useChangeB2bAccountParent'
+export * from './mutations/b2b/manage-roles/useDeleteRoleAsync/useDeleteRoleAsync'
+export * from './mutations/b2b/manage-roles/useGetBehaviors/useGetBehaviors'
+export * from './mutations/b2b/manage-roles/useUpdateRoleAsync/useUpdateRoleAsync'
+export * from './mutations/b2b/manage-roles/useCreateRoleAsync/useCreateRoleAsync'
+export * from './queries/b2b/manage-roles/useGetB2BAccountUserBehaviors/useGetB2BAccountUserBehaviors'
 
 //quotes
 export * from './mutations/b2b/quotes/useDeleteQuoteItem/useDeleteQuoteItem'

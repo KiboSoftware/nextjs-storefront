@@ -3,43 +3,25 @@
  */
 import { useMutation, useQueryClient } from '@tanstack/react-query'
 
-import { makeGraphQLClientWithoutUserClaims } from '@/lib/gql/client'
+import { makeGraphQLClient, makeGraphQLClientWithoutUserClaims } from '@/lib/gql/client'
 import { createRoleAsyncMutation } from '@/lib/gql/mutations'
 import { rolesKeys } from '@/lib/react-query/queryKeys'
+import { B2BRole, B2BRoleInput } from '@/lib/types/CustomerB2BAccount'
 
 /**
  * @hidden
  */
 
-const client = makeGraphQLClientWithoutUserClaims()
-
-// Define the B2BRole interface
-export interface B2BRole {
-  id: number
-  name?: string
-  isSystemRole?: boolean
-  behaviors?: number[]
-}
-
-export interface B2BRoleInput {
-  id: number
-  name?: string
-  isSystemRole?: boolean
-  behaviors?: number[]
-}
+const client = makeGraphQLClient()
 
 interface CreateRoleAsyncParams {
-  accountId: number
   b2BRoleInput: B2BRoleInput
 }
 
-const createRoleAsync = async ({
-  accountId,
-  b2BRoleInput,
-}: CreateRoleAsyncParams): Promise<B2BRole> => {
+const createRoleAsync = async ({ b2BRoleInput }: CreateRoleAsyncParams): Promise<B2BRole> => {
   const response = await client.request({
     document: createRoleAsyncMutation,
-    variables: { accountId, b2BRoleInput },
+    variables: { b2BRoleInput },
   })
 
   return response?.createRoleAsync
@@ -65,18 +47,10 @@ export const useCreateRoleAsync = () => {
   return {
     createRole: useMutation({
       mutationFn: createRoleAsync,
-      onSuccess: (data, variables) => {
-        // Invalidate the roles list for the specific account
-        queryClient.invalidateQueries({ queryKey: rolesKeys.rolesByAccount(variables.accountId) })
+      onSuccess: () => {
         // Invalidate all roles queries
         queryClient.invalidateQueries({ queryKey: rolesKeys.all })
-        // If the created role has an ID, set it in the cache
-        if (data?.id) {
-          queryClient.setQueryData(rolesKeys.roleById(variables.accountId, data.id), data)
-        }
       },
     }),
   }
 }
-
-export default useCreateRoleAsync

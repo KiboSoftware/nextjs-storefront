@@ -1,78 +1,91 @@
-import React, { useEffect, useState } from 'react'
+import React, { useEffect, useState, useCallback, useMemo } from 'react'
 
 import { yupResolver } from '@hookform/resolvers/yup'
-import ChevronRightIcon from '@mui/icons-material/ChevronRight'
-import CloseIcon from '@mui/icons-material/Close'
-import ExpandMoreIcon from '@mui/icons-material/ExpandMore'
-import {
-  Box,
-  Button,
-  Checkbox,
-  FormControl,
-  FormControlLabel,
-  Grid,
-  IconButton,
-  List,
-  ListItem,
-  ListItemButton,
-  MenuItem,
-  Radio,
-  RadioGroup,
-  Typography,
-  useTheme,
-  useMediaQuery,
-  Collapse,
-  ListItemText,
-  ListItemIcon,
-  Stack,
-} from '@mui/material'
+import { ArrowBackIos } from '@mui/icons-material'
+import { Box, Button, Stack, Theme, Typography, useMediaQuery } from '@mui/material'
 import { useTranslation } from 'next-i18next'
-import { Controller, useForm, useWatch, ControllerRenderProps } from 'react-hook-form'
+import { useForm } from 'react-hook-form'
 import * as yup from 'yup'
 
+import {
+  AccountScopeSelector,
+  RoleFormAccountHierarchyTree,
+  PermissionSelector,
+  RoleBasicInfo,
+  RoleFormData,
+} from './components'
 import { roleFormStyles } from './RoleForm.styles'
-import { KiboTextBox, KiboSelect } from '@/components/common'
-import { useGetBehaviorCategories } from '@/hooks/mutations/b2b/manage-roles/useGetBehaviorCategories/useGetBehaviorCategories'
-import { useGetBehaviors } from '@/hooks/mutations/b2b/manage-roles/useGetBehaviors/useGetBehaviors'
-import { HierarchyTree } from '@/lib/types'
+import { useCreateRoleAsync } from '@/hooks/mutations/b2b/manage-roles/useCreateRoleAsync/useCreateRoleAsync'
 
 import { B2BAccount, CustomerAccount } from '@/lib/gql/types'
 
-export interface RoleFormData {
-  roleName: string
-  parentAccount: string
-  accountScope: string
-  applyToFutureChildren: boolean
-  selectedAccounts: number[]
-  selectedPermissions: Record<number, number[]>
+interface AccountUserBehaviorResult {
+  accountId: number
+  behaviors: number[]
+  isLoading: boolean
+  isError: boolean
+  isSuccess: boolean
+  error: unknown
 }
 
 interface RoleFormProps {
-  onSave: (data: RoleFormData) => void
+  onSave?: (data: RoleFormData) => void
   onCancel: () => void
+  onBackClick: () => void
   user?: CustomerAccount
   accounts?: B2BAccount[]
-  hierarchy?: HierarchyTree[]
+  behaviorCategories?: { items?: Array<{ id?: number; name?: string }> }
+  behaviors?: { items?: Array<{ id?: number; name?: string; categoryId?: number }> }
+  categoriesLoading?: boolean
+  behaviorsLoading?: boolean
+  accountUserBehaviorResults?: AccountUserBehaviorResult[]
+  accountUserBehaviors?: Array<unknown>
+  behaviorLoading?: boolean
 }
 
 const useRoleFormSchema = () => {
   const { t } = useTranslation('common')
   return yup.object({
-    roleName: yup.string().required(t('role-name-required') || 'Role name is required'),
-    parentAccount: yup.string().nullable(),
-    accountScope: yup.string().required(t('account-scope-required') || 'Account scope is required'),
+    roleName: yup.string().required(t('role-name-required')),
+    parentAccount: yup.string().required(t('parent-account-required')),
+    accountScope: yup.string(),
   })
 }
 
-const RoleForm: React.FC<RoleFormProps> = ({ onSave, onCancel, user, accounts, hierarchy }) => {
+const RoleForm: React.FC<RoleFormProps> = ({
+  onSave,
+  onCancel,
+  user,
+  accounts,
+  onBackClick,
+  behaviorCategories,
+  behaviors,
+  categoriesLoading,
+  behaviorsLoading,
+  accountUserBehaviorResults,
+  accountUserBehaviors,
+}) => {
   const { t } = useTranslation('common')
-  const theme = useTheme()
-  const mdScreen = useMediaQuery(theme.breakpoints.up('md'))
   const styles = roleFormStyles
+  const mdScreen = useMediaQuery((theme: Theme) => theme.breakpoints.up('md'))
 
-  // Fetch behavior categories and behaviors
-  const { behaviorCategories, isLoading: categoriesLoading } = useGetBehaviorCategories()
-  const { behaviors, isLoading: behaviorsLoading } = useGetBehaviors()
+  // Use default values for loading states if not provided
+  const isLoadingCategories = categoriesLoading || false
+  const isLoadingBehaviors = behaviorsLoading || false
+  // Check if user has behavior (create role permission) for a specific account
+  const hasCreateRolePermission = useCallback(
+    (accountId: number): boolean => {
+      if (!accountUserBehaviorResults) return false
+      const accountBehavior = accountUserBehaviorResults.find(
+        (result) => result.accountId === accountId
+      )
+      return accountBehavior ? accountBehavior.behaviors.includes(2027) : false //Need to replace with constant
+    },
+    [accountUserBehaviorResults]
+  )
+
+  // Initialize create role mutation
+  const { createRole } = useCreateRoleAsync()
 
   const roleSchema = useRoleFormSchema()
 
@@ -83,12 +96,11 @@ const RoleForm: React.FC<RoleFormProps> = ({ onSave, onCancel, user, accounts, h
     setValue,
     reset,
     watch,
-    getValues,
   } = useForm<RoleFormData>({
     defaultValues: {
       roleName: '',
       parentAccount: '',
-      accountScope: 'all-child',
+      accountScope: '',
       applyToFutureChildren: false,
       selectedAccounts: [],
       selectedPermissions: {},
@@ -96,36 +108,90 @@ const RoleForm: React.FC<RoleFormProps> = ({ onSave, onCancel, user, accounts, h
     resolver: yupResolver(roleSchema),
   })
 
-  // Update parent account when user data loads
-  useEffect(() => {
-    if (user?.id) {
-      reset({
-        roleName: '',
-        parentAccount: String(user.id),
-        accountScope: 'all-child',
-        applyToFutureChildren: false,
-        selectedAccounts: [],
-        selectedPermissions: {},
-      })
-    }
-  }, [user?.id, reset])
-
-  useEffect(() => {
-    console.log('User:', user)
-    console.log('Accounts:', accounts)
-  }, [user, accounts])
-
-  // Watch the parentAccount field value
-  const parentAccountValue = useWatch({ control, name: 'parentAccount' })
-
-  useEffect(() => {
-    console.log('Form parentAccount value changed to:', parentAccountValue)
-  }, [parentAccountValue])
-
+  // State management
   const [selectedCategory, setSelectedCategory] = useState<number | null>(null)
   const [selectedPermissions, setSelectedPermissions] = useState<Record<number, number[]>>({})
   const [selectedAccounts, setSelectedAccounts] = useState<number[]>([])
   const [expandedNodes, setExpandedNodes] = useState<Set<number>>(new Set())
+  const [permissionError, setPermissionError] = useState<string>('')
+  const [searchQuery, setSearchQuery] = useState<string>('')
+
+  // Watch form values (must be declared before useEffect hooks that use them)
+  const accountScope = watch('accountScope')
+  const parentAccount = watch('parentAccount')
+  const roleName = watch('roleName')
+
+  // Helper functions
+  const getChildAccountsForParent = useCallback(
+    (parentId: number): B2BAccount[] => {
+      if (!accounts) return []
+      return accounts.filter((acc) => acc.parentAccountId === parentId)
+    },
+    [accounts]
+  )
+
+  // Get all accounts where user has create role permission (for parent dropdown)
+  const getAccountsWithCreateRolePermission = useCallback((): B2BAccount[] => {
+    if (!accounts || !accountUserBehaviorResults) return []
+    return accounts.filter((account) => hasCreateRolePermission(account.id))
+  }, [accounts, accountUserBehaviorResults, hasCreateRolePermission])
+
+  // Get all accounts from hierarchy (not just logged-in user's children)
+  const getAllAccountsFromHierarchy = useCallback((): B2BAccount[] => {
+    return accounts || []
+  }, [accounts])
+
+  const hasChildAccounts = parentAccount
+    ? getChildAccountsForParent(Number(parentAccount)).length > 0
+    : false
+
+  const shouldShowAccount = useCallback(
+    (accountId: number, query: string): boolean => {
+      const checkAccountMatch = (id: number, searchQuery: string): boolean => {
+        if (!searchQuery.trim()) return true
+
+        const account = accounts?.find((acc) => acc.id === id)
+        if (!account) return false
+
+        // Check if current account matches
+        const accountName = account.companyOrOrganization || `Account ${id}`
+        if (accountName.toLowerCase().includes(searchQuery.toLowerCase())) {
+          return true
+        }
+
+        // Check if any child accounts match (recursive)
+        const childAccounts = getChildAccountsForParent(id)
+        return childAccounts.some((child) => checkAccountMatch(child.id, searchQuery))
+      }
+
+      return checkAccountMatch(accountId, query)
+    },
+    [accounts, getChildAccountsForParent]
+  )
+
+  // Update parent account when user data loads - set to first account with create role permission
+  useEffect(() => {
+    if (accountUserBehaviorResults && accounts && accountUserBehaviorResults.length > 0) {
+      const accountsWithPermission = getAccountsWithCreateRolePermission()
+
+      // Find user's current account or first account with permission
+      const userAccount = accountsWithPermission.find((acc) => acc.id === user?.id)
+      const defaultAccount = userAccount || accountsWithPermission[0]
+
+      if (defaultAccount) {
+        const userHasChildren =
+          accounts.filter((acc) => acc.parentAccountId === defaultAccount.id).length > 0
+        reset({
+          roleName: '',
+          parentAccount: String(defaultAccount.id),
+          accountScope: userHasChildren ? 'all-child' : '',
+          applyToFutureChildren: false,
+          selectedAccounts: [],
+          selectedPermissions: {},
+        })
+      }
+    }
+  }, [user?.id, reset, accounts, accountUserBehaviorResults, getAccountsWithCreateRolePermission])
 
   // Set default selected category when categories load
   useEffect(() => {
@@ -138,38 +204,56 @@ const RoleForm: React.FC<RoleFormProps> = ({ onSave, onCancel, user, accounts, h
     }
   }, [behaviorCategories, selectedCategory])
 
-  // Watch accountScope to show/hide hierarchy
-  const accountScope = watch('accountScope')
-  const parentAccount = watch('parentAccount')
+  // Auto-expand nodes when searching
+  useEffect(() => {
+    if (searchQuery.trim() && accounts && parentAccount) {
+      const expandedIds = new Set<number>()
 
-  // Handle parent account selection
+      const expandParentsOfMatches = (accountId: number) => {
+        const account = accounts.find((acc) => acc.id === accountId)
+        if (!account) return
+
+        const accountName = account.companyOrOrganization || `Account ${accountId}`
+        if (accountName.toLowerCase().includes(searchQuery.toLowerCase())) {
+          // Expand all parents
+          let currentParentId = account.parentAccountId
+          while (currentParentId) {
+            expandedIds.add(currentParentId)
+            const parentAccount = accounts.find((acc) => acc.id === currentParentId)
+            currentParentId = parentAccount?.parentAccountId
+          }
+        }
+
+        // Check children recursively
+        const children = getChildAccountsForParent(accountId)
+        children.forEach((child) => expandParentsOfMatches(child.id))
+      }
+
+      expandParentsOfMatches(Number(parentAccount))
+      setExpandedNodes(expandedIds)
+    }
+  }, [searchQuery, accounts, parentAccount, getChildAccountsForParent])
+
+  // Event handlers
   const handleParentAccountChange = (value: string) => {
-    console.log('handleParentAccountChange called - value:', value)
-    console.log('Current form values before change:', getValues())
     setValue('parentAccount', value)
-    // Reset selected accounts when parent changes
     setSelectedAccounts([])
     setValue('selectedAccounts', [])
-    console.log('Form values after change:', getValues())
+
+    const newParentHasChildren = value ? getChildAccountsForParent(Number(value)).length > 0 : false
+    if (!newParentHasChildren) {
+      setValue('accountScope', '')
+    }
   }
 
-  // Get child accounts for the selected parent
-  const getChildAccountsForParent = (parentId: number): B2BAccount[] => {
-    if (!accounts) return []
-    return accounts.filter((acc) => acc.parentAccountId === parentId)
+  const handleAccountSelection = (accountId: number, checked: boolean) => {
+    setSelectedAccounts((prev) => {
+      const newSelection = checked ? [...prev, accountId] : prev.filter((id) => id !== accountId)
+      setValue('selectedAccounts', newSelection)
+      return newSelection
+    })
   }
 
-  // Build hierarchy tree for selected parent
-  const buildHierarchyTree = (parentId: number): HierarchyTree[] => {
-    const childAccounts = getChildAccountsForParent(parentId)
-    return childAccounts.map((acc) => ({
-      id: acc.id,
-      children: buildHierarchyTree(acc.id),
-      collapsed: !expandedNodes.has(acc.id),
-    }))
-  }
-
-  // Toggle node expansion
   const toggleNodeExpansion = (nodeId: number) => {
     setExpandedNodes((prev) => {
       const newSet = new Set(prev)
@@ -179,47 +263,6 @@ const RoleForm: React.FC<RoleFormProps> = ({ onSave, onCancel, user, accounts, h
         newSet.add(nodeId)
       }
       return newSet
-    })
-  }
-
-  // Handle account selection in hierarchy
-  const handleAccountSelection = (accountId: number, checked: boolean) => {
-    setSelectedAccounts((prev) => {
-      const newSelection = checked ? [...prev, accountId] : prev.filter((id) => id !== accountId)
-      setValue('selectedAccounts', newSelection)
-      return newSelection
-    })
-  }
-
-  // Select/deselect all child accounts recursively
-  const handleSelectAllChildren = (nodeId: number, checked: boolean) => {
-    const getAllDescendants = (id: number): number[] => {
-      const children = getChildAccountsForParent(id)
-      const descendants: number[] = []
-      children.forEach((child) => {
-        descendants.push(child.id)
-        descendants.push(...getAllDescendants(child.id))
-      })
-      return descendants
-    }
-
-    const descendants = getAllDescendants(nodeId)
-    setSelectedAccounts((prev) => {
-      let newSelection = [...prev]
-      if (checked) {
-        // Add node and all descendants
-        newSelection.push(nodeId)
-        descendants.forEach((id) => {
-          if (!newSelection.includes(id)) {
-            newSelection.push(id)
-          }
-        })
-      } else {
-        // Remove node and all descendants
-        newSelection = newSelection.filter((id) => id !== nodeId && !descendants.includes(id))
-      }
-      setValue('selectedAccounts', newSelection)
-      return newSelection
     })
   }
 
@@ -244,115 +287,43 @@ const RoleForm: React.FC<RoleFormProps> = ({ onSave, onCancel, user, accounts, h
         }
       }
     })
+
+    if (permissionError) {
+      setPermissionError('')
+    }
   }
 
-  const handleRemoveBehavior = (category: number, behavior: number) => {
-    setSelectedPermissions((prev) => ({
-      ...prev,
-      [category]: (prev[category] || []).filter((b) => b !== behavior),
-    }))
-  }
+  const handleBehaviorNameCheckboxChange = () => {
+    const selectedCategoryBehaviors =
+      behaviors?.items?.filter((behavior) => behavior.categoryId === selectedCategory) || []
 
-  // Render account hierarchy tree recursively
-  const renderAccountHierarchy = (accountId: number, level: number): React.ReactNode => {
-    const account = accounts?.find((acc) => acc.id === accountId)
-    if (!account) return null
-
-    const childAccounts = getChildAccountsForParent(accountId)
-    const hasChildren = childAccounts.length > 0
-    const isExpanded = expandedNodes.has(accountId)
-    const isSelected = selectedAccounts.includes(accountId)
-    const isParentAccount = accountId === Number(parentAccount)
-
-    return (
-      <Box key={accountId}>
-        <Box
-          sx={{
-            display: 'flex',
-            alignItems: 'center',
-            pl: level * 3,
-            py: 0.5,
-            '&:hover': {
-              bgcolor: theme.palette.action.hover,
-            },
-          }}
-        >
-          {hasChildren ? (
-            <IconButton
-              size="small"
-              onClick={() => toggleNodeExpansion(accountId)}
-              sx={{ mr: 0.5, p: 0.5 }}
-            >
-              {isExpanded ? (
-                <ExpandMoreIcon fontSize="small" />
-              ) : (
-                <ChevronRightIcon fontSize="small" />
-              )}
-            </IconButton>
-          ) : (
-            <Box sx={{ width: 28, mr: 0.5 }} />
-          )}
-
-          <FormControlLabel
-            control={
-              <Checkbox
-                checked={isSelected}
-                onChange={(e) => handleAccountSelection(accountId, e.target.checked)}
-                disabled={isParentAccount}
-                size="small"
-              />
-            }
-            label={
-              <Typography variant="body2" sx={{ fontWeight: isParentAccount ? 600 : 400 }}>
-                {account.companyOrOrganization || `Account ${accountId}`}
-                {isParentAccount && ` (${t('parent') || 'Parent'})`}
-              </Typography>
-            }
-            sx={{ m: 0, flex: 1 }}
-          />
-
-          {hasChildren && (
-            <Typography variant="caption" color="text.secondary" sx={{ mr: 1 }}>
-              ({childAccounts.length}{' '}
-              {childAccounts.length === 1 ? t('child') || 'child' : t('children') || 'children'})
-            </Typography>
-          )}
-        </Box>
-
-        {hasChildren && isExpanded && (
-          <Box>{childAccounts.map((child) => renderAccountHierarchy(child.id, level + 1))}</Box>
-        )}
-      </Box>
+    const allSelected = selectedCategoryBehaviors.every((behavior) =>
+      selectedPermissions[selectedCategory || 0]?.includes(behavior.id || 0)
     )
-  }
 
-  const onSubmit = (data: RoleFormData) => {
-    // Extract all selected behavior IDs from selectedPermissions
-    const allSelectedBehaviorIds: number[] = []
-    Object.values(selectedPermissions).forEach((behaviorIds) => {
-      allSelectedBehaviorIds.push(...behaviorIds)
-    })
-
-    // Create payload in requested format
-    const payload = {
-      name: data.roleName,
-      behaviors: allSelectedBehaviorIds,
+    if (allSelected) {
+      setSelectedPermissions((prev) => ({
+        ...prev,
+        [selectedCategory || 0]: [],
+      }))
+    } else {
+      const allBehaviorIds = selectedCategoryBehaviors.map((behavior) => behavior.id || 0)
+      setSelectedPermissions((prev) => ({
+        ...prev,
+        [selectedCategory || 0]: allBehaviorIds,
+      }))
     }
 
-    console.log('Create Role Payload:', payload)
-
-    // Call the original onSave function
-    onSave({
-      ...data,
-      selectedAccounts,
-      selectedPermissions,
-    })
+    if (permissionError) {
+      setPermissionError('')
+    }
   }
 
   // Get behaviors for the selected category
   const selectedCategoryBehaviors =
     behaviors?.items?.filter((behavior) => behavior.categoryId === selectedCategory) || []
 
+  // Get all selected behaviors for the "Selected Behavior" column
   const getAllSelectedBehaviors = () => {
     const allBehaviors: Array<{ category: number; behavior: number }> = []
     Object.entries(selectedPermissions).forEach(([category, behaviors]) => {
@@ -363,353 +334,285 @@ const RoleForm: React.FC<RoleFormProps> = ({ onSave, onCancel, user, accounts, h
     return allBehaviors
   }
 
+  // Handle removing a behavior from the selected list
+  const handleRemoveBehavior = (category: number, behavior: number) => {
+    setSelectedPermissions((prev) => ({
+      ...prev,
+      [category]: (prev[category] || []).filter((b) => b !== behavior),
+    }))
+  }
+
+  const handleSelectAllAccounts = () => {
+    if (!parentAccount || !accounts) return
+
+    const getAllDescendants = (parentId: number): number[] => {
+      const directChildren = accounts.filter((acc) => acc.parentAccountId === parentId) || []
+      const descendants: number[] = []
+      directChildren.forEach((child) => {
+        // Only include accounts where user has create role permission
+        if (hasCreateRolePermission(child.id)) {
+          descendants.push(child.id)
+        }
+        descendants.push(...getAllDescendants(child.id))
+      })
+      return descendants
+    }
+
+    const allDescendantIds = getAllDescendants(Number(parentAccount))
+    setSelectedAccounts(allDescendantIds)
+    const allIds = new Set(accounts.map((acc) => acc.id) || [])
+    setExpandedNodes(allIds)
+    setValue('selectedAccounts', allDescendantIds)
+  }
+
+  const handleDeselectAllAccounts = () => {
+    setSelectedAccounts([])
+    setExpandedNodes(new Set())
+    setValue('selectedAccounts', [])
+  }
+
+  // Form validation - Using useMemo to make it reactive to form and permission changes
+  const hasSelectedPermissions = getAllSelectedBehaviors().length > 0
+
+  const isFormValid = useMemo(() => {
+    return roleName?.trim() !== '' && parentAccount !== '' && hasSelectedPermissions
+  }, [roleName, parentAccount, hasSelectedPermissions])
+
+  const onSubmit = async (data: RoleFormData) => {
+    // Validate that at least one permission is selected
+    if (!hasSelectedPermissions) {
+      setPermissionError(t('at-least-one-permission-required'))
+      return
+    }
+
+    // Clear permission error if validation passes
+    setPermissionError('')
+
+    // Extract all selected behavior IDs from selectedPermissions
+    const allSelectedBehaviorIds: number[] = []
+    Object.values(selectedPermissions).forEach((behaviorIds) => {
+      allSelectedBehaviorIds.push(...behaviorIds)
+    })
+
+    // Determine which accounts to include based on account scope selection
+    let accountsToInclude: number[] = []
+    const parentAccountId = Number(data.parentAccount)
+
+    // If parent has no child accounts, only include the parent account
+    if (!hasChildAccounts) {
+      accountsToInclude = [parentAccountId]
+    } else if (data.accountScope === 'all-child') {
+      // First radio button: Apply to all child accounts
+      // Include parent + all child accounts and their nested children (recursive) that have create role permission
+      const getAllDescendants = (parentId: number): number[] => {
+        const directChildren = accounts?.filter((acc) => acc.parentAccountId === parentId) || []
+        const descendants: number[] = []
+        directChildren.forEach((child) => {
+          // Only include if user has create role permission for this account
+          if (hasCreateRolePermission(child.id)) {
+            descendants.push(child.id)
+          }
+          descendants.push(...getAllDescendants(child.id)) // Recursively get nested children
+        })
+        return descendants
+      }
+
+      const allDescendantIds = getAllDescendants(parentAccountId)
+      accountsToInclude = [parentAccountId, ...allDescendantIds]
+    } else if (data.accountScope === 'specific-child') {
+      // Second radio button: Apply to specific child accounts
+      // Include parent + selected child accounts
+      accountsToInclude = [parentAccountId, ...selectedAccounts]
+    } else if (data.accountScope === 'all-except') {
+      // Third radio button: Apply to all child accounts except selected
+      // Include parent + all child accounts and their nested children (recursive) that are NOT selected and have create role permission
+      const getAllDescendants = (parentId: number): number[] => {
+        const directChildren = accounts?.filter((acc) => acc.parentAccountId === parentId) || []
+        const descendants: number[] = []
+        directChildren.forEach((child) => {
+          // Only include if user has create role permission for this account
+          if (hasCreateRolePermission(child.id)) {
+            descendants.push(child.id)
+          }
+          descendants.push(...getAllDescendants(child.id)) // Recursively get nested children
+        })
+        return descendants
+      }
+
+      const allDescendantIds = getAllDescendants(parentAccountId)
+      // Remove selected accounts from the list of descendants
+      const unselectedDescendantIds = allDescendantIds.filter(
+        (id) => !selectedAccounts.includes(id)
+      )
+      accountsToInclude = [parentAccountId, ...unselectedDescendantIds]
+    }
+
+    // Create single payload with the specified format
+    const payload = {
+      b2BRoleInput: {
+        name: data.roleName,
+        behaviors: allSelectedBehaviorIds,
+        accountIds: accountsToInclude,
+        id: 0,
+      },
+    }
+
+    try {
+      // Execute role creation with single API call
+      const createdRole = await createRole.mutateAsync(payload)
+
+      // Call onSave callback if provided
+      if (onSave) {
+        onSave({
+          ...data,
+          selectedAccounts,
+          selectedPermissions,
+        })
+      }
+    } catch (error) {
+      console.error('Error creating role:', error)
+      // Handle error - you might want to show an error message to the user
+      setPermissionError(t('role-creation-failed'))
+    }
+  }
+
   return (
-    <Box>
-      <form onSubmit={handleSubmit(onSubmit)} id="addRoleForm" data-testid="role-form">
-        <Grid container spacing={3}>
-          {/* Role Information Section */}
-          <Grid item xs={12}>
-            <Typography variant="h6" sx={{ mb: 2, fontWeight: 600 }}>
-              {t('role-information')}
-            </Typography>
-          </Grid>
-
-          {/* Role Name Field */}
-          <Grid item xs={12} md={6}>
-            <Controller
-              name="roleName"
-              control={control}
-              render={({ field }: { field: ControllerRenderProps<RoleFormData, 'roleName'> }) => (
-                <KiboTextBox
-                  fullWidth
-                  label={t('role-name')}
-                  placeholder={t('role-name-placeholder') || 'e.g. Finance Manager, Order Manager'}
-                  value={field.value}
-                  onChange={(_name, value) => field.onChange(value)}
-                  error={!!errors.roleName}
-                  helperText={errors.roleName?.message}
-                />
-              )}
-            />
-          </Grid>
-
-          {/* Parent Account Field */}
-          <Grid item xs={12} md={6}>
-            <Controller
-              name="parentAccount"
-              control={control}
-              render={({
-                field,
-              }: {
-                field: ControllerRenderProps<RoleFormData, 'parentAccount'>
-              }) => (
-                <KiboSelect
-                  name="parentAccount"
-                  label={t('parent-account')}
-                  onChange={(name: string, value: string) => {
-                    console.log('KiboSelect onChange called - name:', name, 'value:', value)
-                    // Call field.onChange first to update React Hook Form
-                    field.onChange(value)
-                    // Then call our custom handler
-                    handleParentAccountChange(value)
-                  }}
-                  onBlur={(name: string, value: string) => {
-                    console.log('KiboSelect onBlur called - name:', name, 'value:', value)
-                    field.onBlur()
-                  }}
-                  value={field.value || ''}
-                  disabled={!accounts || accounts.length === 0}
-                  placeholder={t('select-parent-account')}
-                  error={!!errors.parentAccount}
-                  helperText={errors.parentAccount?.message}
-                >
-                  {accounts && accounts.length > 0
-                    ? [
-                        ...(user?.id
-                          ? [
-                              <MenuItem key={`user-${user.id}`} value={String(user.id)}>
-                                {user.companyOrOrganization ||
-                                  `${user.firstName || ''} ${user.lastName || ''}`.trim() ||
-                                  user.emailAddress ||
-                                  t('current-account')}
-                              </MenuItem>,
-                            ]
-                          : []),
-                        ...accounts
-                          .filter((account) => account.id !== user?.id)
-                          .map((account) => (
-                            <MenuItem key={account.id} value={String(account.id)}>
-                              {account.companyOrOrganization || `Account ${account.id}`}
-                            </MenuItem>
-                          )),
-                      ]
-                    : [
-                        <MenuItem key="no-accounts" value="" disabled>
-                          {t('no-accounts-available')}
-                        </MenuItem>,
-                      ]}
-                </KiboSelect>
-              )}
-            />
-          </Grid>
-
-          {/* Account Scope Radio Buttons */}
-          <Grid item xs={12}>
-            <Controller
-              name="accountScope"
-              control={control}
-              render={({
-                field,
-              }: {
-                field: ControllerRenderProps<RoleFormData, 'accountScope'>
-              }) => (
-                <FormControl component="fieldset" fullWidth>
-                  <Typography variant="body2" sx={{ mb: 1, fontWeight: 500 }}>
-                    {t('account-hierarchy-scope')}
-                  </Typography>
-                  <RadioGroup {...field}>
-                    <Box>
-                      <FormControlLabel
-                        value="all-child"
-                        control={<Radio size="small" />}
-                        label={t('apply-to-all-child-accounts')}
-                      />
-                      {/* Checkbox for future children - shown when "all-child" is selected */}
-                      {accountScope === 'all-child' && (
-                        <Box sx={{ pl: 4 }}>
-                          <Controller
-                            name="applyToFutureChildren"
-                            control={control}
-                            render={({
-                              field: checkboxField,
-                            }: {
-                              field: ControllerRenderProps<RoleFormData, 'applyToFutureChildren'>
-                            }) => (
-                              <FormControlLabel
-                                control={
-                                  <Checkbox
-                                    size="small"
-                                    checked={checkboxField.value}
-                                    onChange={(e) => checkboxField.onChange(e.target.checked)}
-                                  />
-                                }
-                                label={
-                                  <Typography variant="body2">
-                                    {t('apply-to-future-child-accounts')}
-                                  </Typography>
-                                }
-                              />
-                            )}
-                          />
-                        </Box>
-                      )}
-                    </Box>
-                    <FormControlLabel
-                      value="specific-child"
-                      control={<Radio size="small" />}
-                      label={t('apply-to-specific-child-accounts')}
-                    />
-                    <FormControlLabel
-                      value="all-except"
-                      control={<Radio size="small" />}
-                      label={t('apply-to-all-child-accounts-except')}
-                    />
-                  </RadioGroup>
-                </FormControl>
-              )}
-            />
-          </Grid>
-        </Grid>
-
-        {/* Account Hierarchy Tree - Show when specific-child or all-except is selected */}
-        {parentAccount && (accountScope === 'specific-child' || accountScope === 'all-except') && (
-          <Box
-            sx={{
-              mt: 3,
-              p: 2,
-              border: `1px solid ${theme.palette.grey[300]}`,
-              borderRadius: 1,
-              bgcolor: theme.palette.grey[50],
-            }}
-          >
-            <Box
-              sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', mb: 2 }}
-            >
-              <Typography variant="subtitle2" sx={{ fontWeight: 600 }}>
-                {accountScope === 'specific-child'
-                  ? t('select-child-accounts')
-                  : t('select-accounts-to-exclude')}
-              </Typography>
-              <Box sx={{ display: 'flex', gap: 1 }}>
-                <Button
-                  size="small"
-                  variant="outlined"
-                  onClick={() => {
-                    setSelectedAccounts([])
-                    setExpandedNodes(new Set())
-                    setValue('selectedAccounts', [])
-                  }}
-                >
-                  {t('deselect-all-accounts')}
-                </Button>
-                <Button
-                  size="small"
-                  variant="outlined"
-                  onClick={() => {
-                    const allChildIds =
-                      accounts
-                        ?.filter(
-                          (acc) => acc.parentAccountId !== null && acc.id !== Number(parentAccount)
-                        )
-                        .map((acc) => acc.id) || []
-                    setSelectedAccounts(allChildIds)
-                    const allIds = new Set(accounts?.map((acc) => acc.id) || [])
-                    setExpandedNodes(allIds)
-                    setValue('selectedAccounts', allChildIds)
-                  }}
-                >
-                  {t('select-all-accounts')}
-                </Button>
-              </Box>
+    <Box
+      component="form"
+      onSubmit={handleSubmit(onSubmit)}
+      sx={{ ...styles.container, padding: 0, margin: 0 }}
+    >
+      <Box>
+        <Stack sx={{ ...styles.wrapIcon }} direction="row" gap={2}>
+          {/* Header Section with Title and Actions */}
+          <Box sx={{ display: 'flex' }} onClick={onBackClick}>
+            <ArrowBackIos fontSize="inherit" />
+            {mdScreen && <Typography variant="body2">{t('manage-roles')}</Typography>}
+          </Box>
+          {!mdScreen && (
+            <Box sx={{ ...styles.createRoleTitle }}>
+              <Typography variant="h2">{t('create-new-role')}</Typography>
             </Box>
-
-            {selectedAccounts.length > 0 && (
-              <Typography variant="caption" color="text.secondary" sx={{ display: 'block', mb: 2 }}>
-                {selectedAccounts.length}{' '}
-                {selectedAccounts.length === 1 ? t('account-singular') : t('accounts-plural')}{' '}
-                {t('selected-lowercase')}
-              </Typography>
-            )}
-
-            <Box
+          )}
+        </Stack>
+      </Box>
+      {mdScreen && (
+        <Box
+          sx={{
+            display: 'flex',
+            justifyContent: 'space-between',
+            alignItems: 'center',
+            mb: 3,
+            mt: 3,
+          }}
+        >
+          <Typography variant="h1">{t('create-new-role')}</Typography>
+          <Box sx={{ display: 'flex', gap: 2 }}>
+            <Button variant="contained" color="secondary" onClick={onCancel}>
+              {t('cancel')}
+            </Button>
+            <Button
+              type="submit"
+              variant="contained"
+              disabled={!isFormValid}
               sx={{
-                maxHeight: 400,
-                overflow: 'auto',
-                border: `1px solid ${theme.palette.grey[200]}`,
-                borderRadius: 1,
-                bgcolor: 'white',
-                p: 1,
+                bgcolor: isFormValid ? 'primary.main' : 'grey.400',
+                '&:hover': {
+                  bgcolor: isFormValid ? 'primary.dark' : 'grey.400',
+                },
               }}
             >
-              {renderAccountHierarchy(Number(parentAccount), 0)}
-            </Box>
-          </Box>
-        )}
-
-        {/* Permission Configuration Section */}
-        <Box sx={{ ...styles.section, mt: 3 }}>
-          <Typography variant="h6" sx={styles.sectionHeader}>
-            {t('permission-configuration')}
-          </Typography>
-          <Typography sx={styles.sectionDescription}>
-            {t('permission-configuration-description')}
-          </Typography>
-
-          <Box sx={styles.permissionContainer}>
-            {/* Behavior Category Column */}
-            <Box sx={styles.permissionColumn}>
-              <Typography sx={styles.permissionColumnHeader}>{t('behavior-category')}</Typography>
-              <List sx={styles.permissionList}>
-                {categoriesLoading ? (
-                  <ListItem>
-                    <Typography variant="body2">{t('loading')}</Typography>
-                  </ListItem>
-                ) : (
-                  behaviorCategories?.items?.map((cat) => (
-                    <ListItemButton
-                      key={cat.id}
-                      onClick={() => handleCategorySelect(cat.id || 0)}
-                      selected={selectedCategory === cat.id}
-                      sx={{
-                        borderBottom: '1px solid #f0f0f0',
-                        '&.Mui-selected': {
-                          backgroundColor: theme.palette.primary.light,
-                          color: theme.palette.primary.main,
-                          '&:hover': {
-                            backgroundColor: theme.palette.primary.light,
-                          },
-                        },
-                      }}
-                    >
-                      <Typography variant="body2">{cat.name}</Typography>
-                    </ListItemButton>
-                  )) || []
-                )}
-              </List>
-            </Box>
-
-            {/* Behavior Name Column */}
-            <Box sx={styles.permissionColumn}>
-              <Typography sx={styles.permissionColumnHeader}>{t('behavior-name')}</Typography>
-              <List sx={styles.permissionList}>
-                {behaviorsLoading ? (
-                  <ListItem>
-                    <Typography variant="body2">{t('loading')}</Typography>
-                  </ListItem>
-                ) : (
-                  selectedCategoryBehaviors.map((behavior) => {
-                    const isSelected = Boolean(
-                      selectedPermissions[selectedCategory || 0]?.includes(behavior.id || 0)
-                    )
-                    return (
-                      <ListItem key={behavior.id} disablePadding>
-                        <ListItemButton
-                          onClick={() =>
-                            handleBehaviorToggle(selectedCategory || 0, behavior.id || 0)
-                          }
-                          sx={styles.behaviorItem(theme)}
-                        >
-                          <Checkbox checked={isSelected} size="small" sx={{ padding: 0 }} />
-                          <Typography variant="body2">{behavior.name}</Typography>
-                        </ListItemButton>
-                      </ListItem>
-                    )
-                  })
-                )}
-              </List>
-            </Box>
-
-            {/* Selected Behavior Column */}
-            <Box sx={styles.permissionColumn}>
-              <Typography sx={styles.permissionColumnHeader}>{t('selected-behavior')}</Typography>
-              {getAllSelectedBehaviors().length === 0 ? (
-                <Typography sx={styles.noSelectionText}>{t('no-behaviors-selected')}</Typography>
-              ) : (
-                <List sx={styles.permissionList}>
-                  {getAllSelectedBehaviors().map(({ category, behavior }) => {
-                    const behaviorObj = behaviors?.items?.find((b) => b.id === behavior)
-                    return (
-                      <ListItem key={`${category}-${behavior}`} disablePadding>
-                        <Box sx={styles.selectedBehaviorItem(theme)}>
-                          <Typography variant="body2">
-                            {behaviorObj?.name || `Behavior ${behavior}`}
-                          </Typography>
-                          <IconButton
-                            size="small"
-                            onClick={() => handleRemoveBehavior(category, behavior)}
-                          >
-                            <CloseIcon fontSize="small" />
-                          </IconButton>
-                        </Box>
-                      </ListItem>
-                    )
-                  })}
-                </List>
-              )}
-            </Box>
+              {t('create-role')}
+            </Button>
           </Box>
         </Box>
+      )}
 
-        {/* Action Buttons at Bottom */}
-        <Box sx={{ mt: 4, display: 'flex', justifyContent: 'flex-end', gap: 2 }}>
-          <Button variant="outlined" color="inherit" onClick={onCancel} sx={{ minWidth: 120 }}>
+      {/* Basic Information Section */}
+      <RoleBasicInfo
+        control={control}
+        errors={errors}
+        accounts={getAccountsWithCreateRolePermission()}
+        user={user}
+        onParentAccountChange={handleParentAccountChange}
+      />
+
+      {/* Account Scope Section */}
+      <AccountScopeSelector
+        control={control}
+        hasChildAccounts={hasChildAccounts}
+        selectedAccountsLength={selectedAccounts.length}
+        parentAccount={parentAccount}
+        accounts={getAccountsWithCreateRolePermission()}
+      />
+
+      {/* Account Hierarchy Tree - Show when specific-child or all-except is selected AND parent has children */}
+      {parentAccount && (accountScope === 'specific-child' || accountScope === 'all-except') && (
+        <RoleFormAccountHierarchyTree
+          parentAccount={parentAccount}
+          accountScope={accountScope}
+          accounts={getAllAccountsFromHierarchy()}
+          selectedAccounts={selectedAccounts}
+          expandedNodes={expandedNodes}
+          searchQuery={searchQuery}
+          onSearchQueryChange={setSearchQuery}
+          onAccountSelection={handleAccountSelection}
+          onToggleNodeExpansion={toggleNodeExpansion}
+          onSelectAllAccounts={handleSelectAllAccounts}
+          onDeselectAllAccounts={handleDeselectAllAccounts}
+          shouldShowAccount={shouldShowAccount}
+          getChildAccountsForParent={getChildAccountsForParent}
+          hasCreateRolePermission={hasCreateRolePermission}
+        />
+      )}
+
+      {/* Permission Configuration Section */}
+      <PermissionSelector
+        behaviorCategories={behaviorCategories}
+        behaviors={behaviors}
+        categoriesLoading={isLoadingCategories}
+        behaviorsLoading={isLoadingBehaviors}
+        selectedCategory={selectedCategory}
+        selectedPermissions={selectedPermissions}
+        permissionError={permissionError}
+        onCategorySelect={handleCategorySelect}
+        onBehaviorToggle={handleBehaviorToggle}
+        onBehaviorNameCheckboxChange={handleBehaviorNameCheckboxChange}
+        getAllSelectedBehaviors={getAllSelectedBehaviors}
+        handleRemoveBehavior={handleRemoveBehavior}
+        selectedCategoryBehaviors={selectedCategoryBehaviors}
+      />
+
+      {!mdScreen && (
+        <Box
+          sx={{
+            display: 'flex',
+            gap: 2,
+            mt: 2,
+            flexDirection: {
+              xs: 'column-reverse',
+              md: 'row',
+            },
+          }}
+        >
+          <Button variant="contained" color="secondary" onClick={onCancel}>
             {t('cancel')}
           </Button>
-          <Button variant="contained" disableElevation type="submit" sx={{ minWidth: 120 }}>
+          <Button
+            type="submit"
+            variant="contained"
+            disabled={!isFormValid}
+            sx={{
+              bgcolor: isFormValid ? 'primary.main' : 'grey.400',
+              '&:hover': {
+                bgcolor: isFormValid ? 'primary.dark' : 'grey.400',
+              },
+            }}
+          >
             {t('create-role')}
           </Button>
         </Box>
-      </form>
+      )}
     </Box>
   )
 }

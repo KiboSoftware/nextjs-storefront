@@ -1,32 +1,50 @@
 import React from 'react'
 
-import ArrowBackIos from '@mui/icons-material/ArrowBackIos'
-import { Box, Button, Grid, Typography, useMediaQuery, useTheme } from '@mui/material'
+import { Box, Grid } from '@mui/material'
 import { useRouter } from 'next/router'
 import { useTranslation } from 'next-i18next'
 
 import { CreateRoleTemplateStyles } from './CreateRoleTemplate.styles'
-import { RoleForm, RoleFormData } from '@/components/b2b/index'
-import { MobileB2BLayout } from '@/components/layout'
+import { RoleForm } from '@/components/b2b/index'
+import { RoleFormData } from '@/components/b2b/Role/RoleForm/components'
 import { B2BAccountHierarchyResult } from '@/lib/types'
 
 import { CustomerAccount } from '@/lib/gql/types'
-
+interface AccountUserBehaviorResult {
+  accountId: number
+  behaviors: number[]
+  isLoading: boolean
+  isError: boolean
+  isSuccess: boolean
+  error: unknown
+}
 interface CreateRoleTemplateProps {
   onBackClick?: () => void
   user?: CustomerAccount
   initialData?: B2BAccountHierarchyResult
+  behaviorCategories?: { items?: Array<{ id?: number; name?: string }> }
+  behaviors?: { items?: Array<{ id?: number; name?: string; categoryId?: number }> }
+  categoriesLoading?: boolean
+  behaviorsLoading?: boolean
+  accountUserBehaviorResults?: Array<AccountUserBehaviorResult>
+  accountUserBehaviors?: Array<unknown>
+  behaviorLoading?: boolean
 }
 
 const CreateRoleTemplate: React.FC<CreateRoleTemplateProps> = ({
   onBackClick,
   user,
   initialData,
+  behaviorCategories,
+  behaviors,
+  categoriesLoading,
+  behaviorsLoading,
+  accountUserBehaviorResults,
+  accountUserBehaviors,
+  behaviorLoading,
 }) => {
   const { t } = useTranslation('common')
-  const theme = useTheme()
   const router = useRouter()
-  const mdScreen = useMediaQuery(theme.breakpoints.up('md'))
 
   const breadcrumbList = [
     {
@@ -46,9 +64,6 @@ const CreateRoleTemplate: React.FC<CreateRoleTemplateProps> = ({
   }
 
   const handleSave = (data: RoleFormData) => {
-    // TODO: Implement the API call to save the role
-    console.log('Saving role:', data)
-
     // For now, just navigate back to the roles page
     router.push('/my-account/b2b/manage-roles')
   }
@@ -62,24 +77,6 @@ const CreateRoleTemplate: React.FC<CreateRoleTemplateProps> = ({
       <Grid item style={{ marginTop: '10px', marginBottom: '20px' }}>
         <Box sx={CreateRoleTemplateStyles.container}>
           {/* Desktop Back Button */}
-          {mdScreen && (
-            <Box sx={{ mb: 2 }}>
-              <Button
-                startIcon={<ArrowBackIos fontSize="small" />}
-                onClick={handleBackClick}
-                sx={{ color: 'text.primary', textTransform: 'none' }}
-              >
-                {t('manage-roles')}
-              </Button>
-            </Box>
-          )}
-
-          {/* Header Section */}
-          <Box sx={{ mb: 3 }}>
-            <Typography variant={mdScreen ? 'h1' : 'h2'} sx={{ mb: 1 }}>
-              {t('create-new-role') || 'Create New Role'}
-            </Typography>
-          </Box>
 
           {/* Role Form */}
           <RoleForm
@@ -87,7 +84,14 @@ const CreateRoleTemplate: React.FC<CreateRoleTemplateProps> = ({
             onCancel={handleCancel}
             user={user}
             accounts={initialData?.accounts}
-            hierarchy={initialData?.hierarchy}
+            onBackClick={handleBackClick}
+            behaviorCategories={behaviorCategories}
+            behaviors={behaviors}
+            categoriesLoading={categoriesLoading}
+            behaviorsLoading={behaviorsLoading}
+            accountUserBehaviorResults={accountUserBehaviorResults}
+            accountUserBehaviors={accountUserBehaviors}
+            behaviorLoading={behaviorLoading}
           />
         </Box>
       </Grid>
