@@ -4,5 +4,6 @@ fragment b2bRole on B2BRole  {
     name
     isSystemRole
     behaviors
+    accountIds
 } 
 `

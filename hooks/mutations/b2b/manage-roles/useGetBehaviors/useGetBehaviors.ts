@@ -69,5 +69,3 @@ export const useGetBehaviors = (initialData?: GetBehaviorsResponse) => {
     error,
   }
 }
-
-export default useGetBehaviors

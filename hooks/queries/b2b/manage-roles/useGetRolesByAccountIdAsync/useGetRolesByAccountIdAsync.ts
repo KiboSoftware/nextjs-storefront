@@ -1,17 +1,17 @@
 /**
- * @module useGetRolesAsync
+ * @module useGetRolesByAccountIdAsync
  */
 import { useQuery } from '@tanstack/react-query'
 
-import { makeGraphQLClientWithoutUserClaims } from '@/lib/gql/client'
-import { getRolesAsyncQuery } from '@/lib/gql/queries'
+import { makeGraphQLClientWithoutUserClaims, makeGraphQLClient } from '@/lib/gql/client'
+import { getRolesByAccountIdAsyncQuery } from '@/lib/gql/queries'
 import { rolesKeys } from '@/lib/react-query/queryKeys'
 
 /**
  * @hidden
  */
 
-const client = makeGraphQLClientWithoutUserClaims()
+const client = makeGraphQLClient()
 
 // Define the B2BRole interface based on the GraphQL fragment
 export interface B2BRole {
@@ -30,17 +30,17 @@ export interface GetRolesAsyncResponse {
   items?: B2BRole[]
 }
 
-const getRolesAsync = async (accountId: number): Promise<GetRolesAsyncResponse> => {
+const getRolesByAccountIdAsync = async (accountId: number): Promise<GetRolesAsyncResponse> => {
   const response = await client.request({
-    document: getRolesAsyncQuery,
+    document: getRolesByAccountIdAsyncQuery,
     variables: { accountId },
   })
 
-  return response?.getRolesAsync
+  return response?.getRolesByAccountIdAsync
 }
 
 /**
- * [Query hook] useGetRolesAsync uses the graphQL query
+ * [Query hook] useGetRolesByAccountIdAsync uses the graphQL query
  *
  * <b>getRolesAsync(accountId: Int!): GetRolesAsyncResponse</b>
  *
@@ -51,10 +51,13 @@ const getRolesAsync = async (accountId: number): Promise<GetRolesAsyncResponse> 
  * @returns 'response?.getRolesAsync', which contains list of roles with pagination info.
  */
 
-export const useGetRolesAsync = (accountId: number, initialData?: GetRolesAsyncResponse) => {
+export const useGetRolesByAccountIdAsync = (
+  accountId: number,
+  initialData?: GetRolesAsyncResponse
+) => {
   const { isLoading, isSuccess, isError, data, error } = useQuery({
     queryKey: rolesKeys.rolesByAccount(accountId),
-    queryFn: () => getRolesAsync(accountId),
+    queryFn: () => getRolesByAccountIdAsync(accountId),
     enabled: !!accountId,
     placeholderData: (previousData) => previousData ?? undefined,
     initialData,
@@ -70,4 +73,4 @@ export const useGetRolesAsync = (accountId: number, initialData?: GetRolesAsyncR
   }
 }
 
-export default useGetRolesAsync
+export default useGetRolesByAccountIdAsync

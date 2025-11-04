@@ -26,4 +26,3 @@ export { default as BuyerQuoteActions } from '@/components/b2b/BuyerQuoteActions
 
 // B2B Roles
 export { default as RoleForm } from './Role/RoleForm/RoleForm'
-export type { RoleFormData } from './Role/RoleForm/RoleForm'

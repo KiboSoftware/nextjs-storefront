@@ -10,6 +10,22 @@ export interface B2BAccountHierarchyResult {
   hierarchy: HierarchyTree[]
 }
 
+export interface B2BRole {
+  id: number
+  name?: string
+  isSystemRole?: boolean
+  accountIds?: number[]
+  behaviors?: any[]
+}
+
+export interface B2BRoleInput {
+  id?: number
+  name?: string
+  isSystemRole?: boolean
+  behaviors?: number[]
+  accountIds?: number[]
+}
+
 export interface AddChildAccountProps {
   isAddingAccountToChild: boolean
   accounts: any[]
