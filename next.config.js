@@ -4,7 +4,6 @@ const { i18n } = require('./next-i18next.config')
 
 const LOCATION_COOKIE = 'kibo_purchase_location'
 const DEFAULT_WISHLIST_NAME = 'default-wishlist'
-
 module.exports = {
   reactStrictMode: false,
   compiler: {
@@ -34,6 +33,8 @@ module.exports = {
   },
   publicRuntimeConfig: {
     currentUrl: process.env.CURRENT_DOMAIN,
+    chatwootSiteToken: process.env.CHATWOOT_SITE_TOKEN,
+    chatwootBaseUrl: process.env.CHATWOOT_BASE_URL || 'https://app.chatwoot.com',
     metaData: {
       siteTitle: 'Kibo Commerce',
       defaultTitle: 'Storefront',

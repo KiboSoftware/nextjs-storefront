@@ -1,4 +1,4 @@
-import { SyntheticEvent } from 'react'
+import { SyntheticEvent, useState } from 'react'
 
 import { SvgIconComponent } from '@mui/icons-material'
 import Image, { ImageProps } from 'next/image'
@@ -12,17 +12,24 @@ interface KiboImageProps extends ImageProps {
 
 const errorImage = { image: DefaultImage }
 
-const onImageError = (
-  event: SyntheticEvent<HTMLImageElement, Event> & {
-    target: HTMLImageElement
-  }
-) => {
-  const { target } = event
-  target.src = errorImage.image
-}
-
 const KiboImage = (props: KiboImageProps) => {
-  errorImage.image = props.errorimage
+  const [hasError, setHasError] = useState(false)
+
+  const onImageError = (
+    event: SyntheticEvent<HTMLImageElement, Event> & {
+      target: HTMLImageElement
+    }
+  ) => {
+    if (!hasError) {
+      setHasError(true)
+      const { target } = event
+      target.src = errorImage.image?.src
+    }
+  }
+  const { src, ...rest } = props
+  if (!src || hasError) {
+    return <Image {...rest} src={errorImage.image?.src} alt={props.alt} />
+  }
   return (
     <Image
       {...props}
