@@ -1,4 +1,4 @@
-import React, { useMemo } from 'react'
+import React from 'react'
 
 import { GetServerSidePropsContext, NextApiRequest, NextApiResponse, NextPage } from 'next'
 import { useRouter } from 'next/router'
@@ -6,10 +6,15 @@ import { serverSideTranslations } from 'next-i18next/serverSideTranslations'
 
 import { CreateRoleTemplate } from '@/components/page-templates'
 import { useAuthContext } from '@/context'
-import { useGetBehaviorCategories } from '@/hooks/mutations/b2b/manage-roles/useGetBehaviorCategories/useGetBehaviorCategories'
-import { useGetBehaviors } from '@/hooks/mutations/b2b/manage-roles/useGetBehaviors/useGetBehaviors'
-import { useGetMultipleB2BAccountUserBehaviors } from '@/hooks/queries/b2b/manage-roles/useGetB2BAccountUserBehaviors/useGetB2BAccountUserBehaviors'
-import { getB2BAccountHierarchy, getCurrentUser } from '@/lib/api/operations'
+import {
+  getB2BAccountHierarchy,
+  getCurrentUser,
+  getBehaviorCategories,
+  getBehaviors,
+  getMultipleB2BAccountUserBehaviors,
+} from '@/lib/api/operations'
+import type { BehaviorCategory } from '@/lib/api/operations/get-behavior-categories'
+import type { Behavior } from '@/lib/api/operations/get-behaviors'
 import { B2BAccountHierarchyResult } from '@/lib/types'
 
 import { CustomerAccount } from '@/lib/gql/types'
@@ -17,29 +22,52 @@ import { CustomerAccount } from '@/lib/gql/types'
 interface CreateRolePageProps {
   customerAccount?: CustomerAccount
   initialData?: B2BAccountHierarchyResult
+  behaviorCategories?: BehaviorCategory[]
+  behaviors?: Behavior[]
+  accountUserBehaviors?: Record<number, number[]>
 }
 
 export async function getServerSideProps(context: GetServerSidePropsContext) {
   const { locale, req, res } = context
 
-  const hierarchyResponse = await getB2BAccountHierarchy(
-    req as NextApiRequest,
-    res as NextApiResponse
-  )
+  const [hierarchyResponse, currentUserResponse, behaviorCategoriesResponse, behaviorsResponse] =
+    await Promise.all([
+      getB2BAccountHierarchy(req as NextApiRequest, res as NextApiResponse),
+      getCurrentUser(req as NextApiRequest, res as NextApiResponse),
+      getBehaviorCategories(req as NextApiRequest, res as NextApiResponse),
+      getBehaviors(req as NextApiRequest, res as NextApiResponse),
+    ])
 
-  const response = await getCurrentUser(req as NextApiRequest, res as NextApiResponse)
+  // Get account IDs from hierarchy
+  const accountIds = hierarchyResponse?.accounts?.map((account) => account.id).filter(Boolean) || []
+
+  // Fetch behaviors for all accounts
+  const accountUserBehaviors = await getMultipleB2BAccountUserBehaviors(
+    req as NextApiRequest,
+    res as NextApiResponse,
+    accountIds as number[]
+  )
 
   return {
     props: {
-      customerAccount: response?.customerAccount,
+      customerAccount: currentUserResponse?.customerAccount,
       initialData: hierarchyResponse,
+      behaviorCategories: behaviorCategoriesResponse?.items || [],
+      behaviors: behaviorsResponse?.items || [],
+      accountUserBehaviors: accountUserBehaviors || {},
       ...(await serverSideTranslations(locale as string, ['common'])),
     },
   }
 }
 
 const CreateRolePage: NextPage<CreateRolePageProps> = (props) => {
-  const { customerAccount: customerAccountFromServer, initialData } = props
+  const {
+    customerAccount: customerAccountFromServer,
+    initialData,
+    behaviorCategories = [],
+    behaviors = [],
+    accountUserBehaviors = {},
+  } = props
   const router = useRouter()
 
   const { user: customerAccountFromClient } = useAuthContext()
@@ -49,26 +77,17 @@ const CreateRolePage: NextPage<CreateRolePageProps> = (props) => {
     ...customerAccountFromClient,
   } as CustomerAccount
 
-  // Fetch behavior categories and behaviors
-  const { behaviorCategories, isLoading: categoriesLoading } = useGetBehaviorCategories()
-  const { behaviors, isLoading: behaviorsLoading } = useGetBehaviors()
-
-  // Get account IDs for multiple account user behaviors query
-  const accountIds = useMemo(
-    () => (initialData?.accounts?.map((account) => account.id).filter(Boolean) as number[]) || [],
-    [initialData?.accounts]
+  // Convert accountUserBehaviors Record to array format expected by RoleForm
+  const accountUserBehaviorResults = Object.entries(accountUserBehaviors).map(
+    ([accountId, behaviors]) => ({
+      accountId: Number(accountId),
+      behaviors,
+      isLoading: false,
+      isError: false,
+      isSuccess: true,
+      error: null,
+    })
   )
-  const userId = customerAccount?.userId || ''
-
-  // Fetch user behaviors for multiple accounts
-  const {
-    results: accountUserBehaviorResults,
-    allBehaviors: accountUserBehaviors,
-    isLoading: behaviorLoading,
-  } = useGetMultipleB2BAccountUserBehaviors({
-    accountIds,
-    userId: userId as string,
-  })
 
   const handleBackClick = () => {
     router.push('/my-account/b2b/manage-roles')
@@ -79,13 +98,13 @@ const CreateRolePage: NextPage<CreateRolePageProps> = (props) => {
       onBackClick={handleBackClick}
       user={customerAccount}
       initialData={initialData}
-      behaviorCategories={behaviorCategories}
-      behaviors={behaviors}
-      categoriesLoading={categoriesLoading || false}
-      behaviorsLoading={behaviorsLoading || false}
+      behaviorCategories={{ items: behaviorCategories }}
+      behaviors={{ items: behaviors }}
+      categoriesLoading={false}
+      behaviorsLoading={false}
       accountUserBehaviorResults={accountUserBehaviorResults}
-      accountUserBehaviors={accountUserBehaviors}
-      behaviorLoading={behaviorLoading || false}
+      accountUserBehaviors={Object.values(accountUserBehaviors).flat()}
+      behaviorLoading={false}
     />
   )
 }

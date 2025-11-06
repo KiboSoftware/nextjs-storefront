@@ -205,6 +205,7 @@
   "including-parent": "including parent",
   "role-creation-failed": "Failed to create role. Please try again.",
   "no-permission": "No permission",
+  "role-created-successfully": "Role Created Successfully",
 
   "time-filter": "Time Filter",
   "last-30-days": "Last 30 days",
