@@ -19,20 +19,13 @@ export interface B2BRole {
   name?: string
   isSystemRole?: boolean
   behaviors?: number[]
+  accountIds?: number[]
 }
 
-interface UseGetRoleByIdAsyncParams {
-  accountId: number
-  roleId: number
-}
-
-const getRoleByIdAsync = async ({
-  accountId,
-  roleId,
-}: UseGetRoleByIdAsyncParams): Promise<B2BRole> => {
+const getRoleByIdAsync = async ({ roleId }: any): Promise<B2BRole> => {
   const response = await client.request({
     document: getRoleByRoleIdAsyncQuery,
-    variables: { accountId, roleId },
+    variables: { roleId },
   })
 
   return response?.getRoleByRoleIdAsync
@@ -50,11 +43,11 @@ const getRoleByIdAsync = async ({
  * @returns 'response?.getRoleByIdAsync', which contains the role details.
  */
 
-export const useGetRoleByIdAsync = (accountId: number, roleId: number, initialData?: B2BRole) => {
+export const useGetRoleByIdAsync = (roleId: number, initialData?: B2BRole) => {
   const { isLoading, isSuccess, isError, data, error } = useQuery({
-    queryKey: rolesKeys.roleById(accountId, roleId),
-    queryFn: () => getRoleByIdAsync({ accountId, roleId }),
-    enabled: !!accountId && !!roleId,
+    queryKey: rolesKeys.roleById(roleId),
+    queryFn: () => getRoleByIdAsync({ roleId }),
+    enabled: !!roleId,
     placeholderData: (previousData) => previousData ?? undefined,
     initialData,
     retry: 0,

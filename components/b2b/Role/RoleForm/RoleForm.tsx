@@ -11,6 +11,7 @@ import * as yup from 'yup'
 import {
   AccountScopeSelector,
   RoleFormAccountHierarchyTree,
+  RoleAccountHierarchyView,
   PermissionSelector,
   RoleBasicInfo,
   RoleFormData,
@@ -42,6 +43,12 @@ interface RoleFormProps {
   behaviors?: { items?: Array<{ id?: number; name?: string; categoryId?: number }> }
   accountUserBehaviorResults?: AccountUserBehaviorResult[]
   accountUserBehaviors?: Array<unknown>
+  behaviorLoading?: boolean
+  isReadOnly?: boolean
+  initialData?: RoleFormData
+  pageTitle?: string
+  isLoading?: boolean
+  roleAccountIds?: number[]
 }
 
 const useRoleFormSchema = () => {
@@ -61,6 +68,11 @@ const RoleForm: React.FC<RoleFormProps> = ({
   behaviorCategories,
   behaviors,
   accountUserBehaviorResults,
+  isReadOnly = false,
+  initialData,
+  pageTitle,
+  isLoading = false,
+  roleAccountIds = [],
 }) => {
   const { t } = useTranslation('common')
 
@@ -98,7 +110,7 @@ const RoleForm: React.FC<RoleFormProps> = ({
     reset,
     watch,
   } = useForm<RoleFormData>({
-    defaultValues: {
+    defaultValues: initialData || {
       roleName: '',
       parentAccount: '',
       accountScope: '',
@@ -401,7 +413,7 @@ const RoleForm: React.FC<RoleFormProps> = ({
           </Box>
           {!mdScreen && (
             <Box sx={{ ...styles.createRoleTitle }}>
-              <Typography variant="h2">{t('create-new-role')}</Typography>
+              <Typography variant="h2">{pageTitle || t('create-new-role')}</Typography>
             </Box>
           )}
         </Stack>
@@ -416,24 +428,28 @@ const RoleForm: React.FC<RoleFormProps> = ({
             mt: 3,
           }}
         >
-          <Typography variant="h1">{t('create-new-role')}</Typography>
+          <Typography variant="h1">{pageTitle || t('create-new-role')}</Typography>
           <Box sx={{ display: 'flex', gap: 2 }}>
-            <Button variant="contained" color="secondary" onClick={onCancel}>
-              {t('cancel')}
-            </Button>
-            <Button
-              type="submit"
-              variant="contained"
-              disabled={!isFormValid}
-              sx={{
-                bgcolor: isFormValid ? 'primary.main' : 'grey.400',
-                '&:hover': {
-                  bgcolor: isFormValid ? 'primary.dark' : 'grey.400',
-                },
-              }}
-            >
-              {t('create-role')}
-            </Button>
+            {!isReadOnly && (
+              <>
+                <Button variant="contained" color="secondary" onClick={onCancel}>
+                  {t('cancel')}
+                </Button>
+                <Button
+                  type="submit"
+                  variant="contained"
+                  disabled={!isFormValid || isLoading}
+                  sx={{
+                    bgcolor: isFormValid ? 'primary.main' : 'grey.400',
+                    '&:hover': {
+                      bgcolor: isFormValid ? 'primary.dark' : 'grey.400',
+                    },
+                  }}
+                >
+                  {t('create-role')}
+                </Button>
+              </>
+            )}
           </Box>
         </Box>
       )}
@@ -444,6 +460,7 @@ const RoleForm: React.FC<RoleFormProps> = ({
         errors={errors}
         accounts={accountsWithPermission}
         onParentAccountChange={handleParentAccountChange}
+        isReadOnly={isReadOnly}
       />
 
       {/* Account Scope Section */}
@@ -461,7 +478,16 @@ const RoleForm: React.FC<RoleFormProps> = ({
             onAccountsChange={handleAccountsChange}
             accountUserBehaviorResults={accountUserBehaviorResults}
           />
-        )}
+      )}
+
+      {/* Account Hierarchy View Section - Shows which accounts the role is applied to */}
+      {isReadOnly && roleAccountIds && roleAccountIds.length > 0 && (
+        <RoleAccountHierarchyView
+          accounts={accounts}
+          selectedAccountIds={roleAccountIds}
+          parentAccountId={Number(parentAccount)}
+        />
+      )}
 
       {/* Permission Configuration Section */}
       <PermissionSelector
@@ -475,7 +501,7 @@ const RoleForm: React.FC<RoleFormProps> = ({
         handleRemoveBehavior={handleRemoveBehavior}
       />
 
-      {!mdScreen && (
+      {!mdScreen && !isReadOnly && (
         <Box
           sx={{
             display: 'flex',
@@ -493,7 +519,7 @@ const RoleForm: React.FC<RoleFormProps> = ({
           <Button
             type="submit"
             variant="contained"
-            disabled={!isFormValid}
+            disabled={!isFormValid || isLoading}
             sx={{
               bgcolor: isFormValid ? 'primary.main' : 'grey.400',
               '&:hover': {

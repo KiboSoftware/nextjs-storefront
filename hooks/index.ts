@@ -63,6 +63,7 @@ export * from './queries/b2b/quotes/useGetQuoteById/useGetQuoteById'
 
 export * from './queries/b2b/useGetAccountsByUser/useGetAccountsByUser'
 export * from './queries/b2b/manage-roles/useGetB2BAccountUserBehaviors/useGetB2BAccountUserBehaviors'
+export * from './queries/b2b/manage-roles/useGetRoleByRoleIdAsync/useGetRoleByRoleIdAsync'
 
 // Custom hooks
 export * from './custom/useDebounce/useDebounce'

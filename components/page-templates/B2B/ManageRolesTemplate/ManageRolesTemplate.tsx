@@ -1,12 +1,13 @@
-import React, { useState } from 'react'
+import React, { useState, useEffect, ChangeEvent } from 'react'
 
 import {
   AddCircleOutline as AddCircleOutlineIcon,
   ChevronLeft as ChevronLeftIcon,
   Visibility as VisibilityIcon,
   Edit as EditIcon,
-  FileCopy as FileCopyIcon,
   Delete as DeleteIcon,
+  MoreVert as MoreVertIcon,
+  ContentCopy as ContentCopyIcon,
 } from '@mui/icons-material'
 import {
   Box,
@@ -14,6 +15,11 @@ import {
   Chip,
   Grid,
   IconButton,
+  Menu,
+  MenuItem,
+  ListItemIcon,
+  ListItemText,
+  Pagination,
   Table,
   TableBody,
   TableCell,
@@ -31,6 +37,13 @@ import { useRouter } from 'next/router'
 import { useTranslation } from 'next-i18next'
 
 import { SearchBar } from '@/components/common'
+import { ConfirmationDialog } from '@/components/dialogs'
+import { useAuthContext, useModalContext, useSnackbarContext } from '@/context'
+import { useDeleteRoleAsync } from '@/hooks/mutations/b2b/manage-roles/useDeleteRoleAsync/useDeleteRoleAsync'
+import { useGetRolesByAccountIdAsync } from '@/hooks/queries/b2b/manage-roles/useGetRolesByAccountIdAsync/useGetRolesByAccountIdAsync'
+
+import type { GetRolesAsyncResponse } from '@/lib/api/operations/get-roles-by-account-id'
+import type { CustomerAccount } from '@/lib/gql/types'
 
 const BackButtonLink = styled(Link)(({ theme }: { theme: Theme }) => ({
   typography: 'body2',
@@ -47,67 +60,90 @@ const SearchBoxContainer = styled(Box)({
   width: '100%',
 })
 
+const PaginationContainer = styled(Box)(({ theme }: { theme: Theme }) => ({
+  display: 'flex',
+  justifyContent: 'space-between',
+  color: theme.palette.grey[600],
+  alignItems: 'center',
+  margin: '20px 0',
+}))
+
 interface Role {
   id: string
   name: string
-  classification: 'System' | 'Custom'
+  roleType: 'System' | 'Custom'
   accountScope: string
   assignedUsers: number
 }
 
-const initialRoles: Role[] = [
-  {
-    id: '1',
-    name: 'Admin',
-    classification: 'System',
-    accountScope: 'All child accounts',
-    assignedUsers: 5,
-  },
-  {
-    id: '2',
-    name: 'Purchaser',
-    classification: 'System',
-    accountScope: 'All child accounts',
-    assignedUsers: 12,
-  },
-  {
-    id: '3',
-    name: 'Non-Purchaser',
-    classification: 'System',
-    accountScope: 'All child accounts',
-    assignedUsers: 8,
-  },
-  {
-    id: '4',
-    name: 'Admin_Copy',
-    classification: 'Custom',
-    accountScope: 'All child accounts',
-    assignedUsers: 0,
-  },
-  {
-    id: '5',
-    name: 'Purchaser_Copy',
-    classification: 'Custom',
-    accountScope: 'All child accounts',
-    assignedUsers: 0,
-  },
-]
-
 interface ManageRolesTemplateProps {
+  customerAccount?: CustomerAccount
+  initialData?: GetRolesAsyncResponse
   onAccountTitleClick?: () => void
 }
 
-const ManageRolesTemplate = ({ onAccountTitleClick }: ManageRolesTemplateProps) => {
+const ManageRolesTemplate = ({
+  customerAccount,
+  initialData,
+  onAccountTitleClick,
+}: ManageRolesTemplateProps) => {
   const { t } = useTranslation('common')
   const theme = useTheme()
   const router = useRouter()
   const mdScreen = useMediaQuery(theme.breakpoints.up('md'))
+  const { showModal } = useModalContext()
+  const { showSnackbar } = useSnackbarContext()
+  const { user } = useAuthContext()
+  const { deleteRole } = useDeleteRoleAsync()
 
-  const [roles, setRoles] = useState<Role[]>(initialRoles)
+  const [roles, setRoles] = useState<Role[]>([])
   const [searchQuery, setSearchQuery] = useState('')
+  const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null)
+  const [selectedRoleId, setSelectedRoleId] = useState<string | null>(null)
+  const [currentPage, setCurrentPage] = useState(1)
+
+  const pageSize = 10
+
+  // Fetch roles from API with initial server-side data
+  const {
+    roles: rolesData,
+    isLoading,
+    isError,
+  } = useGetRolesByAccountIdAsync(customerAccount?.id as number, initialData)
+
+  // Transform API response to Role interface when data is loaded
+  useEffect(() => {
+    if (rolesData?.items) {
+      const transformedRoles: Role[] = rolesData.items.map((item) => ({
+        id: item.id?.toString() || '',
+        name: item.name || '',
+        roleType: item.isSystemRole ? 'System' : 'Custom',
+        accountScope: 'All child accounts', // This might need to be calculated based on accountIds
+        assignedUsers: 0, // This data is not in the API response, might need another endpoint
+      }))
+      setRoles(transformedRoles)
+    }
+  }, [rolesData])
+
+  const handleMenuOpen = (event: React.MouseEvent<HTMLElement>, roleId: string) => {
+    setAnchorEl(event.currentTarget)
+    setSelectedRoleId(roleId)
+  }
+
+  const handleMenuClose = () => {
+    setAnchorEl(null)
+    setSelectedRoleId(null)
+  }
+
+  const selectedRole = roles.find((role) => role.id === selectedRoleId)
 
   const handleSearch = (searchText: string) => {
     setSearchQuery(searchText)
+    setCurrentPage(1) // Reset to first page on search
+  }
+
+  const handlePageChange = (event: ChangeEvent<any>, page: number) => {
+    setCurrentPage(page)
   }
 
   const handleAddNewRole = () => {
@@ -115,28 +151,85 @@ const ManageRolesTemplate = ({ onAccountTitleClick }: ManageRolesTemplateProps) 
   }
 
   const handleViewRole = (roleId: string) => {
-    // TODO: Implement view role details
-    console.log('View role:', roleId)
+    handleMenuClose()
+    // Navigate to create role page in readonly mode
+    router.push(`/my-account/b2b/manage-roles/create?roleId=${roleId}&mode=view`)
   }
 
   const handleEditRole = (roleId: string) => {
+    handleMenuClose()
     // TODO: Implement edit role
     console.log('Edit role:', roleId)
   }
 
   const handleCopyRole = (roleId: string) => {
-    // TODO: Implement copy role
-    console.log('Copy role:', roleId)
+    handleMenuClose()
+    const roleToCopy = roles.find((role) => role.id === roleId)
+    if (roleToCopy) {
+      // Create a copy of the role with a new ID and _Copy suffix
+      const maxId = Math.max(...roles.map((r) => parseInt(r.id)), 0)
+      const newRole: Role = {
+        ...roleToCopy,
+        id: (maxId + 1).toString(),
+        name: `${roleToCopy.name}_Copy`,
+        roleType: 'Custom',
+        assignedUsers: 0,
+      }
+      setRoles((prevRoles) => [...prevRoles, newRole])
+      showSnackbar(t('role-copied-successfully'), 'success')
+    }
   }
 
   const handleDeleteRole = (roleId: string) => {
-    // TODO: Implement delete role with confirmation
-    console.log('Delete role:', roleId)
+    handleMenuClose()
+    // Show confirmation dialog before deleting
+    showModal({
+      Component: ConfirmationDialog,
+      props: {
+        contentText: t('delete-role-confirmation-message'),
+        primaryButtonText: t('delete'),
+        onConfirm: async () => {
+          try {
+            // Call API to delete role
+            await deleteRole.mutateAsync({
+              roleId: parseInt(roleId),
+            })
+
+            // Remove role from local state
+            setRoles((prevRoles) => prevRoles.filter((role) => role.id !== roleId))
+
+            // Show success message
+            showSnackbar(t('role-deleted-successfully'), 'success')
+          } catch (error) {
+            console.error('Error deleting role:', error)
+            showSnackbar(t('error-deleting-role'), 'error')
+          }
+        },
+      },
+    })
   }
 
   const filteredRoles = roles.filter((role: Role) =>
     role.name.toLowerCase().includes(searchQuery.toLowerCase())
   )
+
+  // Pagination logic
+  const totalCount = filteredRoles.length
+  const pageCount = Math.ceil(totalCount / pageSize)
+  const startIndex = (currentPage - 1) * pageSize
+  const endIndex = startIndex + pageSize
+  const paginatedRoles = filteredRoles.slice(startIndex, endIndex)
+
+  // Helper function for displaying pagination text
+  const getPerPageItemText = () => {
+    if (totalCount === 0) return ''
+    const start = startIndex + 1
+    const end = Math.min(endIndex, totalCount)
+    if (mdScreen) {
+      return `${t('displaying')} ${start} - ${end} of ${totalCount}`
+    }
+    return `${start} - ${end} of ${totalCount}`
+  }
 
   return (
     <Grid>
@@ -180,7 +273,7 @@ const ManageRolesTemplate = ({ onAccountTitleClick }: ManageRolesTemplateProps) 
         <SearchBoxContainer>
           <SearchBar
             onSearch={handleSearch}
-            placeHolder={t('search-roles') || 'Search roles'}
+            placeHolder={t('search-roles')}
             searchTerm={searchQuery}
             showClearButton={true}
           />
@@ -188,112 +281,135 @@ const ManageRolesTemplate = ({ onAccountTitleClick }: ManageRolesTemplateProps) 
 
         {/* Roles Table */}
         <Table>
-          {!filteredRoles?.length ? (
+          {isLoading ? (
+            <caption style={{ textAlign: 'center' }}>{t('loading')}</caption>
+          ) : isError ? (
+            <caption style={{ textAlign: 'center' }}>{t('error-loading-roles')}</caption>
+          ) : !filteredRoles?.length ? (
             <caption style={{ textAlign: 'center' }}>{t('no-record-found')}</caption>
           ) : null}
           <TableHead>
             <TableRow style={{ backgroundColor: theme.palette.grey[100] }}>
               <TableCell>{t('role-name')}</TableCell>
-              <TableCell>{t('classification')}</TableCell>
-              <TableCell>{t('account-scope')}</TableCell>
+              <TableCell>{t('role-type')}</TableCell>
               <TableCell>{t('assigned-users')}</TableCell>
               <TableCell></TableCell>
             </TableRow>
           </TableHead>
           <TableBody>
-            {filteredRoles.map((role: Role) => (
-              <TableRow key={role.id}>
-                <TableCell sx={{ fontWeight: 500 }}>{role.name}</TableCell>
-                <TableCell>
-                  <Chip
-                    label={role.classification}
-                    size="small"
-                    sx={{
-                      backgroundColor: role.classification === 'System' ? '#e3f2fd' : '#f3e5f5',
-                      color: role.classification === 'System' ? '#1565c0' : '#6a1b9a',
-                      fontSize: '0.75rem',
-                      fontWeight: 500,
-                    }}
-                  />
-                </TableCell>
-                <TableCell>{role.accountScope}</TableCell>
-                <TableCell>
-                  {role.assignedUsers} {t('users')}
-                </TableCell>
-                <TableCell>
-                  <Box sx={{ display: 'flex', gap: 0.5, justifyContent: 'flex-end' }}>
-                    {/* System roles: View Details and Copy */}
-                    {role.classification === 'System' && (
-                      <>
-                        <Tooltip title={t('view-details') || 'View Details'}>
-                          <IconButton
-                            size="small"
-                            onClick={() => handleViewRole(role.id)}
-                            aria-label="view-role"
-                          >
-                            <VisibilityIcon fontSize="small" />
-                          </IconButton>
-                        </Tooltip>
-                        <Tooltip title={t('copy-role') || 'Copy Role'}>
-                          <IconButton
-                            size="small"
-                            onClick={() => handleCopyRole(role.id)}
-                            aria-label="copy-role"
-                          >
-                            <FileCopyIcon fontSize="small" />
-                          </IconButton>
-                        </Tooltip>
-                      </>
-                    )}
-
-                    {/* Custom roles: View, Edit, Copy, and Delete */}
-                    {role.classification === 'Custom' && (
-                      <>
-                        <Tooltip title={t('view-details') || 'View Details'}>
-                          <IconButton
-                            size="small"
-                            onClick={() => handleViewRole(role.id)}
-                            aria-label="view-role"
-                          >
-                            <VisibilityIcon fontSize="small" />
-                          </IconButton>
-                        </Tooltip>
-                        <Tooltip title={t('edit-role') || 'Edit Role'}>
-                          <IconButton
-                            size="small"
-                            onClick={() => handleEditRole(role.id)}
-                            aria-label="edit-role"
-                          >
-                            <EditIcon fontSize="small" />
-                          </IconButton>
-                        </Tooltip>
-                        <Tooltip title={t('copy-role') || 'Copy Role'}>
-                          <IconButton
-                            size="small"
-                            onClick={() => handleCopyRole(role.id)}
-                            aria-label="copy-role"
-                          >
-                            <FileCopyIcon fontSize="small" />
-                          </IconButton>
-                        </Tooltip>
-                        <Tooltip title={t('delete-role') || 'Delete Role'}>
-                          <IconButton
-                            size="small"
-                            onClick={() => handleDeleteRole(role.id)}
-                            aria-label="delete-role"
-                            sx={{ color: 'error.main' }}
-                          >
-                            <DeleteIcon fontSize="small" />
-                          </IconButton>
-                        </Tooltip>
-                      </>
-                    )}
-                  </Box>
-                </TableCell>
-              </TableRow>
-            ))}
+            {!isLoading &&
+              paginatedRoles.map((role: Role) => (
+                <TableRow key={role.id}>
+                  <TableCell sx={{ fontWeight: 500 }}>{role.name}</TableCell>
+                  <TableCell>
+                    <Chip
+                      label={role.roleType}
+                      size="small"
+                      sx={{
+                        backgroundColor: role.roleType === 'System' ? '#e3f2fd' : '#f3e5f5',
+                        color: role.roleType === 'System' ? '#1565c0' : '#6a1b9a',
+                        fontSize: '0.75rem',
+                        fontWeight: 500,
+                      }}
+                    />
+                  </TableCell>
+                  <TableCell>
+                    {role.assignedUsers} {t('users')}
+                  </TableCell>
+                  <TableCell align="right">
+                    <IconButton
+                      size="small"
+                      onClick={(e) => handleMenuOpen(e, role.id)}
+                      aria-label="actions"
+                    >
+                      <MoreVertIcon fontSize="small" />
+                    </IconButton>
+                  </TableCell>
+                </TableRow>
+              ))}
           </TableBody>
         </Table>
+
+        {/* Pagination */}
+        {!isLoading && totalCount > 0 && (
+          <PaginationContainer>
+            <Pagination
+              count={pageCount}
+              page={currentPage}
+              shape="rounded"
+              onChange={handlePageChange}
+              size="small"
+            />
+            <Typography variant="body2">{getPerPageItemText()}</Typography>
+          </PaginationContainer>
+        )}
+
+        {/* Actions Menu */}
+        <Menu
+          anchorEl={anchorEl}
+          open={Boolean(anchorEl)}
+          onClose={handleMenuClose}
+          anchorOrigin={{
+            vertical: 'bottom',
+            horizontal: 'right',
+          }}
+          transformOrigin={{
+            vertical: 'top',
+            horizontal: 'right',
+          }}
+        >
+          <MenuItem onClick={() => selectedRoleId && handleViewRole(selectedRoleId)}>
+            <ListItemIcon>
+              <VisibilityIcon fontSize="small" />
+            </ListItemIcon>
+            <ListItemText>{t('view-details')}</ListItemText>
+          </MenuItem>
+
+          {selectedRole?.roleType === 'Custom' && (
+            <MenuItem onClick={() => selectedRoleId && handleEditRole(selectedRoleId)}>
+              <ListItemIcon>
+                <EditIcon fontSize="small" />
+              </ListItemIcon>
+              <ListItemText>{t('edit-role')}</ListItemText>
+            </MenuItem>
+          )}
+
+          {selectedRole?.roleType === 'Custom' && (
+            <MenuItem onClick={() => selectedRoleId && handleCopyRole(selectedRoleId)}>
+              <ListItemIcon>
+                <ContentCopyIcon fontSize="small" />
+              </ListItemIcon>
+              <ListItemText>{t('copy-role')}</ListItemText>
+            </MenuItem>
+          )}
+
+          {selectedRole?.roleType === 'Custom' && (
+            <Tooltip
+              title={selectedRole.assignedUsers > 0 ? t('cannot-delete-role-with-users') : ''}
+              placement="left"
+            >
+              <span>
+                <MenuItem
+                  onClick={() => selectedRoleId && handleDeleteRole(selectedRoleId)}
+                  disabled={selectedRole.assignedUsers > 0}
+                  sx={{
+                    color: selectedRole.assignedUsers > 0 ? 'text.disabled' : 'error.main',
+                  }}
+                >
+                  <ListItemIcon>
+                    <DeleteIcon
+                      fontSize="small"
+                      sx={{
+                        color: selectedRole.assignedUsers > 0 ? 'text.disabled' : 'error.main',
+                      }}
+                    />
+                  </ListItemIcon>
+                  <ListItemText>{t('delete-role')}</ListItemText>
+                </MenuItem>
+              </span>
+            </Tooltip>
+          )}
+        </Menu>
       </Grid>
     </Grid>
   )
