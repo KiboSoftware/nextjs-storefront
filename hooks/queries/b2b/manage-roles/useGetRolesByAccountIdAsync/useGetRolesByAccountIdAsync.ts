@@ -2,7 +2,8 @@
  * @module useGetRolesByAccountIdAsync
  */
 import { useQuery } from '@tanstack/react-query'
-import { makeGraphQLClientWithoutUserClaims, makeGraphQLClient } from '@/lib/gql/client'
+
+import { makeGraphQLClient } from '@/lib/gql/client'
 import { getRolesByAccountIdAsyncQuery } from '@/lib/gql/queries'
 import { rolesKeys } from '@/lib/react-query/queryKeys'
 /**

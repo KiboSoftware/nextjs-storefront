@@ -218,7 +218,6 @@
   "primary": "Primary",
   "including-parent": "including parent",
   "role-creation-failed": "Failed to create role. Please try again.",
-  "role-created-successfully": "Role Created Successfully",
   "role-created-but-failed-to-apply-to-future-children": "Role created successfully, but failed to apply to future children",
 
   "time-filter": "Time Filter",
