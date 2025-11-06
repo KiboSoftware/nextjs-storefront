@@ -526,19 +526,12 @@ const RoleForm: React.FC<RoleFormProps> = ({
         id: 0,
       },
     }
-
     try {
       // Execute role creation with single API call
       const createdRole = await createRole.mutateAsync(payload)
-
       // Call onSave callback if provided
-      if (onSave) {
-        onSave({
-          ...data,
-          selectedAccounts,
-          selectedPermissions,
-        })
-      }
+      showSnackbar(t('role-created-successfully'), 'success')
+      router.push('/my-account/b2b/manage-roles')
     } catch (error) {
       console.error('Error creating role:', error)
       // Handle error - you might want to show an error message to the user
