@@ -13,3 +13,9 @@ export { default as getB2BUsers } from './get-b2b-users'
 export { default as getCustomerAddresses } from './get-customer-addresses'
 export { default as getCurrentUser } from './get-current-user'
 export { default as getB2BAccount } from './get-b2b-account'
+export { getBehaviorCategories } from './get-behavior-categories'
+export { getBehaviors } from './get-behaviors'
+export {
+  getB2BAccountUserBehaviors,
+  getMultipleB2BAccountUserBehaviors,
+} from './get-b2b-account-user-behaviors'

@@ -35,19 +35,6 @@ const RoleBasicInfo: React.FC<RoleBasicInfoProps> = ({
 }) => {
   const { t } = useTranslation('common')
 
-  // Helper function to get all descendant accounts recursively
-  const getAllDescendantAccounts = (parentId: number, allAccounts: B2BAccount[]): B2BAccount[] => {
-    const directChildren = allAccounts.filter((account) => account.parentAccountId === parentId)
-    const descendants: B2BAccount[] = [...directChildren]
-
-    // Recursively get descendants of each child
-    directChildren.forEach((child) => {
-      descendants.push(...getAllDescendantAccounts(child.id, allAccounts))
-    })
-
-    return descendants
-  }
-
   return (
     <Box sx={roleBasicInfoStyles.container}>
       {/* Role Information Section */}
@@ -91,7 +78,7 @@ const RoleBasicInfo: React.FC<RoleBasicInfoProps> = ({
                 // Then call our custom handler
                 onParentAccountChange(value)
               }}
-              onBlur={(name: string, value: string) => {
+              onBlur={() => {
                 field.onBlur()
               }}
               value={field.value || ''}
@@ -101,30 +88,11 @@ const RoleBasicInfo: React.FC<RoleBasicInfoProps> = ({
               helperText={errors.parentAccount?.message}
             >
               {accounts && accounts.length > 0
-                ? (() => {
-                    // Get all descendant accounts of the logged-in user
-                    const userDescendants = user?.id
-                      ? getAllDescendantAccounts(user.id, accounts)
-                      : []
-
-                    return [
-                      ...(user?.id
-                        ? [
-                            <MenuItem key={`user-${user.id}`} value={String(user.id)}>
-                              {user.companyOrOrganization ||
-                                `${user.firstName || ''} ${user.lastName || ''}`.trim() ||
-                                user.emailAddress ||
-                                t('current-account')}
-                            </MenuItem>,
-                          ]
-                        : []),
-                      ...userDescendants.map((account) => (
-                        <MenuItem key={account.id} value={String(account.id)}>
-                          {account.companyOrOrganization || `Account ${account.id}`}
-                        </MenuItem>
-                      )),
-                    ]
-                  })()
+                ? accounts.map((account) => (
+                    <MenuItem key={account.id} value={String(account.id)}>
+                      {account.companyOrOrganization || `Account ${account.id}`}
+                    </MenuItem>
+                  ))
                 : [
                     <MenuItem key="no-accounts" value="" disabled>
                       {t('no-accounts-available')}

@@ -3,6 +3,7 @@ import React, { useEffect, useState, useCallback, useMemo } from 'react'
 import { yupResolver } from '@hookform/resolvers/yup'
 import { ArrowBackIos } from '@mui/icons-material'
 import { Box, Button, Stack, Theme, Typography, useMediaQuery } from '@mui/material'
+import { useRouter } from 'next/router'
 import { useTranslation } from 'next-i18next'
 import { useForm } from 'react-hook-form'
 import * as yup from 'yup'
@@ -15,6 +16,7 @@ import {
   RoleFormData,
 } from './components'
 import { roleFormStyles } from './RoleForm.styles'
+import { useSnackbarContext } from '@/context'
 import { useCreateRoleAsync } from '@/hooks/mutations/b2b/manage-roles/useCreateRoleAsync/useCreateRoleAsync'
 
 import { B2BAccount, CustomerAccount } from '@/lib/gql/types'
@@ -66,8 +68,11 @@ const RoleForm: React.FC<RoleFormProps> = ({
   accountUserBehaviors,
 }) => {
   const { t } = useTranslation('common')
+
+  const router = useRouter()
   const styles = roleFormStyles
   const mdScreen = useMediaQuery((theme: Theme) => theme.breakpoints.up('md'))
+  const { showSnackbar } = useSnackbarContext()
 
   // Use default values for loading states if not provided
   const isLoadingCategories = categoriesLoading || false
@@ -133,7 +138,10 @@ const RoleForm: React.FC<RoleFormProps> = ({
   // Get all accounts where user has create role permission (for parent dropdown)
   const getAccountsWithCreateRolePermission = useCallback((): B2BAccount[] => {
     if (!accounts || !accountUserBehaviorResults) return []
-    return accounts.filter((account) => hasCreateRolePermission(account.id))
+
+    const accountsWithPermission = accounts.filter((account) => hasCreateRolePermission(account.id))
+
+    return accountsWithPermission
   }, [accounts, accountUserBehaviorResults, hasCreateRolePermission])
 
   // Get all accounts from hierarchy (not just logged-in user's children)
@@ -456,19 +464,12 @@ const RoleForm: React.FC<RoleFormProps> = ({
         id: 0,
       },
     }
-
     try {
       // Execute role creation with single API call
       const createdRole = await createRole.mutateAsync(payload)
-
       // Call onSave callback if provided
-      if (onSave) {
-        onSave({
-          ...data,
-          selectedAccounts,
-          selectedPermissions,
-        })
-      }
+      showSnackbar(t('role-created-successfully'), 'success')
+      router.push('/my-account/b2b/manage-roles')
     } catch (error) {
       console.error('Error creating role:', error)
       // Handle error - you might want to show an error message to the user
