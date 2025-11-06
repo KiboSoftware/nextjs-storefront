@@ -13,15 +13,10 @@ import { rolesKeys } from '@/lib/react-query/queryKeys'
 
 const client = makeGraphQLClientWithoutUserClaims()
 
-interface DeleteRoleAsyncParams {
-  accountId: number
-  roleId: number
-}
-
-const deleteRoleAsync = async ({ accountId, roleId }: DeleteRoleAsyncParams): Promise<boolean> => {
+const deleteRoleAsync = async (roleId: any): Promise<boolean> => {
   const response = await client.request({
     document: deleteRoleAsyncMutation,
-    variables: { accountId, roleId },
+    variables: roleId,
   })
 
   return response?.deleteRoleAsync
@@ -49,12 +44,12 @@ export const useDeleteRoleAsync = () => {
       mutationFn: deleteRoleAsync,
       onSuccess: (data, variables) => {
         // Invalidate the roles list for the specific account
-        queryClient.invalidateQueries({ queryKey: rolesKeys.rolesByAccount(variables.accountId) })
+        queryClient.invalidateQueries({ queryKey: rolesKeys.rolesByAccount(variables.roleId) })
         // Invalidate all roles queries
         queryClient.invalidateQueries({ queryKey: rolesKeys.all })
         // Remove the specific role from cache
         queryClient.removeQueries({
-          queryKey: rolesKeys.roleById(variables.accountId, variables.roleId),
+          queryKey: rolesKeys.roleById(variables.roleId),
         })
       },
     }),

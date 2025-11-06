@@ -19,3 +19,4 @@ export {
   getB2BAccountUserBehaviors,
   getMultipleB2BAccountUserBehaviors,
 } from './get-b2b-account-user-behaviors'
+export { default as getRolesByAccountId } from './get-roles-by-account-id'

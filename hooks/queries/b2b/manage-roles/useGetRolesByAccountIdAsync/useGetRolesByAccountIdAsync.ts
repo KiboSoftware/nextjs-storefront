@@ -2,17 +2,13 @@
  * @module useGetRolesByAccountIdAsync
  */
 import { useQuery } from '@tanstack/react-query'
-
 import { makeGraphQLClientWithoutUserClaims, makeGraphQLClient } from '@/lib/gql/client'
 import { getRolesByAccountIdAsyncQuery } from '@/lib/gql/queries'
 import { rolesKeys } from '@/lib/react-query/queryKeys'
-
 /**
  * @hidden
  */
-
-const client = makeGraphQLClient()
-
+const client = makeGraphQLClientWithoutUserClaims()
 // Define the B2BRole interface based on the GraphQL fragment
 export interface B2BRole {
   id?: number
@@ -20,7 +16,6 @@ export interface B2BRole {
   isSystemRole?: boolean
   behaviors?: number[]
 }
-
 // Define the response type for getRolesAsync
 export interface GetRolesAsyncResponse {
   startIndex?: number
@@ -29,16 +24,13 @@ export interface GetRolesAsyncResponse {
   totalCount?: number
   items?: B2BRole[]
 }
-
 const getRolesByAccountIdAsync = async (accountId: number): Promise<GetRolesAsyncResponse> => {
   const response = await client.request({
     document: getRolesByAccountIdAsyncQuery,
     variables: { accountId },
   })
-
   return response?.getRolesByAccountIdAsync
 }
-
 /**
  * [Query hook] useGetRolesByAccountIdAsync uses the graphQL query
  *
@@ -50,7 +42,6 @@ const getRolesByAccountIdAsync = async (accountId: number): Promise<GetRolesAsyn
  *
  * @returns 'response?.getRolesAsync', which contains list of roles with pagination info.
  */
-
 export const useGetRolesByAccountIdAsync = (
   accountId: number,
   initialData?: GetRolesAsyncResponse
@@ -63,7 +54,6 @@ export const useGetRolesByAccountIdAsync = (
     initialData,
     retry: 0,
   })
-
   return {
     roles: data,
     isLoading,
@@ -72,5 +62,4 @@ export const useGetRolesByAccountIdAsync = (
     error,
   }
 }
-
 export default useGetRolesByAccountIdAsync

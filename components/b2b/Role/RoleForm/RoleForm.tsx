@@ -11,6 +11,7 @@ import * as yup from 'yup'
 import {
   AccountScopeSelector,
   RoleFormAccountHierarchyTree,
+  RoleAccountHierarchyView,
   PermissionSelector,
   RoleBasicInfo,
   RoleFormData,
@@ -44,6 +45,11 @@ interface RoleFormProps {
   accountUserBehaviorResults?: AccountUserBehaviorResult[]
   accountUserBehaviors?: Array<unknown>
   behaviorLoading?: boolean
+  isReadOnly?: boolean
+  initialData?: RoleFormData
+  pageTitle?: string
+  isLoading?: boolean
+  roleAccountIds?: number[]
 }
 
 const useRoleFormSchema = () => {
@@ -67,6 +73,11 @@ const RoleForm: React.FC<RoleFormProps> = ({
   behaviorsLoading,
   accountUserBehaviorResults,
   accountUserBehaviors,
+  isReadOnly = false,
+  initialData,
+  pageTitle,
+  isLoading = false,
+  roleAccountIds = [],
 }) => {
   const { t } = useTranslation('common')
 
@@ -106,7 +117,7 @@ const RoleForm: React.FC<RoleFormProps> = ({
     reset,
     watch,
   } = useForm<RoleFormData>({
-    defaultValues: {
+    defaultValues: initialData || {
       roleName: '',
       parentAccount: '',
       accountScope: '',
@@ -511,7 +522,7 @@ const RoleForm: React.FC<RoleFormProps> = ({
           </Box>
           {!mdScreen && (
             <Box sx={{ ...styles.createRoleTitle }}>
-              <Typography variant="h2">{t('create-new-role')}</Typography>
+              <Typography variant="h2">{pageTitle || t('create-new-role')}</Typography>
             </Box>
           )}
         </Stack>
@@ -526,24 +537,28 @@ const RoleForm: React.FC<RoleFormProps> = ({
             mt: 3,
           }}
         >
-          <Typography variant="h1">{t('create-new-role')}</Typography>
+          <Typography variant="h1">{pageTitle || t('create-new-role')}</Typography>
           <Box sx={{ display: 'flex', gap: 2 }}>
-            <Button variant="contained" color="secondary" onClick={onCancel}>
-              {t('cancel')}
-            </Button>
-            <Button
-              type="submit"
-              variant="contained"
-              disabled={!isFormValid}
-              sx={{
-                bgcolor: isFormValid ? 'primary.main' : 'grey.400',
-                '&:hover': {
-                  bgcolor: isFormValid ? 'primary.dark' : 'grey.400',
-                },
-              }}
-            >
-              {t('create-role')}
-            </Button>
+            {!isReadOnly && (
+              <>
+                <Button variant="contained" color="secondary" onClick={onCancel}>
+                  {t('cancel')}
+                </Button>
+                <Button
+                  type="submit"
+                  variant="contained"
+                  disabled={!isFormValid || isLoading}
+                  sx={{
+                    bgcolor: isFormValid ? 'primary.main' : 'grey.400',
+                    '&:hover': {
+                      bgcolor: isFormValid ? 'primary.dark' : 'grey.400',
+                    },
+                  }}
+                >
+                  {t('create-role')}
+                </Button>
+              </>
+            )}
           </Box>
         </Box>
       )}
@@ -555,34 +570,48 @@ const RoleForm: React.FC<RoleFormProps> = ({
         accounts={getAccountsWithCreateRolePermission()}
         user={user}
         onParentAccountChange={handleParentAccountChange}
+        isReadOnly={isReadOnly}
       />
 
-      {/* Account Scope Section */}
-      <AccountScopeSelector
-        control={control}
-        hasChildAccounts={hasChildAccounts}
-        selectedAccountsLength={selectedAccounts.length}
-        parentAccount={parentAccount}
-        accounts={getAccountsWithCreateRolePermission()}
-      />
-
-      {/* Account Hierarchy Tree - Show when specific-child or all-except is selected AND parent has children */}
-      {parentAccount && (accountScope === 'specific-child' || accountScope === 'all-except') && (
-        <RoleFormAccountHierarchyTree
+      {/* Account Scope Section - Hide in readonly mode */}
+      {!isReadOnly && (
+        <AccountScopeSelector
+          control={control}
+          hasChildAccounts={hasChildAccounts}
+          selectedAccountsLength={selectedAccounts.length}
           parentAccount={parentAccount}
-          accountScope={accountScope}
+          accounts={getAccountsWithCreateRolePermission()}
+        />
+      )}
+
+      {/* Account Hierarchy Tree - Show when specific-child or all-except is selected AND parent has children - Hide in readonly mode */}
+      {!isReadOnly &&
+        parentAccount &&
+        (accountScope === 'specific-child' || accountScope === 'all-except') && (
+          <RoleFormAccountHierarchyTree
+            parentAccount={parentAccount}
+            accountScope={accountScope}
+            accounts={getAllAccountsFromHierarchy()}
+            selectedAccounts={selectedAccounts}
+            expandedNodes={expandedNodes}
+            searchQuery={searchQuery}
+            onSearchQueryChange={setSearchQuery}
+            onAccountSelection={handleAccountSelection}
+            onToggleNodeExpansion={toggleNodeExpansion}
+            onSelectAllAccounts={handleSelectAllAccounts}
+            onDeselectAllAccounts={handleDeselectAllAccounts}
+            shouldShowAccount={shouldShowAccount}
+            getChildAccountsForParent={getChildAccountsForParent}
+            hasCreateRolePermission={hasCreateRolePermission}
+          />
+        )}
+
+      {/* Account Hierarchy View Section - Shows which accounts the role is applied to */}
+      {isReadOnly && roleAccountIds && roleAccountIds.length > 0 && (
+        <RoleAccountHierarchyView
           accounts={getAllAccountsFromHierarchy()}
-          selectedAccounts={selectedAccounts}
-          expandedNodes={expandedNodes}
-          searchQuery={searchQuery}
-          onSearchQueryChange={setSearchQuery}
-          onAccountSelection={handleAccountSelection}
-          onToggleNodeExpansion={toggleNodeExpansion}
-          onSelectAllAccounts={handleSelectAllAccounts}
-          onDeselectAllAccounts={handleDeselectAllAccounts}
-          shouldShowAccount={shouldShowAccount}
-          getChildAccountsForParent={getChildAccountsForParent}
-          hasCreateRolePermission={hasCreateRolePermission}
+          selectedAccountIds={roleAccountIds}
+          parentAccountId={Number(parentAccount)}
         />
       )}
 
@@ -603,7 +632,7 @@ const RoleForm: React.FC<RoleFormProps> = ({
         selectedCategoryBehaviors={selectedCategoryBehaviors}
       />
 
-      {!mdScreen && (
+      {!mdScreen && !isReadOnly && (
         <Box
           sx={{
             display: 'flex',
@@ -621,7 +650,7 @@ const RoleForm: React.FC<RoleFormProps> = ({
           <Button
             type="submit"
             variant="contained"
-            disabled={!isFormValid}
+            disabled={!isFormValid || isLoading}
             sx={{
               bgcolor: isFormValid ? 'primary.main' : 'grey.400',
               '&:hover': {
