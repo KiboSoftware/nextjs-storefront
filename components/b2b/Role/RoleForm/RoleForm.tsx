@@ -106,6 +106,9 @@ const RoleForm: React.FC<RoleFormProps> = ({
   // Initialize create role mutation
   const { createRole } = useCreateRoleAsync()
 
+  // Initialize apply role to future children mutation
+  const { applyRoleToFutureChildrens } = useApplyRoleToFutureChildrensAsync()
+
   const roleSchema = useRoleFormSchema()
 
   const {
@@ -529,6 +532,21 @@ const RoleForm: React.FC<RoleFormProps> = ({
     try {
       // Execute role creation with single API call
       const createdRole = await createRole.mutateAsync(payload)
+
+      // If applyToFutureChildren checkbox is selected and role was created successfully
+      if (data.applyToFutureChildren && createdRole?.id) {
+        try {
+          await applyRoleToFutureChildrens.mutateAsync({
+            roleId: createdRole.id,
+            accountId: parentAccountId,
+            enabled: true,
+          })
+        } catch (applyError) {
+          // Show warning but don't prevent navigation since role was created
+          showSnackbar(t('role-created-but-failed-to-apply-to-future-children'), 'warning')
+        }
+      }
+
       // Call onSave callback if provided
       showSnackbar(t('role-created-successfully'), 'success')
       router.push('/my-account/b2b/manage-roles')
