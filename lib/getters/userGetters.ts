@@ -150,7 +150,18 @@ const getCustomerAccountDetails = (user: CustomerAccount) => {
 
 const getCustomerB2BUsers = (items: B2BUser[]) => items
 
-const getRole = (b2BUser: B2BUser | undefined | null) => b2BUser?.roles?.[0]?.roleName ?? 'N/A'
+const getRole = (b2BUser: B2BUser | undefined | null) => {
+  if (!b2BUser?.roles || b2BUser.roles.length === 0) {
+    return 'N/A'
+  }
+
+  if (b2BUser.roles.length > 1) {
+    return 'Multiple'
+  }
+
+  return b2BUser.roles[0]?.roleName ?? 'N/A'
+}
+
 const getStatus = (b2BUser: B2BUser | undefined | null): boolean | undefined | null =>
   b2BUser?.isActive
 

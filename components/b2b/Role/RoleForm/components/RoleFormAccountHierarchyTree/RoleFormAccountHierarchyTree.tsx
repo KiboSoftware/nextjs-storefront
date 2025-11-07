@@ -119,7 +119,6 @@ const RoleFormAccountHierarchyTree: React.FC<RoleFormAccountHierarchyTreeProps> 
               >
                 {account.companyOrOrganization || `Account ${accountId}`}
                 {isParentAccount && ` (${t('parent')})`}
-                {!hasPermission && !isParentAccount && ` (${t('no-permission')})`}
               </Typography>
             }
             sx={roleFormAccountHierarchyTreeStyles.formControlLabel}
@@ -230,7 +229,9 @@ const RoleFormAccountHierarchyTree: React.FC<RoleFormAccountHierarchyTreeProps> 
             color="text.secondary"
             sx={roleFormAccountHierarchyTreeStyles.countText}
           >
-            {`Role will be applied to ${totalAccounts} ${accountText} (${includingParentText})`}
+            {totalAccounts > 1
+              ? `Role will be applied to ${totalAccounts} ${accountText} (${includingParentText})`
+              : `Role will be applied to ${totalAccounts} ${accountText}`}
           </Typography>
         </Box>
 

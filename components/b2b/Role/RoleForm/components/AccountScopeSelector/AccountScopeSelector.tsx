@@ -126,12 +126,18 @@ const AccountScopeSelector: React.FC<AccountScopeSelectorProps> = ({
                   </Box>
                 )}
               </Box>
-              <FormControlLabel
-                value="specific-child"
-                control={<Radio size="small" />}
-                label={t('apply-to-specific-child-accounts')}
-                disabled={!hasChildAccounts}
-              />
+              <Box sx={accountScopeSelectorStyles.flexContainer}>
+                <FormControlLabel
+                  value="specific-child"
+                  control={<Radio size="small" />}
+                  label={t('apply-to-specific-child-accounts')}
+                  disabled={!hasChildAccounts}
+                  sx={accountScopeSelectorStyles.formControlLabelNoMargin}
+                />
+                <Tooltip title={t('apply-to-specific-child-accounts-tooltip')} placement="top">
+                  <InfoIcon sx={accountScopeSelectorStyles.infoIcon(theme)} />
+                </Tooltip>
+              </Box>
               <Box sx={accountScopeSelectorStyles.flexContainer}>
                 <FormControlLabel
                   value="all-except"
