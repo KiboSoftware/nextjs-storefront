@@ -1,8 +1,11 @@
 import React, { useState } from 'react'
 
-import { ExpandMore as ExpandMoreIcon, ChevronRight as ChevronRightIcon } from '@mui/icons-material'
-import { Box, Checkbox, Typography, styled } from '@mui/material'
+import ChevronRightIcon from '@mui/icons-material/ChevronRight'
+import ExpandMoreIcon from '@mui/icons-material/ExpandMore'
+import { Box, Checkbox, FormControlLabel, IconButton, Typography } from '@mui/material'
 import { useTranslation } from 'next-i18next'
+
+import { roleAccountHierarchyViewStyles } from './RoleAccountHierarchyView.styles'
 
 import { B2BAccount } from '@/lib/gql/types'
 
@@ -12,29 +15,18 @@ interface RoleAccountHierarchyViewProps {
   parentAccountId?: number
 }
 
-const TreeNode = styled(Box)(({ theme }) => ({
-  marginLeft: theme.spacing(2),
-}))
-
-const NodeContent = styled(Box)(({ theme }) => ({
-  display: 'flex',
-  alignItems: 'center',
-  padding: theme.spacing(0.5, 1),
-  cursor: 'pointer',
-  '&:hover': {
-    backgroundColor: theme.palette.action.hover,
-  },
-}))
-
 const RoleAccountHierarchyView: React.FC<RoleAccountHierarchyViewProps> = ({
   accounts = [],
   selectedAccountIds = [],
   parentAccountId,
 }) => {
   const { t } = useTranslation('common')
-  const [expandedNodes, setExpandedNodes] = useState<Set<number>>(new Set([parentAccountId || 0]))
+  const [expandedNodes, setExpandedNodes] = useState<Set<number>>(
+    new Set(parentAccountId ? [parentAccountId] : [])
+  )
 
-  const toggleNodeExpansion = (nodeId: number) => {
+  // Toggle node expansion
+  const handleToggleNodeExpansion = (nodeId: number) => {
     setExpandedNodes((prev) => {
       const newSet = new Set(prev)
       if (newSet.has(nodeId)) {
@@ -46,77 +38,107 @@ const RoleAccountHierarchyView: React.FC<RoleAccountHierarchyViewProps> = ({
     })
   }
 
+  // Get child accounts for a parent
   const getChildAccountsForParent = (parentId: number): B2BAccount[] => {
     return accounts.filter((acc) => acc.parentAccountId === parentId)
   }
 
-  const isAccountSelected = (accountId: number): boolean => {
-    return selectedAccountIds.includes(accountId)
-  }
+  // Render account hierarchy tree recursively
+  const renderAccountHierarchy = (accountId: number, level: number): React.ReactNode => {
+    const account = accounts.find((acc) => acc.id === accountId)
+    if (!account) return null
 
-  const renderAccountNode = (account: B2BAccount, level: number = 0): React.ReactNode => {
-    const children = getChildAccountsForParent(account.id)
-    const hasChildren = children.length > 0
-    const isExpanded = expandedNodes.has(account.id)
-    const isSelected = isAccountSelected(account.id)
+    const childAccounts = getChildAccountsForParent(accountId)
+    const hasChildren = childAccounts.length > 0
+    const isExpanded = expandedNodes.has(accountId)
+    const isSelected = selectedAccountIds.includes(accountId)
+    const isParentAccount = accountId === parentAccountId
 
     return (
-      <Box key={account.id}>
-        <NodeContent
-          sx={{ paddingLeft: `${level * 24}px` }}
-          onClick={() => hasChildren && toggleNodeExpansion(account.id)}
+      <Box key={accountId}>
+        <Box
+          sx={{
+            ...roleAccountHierarchyViewStyles.accountItem,
+            pl: level * 3,
+          }}
         >
           {hasChildren ? (
-            isExpanded ? (
-              <ExpandMoreIcon fontSize="small" sx={{ mr: 1 }} />
-            ) : (
-              <ChevronRightIcon fontSize="small" sx={{ mr: 1 }} />
-            )
+            <IconButton
+              size="small"
+              onClick={() => handleToggleNodeExpansion(accountId)}
+              sx={roleAccountHierarchyViewStyles.expandButton}
+            >
+              {isExpanded ? (
+                <ExpandMoreIcon fontSize="small" />
+              ) : (
+                <ChevronRightIcon fontSize="small" />
+              )}
+            </IconButton>
           ) : (
-            <Box sx={{ width: 24, mr: 1 }} />
+            <Box sx={roleAccountHierarchyViewStyles.spacer} />
           )}
-          <Checkbox checked={isSelected} disabled size="small" sx={{ mr: 1, p: 0 }} />
-          <Typography variant="body2">
-            {account.companyOrOrganization || `Account ${account.id}`}
-          </Typography>
-        </NodeContent>
+
+          <FormControlLabel
+            control={<Checkbox checked={isSelected} disabled={true} size="small" />}
+            label={
+              <Typography
+                variant="body2"
+                sx={roleAccountHierarchyViewStyles.accountLabel(isParentAccount)}
+              >
+                {account.companyOrOrganization || `Account ${accountId}`}
+                {isParentAccount && ` (${t('parent')})`}
+              </Typography>
+            }
+            sx={roleAccountHierarchyViewStyles.formControlLabel}
+          />
+
+          {hasChildren && (
+            <Typography
+              variant="caption"
+              color="text.secondary"
+              sx={roleAccountHierarchyViewStyles.childCountText}
+            >
+              ({childAccounts.length} {childAccounts.length === 1 ? t('child') : t('children')})
+            </Typography>
+          )}
+        </Box>
+
         {hasChildren && isExpanded && (
-          <TreeNode>{children.map((child) => renderAccountNode(child, level + 1))}</TreeNode>
+          <Box>{childAccounts.map((child) => renderAccountHierarchy(child.id, level + 1))}</Box>
         )}
       </Box>
     )
   }
 
-  // Find the parent/root account to start rendering from
-  const rootAccount = parentAccountId
-    ? accounts.find((acc) => acc.id === parentAccountId)
-    : accounts.find((acc) => !acc.parentAccountId)
-
-  if (!rootAccount) {
+  if (!accounts || accounts.length === 0 || !parentAccountId) {
     return (
-      <Box sx={{ p: 2 }}>
-        <Typography variant="body2" color="text.secondary">
-          {t('no-account-hierarchy-available')}
+      <Box sx={roleAccountHierarchyViewStyles.emptyState}>
+        <Typography variant="body2" sx={roleAccountHierarchyViewStyles.emptyStateText}>
+          {t('no-accounts-available')}
         </Typography>
       </Box>
     )
   }
 
+  const selectedCount = selectedAccountIds.length
+  const accountText = selectedCount === 1 ? t('account') : t('accounts')
+
   return (
-    <Box sx={{ mt: 3, mb: 3 }}>
-      <Typography variant="h6" sx={{ mb: 2 }}>
+    <Box sx={roleAccountHierarchyViewStyles.container}>
+      <Typography variant="subtitle2" sx={roleAccountHierarchyViewStyles.sectionTitle}>
         {t('account-hierarchy')}
       </Typography>
-      <Box
-        sx={{
-          border: '1px solid',
-          borderColor: 'divider',
-          borderRadius: 1,
-          p: 2,
-          backgroundColor: 'background.paper',
-        }}
+
+      <Typography
+        variant="caption"
+        color="text.secondary"
+        sx={roleAccountHierarchyViewStyles.countText}
       >
-        {renderAccountNode(rootAccount)}
+        {`Role is applied to ${selectedCount} ${accountText}`}
+      </Typography>
+
+      <Box sx={roleAccountHierarchyViewStyles.treeContainer}>
+        {renderAccountHierarchy(parentAccountId, 0)}
       </Box>
     </Box>
   )

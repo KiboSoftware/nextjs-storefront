@@ -197,3 +197,13 @@ NoSelections.args = {
   behaviors: mockBehaviors,
   permissionError: '',
 }
+
+export const ReadOnlyMode = Template.bind({})
+ReadOnlyMode.args = {
+  behaviorCategories: mockBehaviorCategories,
+  behaviors: mockBehaviors,
+  categoriesLoading: false,
+  behaviorsLoading: false,
+  permissionError: '',
+  isReadOnly: true,
+}

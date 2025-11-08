@@ -5,6 +5,7 @@ import { serverSideTranslations } from 'next-i18next/serverSideTranslations'
 import { ManageRolesTemplate } from '@/components/page-templates'
 import { getCurrentUser, getRolesByAccountId } from '@/lib/api/operations'
 import type { GetRolesAsyncResponse } from '@/lib/api/operations/get-roles-by-account-id'
+
 import type { CustomerAccount } from '@/lib/gql/types'
 
 interface ManageRolesPageProps {
@@ -17,7 +18,6 @@ export async function getServerSideProps(context: GetServerSidePropsContext) {
 
   const response = await getCurrentUser(req as NextApiRequest, res as NextApiResponse)
   const rolesData = await getRolesByAccountId(req as NextApiRequest, res as NextApiResponse)
-  console.log('-----------rolesData-----', rolesData)
   return {
     props: {
       customerAccount: response?.customerAccount,
