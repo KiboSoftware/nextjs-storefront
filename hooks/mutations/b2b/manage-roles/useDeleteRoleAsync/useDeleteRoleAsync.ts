@@ -3,7 +3,7 @@
  */
 import { useMutation, useQueryClient } from '@tanstack/react-query'
 
-import { makeGraphQLClientWithoutUserClaims } from '@/lib/gql/client'
+import { makeGraphQLClientWithoutUserClaims, makeGraphQLClient } from '@/lib/gql/client'
 import { deleteRoleAsyncMutation } from '@/lib/gql/mutations'
 import { rolesKeys } from '@/lib/react-query/queryKeys'
 
@@ -11,7 +11,7 @@ import { rolesKeys } from '@/lib/react-query/queryKeys'
  * @hidden
  */
 
-const client = makeGraphQLClientWithoutUserClaims()
+const client = makeGraphQLClient()
 
 const deleteRoleAsync = async (roleId: any): Promise<boolean> => {
   const response = await client.request({

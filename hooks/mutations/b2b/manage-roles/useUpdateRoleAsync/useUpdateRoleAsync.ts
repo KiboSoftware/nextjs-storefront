@@ -60,7 +60,7 @@ export const useUpdateRoleAsync = () => {
         queryClient.invalidateQueries({ queryKey: rolesKeys.all })
         // Update the specific role in cache with the new data
         if (data?.id) {
-          queryClient.setQueryData(rolesKeys.roleById(variables.accountId, variables.roleId), data)
+          queryClient.setQueryData(rolesKeys.roleById(variables.roleId), data)
         }
       },
     }),

@@ -41,8 +41,8 @@ import { ConfirmationDialog } from '@/components/dialogs'
 import { useAuthContext, useModalContext, useSnackbarContext } from '@/context'
 import { useDeleteRoleAsync } from '@/hooks/mutations/b2b/manage-roles/useDeleteRoleAsync/useDeleteRoleAsync'
 import { useGetRolesByAccountIdAsync } from '@/hooks/queries/b2b/manage-roles/useGetRolesByAccountIdAsync/useGetRolesByAccountIdAsync'
-
 import type { GetRolesAsyncResponse } from '@/lib/api/operations/get-roles-by-account-id'
+
 import type { CustomerAccount } from '@/lib/gql/types'
 
 const BackButtonLink = styled(Link)(({ theme }: { theme: Theme }) => ({
@@ -159,25 +159,13 @@ const ManageRolesTemplate = ({
   const handleEditRole = (roleId: string) => {
     handleMenuClose()
     // TODO: Implement edit role
-    console.log('Edit role:', roleId)
+    router.push(`/my-account/b2b/manage-roles/create?roleId=${roleId}&mode=edit`)
   }
 
   const handleCopyRole = (roleId: string) => {
     handleMenuClose()
-    const roleToCopy = roles.find((role) => role.id === roleId)
-    if (roleToCopy) {
-      // Create a copy of the role with a new ID and _Copy suffix
-      const maxId = Math.max(...roles.map((r) => parseInt(r.id)), 0)
-      const newRole: Role = {
-        ...roleToCopy,
-        id: (maxId + 1).toString(),
-        name: `${roleToCopy.name}_Copy`,
-        roleType: 'Custom',
-        assignedUsers: 0,
-      }
-      setRoles((prevRoles) => [...prevRoles, newRole])
-      showSnackbar(t('role-copied-successfully'), 'success')
-    }
+    // Navigate to create role page with copy mode
+    router.push(`/my-account/b2b/manage-roles/create?roleId=${roleId}&mode=copy`)
   }
 
   const handleDeleteRole = (roleId: string) => {

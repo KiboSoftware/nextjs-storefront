@@ -25,10 +25,10 @@ export interface B2BRole {
 const getRoleByIdAsync = async ({ roleId }: any): Promise<B2BRole> => {
   const response = await client.request({
     document: getRoleByIdAsyncQuery,
-    variables: roleId,
+    variables: { roleId },
   })
 
-  return response?.getRoleByIdAsync
+  return response?.getRoleByRoleIdAsync
 }
 
 /**

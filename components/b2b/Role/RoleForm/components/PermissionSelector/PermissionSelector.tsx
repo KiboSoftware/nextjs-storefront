@@ -40,6 +40,7 @@ interface PermissionSelectorProps {
   getAllSelectedBehaviors: () => Array<{ category: number; behavior: number }>
   handleRemoveBehavior: (category: number, behavior: number) => void
   selectedCategoryBehaviors: Behavior[]
+  isReadOnly?: boolean
 }
 
 const PermissionSelector: React.FC<PermissionSelectorProps> = ({
@@ -56,6 +57,7 @@ const PermissionSelector: React.FC<PermissionSelectorProps> = ({
   getAllSelectedBehaviors,
   handleRemoveBehavior,
   selectedCategoryBehaviors,
+  isReadOnly = false,
 }) => {
   const { t } = useTranslation('common')
 
@@ -90,8 +92,9 @@ const PermissionSelector: React.FC<PermissionSelectorProps> = ({
               behaviorCategories?.items?.map((cat) => (
                 <ListItemButton
                   key={cat.id}
-                  onClick={() => onCategorySelect(cat.id || 0)}
+                  onClick={() => !isReadOnly && onCategorySelect(cat.id || 0)}
                   selected={selectedCategory === cat.id}
+                  disabled={isReadOnly}
                   sx={permissionSelectorStyles.categoryListItem}
                 >
                   <Typography variant="body2">{cat.name}</Typography>
@@ -121,6 +124,7 @@ const PermissionSelector: React.FC<PermissionSelectorProps> = ({
                 )
               }
               onChange={onBehaviorNameCheckboxChange}
+              disabled={isReadOnly}
               sx={permissionSelectorStyles.headerCheckbox}
             />
             <Typography sx={permissionSelectorStyles.headerTitle}>{t('behavior-name')}</Typography>
@@ -138,11 +142,15 @@ const PermissionSelector: React.FC<PermissionSelectorProps> = ({
                 return (
                   <ListItem key={behavior.id} disablePadding>
                     <ListItemButton
-                      onClick={() => onBehaviorToggle(selectedCategory || 0, behavior.id || 0)}
+                      onClick={() =>
+                        !isReadOnly && onBehaviorToggle(selectedCategory || 0, behavior.id || 0)
+                      }
+                      disabled={isReadOnly}
                       sx={permissionSelectorStyles.behaviorListItem}
                     >
                       <Checkbox
                         checked={isSelected}
+                        disabled={isReadOnly}
                         size="small"
                         sx={permissionSelectorStyles.checkbox}
                       />
@@ -174,13 +182,15 @@ const PermissionSelector: React.FC<PermissionSelectorProps> = ({
                       <Typography variant="body2">
                         {behaviorObj?.name || `Behavior ${behavior}`}
                       </Typography>
-                      <IconButton
-                        size="small"
-                        onClick={() => handleRemoveBehavior(category, behavior)}
-                        sx={permissionSelectorStyles.removeButton}
-                      >
-                        <CloseIcon fontSize="small" />
-                      </IconButton>
+                      {!isReadOnly && (
+                        <IconButton
+                          size="small"
+                          onClick={() => handleRemoveBehavior(category, behavior)}
+                          sx={permissionSelectorStyles.removeButton}
+                        >
+                          <CloseIcon fontSize="small" />
+                        </IconButton>
+                      )}
                     </Box>
                   </ListItem>
                 )

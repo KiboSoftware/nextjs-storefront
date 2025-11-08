@@ -7,9 +7,10 @@ import { useTranslation } from 'next-i18next'
 import { CreateRoleTemplateStyles } from './CreateRoleTemplate.styles'
 import { RoleForm } from '@/components/b2b/index'
 import { RoleFormData } from '@/components/b2b/Role/RoleForm/components'
+import { useSnackbarContext } from '@/context'
 import { useCreateRoleAsync } from '@/hooks/mutations/b2b/manage-roles/useCreateRoleAsync/useCreateRoleAsync'
+import { useUpdateRoleAsync } from '@/hooks/mutations/b2b/manage-roles/useUpdateRoleAsync/useUpdateRoleAsync'
 import { useGetRoleByIdAsync } from '@/hooks/queries/b2b/manage-roles/useGetRoleByIdAsync/useGetRoleByIdAsync'
-
 import { B2BAccountHierarchyResult } from '@/lib/types'
 
 import { CustomerAccount } from '@/lib/gql/types'
@@ -48,8 +49,10 @@ const CreateRoleTemplate: React.FC<CreateRoleTemplateProps> = ({
 }) => {
   const { t } = useTranslation('common')
   const router = useRouter()
+  const { showSnackbar } = useSnackbarContext()
 
   const { createRole } = useCreateRoleAsync()
+  const { updateRole } = useUpdateRoleAsync()
 
   // Check if we're in readonly/view mode or copy mode from query params
   const { roleId, mode } = router.query
@@ -79,18 +82,21 @@ const CreateRoleTemplate: React.FC<CreateRoleTemplateProps> = ({
       }
 
       // Convert behaviors array to selectedPermissions format if behaviors exist
-      if (roleData.behaviors && Array.isArray(roleData.behaviors)) {
-        // Group behaviors by category
+      if (roleData.behaviors && Array.isArray(roleData.behaviors) && behaviors?.items) {
+        // Group behaviors by category using the actual behavior data
         const permissionsMap: Record<number, number[]> = {}
         roleData.behaviors.forEach((behavior) => {
           const behaviorId = typeof behavior === 'string' ? parseInt(behavior) : behavior
           if (!isNaN(behaviorId)) {
-            // You may need to map behaviors to categories properly based on your data structure
-            // For now, grouping all under category 0 as placeholder
-            if (!permissionsMap[0]) {
-              permissionsMap[0] = []
+            // Find the behavior in the behaviors list to get its categoryId
+            const behaviorObj = behaviors.items?.find((b) => b.id === behaviorId)
+            if (behaviorObj && behaviorObj.categoryId) {
+              const categoryId = behaviorObj.categoryId
+              if (!permissionsMap[categoryId]) {
+                permissionsMap[categoryId] = []
+              }
+              permissionsMap[categoryId].push(behaviorId)
             }
-            permissionsMap[0].push(behaviorId)
           }
         })
         preparedData.selectedPermissions = permissionsMap
@@ -101,7 +107,7 @@ const CreateRoleTemplate: React.FC<CreateRoleTemplateProps> = ({
       // Clear form data when there's no roleId (create mode)
       setFormData(undefined)
     }
-  }, [roleData, isLoadingRole, isReadOnly, isEditMode, isCopyMode, user?.id, roleId])
+  }, [roleData, isLoadingRole, isReadOnly, isEditMode, isCopyMode, user?.id, roleId, behaviors])
 
   const breadcrumbList = [
     {
@@ -122,14 +128,83 @@ const CreateRoleTemplate: React.FC<CreateRoleTemplateProps> = ({
 
   const handleSave = async (data: RoleFormData) => {
     try {
-      // TODO: Implement actual role creation logic using createRole mutation
-      // await createRole.mutateAsync({ b2BRoleInput: transformedData })
+      // Transform form data to B2BRoleInput
+      const behaviors: number[] = []
+      Object.values(data.selectedPermissions || {}).forEach((categoryBehaviors) => {
+        behaviors.push(...categoryBehaviors)
+      })
 
-      // For now, just navigate back to the roles page
+      // Calculate accountIds based on account scope
+      let accountIds: number[] = []
+      const parentAccountId = parseInt(data.parentAccount)
+
+      if (data.accountScope === 'all-child') {
+        // Include parent and all child accounts recursively
+        const getAllDescendants = (parentId: number): number[] => {
+          const directChildren =
+            initialData?.accounts?.filter((acc) => acc.parentAccountId === parentId) || []
+          const descendants: number[] = []
+          directChildren.forEach((child) => {
+            descendants.push(child.id)
+            descendants.push(...getAllDescendants(child.id))
+          })
+          return descendants
+        }
+        accountIds = [parentAccountId, ...getAllDescendants(parentAccountId)]
+      } else if (data.accountScope === 'specific-child') {
+        // Include parent and selected child accounts
+        accountIds = [parentAccountId, ...(data.selectedAccounts || [])]
+      } else if (data.accountScope === 'all-except') {
+        // Include parent and all child accounts except selected ones
+        const getAllDescendants = (parentId: number): number[] => {
+          const directChildren =
+            initialData?.accounts?.filter((acc) => acc.parentAccountId === parentId) || []
+          const descendants: number[] = []
+          directChildren.forEach((child) => {
+            descendants.push(child.id)
+            descendants.push(...getAllDescendants(child.id))
+          })
+          return descendants
+        }
+        const allDescendantIds = getAllDescendants(parentAccountId)
+        accountIds = [
+          parentAccountId,
+          ...allDescendantIds.filter((id) => !data.selectedAccounts?.includes(id)),
+        ]
+      } else {
+        // Current account only
+        accountIds = [parentAccountId]
+      }
+
+      const b2BRoleInput = {
+        name: data.roleName,
+        isSystemRole: false,
+        behaviors,
+        accountIds,
+      }
+
+      if (isEditMode && roleId) {
+        // Update existing role
+        await updateRole.mutateAsync({
+          accountId: user?.id as number,
+          roleId: parseInt(roleId as string),
+          b2BRoleInput,
+        })
+        showSnackbar(t('role-updated-successfully'), 'success')
+      } else {
+        // Create new role (for create mode or copy mode)
+        await createRole.mutateAsync({ b2BRoleInput })
+        showSnackbar(
+          isCopyMode ? t('role-copied-successfully') : t('role-created-successfully'),
+          'success'
+        )
+      }
+
+      // Navigate back to the roles page
       router.push('/my-account/b2b/manage-roles')
     } catch (error) {
-      console.error('Error creating role:', error)
-      // TODO: Add proper error handling
+      console.error('Error saving role:', error)
+      showSnackbar(isEditMode ? t('error-updating-role') : t('error-creating-role'), 'error')
     }
   }
 
@@ -143,6 +218,13 @@ const CreateRoleTemplate: React.FC<CreateRoleTemplateProps> = ({
     if (isEditMode) return t('edit-role')
     if (isCopyMode) return t('copy-role')
     return t('create-new-role')
+  }
+
+  // Determine submit button text based on mode
+  const getSubmitButtonText = () => {
+    if (isEditMode) return t('edit-role')
+    if (isCopyMode) return t('copy-role')
+    return t('create-role')
   }
 
   return (
@@ -170,6 +252,7 @@ const CreateRoleTemplate: React.FC<CreateRoleTemplateProps> = ({
             pageTitle={getPageTitle()}
             isLoading={isLoadingRole && !!roleId}
             roleAccountIds={roleData?.accountIds}
+            submitButtonText={getSubmitButtonText()}
           />
         </Box>
       </Grid>

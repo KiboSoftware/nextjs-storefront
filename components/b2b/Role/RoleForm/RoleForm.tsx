@@ -50,6 +50,7 @@ interface RoleFormProps {
   pageTitle?: string
   isLoading?: boolean
   roleAccountIds?: number[]
+  submitButtonText?: string
 }
 
 const useRoleFormSchema = () => {
@@ -78,6 +79,7 @@ const RoleForm: React.FC<RoleFormProps> = ({
   pageTitle,
   isLoading = false,
   roleAccountIds = [],
+  submitButtonText,
 }) => {
   const { t } = useTranslation('common')
 
@@ -194,6 +196,9 @@ const RoleForm: React.FC<RoleFormProps> = ({
 
   // Update parent account when user data loads - set to first account with create role permission
   useEffect(() => {
+    // Don't reset if we have initialData (viewing/editing/copying existing role)
+    if (initialData) return
+
     if (accountUserBehaviorResults && accounts && accountUserBehaviorResults.length > 0) {
       const accountsWithPermission = getAccountsWithCreateRolePermission()
 
@@ -214,7 +219,14 @@ const RoleForm: React.FC<RoleFormProps> = ({
         })
       }
     }
-  }, [user?.id, reset, accounts, accountUserBehaviorResults, getAccountsWithCreateRolePermission])
+  }, [
+    user?.id,
+    reset,
+    accounts,
+    accountUserBehaviorResults,
+    getAccountsWithCreateRolePermission,
+    initialData,
+  ])
 
   // Set default selected category when categories load
   useEffect(() => {
@@ -256,6 +268,25 @@ const RoleForm: React.FC<RoleFormProps> = ({
       setExpandedNodes(expandedIds)
     }
   }, [searchQuery, accounts, parentAccount, getChildAccountsForParent])
+
+  // Initialize form with initialData when available (for view/edit/copy modes)
+  useEffect(() => {
+    if (initialData) {
+      reset({
+        roleName: initialData.roleName || '',
+        parentAccount: initialData.parentAccount || '',
+        accountScope: initialData.accountScope || '',
+        applyToFutureChildren: initialData.applyToFutureChildren || false,
+        selectedAccounts: initialData.selectedAccounts || [],
+        selectedPermissions: initialData.selectedPermissions || {},
+      })
+
+      // Also set the selectedPermissions state for the PermissionSelector
+      if (initialData.selectedPermissions) {
+        setSelectedPermissions(initialData.selectedPermissions)
+      }
+    }
+  }, [initialData, reset])
 
   // Event handlers
   const handleParentAccountChange = (value: string) => {
@@ -555,7 +586,7 @@ const RoleForm: React.FC<RoleFormProps> = ({
                     },
                   }}
                 >
-                  {t('create-role')}
+                  {submitButtonText || t('create-role')}
                 </Button>
               </>
             )}
@@ -611,7 +642,7 @@ const RoleForm: React.FC<RoleFormProps> = ({
         <RoleAccountHierarchyView
           accounts={getAllAccountsFromHierarchy()}
           selectedAccountIds={roleAccountIds}
-          parentAccountId={Number(parentAccount)}
+          parentAccountId={user?.id}
         />
       )}
 
@@ -630,6 +661,7 @@ const RoleForm: React.FC<RoleFormProps> = ({
         getAllSelectedBehaviors={getAllSelectedBehaviors}
         handleRemoveBehavior={handleRemoveBehavior}
         selectedCategoryBehaviors={selectedCategoryBehaviors}
+        isReadOnly={isReadOnly}
       />
 
       {!mdScreen && !isReadOnly && (
@@ -658,7 +690,7 @@ const RoleForm: React.FC<RoleFormProps> = ({
               },
             }}
           >
-            {t('create-role')}
+            {submitButtonText || t('create-role')}
           </Button>
         </Box>
       )}
