@@ -49,6 +49,7 @@ interface RoleFormProps {
   pageTitle?: string
   isLoading?: boolean
   roleAccountIds?: number[]
+  submitButtonText?: string
 }
 
 const useRoleFormSchema = () => {
@@ -73,6 +74,7 @@ const RoleForm: React.FC<RoleFormProps> = ({
   pageTitle,
   isLoading = false,
   roleAccountIds = [],
+  submitButtonText,
 }) => {
   const { t } = useTranslation('common')
 
@@ -194,6 +196,9 @@ const RoleForm: React.FC<RoleFormProps> = ({
 
   // Update parent account when user data loads - set to first account with create role permission
   useEffect(() => {
+    // Don't reset if we have initialData (viewing/editing/copying existing role)
+    if (initialData) return
+
     if (accountUserBehaviorResults && accounts && accountUserBehaviorResults.length > 0) {
       const accountsWithPermission = getAccountsWithCreateRolePermission()
 
@@ -214,8 +219,14 @@ const RoleForm: React.FC<RoleFormProps> = ({
         })
       }
     }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [user?.id, accounts, accountUserBehaviorResults])
+  }, [
+    user?.id,
+    reset,
+    accounts,
+    accountUserBehaviorResults,
+    getAccountsWithCreateRolePermission,
+    initialData,
+  ])
 
   // Event handlers
   const handleParentAccountChange = useCallback(
@@ -591,7 +602,7 @@ const RoleForm: React.FC<RoleFormProps> = ({
                     },
                   }}
                 >
-                  {t('create-role')}
+                  {submitButtonText || t('create-role')}
                 </Button>
               </>
             )}
@@ -630,7 +641,7 @@ const RoleForm: React.FC<RoleFormProps> = ({
         <RoleAccountHierarchyView
           accounts={accounts}
           selectedAccountIds={roleAccountIds}
-          parentAccountId={Number(parentAccount)}
+          parentAccountId={user?.id}
         />
       )}
 
@@ -672,7 +683,7 @@ const RoleForm: React.FC<RoleFormProps> = ({
               },
             }}
           >
-            {t('create-role')}
+            {submitButtonText || t('create-role')}
           </Button>
         </Box>
       )}
