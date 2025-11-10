@@ -233,7 +233,7 @@ const OrderReturnItems = (props: OrderReturnItemsProps) => {
                       height={134}
                       width={134}
                       alt={productGetters.getName(item?.product as CrProduct)}
-                      objectFit="contain"
+                      style={{ objectFit: 'contain' }}
                     />
                   </Box>
                 ))}

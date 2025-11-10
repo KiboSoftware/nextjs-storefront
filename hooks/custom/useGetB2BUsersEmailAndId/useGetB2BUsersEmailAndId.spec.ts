@@ -1,6 +1,6 @@
 import '@testing-library/jest-dom'
 import { waitFor } from '@testing-library/react'
-import { renderHook } from '@testing-library/react-hooks'
+import { renderHook } from '@testing-library/react'
 
 import { useGetB2BUsersEmailAndId } from './useGetB2BUsersEmailAndId'
 import { customerB2BUserForPage0Mock } from '@/__mocks__/stories'

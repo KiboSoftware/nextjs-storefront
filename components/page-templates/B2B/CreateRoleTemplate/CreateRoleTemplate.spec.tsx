@@ -1,9 +1,13 @@
 import React from 'react'
 
 import '@testing-library/jest-dom'
-import { render, screen } from '@testing-library/react'
+import { composeStories } from '@storybook/testing-react'
+import { screen } from '@testing-library/react'
 
-import CreateRoleTemplate from './CreateRoleTemplate'
+import * as stories from './CreateRoleTemplate.stories'
+import { renderWithQueryClient } from '@/__test__/utils'
+
+const { Default } = composeStories(stories)
 
 const mockRouter = {
   push: jest.fn(),
@@ -18,15 +22,15 @@ jest.mock('next/router', () => ({
 
 describe('CreateRoleTemplate', () => {
   it('should render the create role template', () => {
-    render(<CreateRoleTemplate />)
+    renderWithQueryClient(<Default {...Default.args} />)
 
-    expect(screen.getByText(/Create New Role/i)).toBeInTheDocument()
+    expect(screen.getByText(/create-new-role/i)).toBeInTheDocument()
   })
 
-  it('should render the role form', () => {
-    render(<CreateRoleTemplate />)
+  it('should render the role form sections', () => {
+    renderWithQueryClient(<Default {...Default.args} />)
 
-    expect(screen.getByText(/Role Information/i)).toBeInTheDocument()
-    expect(screen.getByText(/Permission Configuration/i)).toBeInTheDocument()
+    expect(screen.getByText(/role-information/i)).toBeInTheDocument()
+    expect(screen.getByRole('heading', { name: /permission-configuration/i })).toBeInTheDocument()
   })
 })

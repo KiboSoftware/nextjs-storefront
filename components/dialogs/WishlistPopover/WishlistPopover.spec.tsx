@@ -10,7 +10,9 @@ const { Common } = composeStories(stories)
 
 const setup = (args = Common.args) => {
   const user = userEvent.setup()
-  render(<Common {...args} />)
+  const anchorEl = document.createElement('div')
+  document.body.appendChild(anchorEl)
+  render(<Common {...args} anchorEl={anchorEl} />)
   return {
     user,
   }

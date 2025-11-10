@@ -33,7 +33,7 @@ const ReviewProductItemsWithAddresses = (props: ReviewProductItemsWithAddressesP
         const product = item?.product as CrProduct
         const formattedAddress = addressGetters.getFormattedAddress(userShippingAddresses[index])
         return (
-          <>
+          <React.Fragment key={(item?.id || '') + index}>
             <Typography variant="subtitle2" component="h4" fontWeight={'bold'} color="text.primary">
               {t('ship-to')}
               <Typography
@@ -56,7 +56,7 @@ const ReviewProductItemsWithAddresses = (props: ReviewProductItemsWithAddressesP
               {t('est-arrival')} {checkoutGetters.getFormattedDate(item?.expectedDeliveryDate)}
             </Typography>
 
-            <Stack key={item?.id}>
+            <Stack>
               <ProductItem
                 id={orderGetters.getCartItemId(item as CrOrderItem)}
                 qty={orderGetters.getProductQuantity(item as CrOrderItem)}
@@ -72,7 +72,7 @@ const ReviewProductItemsWithAddresses = (props: ReviewProductItemsWithAddressesP
                 data-testid="product-item-multi-ship"
               ></ProductItem>
             </Stack>
-          </>
+          </React.Fragment>
         )
       })}
     </Stack>

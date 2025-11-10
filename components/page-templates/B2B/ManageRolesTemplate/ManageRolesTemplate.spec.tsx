@@ -1,19 +1,44 @@
 import React from 'react'
 
 import { composeStories } from '@storybook/testing-react'
-import { render, screen, waitFor } from '@testing-library/react'
+import { screen, waitFor } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
 
 import * as stories from './ManageRolesTemplate.stories'
+import { renderWithQueryClient } from '@/__test__/utils'
+import { generateQueryClient } from '@/lib/react-query/queryClient'
 
 const { Common } = composeStories(stories)
 
 describe('[Page Template] ManageRolesTemplate', () => {
+  beforeEach(() => {
+    jest.clearAllMocks()
+  })
+
+  afterEach(() => {
+    jest.clearAllMocks()
+  })
+
   const setup = () => {
     const user = userEvent.setup()
     const onAccountTitleClick = jest.fn()
+    const showSnackbarMock = jest.fn()
 
-    render(<Common {...Common.args} onAccountTitleClick={onAccountTitleClick} />)
+    const generateTestQueryClient = () => {
+      const client = generateQueryClient(showSnackbarMock)
+      const options = client.getDefaultOptions()
+      options.queries = {
+        ...options.queries,
+        retry: false,
+      }
+
+      return client
+    }
+
+    renderWithQueryClient(
+      <Common {...Common.args} onAccountTitleClick={onAccountTitleClick} />,
+      generateTestQueryClient()
+    )
 
     return {
       user,
@@ -31,9 +56,10 @@ describe('[Page Template] ManageRolesTemplate', () => {
     expect(screen.getByText(/add-new-role/i)).toBeInTheDocument()
   })
 
-  it('should render the roles grid', () => {
+  it('should render the roles table', () => {
     setup()
-    expect(screen.getByText(/roles-grid/i)).toBeInTheDocument()
+    expect(screen.getByText(/role-name/i)).toBeInTheDocument()
+    expect(screen.getByText(/role-type/i)).toBeInTheDocument()
   })
 
   it('should render search input', () => {

@@ -1,4 +1,4 @@
-import { renderHook, act } from '@testing-library/react-hooks'
+import { renderHook, act } from '@testing-library/react'
 
 import { useCardContactActions } from './useCardContactActions'
 import { customerAccountCardsMock, userAddressMock } from '@/__mocks__/stories'

@@ -167,7 +167,7 @@ const ProductCardListView = (props: ProductCardListViewProps) => {
                   src={imageUrl ?? placeholderImageUrl}
                   alt={imageUrl ? imageAltText : 'no-image-alt'}
                   fill
-                  objectFit="contain"
+                  style={{ objectFit: 'contain' }}
                   data-testid="product-image"
                   errorimage={placeholderImageUrl}
                 />

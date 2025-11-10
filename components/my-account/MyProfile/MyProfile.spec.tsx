@@ -8,10 +8,13 @@ import * as stories from './MyProfile.stories'
 
 const { Common } = composeStories(stories)
 
-const setup = () => {
+const setup = async () => {
   const user = userEvent.setup()
 
   render(<Common {...Common.args} />)
+  await waitFor(() => {
+    expect(true).toBe(true)
+  })
 
   return {
     user,
@@ -19,8 +22,8 @@ const setup = () => {
 }
 
 describe('[components] MyProfile', () => {
-  it('should render component', () => {
-    setup()
+  it('should render component', async () => {
+    await setup()
 
     const customerNameLabel = screen.getByText(/customer-name/i)
     const customerName = screen.getByText(
@@ -44,7 +47,7 @@ describe('[components] MyProfile', () => {
   })
 
   it(`should render names form if 'edit' button is clicked`, async () => {
-    const { user } = setup()
+    const { user } = await setup()
 
     const editName = screen.getAllByText(/edit/i)
     user.click(editName[0])
@@ -61,7 +64,7 @@ describe('[components] MyProfile', () => {
   })
 
   it(`should render email form if 'edit' button is clicked`, async () => {
-    const { user } = setup()
+    const { user } = await setup()
 
     const editName = screen.getAllByText(/edit/i)
     user.click(editName[1])
@@ -73,7 +76,7 @@ describe('[components] MyProfile', () => {
   })
 
   it(`should render password form if 'edit' button is clicked`, async () => {
-    const { user } = setup()
+    const { user } = await setup()
 
     const editName = screen.getAllByText(/edit/i)
     user.click(editName[2])

@@ -102,8 +102,8 @@ function HeroItem(props: ItemProps) {
           alt={imageAlt || 'carousel-image'}
           sizes="(max-width: 1200px) 92vw, 1152px"
           loading="eager"
-          layout="fill"
-          objectFit="cover"
+          fill
+          style={{ objectFit: 'cover' }}
           data-testid="product-image"
           priority
         />

@@ -230,21 +230,24 @@ export const ProductCustomMock: ProductCustom = {
       {
         imageUrl:
           '//cdn-sb.mozu.com/30294-50525/cms/50525/files/d2249f22-a56f-42fe-be08-702801c97e4e',
-        imageLabel: null,
+        imageLabel: 'Diamondback Sortie',
+        altText: 'Diamondback Sortie',
         mediaType: null,
         productImageGroupId: 'default',
       },
       {
         imageUrl:
           '//cdn-sb.mozu.com/30294-50525/cms/50525/files/af946329-d91b-4e41-a21e-4825179c4219',
-        imageLabel: null,
+        imageLabel: 'Diamondback Sortie',
+        altText: 'Diamondback Sortie',
         mediaType: null,
         productImageGroupId: 'default',
       },
       {
         imageUrl:
           '//cdn-sb.mozu.com/30294-50525/cms/50525/files/4d6a6222-6eb9-4f6c-bc0a-08e0d81d9454',
-        imageLabel: null,
+        imageLabel: 'Diamondback Sortie',
+        altText: 'Diamondback Sortie',
         mediaType: null,
         productImageGroupId: 'default',
       },
@@ -252,6 +255,7 @@ export const ProductCustomMock: ProductCustom = {
         imageUrl:
           '//cdn-sb.mozu.com/30294-50525/cms/50525/files/6deee665-8462-4076-b9b4-f2fc4f1a78e1',
         imageLabel: null,
+        altText: 'Diamondback Sortie',
         mediaType: null,
         productImageGroupId: 'default',
       },

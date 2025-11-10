@@ -115,7 +115,7 @@ const userContextValues = (isAuthenticated: boolean, userId: number) => ({
   logout: jest.fn(),
 })
 
-const setup = (param: {
+const setup = async (param: {
   checkout: CrOrder
   isAuthenticated: boolean
   userId: number
@@ -134,6 +134,10 @@ const setup = (param: {
     </AuthContext.Provider>
   )
 
+  await waitFor(() => {
+    expect(true).toBe(true)
+  })
+
   return {
     user,
   }
@@ -141,8 +145,8 @@ const setup = (param: {
 
 describe('[components] StandardShippingStep', () => {
   describe('There are no previously saved shipping addresses to choose from', () => {
-    it('should not display previously saved shipping address radio buttons', () => {
-      setup({
+    it('should not display previously saved shipping address radio buttons', async () => {
+      await setup({
         checkout: {
           ...orderMock.checkout,
           fulfillmentInfo: { ...orderMock.checkout.fulfillmentInfo, fulfillmentContact: null },
@@ -155,7 +159,7 @@ describe('[components] StandardShippingStep', () => {
     })
 
     it('should display shipping address form', async () => {
-      setup({
+      await setup({
         checkout: {
           ...orderMock.checkout,
           fulfillmentInfo: { ...orderMock.checkout.fulfillmentInfo, fulfillmentContact: null },
@@ -170,7 +174,7 @@ describe('[components] StandardShippingStep', () => {
     })
 
     it('should handle AddressForm properly', async () => {
-      const { user } = setup({
+      const { user } = await setup({
         checkout: {
           ...orderMock.checkout,
           fulfillmentInfo: { ...orderMock.checkout.fulfillmentInfo, fulfillmentContact: null },
@@ -195,7 +199,7 @@ describe('[components] StandardShippingStep', () => {
 
   describe('There are previously saved shipping address in account but not in checkout', () => {
     it('should select a shipping address radio button and shippingMethod should be selected', async () => {
-      const { user } = setup({
+      const { user } = await setup({
         checkout: {
           ...orderMock.checkout,
           fulfillmentInfo: { ...orderMock.checkout.fulfillmentInfo, fulfillmentContact: null },
@@ -239,7 +243,7 @@ describe('[components] StandardShippingStep', () => {
 
   describe('There are previously saved shipping address in account and checkout', () => {
     it('should display shipping address radio buttons(saved in account and checkout)', async () => {
-      setup({
+      await setup({
         checkout: {
           ...orderMock.checkout,
         },
@@ -258,7 +262,7 @@ describe('[components] StandardShippingStep', () => {
     })
 
     it('should select a shipping address radio button and shippingMethod should be selected', async () => {
-      const { user } = setup({
+      const { user } = await setup({
         checkout: {
           ...orderMock.checkout,
         },

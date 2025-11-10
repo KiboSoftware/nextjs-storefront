@@ -109,22 +109,6 @@ const CreateRoleTemplate: React.FC<CreateRoleTemplateProps> = ({
     }
   }, [roleData, isLoadingRole, isReadOnly, isEditMode, isCopyMode, user?.id, roleId, behaviors])
 
-  const { createRole } = useCreateRoleAsync()
-
-  // Check if we're in readonly/view mode or copy mode from query params
-  const { roleId, mode } = router.query
-  const isReadOnly = mode === 'view'
-  const isCopyMode = mode === 'copy'
-  const isEditMode = mode === 'edit'
-
-  // Fetch role data if roleId is present (for view, edit, or copy mode)
-  const { role: roleData, isLoading: isLoadingRole } = useGetRoleByIdAsync(
-    roleId ? parseInt(roleId as string) : 0
-  )
-
-  // State to hold the initial form data
-  const [formData, setFormData] = useState<RoleFormData | undefined>(undefined)
-
   // When role data is loaded, prepare the initial data based on mode
   useEffect(() => {
     if (roleData && !isLoadingRole && (isReadOnly || isEditMode || isCopyMode)) {

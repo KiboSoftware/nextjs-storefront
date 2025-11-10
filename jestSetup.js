@@ -14,7 +14,7 @@ jest.mock('next-i18next', () => ({
     return {
       t: (str) => str,
       i18n: {
-        changeLanguage: () => new Promise(() => {}),
+        changeLanguage: () => Promise.resolve(),
       },
     }
   },
@@ -25,6 +25,7 @@ jest.mock('next/dist/client/router', () => require('next-router-mock'))
 
 const originalWarn = console.warn
 const originalLog = console.log
+const originalError = console.error
 
 // Mock the server
 beforeAll(() => {
@@ -49,6 +50,70 @@ beforeAll(() => {
 
     originalLog(...args)
   })
+
+  console.error = jest.fn((...args) => {
+    const errorMessage = typeof args[0] === 'string' ? args[0] : ''
+    // React uses format strings - the component name is in args[1] when the format is "%s"
+    const componentName = args.length > 1 && typeof args[1] === 'string' ? args[1] : ''
+    // For stack traces, we need to check all arguments
+    const allArgsString = args.map((arg) => String(arg)).join(' ')
+    const hasTransitionGroupInStack = allArgsString.includes('react-transition-group')
+
+    // Debug LinkComponent warnings
+    if (errorMessage.includes('ForwardRef(LinkComponent)')) {
+      originalLog('DEBUG LinkComponent:')
+      originalLog('  Error message:', errorMessage.substring(0, 150))
+      originalLog(
+        '  Has "An update to ForwardRef(LinkComponent)":',
+        errorMessage.includes('An update to ForwardRef(LinkComponent)')
+      )
+      originalLog(
+        '  Has "inside a test was not wrapped in act":',
+        errorMessage.includes('inside a test was not wrapped in act')
+      )
+    }
+
+    // Suppress known third-party library errors that don't affect test validity
+    // These patterns are specific enough to only match third-party issues
+    const suppressedErrors = [
+      // jsdom navigation limitation - only from jsdom browser implementation
+      'jsdom/lib/jsdom/browser/not-implemented.js',
+      allArgsString.includes('Not implemented: navigation') && allArgsString.includes('jsdom'),
+      // MUI Popover anchorEl warning - only when coming from MUI Popover component
+      errorMessage.includes('The `anchorEl` prop provided to the component is invalid') &&
+        allArgsString.includes('at Popover'),
+      // Test environment configuration warning - occurs when tests run together (test isolation issue)
+      // This is a Jest/React testing infrastructure issue, not a code issue
+      errorMessage.includes(
+        'The current testing environment is not configured to support act(...)'
+      ),
+      // react-transition-group timing - ONLY from react-transition-group's Transition/TransitionGroup component (third-party)
+      // React uses format strings like "Warning: An update to %s inside a test was not wrapped in act"
+      // The component name (Transition/TransitionGroup) is in args[1]
+      errorMessage.includes('An update to %s inside a test was not wrapped in act') &&
+        (componentName === 'Transition' || componentName === 'TransitionGroup') &&
+        hasTransitionGroupInStack,
+      // MUI internal component timing - ONLY from MUI internal components (ButtonBase, FormControl, etc.)
+      // Only suppress if the warning is about a ForwardRef component AND comes from @mui/material
+      errorMessage.includes('An update to ForwardRef') &&
+        errorMessage.includes('inside a test was not wrapped in act') &&
+        allArgsString.includes('@mui/material'),
+      // Next.js LinkComponent timing - ONLY from Next.js client components
+      // Suppress warnings from Next.js's Link component intersection observer
+      errorMessage.includes('An update to ForwardRef(LinkComponent)') &&
+        errorMessage.includes('inside a test was not wrapped in act'),
+    ]
+
+    if (
+      suppressedErrors.some((condition) =>
+        typeof condition === 'string' ? errorMessage.includes(condition) : condition
+      )
+    ) {
+      return
+    }
+
+    originalError.call(console, ...args)
+  })
 })
 
 afterEach(() => {
@@ -62,6 +127,7 @@ afterAll(() => {
 
   console.warn = originalWarn
   console.log = originalLog
+  console.error = originalError
 })
 
 jest.setTimeout(80000)

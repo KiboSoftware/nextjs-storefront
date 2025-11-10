@@ -13,6 +13,7 @@ import {
   customerPurchaseOrderMock,
   customerPurchaseOrderAccountMock,
   b2BAccountHierarchyResult,
+  rolesMock,
 } from '../stories'
 import { b2BAccountResponseMock } from '../stories/b2BAccountResponseMock'
 import { cartItemMock } from '../stories/cartItemMock'
@@ -673,6 +674,22 @@ export const b2bHandlers = [
   graphql.mutation('deleteQuoteCoupon', (_req, res, ctx) => {
     return res(ctx.data({ deleteQuoteCoupon: quoteMock?.items?.[0] }))
   }),
+
+  // useGetRolesByAccountIdAsync
+  graphql.query('getRolesByAccountIdAsync', (_req, res, ctx) => {
+    return res(ctx.data({ getRolesByAccountIdAsync: rolesMock }))
+  }),
+
+  // useDeleteRoleAsync
+  graphql.mutation('deleteRoleAsyncMutation', (_req, res, ctx) => {
+    return res(ctx.data({ deleteRoleAsyncMutation: true }))
+  }),
+]
+
+export const paypalHandlers = [
+  rest.get(`${baseUrl}/api/is-paypal-enabled`, (_req, res, ctx) => {
+    return res(ctx.status(200), ctx.json({ enabled: true }))
+  }),
 ]
 
 export const handlers = [
@@ -690,4 +707,5 @@ export const handlers = [
   ...inventoryHandlers,
   ...subscriptionHandlers,
   ...b2bHandlers,
+  ...paypalHandlers,
 ]

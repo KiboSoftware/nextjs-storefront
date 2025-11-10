@@ -52,7 +52,7 @@ describe('[components] - B2BProductSearch', () => {
 
     const textBox = screen.getByRole('textbox', { name: 'search-for-product' })
 
-    user.type(textBox, 'jacket')
+    await user.type(textBox, 'jacket')
 
     await waitFor(() => {
       const productItems = screen.queryAllByTestId(/product-item-component/i)
@@ -65,12 +65,16 @@ describe('[components] - B2BProductSearch', () => {
 
     const textBox = screen.getByRole('textbox', { name: 'search-for-product' })
 
-    user.type(textBox, 'shirt')
+    await user.type(textBox, 'shirt')
 
     await waitFor(() => {
       const productItems = screen.getAllByRole('button', { name: /Product Item/i })
-      user.click(productItems[0])
+      expect(productItems.length).toBeGreaterThan(0)
     })
+
+    const productItems = screen.getAllByRole('button', { name: /Product Item/i })
+    await user.click(productItems[0])
+
     await waitFor(() => {
       expect(onChangeMock).toBeCalled()
     })

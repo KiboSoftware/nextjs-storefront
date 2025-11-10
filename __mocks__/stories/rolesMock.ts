@@ -1,22 +1,4 @@
-import React from 'react'
-
-import { ComponentStory, ComponentMeta } from '@storybook/react'
-
-import ManageRolesTemplate from './ManageRolesTemplate'
-
-export default {
-  title: 'Page Templates/B2B/ManageRolesTemplate',
-  component: ManageRolesTemplate,
-  argTypes: {
-    onAccountTitleClick: { action: 'onAccountTitleClick' },
-  },
-} as ComponentMeta<typeof ManageRolesTemplate>
-
-const Template: ComponentStory<typeof ManageRolesTemplate> = (args) => (
-  <ManageRolesTemplate {...args} />
-)
-
-const mockRolesData = {
+export const rolesMock = {
   totalCount: 5,
   items: [
     {
@@ -58,13 +40,4 @@ const mockRolesData = {
   pageCount: 1,
   pageSize: 20,
   startIndex: 0,
-}
-
-export const Common = Template.bind({})
-Common.args = {
-  customerAccount: {
-    id: 100,
-    companyOrOrganization: 'Test Company',
-  } as any,
-  initialData: mockRolesData,
 }
