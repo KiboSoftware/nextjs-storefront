@@ -462,7 +462,7 @@ const StandardShippingStep = (props: ShippingProps) => {
 
           <Box m={1} maxWidth={'872px'} data-testid="address-form">
             <Grid container>
-              <Grid item xs={6} gap={2} display={'flex'} direction={'column'}>
+              <Grid item xs={6} gap={2} display={'flex'} flexDirection={'column'}>
                 <Button
                   variant="contained"
                   color="secondary"

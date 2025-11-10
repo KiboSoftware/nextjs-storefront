@@ -29,7 +29,7 @@ interface KiboRadioProps {
   onChange: (value: string) => void
 }
 
-export const KiboRadio = (props: KiboRadioProps) => {
+export const KiboRadio = React.forwardRef<HTMLDivElement, KiboRadioProps>((props, ref) => {
   const {
     name,
     title,
@@ -46,7 +46,7 @@ export const KiboRadio = (props: KiboRadioProps) => {
   }
 
   return (
-    <FormControl>
+    <FormControl ref={ref}>
       <FormLabel
         id="kibo-radio-buttons-group-label"
         sx={{ fontSize: 'body2', color: 'text.primary', pb: 1 }}
@@ -87,6 +87,8 @@ export const KiboRadio = (props: KiboRadioProps) => {
       </RadioGroup>
     </FormControl>
   )
-}
+})
+
+KiboRadio.displayName = 'KiboRadio'
 
 export default KiboRadio

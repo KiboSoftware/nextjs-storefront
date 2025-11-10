@@ -1,4 +1,4 @@
-import { renderHook, act } from '@testing-library/react-hooks'
+import { renderHook, act } from '@testing-library/react'
 
 import { useProductCardActions } from './useProductCardActions'
 import { AddToCartDialog } from '@/components/dialogs'

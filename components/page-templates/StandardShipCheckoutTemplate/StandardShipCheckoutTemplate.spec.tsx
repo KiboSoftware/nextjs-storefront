@@ -98,9 +98,18 @@ beforeAll(() => server.listen())
 afterEach(() => server.resetHandlers())
 afterAll(() => server.close())
 
+const setup = async () => {
+  const user = userEvent.setup()
+  render(<Common {...Common?.args} />)
+  await waitFor(() => {
+    expect(true).toBe(true)
+  })
+  return { user }
+}
+
 describe('[component] - StandardShipCheckout template', () => {
   it('should render component', async () => {
-    render(<Common {...Common?.args} />)
+    await setup()
     const checkoutUITemplate = screen.getByTestId('checkout-ui-template-mock')
     const detailsStep = screen.getByTestId('details-step-mock')
     const standardShippingStep = screen.getByTestId('standard-shipping-step-mock')
@@ -115,7 +124,6 @@ describe('[component] - StandardShipCheckout template', () => {
   })
 
   it('should handle handleApplyCouponCode with invalid coupons', async () => {
-    const user = userEvent.setup()
     server.use(
       graphql.mutation('updateOrderCoupon', (_req, res, ctx) => {
         return res(
@@ -131,7 +139,7 @@ describe('[component] - StandardShipCheckout template', () => {
         )
       })
     )
-    render(<Common {...Common?.args} />)
+    const { user } = await setup()
     user.click(screen.getByTestId(/apply-coupon-button/))
 
     await waitFor(() => {
@@ -140,8 +148,7 @@ describe('[component] - StandardShipCheckout template', () => {
   })
 
   it('should handle handleRemoveCouponCode', async () => {
-    const user = userEvent.setup()
-    render(<Common {...Common?.args} />)
+    const { user } = await setup()
     expect(screen.getByTestId('coupon-count')).toHaveTextContent('2')
     server.use(
       graphql.query('getCheckout', (_req, res, ctx) => {
@@ -164,9 +171,6 @@ describe('[component] - StandardShipCheckout template', () => {
   })
 
   it('should handle updateCheckoutPersonalInfo', async () => {
-    const user = userEvent.setup()
-    render(<Common {...Common?.args} />)
-
     server.use(
       graphql.query('getCheckout', (_req, res, ctx) => {
         return res(
@@ -179,6 +183,8 @@ describe('[component] - StandardShipCheckout template', () => {
         )
       })
     )
+
+    const { user } = await setup()
 
     user.click(screen.getByTestId(/updateCheckoutPersonalInfo/))
 

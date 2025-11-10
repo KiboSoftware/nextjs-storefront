@@ -189,8 +189,8 @@ const ImageGallery = (props: ImageGalleryProps) => {
                         placeholderImageUrl
                       }
                       alt={(image?.altText as string) || t('product-image-alt')}
-                      layout="fill"
-                      objectFit="contain"
+                      fill
+                      style={{ objectFit: 'contain' }}
                       errorimage={placeholderImageUrl}
                     />
                   </Box>
@@ -291,8 +291,8 @@ const ImageGallery = (props: ImageGalleryProps) => {
                           ? (images[selectedImage.selectedIndex]?.altText as string)
                           : 'placeholder-image'
                       }
-                      layout="fill"
-                      objectFit="contain"
+                      fill
+                      style={{ objectFit: 'contain' }}
                       data-testid={`selected-image`}
                     />
                   </Box>

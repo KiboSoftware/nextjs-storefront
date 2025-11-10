@@ -1,10 +1,11 @@
 const path = require('path')
-const { TsconfigPathsPlugin } = require('tsconfig-paths-webpack-plugin')
+const TsconfigPathsPlugin = require('tsconfig-paths-webpack-plugin')
 
 function resolve(dir) {
   return path.join(__dirname, dir)
 }
 module.exports = {
+  staticDirs: ['../public'],
   webpackFinal: async (config) => {
     // config.resolve.modules.push(path.resolve(__dirname, '../'));
     ;[].push.apply(config.resolve.plugins, [
@@ -23,7 +24,6 @@ module.exports = {
     '@storybook/addon-links',
     '@storybook/addon-essentials',
     'storybook-addon-material-ui5',
-    '@storybook/addon-docs',
     '@storybook/addon-a11y',
     'storybook-addon-next-router',
   ],

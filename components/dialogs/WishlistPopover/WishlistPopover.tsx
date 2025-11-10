@@ -7,6 +7,7 @@ import { useRouter } from 'next/router'
 import { useTranslation } from 'next-i18next'
 interface WishlistPopoverProps {
   isInWishlist: boolean
+  anchorEl?: Element | null
 }
 
 const styles = {
@@ -43,7 +44,7 @@ const styles = {
 }
 
 const WishlistPopover = (props: WishlistPopoverProps) => {
-  const { isInWishlist } = props
+  const { isInWishlist, anchorEl = null } = props
   const { t } = useTranslation('common')
   const router = useRouter()
   const theme = useTheme()
@@ -67,6 +68,7 @@ const WishlistPopover = (props: WishlistPopoverProps) => {
   return (
     <Popover
       open={isOpen}
+      anchorEl={anchorEl}
       sx={{
         ...styles.popOverStyle,
         top: popOverTop,

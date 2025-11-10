@@ -5,14 +5,14 @@
     "npm": ">=8.3.0"
   },
   "scripts": {
-    "dev": "NODE_OPTIONS='-r next-logger' next dev",
+    "dev": "cross-env NODE_OPTIONS='-r next-logger' next dev",
     "build": "next build",
-    "start": "NODE_OPTIONS='-r next-logger' next start",
+    "start": "cross-env NODE_OPTIONS='-r next-logger' next start",
     "lint": "next lint",
     "fixlint": "next lint --fix",
     "generate-types": "graphql-codegen",
-    "storybook": "start-storybook -p 3000 -s ./public",
-    "build-storybook": "build-storybook -s ./public",
+    "storybook": "cross-env NODE_OPTIONS=--openssl-legacy-provider start-storybook -p 3000",
+    "build-storybook": "cross-env NODE_OPTIONS=--openssl-legacy-provider build-storybook",
     "validate-types": "tsc --noEmit --declaration",
     "test": "jest",
     "test-report-coverage": "jest --silent --coverage --testResultsProcessor=jest-sonar-reporter",

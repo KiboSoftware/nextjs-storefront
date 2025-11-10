@@ -1,6 +1,13 @@
-import { renderHook } from '@testing-library/react'
+import { renderHook, waitFor } from '@testing-library/react'
 
 import { usePayPalBearerToken } from './usePayPalBearerToken'
+
+// Mock fetch
+global.fetch = jest.fn(() =>
+  Promise.resolve({
+    json: () => Promise.resolve({ token: 'mock-bearer-token' }),
+  })
+) as jest.Mock
 
 jest.mock('next-i18next', () => ({
   useTranslation: () => ({
@@ -10,8 +17,14 @@ jest.mock('next-i18next', () => ({
 }))
 
 describe('usePayPalBearerToken', () => {
-  it('should return Paypal bearer token', () => {
+  afterEach(() => {
+    jest.clearAllMocks()
+  })
+
+  it('should return Paypal bearer token', async () => {
     const { result } = renderHook(() => usePayPalBearerToken())
-    expect(result.current).toEqual(null)
+    await waitFor(() => {
+      expect(result.current).toEqual({ token: 'mock-bearer-token' })
+    })
   })
 })

@@ -1,6 +1,7 @@
 /* eslint-disable @typescript-eslint/no-var-requires */
-import { KeyboardArrowDownOutlined } from '@mui/icons-material'
-import { screen, waitFor, within } from '@testing-library/react'
+import React from 'react'
+
+import { screen, waitFor } from '@testing-library/react'
 import '@testing-library/jest-dom'
 import userEvent from '@testing-library/user-event'
 import { mock } from 'jest-mock-extended'
@@ -14,10 +15,21 @@ const mockFetch = jest.fn(() => {
   return {
     json: () => ({ id: 1011 }),
   }
-}) as any
+})
 
 // Assign the mock fetch implementation to the global object
-global.fetch = mockFetch
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+global.fetch = mockFetch as any
+
+const mockShowModal = jest.fn()
+const mockCloseModal = jest.fn()
+
+const mockModalContextValue = {
+  Component: null,
+  props: {},
+  showModal: mockShowModal,
+  closeModal: mockCloseModal,
+}
 
 const mockValues = mock<AuthContextType>()
 mockValues.setSelectedAccountId = jest.fn()
@@ -29,6 +41,11 @@ mockValues.user = {
   emailAddress: 'user1@example.com',
   companyOrOrganization: 'Company 1',
 }
+
+jest.mock('@/context', () => ({
+  ...jest.requireActual('@/context'),
+  useModalContext: () => mockModalContextValue,
+}))
 
 jest.mock('@/components/common/KiboDialog/KiboDialog', () => ({
   __esModule: true,
@@ -52,11 +69,13 @@ const setup = () => {
 
   const handleCloseMock = jest.fn()
 
-  const el = <KeyboardArrowDownOutlined />
+  // Create a DOM element to use as anchorEl (MUI expects an HTMLElement, not a React element)
+  const anchorEl = document.createElement('div')
+  document.body.appendChild(anchorEl)
 
   renderWithQueryClient(
     <AuthContext.Provider value={mockValues}>
-      <SwitchAccountMenu open={true} anchorEl={el} handleClose={handleCloseMock} />
+      <SwitchAccountMenu open={true} anchorEl={anchorEl} handleClose={handleCloseMock} />
     </AuthContext.Provider>
   )
   return {

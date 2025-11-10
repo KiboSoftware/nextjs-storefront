@@ -36,7 +36,11 @@ export const renderWithQueryClient = (ui: ReactElement, client?: QueryClient): R
 export const createQueryClientWrapper = () => {
   const queryClient = generateTestQueryClient()
 
-  return ({ children }: any) => (
+  const QueryClientWrapper = ({ children }: { children: React.ReactNode }) => (
     <QueryClientProvider client={queryClient}>{children}</QueryClientProvider>
   )
+
+  QueryClientWrapper.displayName = 'QueryClientWrapper'
+
+  return QueryClientWrapper
 }
