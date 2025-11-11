@@ -141,6 +141,13 @@ export const roleFormStyles = {
       xs: '16px',
     },
   },
+  mdWrapIcon: {
+    display: 'flex',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+    mb: 3,
+    mt: 3,
+  },
 }
 
 export default roleFormStyles

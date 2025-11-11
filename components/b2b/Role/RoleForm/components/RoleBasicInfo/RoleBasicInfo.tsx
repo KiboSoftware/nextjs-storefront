@@ -24,6 +24,7 @@ interface RoleBasicInfoProps {
   accounts?: B2BAccount[]
   onParentAccountChange: (value: string) => void
   isReadOnly?: boolean
+  isEditMode?: boolean
 }
 
 const RoleBasicInfo: React.FC<RoleBasicInfoProps> = ({
@@ -32,6 +33,7 @@ const RoleBasicInfo: React.FC<RoleBasicInfoProps> = ({
   accounts,
   onParentAccountChange,
   isReadOnly = false,
+  isEditMode = false,
 }) => {
   const { t } = useTranslation('common')
 
@@ -88,7 +90,7 @@ const RoleBasicInfo: React.FC<RoleBasicInfoProps> = ({
       </Box>
 
     {/* Parent Account Field - Hide in readonly mode */}
-    {!isReadOnly && (
+    {!(isReadOnly || isEditMode) && (
       <Box sx={roleBasicInfoStyles.fieldContainer}>
         <Controller
           name="parentAccount"

@@ -133,45 +133,53 @@ const CreateRoleTemplate: React.FC<CreateRoleTemplateProps> = ({
       })
 
       // Calculate accountIds based on account scope
+      // For edit mode, use the original roleData.accountIds
       let accountIds: number[] = []
-      const parentAccountId = parseInt(data.parentAccount)
 
-      if (data.accountScope === 'all-child') {
-        // Include parent and all child accounts recursively
-        const getAllDescendants = (parentId: number): number[] => {
-          const directChildren =
-            initialData?.accounts?.filter((acc) => acc.parentAccountId === parentId) || []
-          const descendants: number[] = []
-          directChildren.forEach((child) => {
-            descendants.push(child.id)
-            descendants.push(...getAllDescendants(child.id))
-          })
-          return descendants
-        }
-        accountIds = [parentAccountId, ...getAllDescendants(parentAccountId)]
-      } else if (data.accountScope === 'specific-child') {
-        // Include parent and selected child accounts
-        accountIds = [parentAccountId, ...(data.selectedAccounts || [])]
-      } else if (data.accountScope === 'all-except') {
-        // Include parent and all child accounts except selected ones
-        const getAllDescendants = (parentId: number): number[] => {
-          const directChildren =
-            initialData?.accounts?.filter((acc) => acc.parentAccountId === parentId) || []
-          const descendants: number[] = []
-          directChildren.forEach((child) => {
-            descendants.push(child.id)
-            descendants.push(...getAllDescendants(child.id))
-          })
-          return descendants
-        }
-        const allDescendantIds = getAllDescendants(parentAccountId)
-        accountIds = [
-          parentAccountId,
-          ...allDescendantIds.filter((id) => !data.selectedAccounts?.includes(id)),
-        ]
+      if (isEditMode && roleData?.accountIds) {
+        // In edit mode, preserve the original account associations
+        accountIds = roleData.accountIds
       } else {
-        // Current account only
-        accountIds = [parentAccountId]
+        // For create/copy mode, calculate accountIds based on form selections
+        const parentAccountId = parseInt(data.parentAccount)
+
+        if (data.accountScope === 'all-child') {
+          // Include parent and all child accounts recursively
+          const getAllDescendants = (parentId: number): number[] => {
+            const directChildren =
+              initialData?.accounts?.filter((acc) => acc.parentAccountId === parentId) || []
+            const descendants: number[] = []
+            directChildren.forEach((child) => {
+              descendants.push(child.id)
+              descendants.push(...getAllDescendants(child.id))
+            })
+            return descendants
+          }
+          accountIds = [parentAccountId, ...getAllDescendants(parentAccountId)]
+        } else if (data.accountScope === 'specific-child') {
+          // Include parent and selected child accounts
+          accountIds = [parentAccountId, ...(data.selectedAccounts || [])]
+        } else if (data.accountScope === 'all-except') {
+          // Include parent and all child accounts except selected ones
+          const getAllDescendants = (parentId: number): number[] => {
+            const directChildren =
+              initialData?.accounts?.filter((acc) => acc.parentAccountId === parentId) || []
+            const descendants: number[] = []
+            directChildren.forEach((child) => {
+              descendants.push(child.id)
+              descendants.push(...getAllDescendants(child.id))
+            })
+            return descendants
+          }
+          const allDescendantIds = getAllDescendants(parentAccountId)
+          accountIds = [
+            parentAccountId,
+            ...allDescendantIds.filter((id) => !data.selectedAccounts?.includes(id)),
+          ]
+        } else {
+          // Current account only
+          accountIds = [parentAccountId]
+        }
       }
 
       const b2BRoleInput = {
@@ -242,6 +250,7 @@ const CreateRoleTemplate: React.FC<CreateRoleTemplateProps> = ({
             accountUserBehaviorResults={accountUserBehaviorResults}
             initialData={formData}
             isReadOnly={isReadOnly}
+            isEditMode={isEditMode}
             pageTitle={getPageTitle()}
             isLoading={isLoadingRole && !!roleId}
             roleAccountIds={[]}
