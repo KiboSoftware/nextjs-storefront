@@ -77,6 +77,7 @@ const AccountScopeSelector: React.FC<AccountScopeSelectorProps> = ({
                     label={applyToAllChildAccountsLabel}
                     disabled={!hasChildAccounts}
                     sx={accountScopeSelectorStyles.formControlLabelNoMargin}
+                    name="account-scope"
                   />
                   <Tooltip title={applyToAllChildAccountsTooltip} placement="top">
                     <InfoIcon sx={infoIconStyle} />
@@ -117,6 +118,7 @@ const AccountScopeSelector: React.FC<AccountScopeSelectorProps> = ({
                   label={applyToSpecificChildAccountsLabel}
                   disabled={!hasChildAccounts}
                   sx={accountScopeSelectorStyles.formControlLabelNoMargin}
+                  name="account-scope"
                 />
                 <Tooltip title={applyToSpecificChildAccountsTooltip} placement="top">
                   <InfoIcon sx={infoIconStyle} />
@@ -129,6 +131,7 @@ const AccountScopeSelector: React.FC<AccountScopeSelectorProps> = ({
                   label={applyToAllChildAccountsExceptLabel}
                   disabled={!hasChildAccounts}
                   sx={accountScopeSelectorStyles.formControlLabelNoMargin}
+                  name="account-scope"
                 />
                 <Tooltip title={applyToAllChildAccountsExceptTooltip} placement="top">
                   <InfoIcon sx={infoIconStyle} />

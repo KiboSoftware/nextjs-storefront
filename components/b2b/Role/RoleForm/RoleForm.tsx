@@ -45,6 +45,7 @@ interface RoleFormProps {
   accountUserBehaviors?: Array<unknown>
   behaviorLoading?: boolean
   isReadOnly?: boolean
+  isEditMode?: boolean
   initialData?: RoleFormData
   pageTitle?: string
   isLoading?: boolean
@@ -70,6 +71,7 @@ const RoleForm: React.FC<RoleFormProps> = ({
   behaviors,
   accountUserBehaviorResults,
   isReadOnly = false,
+  isEditMode = false,
   initialData,
   pageTitle,
   isLoading = false,
@@ -310,6 +312,12 @@ const RoleForm: React.FC<RoleFormProps> = ({
       return
     }
 
+    // Validate that account scope is selected when parent has child accounts
+    if (hasChildAccounts && !data.accountScope) {
+      showSnackbar(t('account-scope-required'), 'error')
+      return
+    }
+
     // Clear permission error if validation passes
     setPermissionError('')
 
@@ -402,10 +410,14 @@ const RoleForm: React.FC<RoleFormProps> = ({
       // Call onSave callback if provided
       showSnackbar(t('role-created-successfully'), 'success')
       router.push('/my-account/b2b/manage-roles')
-    } catch (error) {
+    } catch (error: unknown) {
       console.error('Error creating role:', error)
-      // Handle error - you might want to show an error message to the user
-      setPermissionError(t('role-creation-failed'))
+      // Extract and show the API error message
+      const errorMessage =
+        error && typeof error === 'object' && 'message' in error
+          ? String(error.message)
+          : t('role-creation-failed')
+      showSnackbar(errorMessage, 'error')
     }
   }
 
@@ -430,15 +442,7 @@ const RoleForm: React.FC<RoleFormProps> = ({
         </Stack>
       </Box>
       {mdScreen && (
-        <Box
-          sx={{
-            display: 'flex',
-            justifyContent: 'space-between',
-            alignItems: 'center',
-            mb: 3,
-            mt: 3,
-          }}
-        >
+        <Box sx={{ ...styles.mdWrapIcon }}>
           <Typography variant="h1">{pageTitle || t('create-new-role')}</Typography>
           <Box sx={{ display: 'flex', gap: 2 }}>
             {!isReadOnly && (
@@ -472,13 +476,16 @@ const RoleForm: React.FC<RoleFormProps> = ({
         accounts={accountsWithPermission}
         onParentAccountChange={handleParentAccountChange}
         isReadOnly={isReadOnly}
+        isEditMode={isEditMode}
       />
 
       {/* Account Scope Section */}
-      <AccountScopeSelector control={control} hasChildAccounts={hasChildAccounts} />
+      {!(isReadOnly || isEditMode) && (
+        <AccountScopeSelector control={control} hasChildAccounts={hasChildAccounts} />
+      )}
 
       {/* Account Hierarchy Tree - Show when specific-child or all-except is selected AND parent has children */}
-      {parentAccount &&
+      {!(isReadOnly || isEditMode) && parentAccount &&
         (accountScope === AccountScope.SpecificChild ||
           accountScope === AccountScope.AllExcept) && (
           <RoleFormAccountHierarchyTree
@@ -492,11 +499,12 @@ const RoleForm: React.FC<RoleFormProps> = ({
       )}
 
       {/* Account Hierarchy View Section - Shows which accounts the role is applied to */}
-      {isReadOnly && roleAccountIds && roleAccountIds.length > 0 && (
+      {/* Show in readonly mode OR edit mode */}
+      {(isReadOnly || isEditMode) && roleAccountIds && roleAccountIds.length > 0 && (
         <RoleAccountHierarchyView
           accounts={accounts}
           selectedAccountIds={roleAccountIds}
-          parentAccountId={user?.id}
+          parentAccountId={Number(parentAccount) || user?.id}
         />
       )}
 
