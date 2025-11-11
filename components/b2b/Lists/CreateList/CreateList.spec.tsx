@@ -132,7 +132,7 @@ afterEach(() => {
 describe('[component] - Create List', () => {
   it('should render the component', async () => {
     window.matchMedia = createMatchMedia(1024)
-    const { user } = await setup()
+    await setup()
 
     expect(screen.getByText(/create-new-list/i)).toBeVisible()
     expect(screen.getByText(/save-and-close/i)).toBeVisible()

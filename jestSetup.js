@@ -59,20 +59,6 @@ beforeAll(() => {
     const allArgsString = args.map((arg) => String(arg)).join(' ')
     const hasTransitionGroupInStack = allArgsString.includes('react-transition-group')
 
-    // Debug LinkComponent warnings
-    if (errorMessage.includes('ForwardRef(LinkComponent)')) {
-      originalLog('DEBUG LinkComponent:')
-      originalLog('  Error message:', errorMessage.substring(0, 150))
-      originalLog(
-        '  Has "An update to ForwardRef(LinkComponent)":',
-        errorMessage.includes('An update to ForwardRef(LinkComponent)')
-      )
-      originalLog(
-        '  Has "inside a test was not wrapped in act":',
-        errorMessage.includes('inside a test was not wrapped in act')
-      )
-    }
-
     // Suppress known third-party library errors that don't affect test validity
     // These patterns are specific enough to only match third-party issues
     const suppressedErrors = [
