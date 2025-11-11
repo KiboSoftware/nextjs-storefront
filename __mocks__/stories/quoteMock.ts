@@ -266,7 +266,7 @@ export const quoteMock = {
             countryCode: 'US',
           },
         },
-        shippingMethodCode: 'b5d6d7b9b7ef487db9d9b07c00623006',
+        shippingMethodCode: '46be3c2a4f17412ca1daacb801232b0c',
         shippingMethodName: 'Flat Rate - $15.00',
       },
       userId: '3f0d607c81af4bc28e2d0602b6898b98',

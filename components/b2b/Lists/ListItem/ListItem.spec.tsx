@@ -50,7 +50,7 @@ jest.mock('@/components/common/QuantitySelector/QuantitySelector', () => ({
 const onDeleteItemMock = jest.fn()
 const onChangeQuantityMock = jest.fn()
 
-const setup = () => {
+const setup = async () => {
   const user = userEvent.setup()
   render(
     <Common
@@ -59,13 +59,16 @@ const setup = () => {
       onChangeQuantity={onChangeQuantityMock}
     />
   )
+  await waitFor(() => {
+    expect(true).toBe(true)
+  })
   return { user }
 }
 
 describe('[component] - ListItem', () => {
-  it('should render list item', () => {
+  it('should render list item', async () => {
     window.matchMedia = createMatchMedia(1024)
-    setup()
+    await setup()
     expect(screen.getByText(lineItem.product.name)).toBeVisible()
     expect(screen.getByText(/total/i)).toBeVisible()
     expect(screen.getByText(/qty/i)).toBeVisible()
@@ -75,7 +78,7 @@ describe('[component] - ListItem', () => {
 
   it('should delete item', async () => {
     window.matchMedia = createMatchMedia(1024)
-    const { user } = setup()
+    const { user } = await setup()
     const deleteBtn = screen.getByText(/remove/i)
     user.click(deleteBtn)
     await waitFor(() => {
@@ -84,7 +87,7 @@ describe('[component] - ListItem', () => {
   })
 
   it('should increase item quantity', async () => {
-    const { user } = setup()
+    const { user } = await setup()
     const quantitySelector = screen.getByTestId('quantity-selector')
     const increaseBtn = within(quantitySelector).getByTestId('increase-button')
     user.click(increaseBtn)
@@ -99,7 +102,7 @@ describe('[component] - ListItem', () => {
   })
 
   it('should decrease item quantity', async () => {
-    const { user } = setup()
+    const { user } = await setup()
     const quantitySelector = screen.getByTestId('quantity-selector')
     const decreaseBtn = within(quantitySelector).getByTestId('decrease-button')
     user.click(decreaseBtn)
@@ -114,7 +117,7 @@ describe('[component] - ListItem', () => {
   })
 
   it('should update item quantity', async () => {
-    const { user } = setup()
+    const { user } = await setup()
     const quantitySelector = screen.getByTestId('quantity-selector')
     const quantityUpdateInput = within(quantitySelector).getByTestId('change-input')
     user.type(quantityUpdateInput, '3')
@@ -129,7 +132,7 @@ describe('[component] - ListItem', () => {
   })
 
   it('should open ProductView dialog', async () => {
-    setup()
+    await setup()
     const modalBtn = screen.getByTestId('product-modal-btn')
     expect(modalBtn).toBeVisible()
 

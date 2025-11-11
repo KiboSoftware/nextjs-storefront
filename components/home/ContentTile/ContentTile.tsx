@@ -87,8 +87,8 @@ const ContentTiles = (props: TileProps) => {
           <KiboImage
             src={imgSource}
             alt={'content tiles'}
-            layout="fill"
-            objectFit="cover"
+            fill
+            style={{ objectFit: 'cover' }}
             quality={75}
           />
         </ImageWrapper>

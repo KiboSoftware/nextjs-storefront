@@ -46,7 +46,7 @@ const WishlistTemplate = () => {
                 md={4}
                 sm={4}
                 xs={12}
-                spacing={3}
+                sx={{ p: 1.5 }}
               >
                 <Box>
                   <ProductCard

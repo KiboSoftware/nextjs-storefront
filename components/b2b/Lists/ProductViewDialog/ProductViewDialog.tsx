@@ -20,7 +20,7 @@ import { productGetters } from '@/lib/getters'
 import { uiHelpers } from '@/lib/helpers'
 import DefaultImage from '@/public/product_placeholder.svg'
 
-import { CrProductOption, CrWishlistItem } from '@/lib/gql/types'
+import { CrWishlistItem } from '@/lib/gql/types'
 
 export interface ProductViewDialogProps {
   item: CrWishlistItem
@@ -73,18 +73,16 @@ const ProductView = (props: ProductViewProps) => {
               <Typography data-testid="productCode">
                 {t('product-code')}: {product?.variationProductCode || product?.productCode}
               </Typography>
-              <Typography>
-                {item.subtotal && (
-                  <KeyValueDisplay
-                    option={{
-                      name: t('total'),
-                      value: `$${item.subtotal}`,
-                    }}
-                    sx={{ fontSize: '14px' }}
-                    variant="body1"
-                  />
-                )}
-              </Typography>
+              {item.subtotal && (
+                <KeyValueDisplay
+                  option={{
+                    name: t('total'),
+                    value: `$${item.subtotal}`,
+                  }}
+                  sx={{ fontSize: '14px' }}
+                  variant="body1"
+                />
+              )}
               <Box data-testid="productPrice">
                 <KeyValueDisplay
                   option={{

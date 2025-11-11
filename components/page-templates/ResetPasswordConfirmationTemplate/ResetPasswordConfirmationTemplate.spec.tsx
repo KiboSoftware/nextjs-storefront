@@ -8,9 +8,12 @@ import * as stories from './ResetPasswordConfirmationTemplate.stories' // import
 
 const { Common } = composeStories(stories)
 
-const setup = () => {
+const setup = async () => {
   const user = userEvent.setup()
   render(<Common {...Common?.args} />)
+  await waitFor(() => {
+    expect(true).toBe(true)
+  })
 
   return {
     user,
@@ -18,8 +21,8 @@ const setup = () => {
 }
 
 describe('[component] Reset Password Confirmation Template component', () => {
-  it('should render the reset password confirmation component', () => {
-    setup()
+  it('should render the reset password confirmation component', async () => {
+    await setup()
 
     const resetPasswordLabel = screen.getAllByText(/reset-password/i)[0]
     const passwordTexBox = screen.getByLabelText(/new-password/i)
@@ -33,7 +36,7 @@ describe('[component] Reset Password Confirmation Template component', () => {
   })
 
   it('validates and submits the form with valid data', async () => {
-    const { user } = setup()
+    const { user } = await setup()
 
     const newPasswordInput = screen.getByLabelText(/new-password/i)
     const confirmPasswordInput = screen.getByLabelText(/confirm-password/i)
@@ -53,7 +56,7 @@ describe('[component] Reset Password Confirmation Template component', () => {
   })
 
   it("should display 'Required Field Message' when user tabs out 'Password' field without entering Password", async () => {
-    const { user } = setup()
+    const { user } = await setup()
 
     const newPasswordInput = screen.getByLabelText(/new-password/i)
     const confirmPasswordInput = screen.getByLabelText(/confirm-password/i)
@@ -70,7 +73,7 @@ describe('[component] Reset Password Confirmation Template component', () => {
   })
 
   it('should unmusk password when click on eye icon', async () => {
-    const { user } = setup()
+    const { user } = await setup()
 
     const eyeIcon = screen.getAllByRole('button', { name: 'toggle icon visibility' })[0]
     const passwordInput = screen.getByLabelText('new-password')

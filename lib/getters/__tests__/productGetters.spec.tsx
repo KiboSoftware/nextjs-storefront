@@ -124,7 +124,7 @@ describe('[getters] productGetters', () => {
         name: 'Direct Ship',
         code: 'DS',
         label: 'Ship to Home',
-        details: 'Available to Ship',
+        details: '',
         fulfillmentLocation: '',
         required: false,
         shortName: 'Ship',

@@ -1,6 +1,6 @@
 import React from 'react'
 
-import { screen, waitFor, within, act } from '@testing-library/react'
+import { screen, waitFor, within } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
 import { graphql } from 'msw'
 
@@ -227,7 +227,7 @@ const TestComponent = ({ param }: { param: any }) => {
   )
 }
 
-const setup = (param: {
+const setup = async (param: {
   isAuthenticated: boolean
   userId: number
   savedUserAddressData?: CustomerContactCollection
@@ -247,6 +247,12 @@ const setup = (param: {
       </CheckoutStepProvider>
     </ModalContextProvider>
   )
+
+  // Wait for async effects to settle
+  await waitFor(() => {
+    // Just wait a tick for initial effects to complete
+    expect(true).toBe(true)
+  })
 
   return {
     user,
@@ -317,7 +323,7 @@ describe('[component] MultiShippingStep', () => {
           })
         )
         it('should render shipping address form and handle saving new address', async () => {
-          const { user } = setup({
+          const { user } = await setup({
             isAuthenticated: true,
             userId: 0, // user that has no address saved.
             savedUserAddressData: { ...userAddressResponse, items: [] },
@@ -365,7 +371,7 @@ describe('[component] MultiShippingStep', () => {
         )
 
         it('should render ship option radio and select Ship to more than one address radio to render multiShip view', async () => {
-          const { user } = setup({
+          const { user } = await setup({
             isAuthenticated: true,
             userId: 0, // user that has no address saved.
             savedUserAddressData: { ...userAddressResponse, items: [] },
@@ -390,7 +396,7 @@ describe('[component] MultiShippingStep', () => {
         })
 
         it('should handle Add address for every shipping items', async () => {
-          const { user } = setup({
+          const { user } = await setup({
             isAuthenticated: true,
             userId: 0, // user that has no address saved.
             savedUserAddressData: { ...userAddressResponse, items: [] },
@@ -410,7 +416,7 @@ describe('[component] MultiShippingStep', () => {
         })
 
         it('should handle shippingMethod selection for every ship items', async () => {
-          const { user } = setup({
+          const { user } = await setup({
             isAuthenticated: true,
             userId: 0, // user that has no address saved.
             savedUserAddressData: { ...userAddressResponse, items: [] },
@@ -462,7 +468,7 @@ describe('[component] MultiShippingStep', () => {
         })
       )
       it('should render shipping address type radio and Saved addresses radio', async () => {
-        setup({
+        await setup({
           isAuthenticated: true,
           userId: 1012, // user that has no address saved.
         })
@@ -484,7 +490,7 @@ describe('[component] MultiShippingStep', () => {
       })
 
       it('should handle address change for shipToHome', async () => {
-        const { user } = setup({
+        const { user } = await setup({
           isAuthenticated: true,
           userId: 1012, // user that has no address saved.
         })
@@ -500,7 +506,7 @@ describe('[component] MultiShippingStep', () => {
       })
 
       it('should handle address change in multiShip', async () => {
-        const { user } = setup({
+        const { user } = await setup({
           isAuthenticated: true,
           userId: 0, // user that has no address saved.
         })

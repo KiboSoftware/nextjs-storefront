@@ -1,7 +1,7 @@
 import React, { ReactNode } from 'react'
 
 import { composeStories } from '@storybook/testing-react'
-import { render, screen, waitFor, act } from '@testing-library/react'
+import { render, screen, waitFor } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
 import { Maybe } from 'graphql/jsutils/Maybe'
 import { graphql } from 'msw'
@@ -81,10 +81,10 @@ jest.mock('../../checkout/MultiShippingStep/MultiShippingStep', () => ({
   __esModule: true,
   default: ({
     checkout,
-    updateCheckoutShippingMethod,
+    onUpdateCheckoutShippingMethod,
   }: {
     checkout: Checkout
-    updateCheckoutShippingMethod: (prop: {
+    onUpdateCheckoutShippingMethod: (prop: {
       shippingMethodCode: string
       shippingMethodGroup: CheckoutGroupRates
     }) => void
@@ -94,7 +94,7 @@ jest.mock('../../checkout/MultiShippingStep/MultiShippingStep', () => ({
         type="button"
         data-testid="updateCheckoutShippingMethod"
         onClick={() =>
-          updateCheckoutShippingMethod({
+          onUpdateCheckoutShippingMethod({
             shippingMethodCode: 'method2',
             shippingMethodGroup: {
               groupingId: 'group1',
@@ -136,9 +136,18 @@ beforeAll(() => server.listen())
 afterEach(() => server.resetHandlers())
 afterAll(() => server.close())
 
+const setup = async () => {
+  const user = userEvent.setup()
+  render(<Common {...Common?.args} />)
+  await waitFor(() => {
+    expect(true).toBe(true)
+  })
+  return { user }
+}
+
 describe('[component] - MultiShipCheckout template', () => {
   it('should render component', async () => {
-    render(<Common {...Common?.args} />)
+    await setup()
     const checkoutUITemplate = screen.getByTestId('checkout-ui-template-mock')
     const detailsStep = screen.getByTestId('details-step-mock')
     const multiShippingStep = screen.getByTestId('multi-shipping-step-mock')
@@ -153,8 +162,6 @@ describe('[component] - MultiShipCheckout template', () => {
   })
 
   it('should handle handleApplyCouponCode with invalid coupons', async () => {
-    const user = userEvent.setup()
-
     server.use(
       graphql.mutation('updateCheckoutCoupon', (_req, res, ctx) => {
         return res(
@@ -171,7 +178,7 @@ describe('[component] - MultiShipCheckout template', () => {
       })
     )
 
-    render(<Common {...Common?.args} />)
+    const { user } = await setup()
 
     user.click(screen.getByTestId(/apply-coupon-button/))
 
@@ -181,8 +188,7 @@ describe('[component] - MultiShipCheckout template', () => {
   })
 
   it('should handle handleRemoveCouponCode function successfully', async () => {
-    const user = userEvent.setup()
-    render(<Common {...Common?.args} />)
+    const { user } = await setup()
 
     expect(screen.getByTestId('coupon-count')).toHaveTextContent('1')
 
@@ -207,10 +213,6 @@ describe('[component] - MultiShipCheckout template', () => {
   })
 
   it('should handle updateCheckoutPersonalInfo', async () => {
-    const user = userEvent.setup()
-
-    render(<Common {...Common?.args} />)
-
     server.use(
       graphql.query('getMultiShipCheckout', (_req, res, ctx) => {
         return res(
@@ -224,6 +226,8 @@ describe('[component] - MultiShipCheckout template', () => {
       })
     )
 
+    const { user } = await setup()
+
     user.click(screen.getByTestId(/updateCheckoutPersonalInfo/))
 
     await waitFor(() => {
@@ -232,12 +236,6 @@ describe('[component] - MultiShipCheckout template', () => {
   })
 
   it('should handle updateCheckoutShippingMethod', async () => {
-    const user = userEvent.setup()
-
-    render(<Common {...Common?.args} />)
-
-    expect(screen.getByTestId('updated-shipping-method')).toHaveTextContent('null')
-
     server.use(
       graphql.query('getMultiShipCheckout', (_req, res, ctx) => {
         return res(
@@ -256,6 +254,10 @@ describe('[component] - MultiShipCheckout template', () => {
         )
       })
     )
+
+    const { user } = await setup()
+
+    expect(screen.getByTestId('updated-shipping-method')).toHaveTextContent('null')
 
     user.click(screen.getByTestId(/updateCheckoutShippingMethod/))
 

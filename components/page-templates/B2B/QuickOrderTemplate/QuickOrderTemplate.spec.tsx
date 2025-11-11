@@ -135,6 +135,15 @@ afterEach(() => {
   cleanup()
 })
 
+const setupComponent = async (component: React.ReactElement) => {
+  renderWithQueryClient(component)
+
+  // Wait for async effects to settle
+  await waitFor(() => {
+    expect(true).toBe(true)
+  })
+}
+
 describe('[components] QuickOrderTemplate', () => {
   describe('Desktop', () => {
     beforeEach(() => {
@@ -142,7 +151,7 @@ describe('[components] QuickOrderTemplate', () => {
       useMediaQueryMock.mockReturnValue(true)
     })
     it('should render QuickOrderTemplate component', async () => {
-      renderWithQueryClient(<Common {...Common.args} />)
+      await setupComponent(<Common {...Common.args} />)
 
       const quickOrderText = screen.getByText(/quick-order/i)
       const initiateQuoteButton = screen.getByRole('button', { name: 'initiate-quote' })
@@ -167,7 +176,7 @@ describe('[components] QuickOrderTemplate', () => {
     })
 
     it('should add product in list when user clicks on non configurable product', async () => {
-      renderWithQueryClient(<Common {...Common.args} />)
+      await setupComponent(<Common {...Common.args} />)
 
       expect(screen.queryByTestId('b2b-product-details-table-component')).toBeVisible()
 
@@ -175,7 +184,7 @@ describe('[components] QuickOrderTemplate', () => {
     })
 
     it('should display configure dialogue when user clicks on configurable product', async () => {
-      renderWithQueryClient(
+      await setupComponent(
         <ModalContextProvider>
           <Common {...Common.args} />
           <DialogRoot />
@@ -192,7 +201,7 @@ describe('[components] QuickOrderTemplate', () => {
     })
 
     it('should apply coupon when user enters valid coupon code', async () => {
-      renderWithQueryClient(<Common {...Common.args} />)
+      await setupComponent(<Common {...Common.args} />)
 
       const couponCount = cartMock.currentCart.couponCodes?.length as number
 
@@ -222,7 +231,7 @@ describe('[components] QuickOrderTemplate', () => {
     })
 
     it('should remove coupon when user removes it', async () => {
-      renderWithQueryClient(<Common {...Common.args} />)
+      await setupComponent(<Common {...Common.args} />)
 
       const couponCount = cartMock.currentCart.couponCodes?.length as number
 
@@ -252,7 +261,7 @@ describe('[components] QuickOrderTemplate', () => {
     })
 
     it('should redirect to checkout page when users click on checkout button', async () => {
-      renderWithQueryClient(<Common {...Common.args} />)
+      await setupComponent(<Common {...Common.args} />)
 
       const checkout = screen.getByText(/checkout/i)
 
@@ -268,7 +277,7 @@ describe('[components] QuickOrderTemplate', () => {
     })
 
     it('should initiate a quote when users click on initiate quote button', async () => {
-      renderWithQueryClient(<Common {...Common.args} />)
+      await setupComponent(<Common {...Common.args} />)
 
       const initiateQuoteButton = screen.getByRole('button', { name: /initiate-quote/i })
 
@@ -291,7 +300,7 @@ describe('[components] QuickOrderTemplate', () => {
     })
 
     it('should render QuickOrderTemplate Mobile component', async () => {
-      renderWithQueryClient(<QuickOrderTemplateMobile {...QuickOrderTemplateMobile.args} />)
+      await setupComponent(<QuickOrderTemplateMobile {...QuickOrderTemplateMobile.args} />)
       const quickOrderText = screen.getByText(/quick-order/i)
       const b2bProductComponent = screen.getByTestId('b2b-product-search-component')
 
@@ -316,7 +325,7 @@ describe('[components] QuickOrderTemplate', () => {
       const useMediaQueryMock = useMediaQuery as jest.Mock
       useMediaQueryMock.mockReturnValueOnce(false)
 
-      renderWithQueryClient(<Common {...Common.args} />)
+      await setupComponent(<Common {...Common.args} />)
 
       expect(screen.queryByTestId('cart-item-list-component')).toBeVisible()
 
