@@ -1,4 +1,29 @@
-import { SxProps, Theme } from '@mui/material'
+import { SxProps, Theme, styled } from '@mui/material'
+import { Box } from '@mui/material'
+import Link from 'next/link'
+
+export const BackButtonLink = styled(Link)(({ theme }: { theme: Theme }) => ({
+  typography: 'body2',
+  textDecoration: 'none',
+  color: theme.palette.grey[900],
+  display: 'flex',
+  alignItems: 'center',
+  padding: '1rem 0rem',
+  cursor: 'pointer',
+}))
+
+export const SearchBoxContainer = styled(Box)({
+  marginBottom: '20px',
+  width: '100%',
+})
+
+export const PaginationContainer = styled(Box)(({ theme }: { theme: Theme }) => ({
+  display: 'flex',
+  justifyContent: 'space-between',
+  color: theme.palette.grey[600],
+  alignItems: 'center',
+  margin: '20px 0',
+}))
 
 export const ManageRolesTemplateStyles: Record<string, SxProps<Theme>> = {
   container: {

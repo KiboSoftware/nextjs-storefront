@@ -186,4 +186,6 @@ export const rolesKeys = {
   usersRole: (accountId: number) => [...rolesKeys.all, 'users', accountId] as const,
   usersRoleByUser: (accountId: number, userId: string) =>
     [...rolesKeys.all, 'users', accountId, userId] as const,
+  usersByRole: (accountId: number, roleId: number) =>
+    [...rolesKeys.all, 'usersByRole', accountId, roleId] as const,
 }

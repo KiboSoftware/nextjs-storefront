@@ -14,7 +14,7 @@ import { rolesKeys } from '@/lib/react-query/queryKeys'
 const client = makeGraphQLClient()
 
 // Define the B2BRole interface based on the GraphQL fragment
-export interface B2BRole {
+interface B2BRole {
   id?: number
   name?: string
   isSystemRole?: boolean
