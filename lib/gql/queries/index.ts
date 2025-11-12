@@ -43,3 +43,4 @@ export { default as getRoleByRoleIdAsyncQuery } from './b2b/manage-roles/get-rol
 export { default as getRolesByAccountIdAsyncQuery } from './b2b/manage-roles/get-roles-by-account-id-async'
 export { default as getOneTimeSecretQuery } from './cart-takeover/getOneTimeSecretQuery'
 export { default as b2bAccountUserBehaviorsQuery } from './b2b/manage-roles/get-b2b-account-user-behaviors'
+export { default as getUsersByRoleAsyncQuery } from './b2b/get-users-by-role-async'

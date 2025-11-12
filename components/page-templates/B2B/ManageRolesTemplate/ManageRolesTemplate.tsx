@@ -28,45 +28,23 @@ import {
   Typography,
   useMediaQuery,
   useTheme,
-  styled,
-  Theme,
   Tooltip,
 } from '@mui/material'
-import Link from 'next/link'
 import { useRouter } from 'next/router'
 import { useTranslation } from 'next-i18next'
 
+import {
+  BackButtonLink,
+  SearchBoxContainer,
+  PaginationContainer,
+} from './ManageRolesTemplate.styles'
 import { SearchBar } from '@/components/common'
 import { ConfirmationDialog } from '@/components/dialogs'
 import { useAuthContext, useModalContext, useSnackbarContext } from '@/context'
-import { useDeleteRoleAsync } from '@/hooks/mutations/b2b/manage-roles/useDeleteRoleAsync/useDeleteRoleAsync'
-import { useGetRolesByAccountIdAsync } from '@/hooks/queries/b2b/manage-roles/useGetRolesByAccountIdAsync/useGetRolesByAccountIdAsync'
+import { useGetRolesByAccountIdAsync, useDeleteRoleAsync } from '@/hooks'
 import type { GetRolesAsyncResponse } from '@/lib/api/operations/get-roles-by-account-id'
 
 import type { CustomerAccount } from '@/lib/gql/types'
-
-const BackButtonLink = styled(Link)(({ theme }: { theme: Theme }) => ({
-  typography: 'body2',
-  textDecoration: 'none',
-  color: theme.palette.grey[900],
-  display: 'flex',
-  alignItems: 'center',
-  padding: '1rem 0rem',
-  cursor: 'pointer',
-}))
-
-const SearchBoxContainer = styled(Box)({
-  marginBottom: '20px',
-  width: '100%',
-})
-
-const PaginationContainer = styled(Box)(({ theme }: { theme: Theme }) => ({
-  display: 'flex',
-  justifyContent: 'space-between',
-  color: theme.palette.grey[600],
-  alignItems: 'center',
-  margin: '20px 0',
-}))
 
 interface Role {
   id: string
@@ -118,7 +96,7 @@ const ManageRolesTemplate = ({
         id: item.id?.toString() || '',
         name: item.name || '',
         roleType: item.isSystemRole ? 'System' : 'Custom',
-        accountScope: 'All child accounts', // This might need to be calculated based on accountIds
+        accountScope: 'all-child',
         assignedUsers: 0, // This data is not in the API response, might need another endpoint
       }))
       setRoles(transformedRoles)

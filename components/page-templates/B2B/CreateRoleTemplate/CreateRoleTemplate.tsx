@@ -78,7 +78,7 @@ const CreateRoleTemplate: React.FC<CreateRoleTemplateProps> = ({
       const preparedData: RoleFormData = {
         roleName: isCopyMode ? `${roleData.name}_Copy` : roleData.name || '',
         parentAccount: user?.id?.toString() || '', // Pre-select current account
-        accountScope: 'current-account', // Default to current account
+        accountScope: 'all-child', // Default to current account
         selectedAccounts: [],
         applyToFutureChildren: false,
         selectedPermissions: {}, // Will be populated from roleData.behaviors if needed
