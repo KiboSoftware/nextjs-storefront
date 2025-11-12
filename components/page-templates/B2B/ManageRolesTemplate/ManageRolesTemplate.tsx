@@ -1,4 +1,4 @@
-import React, { useState, useEffect, ChangeEvent } from 'react'
+import React, { useState, useEffect, ChangeEvent, useCallback } from 'react'
 
 import {
   AddCircleOutline as AddCircleOutlineIcon,
@@ -41,7 +41,11 @@ import {
 import { SearchBar } from '@/components/common'
 import { ConfirmationDialog } from '@/components/dialogs'
 import { useAuthContext, useModalContext, useSnackbarContext } from '@/context'
-import { useGetRolesByAccountIdAsync, useDeleteRoleAsync } from '@/hooks'
+import {
+  useGetRolesByAccountIdAsync,
+  useDeleteRoleAsync,
+  useGetUsersByRoleAsync,
+} from '@/hooks'
 import type { GetRolesAsyncResponse } from '@/lib/api/operations/get-roles-by-account-id'
 
 import type { CustomerAccount } from '@/lib/gql/types'
@@ -58,6 +62,28 @@ interface ManageRolesTemplateProps {
   customerAccount?: CustomerAccount
   initialData?: GetRolesAsyncResponse
   onAccountTitleClick?: () => void
+}
+
+// Component to fetch and display user count for a specific role
+const RoleUserCount = ({
+  accountId,
+  roleId,
+  onCountUpdate,
+}: {
+  accountId: number
+  roleId: number
+  onCountUpdate: (roleId: number, count: number) => void
+}) => {
+  const { users, isLoading } = useGetUsersByRoleAsync(accountId, roleId)
+
+  useEffect(() => {
+    if (!isLoading && users) {
+      onCountUpdate(roleId, users.length)
+    }
+  }, [users, isLoading, roleId, onCountUpdate])
+
+  if (isLoading) return <>...</>
+  return <>{users?.length || 0}</>
 }
 
 const ManageRolesTemplate = ({
@@ -79,6 +105,7 @@ const ManageRolesTemplate = ({
   const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null)
   const [selectedRoleId, setSelectedRoleId] = useState<string | null>(null)
   const [currentPage, setCurrentPage] = useState(1)
+  const [userCounts, setUserCounts] = useState<Record<number, number>>({})
 
   const pageSize = 10
 
@@ -97,11 +124,27 @@ const ManageRolesTemplate = ({
         name: item.name || '',
         roleType: item.isSystemRole ? 'System' : 'Custom',
         accountScope: 'all-child',
-        assignedUsers: 0, // This data is not in the API response, might need another endpoint
+        assignedUsers: 0,
       }))
       setRoles(transformedRoles)
     }
   }, [rolesData])
+
+  // Callback to update user count for a role (memoized to prevent infinite loops)
+  const handleUserCountUpdate = useCallback((roleId: number, count: number) => {
+    setUserCounts((prev) => {
+      // Only update if the count has changed
+      if (prev[roleId] !== count) {
+        return { ...prev, [roleId]: count }
+      }
+      return prev
+    })
+  }, [])
+
+  // Get user count for a role (from cached counts or default to 0)
+  const getUserCount = (roleId: string): number => {
+    return userCounts[parseInt(roleId)] ?? 0
+  }
 
   const handleMenuOpen = (event: React.MouseEvent<HTMLElement>, roleId: string) => {
     setAnchorEl(event.currentTarget)
@@ -280,7 +323,16 @@ const ManageRolesTemplate = ({
                     />
                   </TableCell>
                   <TableCell>
-                    {role.assignedUsers} {t('users')}
+                    {customerAccount?.id ? (
+                      <RoleUserCount
+                        accountId={customerAccount.id}
+                        roleId={parseInt(role.id)}
+                        onCountUpdate={handleUserCountUpdate}
+                      />
+                    ) : (
+                      '0'
+                    )}{' '}
+                    {t('users')}
                   </TableCell>
                   <TableCell align="right">
                     <IconButton
@@ -351,22 +403,25 @@ const ManageRolesTemplate = ({
 
           {selectedRole?.roleType === 'Custom' && (
             <Tooltip
-              title={selectedRole.assignedUsers > 0 ? t('cannot-delete-role-with-users') : ''}
+              title={
+                getUserCount(selectedRoleId || '') > 0 ? t('cannot-delete-role-with-users') : ''
+              }
               placement="left"
             >
               <span>
                 <MenuItem
                   onClick={() => selectedRoleId && handleDeleteRole(selectedRoleId)}
-                  disabled={selectedRole.assignedUsers > 0}
+                  disabled={getUserCount(selectedRoleId || '') > 0}
                   sx={{
-                    color: selectedRole.assignedUsers > 0 ? 'text.disabled' : 'error.main',
+                    color: getUserCount(selectedRoleId || '') > 0 ? 'text.disabled' : 'error.main',
                   }}
                 >
                   <ListItemIcon>
                     <DeleteIcon
                       fontSize="small"
                       sx={{
-                        color: selectedRole.assignedUsers > 0 ? 'text.disabled' : 'error.main',
+                        color:
+                          getUserCount(selectedRoleId || '') > 0 ? 'text.disabled' : 'error.main',
                       }}
                     />
                   </ListItemIcon>

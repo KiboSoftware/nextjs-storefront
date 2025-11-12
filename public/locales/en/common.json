@@ -192,7 +192,6 @@
   "error-deleting-role": "Error deleting role. Please try again.",
   "role-copied-successfully": "Role copied successfully",
   "error-copying-role": "Error copying role. Please try again.",
-  "role-created-successfully": "Role created successfully",
   "error-creating-role": "Error creating role. Please try again.",
   "role-updated-successfully": "Role updated successfully",
   "error-updating-role": "Error updating role. Please try again.",
@@ -222,7 +221,8 @@
   "role-creation-failed": "Failed to create role. Please try again.",
   "role-created-successfully": "Role Created Successfully",
   "role-created-but-failed-to-apply-to-future-children": "Role created successfully, but failed to apply to future children",
-
+  "cannot-delete-role-with-users": "Role cannot be deleted with assigned users. Please reassign or remove users before deleting this role.",
+  
   "time-filter": "Time Filter",
   "last-30-days": "Last 30 days",
   "last-6-months": "Last 6 months",
