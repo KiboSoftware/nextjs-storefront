@@ -3,7 +3,7 @@
  */
 import { useQuery, useQueries } from '@tanstack/react-query'
 
-import { makeGraphQLClient, makeGraphQLClientWithoutUserClaims } from '@/lib/gql/client'
+import { makeGraphQLClientWithoutUserClaims } from '@/lib/gql/client'
 import { b2bAccountUserBehaviorsQuery } from '@/lib/gql/queries'
 import { behaviorsKeys } from '@/lib/react-query/queryKeys'
 

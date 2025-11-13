@@ -19,6 +19,7 @@ import { roleFormStyles } from './RoleForm.styles'
 import { useSnackbarContext } from '@/context'
 import { useApplyRoleToFutureChildrensAsync } from '@/hooks/mutations/b2b/manage-roles/useApplyRoleToFutureChildrensAsync/useApplyRoleToFutureChildrensAsync'
 import { useCreateRoleAsync } from '@/hooks/mutations/b2b/manage-roles/useCreateRoleAsync/useCreateRoleAsync'
+import { AccountScope, CustomBehaviors } from '@/lib/constants'
 
 import { B2BAccount, CustomerAccount } from '@/lib/gql/types'
 
@@ -39,11 +40,8 @@ interface RoleFormProps {
   accounts?: B2BAccount[]
   behaviorCategories?: { items?: Array<{ id?: number; name?: string }> }
   behaviors?: { items?: Array<{ id?: number; name?: string; categoryId?: number }> }
-  categoriesLoading?: boolean
-  behaviorsLoading?: boolean
   accountUserBehaviorResults?: AccountUserBehaviorResult[]
   accountUserBehaviors?: Array<unknown>
-  behaviorLoading?: boolean
 }
 
 const useRoleFormSchema = () => {
@@ -63,8 +61,6 @@ const RoleForm: React.FC<RoleFormProps> = ({
   onBackClick,
   behaviorCategories,
   behaviors,
-  categoriesLoading,
-  behaviorsLoading,
   accountUserBehaviorResults,
   accountUserBehaviors,
 }) => {
@@ -74,10 +70,6 @@ const RoleForm: React.FC<RoleFormProps> = ({
   const styles = roleFormStyles
   const mdScreen = useMediaQuery((theme: Theme) => theme.breakpoints.up('md'))
   const { showSnackbar } = useSnackbarContext()
-
-  // Use default values for loading states if not provided
-  const isLoadingCategories = categoriesLoading || false
-  const isLoadingBehaviors = behaviorsLoading || false
   // Check if user has behavior (create role permission) for a specific account
   const hasCreateRolePermission = useCallback(
     (accountId: number): boolean => {
@@ -85,7 +77,9 @@ const RoleForm: React.FC<RoleFormProps> = ({
       const accountBehavior = accountUserBehaviorResults.find(
         (result) => result.accountId === accountId
       )
-      return accountBehavior ? accountBehavior.behaviors.includes(2027) : false //Need to replace with constant
+      return accountBehavior
+        ? accountBehavior.behaviors.includes(CustomBehaviors.CreateRole)
+        : false //Need to replace with constant
     },
     [accountUserBehaviorResults]
   )
@@ -118,7 +112,9 @@ const RoleForm: React.FC<RoleFormProps> = ({
   })
 
   // State management
-  const [selectedCategory, setSelectedCategory] = useState<number | null>(null)
+  const [selectedCategory, setSelectedCategory] = useState<number | null>(
+    behaviorCategories?.items?.[0]?.id || null
+  )
   const [selectedPermissions, setSelectedPermissions] = useState<Record<number, number[]>>({})
   const [selectedAccounts, setSelectedAccounts] = useState<number[]>([])
   const [expandedNodes, setExpandedNodes] = useState<Set<number>>(new Set())
@@ -148,11 +144,6 @@ const RoleForm: React.FC<RoleFormProps> = ({
     return accountsWithPermission
   }, [accounts, accountUserBehaviorResults, hasCreateRolePermission])
 
-  // Get all accounts from hierarchy (not just logged-in user's children)
-  const getAllAccountsFromHierarchy = useCallback((): B2BAccount[] => {
-    return accounts || []
-  }, [accounts])
-
   const hasChildAccounts = parentAccount
     ? getChildAccountsForParent(Number(parentAccount)).length > 0
     : false
@@ -166,7 +157,7 @@ const RoleForm: React.FC<RoleFormProps> = ({
         if (!account) return false
 
         // Check if current account matches
-        const accountName = account.companyOrOrganization || `Account ${id}`
+        const accountName = account.companyOrOrganization || ''
         if (accountName.toLowerCase().includes(searchQuery.toLowerCase())) {
           return true
         }
@@ -205,17 +196,6 @@ const RoleForm: React.FC<RoleFormProps> = ({
     }
   }, [user?.id, reset, accounts, accountUserBehaviorResults, getAccountsWithCreateRolePermission])
 
-  // Set default selected category when categories load
-  useEffect(() => {
-    if (
-      behaviorCategories?.items &&
-      behaviorCategories.items.length > 0 &&
-      selectedCategory === null
-    ) {
-      setSelectedCategory(behaviorCategories.items[0].id || null)
-    }
-  }, [behaviorCategories, selectedCategory])
-
   // Auto-expand nodes when searching
   useEffect(() => {
     if (searchQuery.trim() && accounts && parentAccount) {
@@ -225,7 +205,7 @@ const RoleForm: React.FC<RoleFormProps> = ({
         const account = accounts.find((acc) => acc.id === accountId)
         if (!account) return
 
-        const accountName = account.companyOrOrganization || `Account ${accountId}`
+        const accountName = account.companyOrOrganization || ''
         if (accountName.toLowerCase().includes(searchQuery.toLowerCase())) {
           // Expand all parents
           let currentParentId = account.parentAccountId
@@ -567,31 +547,31 @@ const RoleForm: React.FC<RoleFormProps> = ({
       />
 
       {/* Account Hierarchy Tree - Show when specific-child or all-except is selected AND parent has children */}
-      {parentAccount && (accountScope === 'specific-child' || accountScope === 'all-except') && (
-        <RoleFormAccountHierarchyTree
-          parentAccount={parentAccount}
-          accountScope={accountScope}
-          accounts={getAllAccountsFromHierarchy()}
-          selectedAccounts={selectedAccounts}
-          expandedNodes={expandedNodes}
-          searchQuery={searchQuery}
-          onSearchQueryChange={setSearchQuery}
-          onAccountSelection={handleAccountSelection}
-          onToggleNodeExpansion={toggleNodeExpansion}
-          onSelectAllAccounts={handleSelectAllAccounts}
-          onDeselectAllAccounts={handleDeselectAllAccounts}
-          shouldShowAccount={shouldShowAccount}
-          getChildAccountsForParent={getChildAccountsForParent}
-          hasCreateRolePermission={hasCreateRolePermission}
-        />
-      )}
+      {parentAccount &&
+        (accountScope === AccountScope.SpecificChild ||
+          accountScope === AccountScope.AllExcept) && (
+          <RoleFormAccountHierarchyTree
+            parentAccount={parentAccount}
+            accountScope={accountScope}
+            accounts={accounts}
+            selectedAccounts={selectedAccounts}
+            expandedNodes={expandedNodes}
+            searchQuery={searchQuery}
+            onSearchQueryChange={setSearchQuery}
+            onAccountSelection={handleAccountSelection}
+            onToggleNodeExpansion={toggleNodeExpansion}
+            onSelectAllAccounts={handleSelectAllAccounts}
+            onDeselectAllAccounts={handleDeselectAllAccounts}
+            shouldShowAccount={shouldShowAccount}
+            getChildAccountsForParent={getChildAccountsForParent}
+            hasCreateRolePermission={hasCreateRolePermission}
+          />
+        )}
 
       {/* Permission Configuration Section */}
       <PermissionSelector
         behaviorCategories={behaviorCategories}
         behaviors={behaviors}
-        categoriesLoading={isLoadingCategories}
-        behaviorsLoading={isLoadingBehaviors}
         selectedCategory={selectedCategory}
         selectedPermissions={selectedPermissions}
         permissionError={permissionError}

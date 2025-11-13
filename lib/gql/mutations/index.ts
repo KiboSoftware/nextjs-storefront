@@ -59,8 +59,6 @@ export { default as deleteB2bAccountRoleMutation } from './b2b/delete-b2b-accoun
 export { default as addRoleToCustomerB2bAccountMutation } from './b2b/add-role-to-customer-b2b-account'
 export { default as createRoleAsyncMutation } from './b2b/manage-roles/create-role-async'
 export { default as deleteRoleAsyncMutation } from './b2b/manage-roles/delete-role-async'
-export { default as getBehaviorCategoriesMutation } from './b2b/manage-roles/get-behavior-categories'
-export { default as getBehaviorsMutation } from './b2b/manage-roles/get-behaviors'
 export { default as updateRoleAsyncMutation } from './b2b/manage-roles/update-role-async'
 export { default as applyRoleToFutureChildrensAsyncMutation } from './b2b/manage-roles/apply-role-to-future-childrens-async'
 // Address validation

@@ -12,7 +12,7 @@ export const useAccountSearch = (accounts?: B2BAccount[]) => {
       if (!account) return false
 
       // Check if current account name matches
-      const accountName = account.companyOrOrganization || `Account ${accountId}`
+      const accountName = account.companyOrOrganization || ''
       if (accountName.toLowerCase().includes(query.toLowerCase())) {
         return true
       }

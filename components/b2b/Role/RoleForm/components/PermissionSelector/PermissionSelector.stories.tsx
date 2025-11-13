@@ -159,26 +159,6 @@ export const Default = Template.bind({})
 Default.args = {
   behaviorCategories: mockBehaviorCategories,
   behaviors: mockBehaviors,
-  categoriesLoading: false,
-  behaviorsLoading: false,
-  permissionError: '',
-}
-
-export const LoadingCategories = Template.bind({})
-LoadingCategories.args = {
-  behaviorCategories: { items: [] },
-  behaviors: mockBehaviors,
-  categoriesLoading: true,
-  behaviorsLoading: false,
-  permissionError: '',
-}
-
-export const LoadingBehaviors = Template.bind({})
-LoadingBehaviors.args = {
-  behaviorCategories: mockBehaviorCategories,
-  behaviors: { items: [] },
-  categoriesLoading: false,
-  behaviorsLoading: true,
   permissionError: '',
 }
 
@@ -186,8 +166,6 @@ export const WithError = Template.bind({})
 WithError.args = {
   behaviorCategories: mockBehaviorCategories,
   behaviors: mockBehaviors,
-  categoriesLoading: false,
-  behaviorsLoading: false,
   permissionError: 'At least one permission must be selected for each role.',
 }
 
@@ -195,8 +173,6 @@ export const EmptyData = Template.bind({})
 EmptyData.args = {
   behaviorCategories: { items: [] },
   behaviors: { items: [] },
-  categoriesLoading: false,
-  behaviorsLoading: false,
   permissionError: '',
 }
 
@@ -239,7 +215,5 @@ export const NoSelections: ComponentStory<typeof PermissionSelector> = (args) =>
 NoSelections.args = {
   behaviorCategories: mockBehaviorCategories,
   behaviors: mockBehaviors,
-  categoriesLoading: false,
-  behaviorsLoading: false,
   permissionError: '',
 }

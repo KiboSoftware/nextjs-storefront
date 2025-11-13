@@ -90,7 +90,7 @@ const RoleBasicInfo: React.FC<RoleBasicInfoProps> = ({
               {accounts && accounts.length > 0
                 ? accounts.map((account) => (
                     <MenuItem key={account.id} value={String(account.id)}>
-                      {account.companyOrOrganization || `Account ${account.id}`}
+                      {account.companyOrOrganization || ''}
                     </MenuItem>
                   ))
                 : [

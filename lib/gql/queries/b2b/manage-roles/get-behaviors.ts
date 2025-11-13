@@ -1,5 +1,5 @@
-const getBehaviorsMutation = /* GraphQL */ `
-  mutation getBehaviors {
+const getBehaviorsQuery = /* GraphQL */ `
+  query getBehaviors {
     getBehaviors {
       totalCount
       items {
@@ -15,4 +15,4 @@ const getBehaviorsMutation = /* GraphQL */ `
   }
 `
 
-export default getBehaviorsMutation
+export default getBehaviorsQuery

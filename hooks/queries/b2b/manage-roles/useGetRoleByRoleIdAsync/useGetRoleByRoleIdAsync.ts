@@ -3,22 +3,22 @@
  */
 import { useQuery } from '@tanstack/react-query'
 
-import { makeGraphQLClientWithoutUserClaims } from '@/lib/gql/client'
-import { getRoleByIdAsyncQuery } from '@/lib/gql/queries'
+import { makeGraphQLClient } from '@/lib/gql/client'
+import { getRoleByRoleIdAsyncQuery } from '@/lib/gql/queries'
 import { rolesKeys } from '@/lib/react-query/queryKeys'
 
 /**
  * @hidden
  */
 
-const client = makeGraphQLClientWithoutUserClaims()
+const client = makeGraphQLClient()
 
 // Define the B2BRole interface based on the GraphQL fragment
 export interface B2BRole {
   id?: number
   name?: string
   isSystemRole?: boolean
-  behaviors?: string[]
+  behaviors?: number[]
 }
 
 interface UseGetRoleByIdAsyncParams {
@@ -31,11 +31,11 @@ const getRoleByIdAsync = async ({
   roleId,
 }: UseGetRoleByIdAsyncParams): Promise<B2BRole> => {
   const response = await client.request({
-    document: getRoleByIdAsyncQuery,
+    document: getRoleByRoleIdAsyncQuery,
     variables: { accountId, roleId },
   })
 
-  return response?.getRoleByIdAsync
+  return response?.getRoleByRoleIdAsync
 }
 
 /**

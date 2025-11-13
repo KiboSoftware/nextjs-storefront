@@ -4,7 +4,7 @@
 import { useQuery } from '@tanstack/react-query'
 
 import { makeGraphQLClientWithoutUserClaims } from '@/lib/gql/client'
-import { getBehaviorsMutation } from '@/lib/gql/mutations'
+import getBehaviorsQuery from '@/lib/gql/queries/b2b/manage-roles/get-behaviors'
 import { behaviorsKeys } from '@/lib/react-query/queryKeys'
 
 /**
@@ -32,7 +32,7 @@ export interface GetBehaviorsResponse {
 
 const getBehaviors = async (): Promise<GetBehaviorsResponse> => {
   const response = await client.request({
-    document: getBehaviorsMutation,
+    document: getBehaviorsQuery,
   })
 
   return response?.getBehaviors

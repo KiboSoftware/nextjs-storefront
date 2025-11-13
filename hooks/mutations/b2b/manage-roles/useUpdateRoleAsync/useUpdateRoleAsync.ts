@@ -3,7 +3,7 @@
  */
 import { useMutation, useQueryClient } from '@tanstack/react-query'
 
-import { makeGraphQLClientWithoutUserClaims } from '@/lib/gql/client'
+import { makeGraphQLClient } from '@/lib/gql/client'
 import { updateRoleAsyncMutation } from '@/lib/gql/mutations'
 import { rolesKeys } from '@/lib/react-query/queryKeys'
 import { B2BRole, B2BRoleInput } from '@/lib/types/CustomerB2BAccount'
@@ -12,7 +12,7 @@ import { B2BRole, B2BRoleInput } from '@/lib/types/CustomerB2BAccount'
  * @hidden
  */
 
-const client = makeGraphQLClientWithoutUserClaims()
+const client = makeGraphQLClient()
 
 interface UpdateRoleAsyncParams {
   accountId: number

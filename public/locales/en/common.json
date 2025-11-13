@@ -204,6 +204,8 @@
   "no-saved-payments-yet": "No saved payment methods yet!",
   "primary": "Primary",
   "including-parent": "including parent",
+  "role-applied-to-multiple": "Role will be applied to {{totalAccounts}} {{accountText}} ({{includingParentText}})",
+  "role-applied-to-single": "Role will be applied to {{totalAccounts}} {{accountText}}",
   "role-creation-failed": "Failed to create role. Please try again.",
   "role-created-successfully": "Role Created Successfully",
   "role-created-but-failed-to-apply-to-future-children": "Role created successfully, but failed to apply to future children",

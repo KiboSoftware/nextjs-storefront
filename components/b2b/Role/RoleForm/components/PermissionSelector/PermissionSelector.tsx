@@ -29,8 +29,6 @@ interface Behavior {
 interface PermissionSelectorProps {
   behaviorCategories?: { items?: BehaviorCategory[] }
   behaviors?: { items?: Behavior[] }
-  categoriesLoading: boolean
-  behaviorsLoading: boolean
   selectedCategory: number | null
   selectedPermissions: Record<number, number[]>
   permissionError: string
@@ -45,8 +43,6 @@ interface PermissionSelectorProps {
 const PermissionSelector: React.FC<PermissionSelectorProps> = ({
   behaviorCategories,
   behaviors,
-  categoriesLoading,
-  behaviorsLoading,
   selectedCategory,
   selectedPermissions,
   permissionError,
@@ -58,6 +54,18 @@ const PermissionSelector: React.FC<PermissionSelectorProps> = ({
   selectedCategoryBehaviors,
 }) => {
   const { t } = useTranslation('common')
+
+  // Computed properties for checkbox state
+  const hasCategoryBehaviors = selectedCategoryBehaviors.length > 0
+  const allBehaviorsSelected =
+    hasCategoryBehaviors &&
+    selectedCategoryBehaviors.every((behavior) =>
+      selectedPermissions[selectedCategory || 0]?.includes(behavior.id || 0)
+    )
+  const someBehaviorsSelected = selectedCategoryBehaviors.some((behavior) =>
+    selectedPermissions[selectedCategory || 0]?.includes(behavior.id || 0)
+  )
+  const isIndeterminate = someBehaviorsSelected && !allBehaviorsSelected
 
   return (
     <Box sx={permissionSelectorStyles.container}>
@@ -82,22 +90,16 @@ const PermissionSelector: React.FC<PermissionSelectorProps> = ({
             {t('behavior-category')}
           </Typography>
           <List sx={permissionSelectorStyles.list}>
-            {categoriesLoading ? (
-              <ListItem>
-                <CircularProgress />
-              </ListItem>
-            ) : (
-              behaviorCategories?.items?.map((cat) => (
-                <ListItemButton
-                  key={cat.id}
-                  onClick={() => onCategorySelect(cat.id || 0)}
-                  selected={selectedCategory === cat.id}
-                  sx={permissionSelectorStyles.categoryListItem}
-                >
-                  <Typography variant="body2">{cat.name}</Typography>
-                </ListItemButton>
-              )) || []
-            )}
+            {behaviorCategories?.items?.map((cat) => (
+              <ListItemButton
+                key={cat.id}
+                onClick={() => onCategorySelect(cat.id || 0)}
+                selected={selectedCategory === cat.id}
+                sx={permissionSelectorStyles.categoryListItem}
+              >
+                <Typography variant="body2">{cat.name}</Typography>
+              </ListItemButton>
+            ))}
           </List>
         </Box>
 
@@ -106,52 +108,34 @@ const PermissionSelector: React.FC<PermissionSelectorProps> = ({
           <Box sx={permissionSelectorStyles.behaviorColumnHeader}>
             <Checkbox
               size="small"
-              checked={
-                selectedCategoryBehaviors.length > 0 &&
-                selectedCategoryBehaviors.every((behavior) =>
-                  selectedPermissions[selectedCategory || 0]?.includes(behavior.id || 0)
-                )
-              }
-              indeterminate={
-                selectedCategoryBehaviors.some((behavior) =>
-                  selectedPermissions[selectedCategory || 0]?.includes(behavior.id || 0)
-                ) &&
-                !selectedCategoryBehaviors.every((behavior) =>
-                  selectedPermissions[selectedCategory || 0]?.includes(behavior.id || 0)
-                )
-              }
+              checked={allBehaviorsSelected}
+              indeterminate={isIndeterminate}
               onChange={onBehaviorNameCheckboxChange}
               sx={permissionSelectorStyles.headerCheckbox}
             />
             <Typography sx={permissionSelectorStyles.headerTitle}>{t('behavior-name')}</Typography>
           </Box>
           <List sx={permissionSelectorStyles.list}>
-            {behaviorsLoading ? (
-              <ListItem>
-                <CircularProgress />
-              </ListItem>
-            ) : (
-              selectedCategoryBehaviors.map((behavior) => {
-                const isSelected = Boolean(
-                  selectedPermissions[selectedCategory || 0]?.includes(behavior.id || 0)
-                )
-                return (
-                  <ListItem key={behavior.id} disablePadding>
-                    <ListItemButton
-                      onClick={() => onBehaviorToggle(selectedCategory || 0, behavior.id || 0)}
-                      sx={permissionSelectorStyles.behaviorListItem}
-                    >
-                      <Checkbox
-                        checked={isSelected}
-                        size="small"
-                        sx={permissionSelectorStyles.checkbox}
-                      />
-                      <Typography variant="body2">{behavior.name}</Typography>
-                    </ListItemButton>
-                  </ListItem>
-                )
-              })
-            )}
+            {selectedCategoryBehaviors.map((behavior) => {
+              const isSelected = Boolean(
+                selectedPermissions[selectedCategory || 0]?.includes(behavior.id || 0)
+              )
+              return (
+                <ListItem key={behavior.id} disablePadding>
+                  <ListItemButton
+                    onClick={() => onBehaviorToggle(selectedCategory || 0, behavior.id || 0)}
+                    sx={permissionSelectorStyles.behaviorListItem}
+                  >
+                    <Checkbox
+                      checked={isSelected}
+                      size="small"
+                      sx={permissionSelectorStyles.checkbox}
+                    />
+                    <Typography variant="body2">{behavior.name}</Typography>
+                  </ListItemButton>
+                </ListItem>
+              )
+            })}
           </List>
         </Box>
 

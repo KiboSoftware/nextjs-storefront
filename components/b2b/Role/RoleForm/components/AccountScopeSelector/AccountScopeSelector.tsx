@@ -37,43 +37,6 @@ const AccountScopeSelector: React.FC<AccountScopeSelectorProps> = ({
   const { t } = useTranslation('common')
   const theme = useTheme()
 
-  // Function to calculate total accounts for display
-  const calculateTotalAccounts = (accountScope: string): number => {
-    if (!parentAccount || !accounts) return 0
-
-    if (accountScope === 'all-child') {
-      // Parent + all child accounts recursively
-      const getAllDescendants = (parentId: number): number[] => {
-        const directChildren = accounts.filter((acc) => acc.parentAccountId === parentId) || []
-        const descendants: number[] = []
-        directChildren.forEach((child) => {
-          descendants.push(child.id)
-          descendants.push(...getAllDescendants(child.id))
-        })
-        return descendants
-      }
-      const allDescendantIds = getAllDescendants(Number(parentAccount))
-      return allDescendantIds.length + 1
-    } else if (accountScope === 'specific-child') {
-      // Parent + selected child accounts
-      return selectedAccountsLength + 1
-    } else if (accountScope === 'all-except') {
-      // Parent + all child accounts - selected (excluded) accounts
-      const getAllDescendants = (parentId: number): number[] => {
-        const directChildren = accounts.filter((acc) => acc.parentAccountId === parentId) || []
-        const descendants: number[] = []
-        directChildren.forEach((child) => {
-          descendants.push(child.id)
-          descendants.push(...getAllDescendants(child.id))
-        })
-        return descendants
-      }
-      const allDescendantIds = getAllDescendants(Number(parentAccount))
-      return allDescendantIds.length + 1 - selectedAccountsLength
-    }
-    return 1 // Just parent account
-  }
-
   return (
     <Box sx={accountScopeSelectorStyles.container}>
       <Controller

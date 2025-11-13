@@ -1,7 +1,7 @@
 import { NextApiRequest, NextApiResponse } from 'next'
 
 import { fetcher, getAdditionalHeader } from '@/lib/api/util'
-import { getBehaviorsMutation as query } from '@/lib/gql/mutations'
+import getBehaviorsQuery from '@/lib/gql/queries/b2b/manage-roles/get-behaviors'
 
 export interface Behavior {
   id: number
@@ -20,7 +20,7 @@ export const getBehaviors = async (
 ): Promise<GetBehaviorsResponse | null> => {
   try {
     const headers = req ? getAdditionalHeader(req) : {}
-    const response = await fetcher({ query, variables: {} }, { headers })
+    const response = await fetcher({ query: getBehaviorsQuery, variables: {} }, { headers })
 
     return response?.data?.getBehaviors || null
   } catch (error) {

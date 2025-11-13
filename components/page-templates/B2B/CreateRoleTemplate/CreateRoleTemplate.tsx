@@ -24,11 +24,8 @@ interface CreateRoleTemplateProps {
   initialData?: B2BAccountHierarchyResult
   behaviorCategories?: { items?: Array<{ id?: number; name?: string }> }
   behaviors?: { items?: Array<{ id?: number; name?: string; categoryId?: number }> }
-  categoriesLoading?: boolean
-  behaviorsLoading?: boolean
   accountUserBehaviorResults?: Array<AccountUserBehaviorResult>
   accountUserBehaviors?: Array<unknown>
-  behaviorLoading?: boolean
 }
 
 const CreateRoleTemplate: React.FC<CreateRoleTemplateProps> = ({
@@ -37,11 +34,8 @@ const CreateRoleTemplate: React.FC<CreateRoleTemplateProps> = ({
   initialData,
   behaviorCategories,
   behaviors,
-  categoriesLoading,
-  behaviorsLoading,
   accountUserBehaviorResults,
   accountUserBehaviors,
-  behaviorLoading,
 }) => {
   const { t } = useTranslation('common')
   const router = useRouter()
@@ -87,11 +81,8 @@ const CreateRoleTemplate: React.FC<CreateRoleTemplateProps> = ({
             onBackClick={handleBackClick}
             behaviorCategories={behaviorCategories}
             behaviors={behaviors}
-            categoriesLoading={categoriesLoading}
-            behaviorsLoading={behaviorsLoading}
             accountUserBehaviorResults={accountUserBehaviorResults}
             accountUserBehaviors={accountUserBehaviors}
-            behaviorLoading={behaviorLoading}
           />
         </Box>
       </Grid>
