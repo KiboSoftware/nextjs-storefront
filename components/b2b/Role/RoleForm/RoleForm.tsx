@@ -98,7 +98,9 @@ const RoleForm: React.FC<RoleFormProps> = ({
       const accountBehavior = accountUserBehaviorResults.find(
         (result) => result.accountId === accountId
       )
-      return accountBehavior ? accountBehavior.behaviors.includes(2027) : false //Need to replace with constant
+      return accountBehavior
+        ? accountBehavior.behaviors.includes(CustomBehaviors.CreateRole)
+        : false //Need to replace with constant
     },
     [accountUserBehaviorResults]
   )
