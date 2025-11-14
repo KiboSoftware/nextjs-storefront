@@ -88,7 +88,7 @@ const RoleForm: React.FC<RoleFormProps> = ({
   const { createRole } = useCreateRoleAsync()
 
   // Initialize apply role to future children mutation
-  const { applyRoleToFutureChildrens } = useApplyRoleToFutureChildrensAsync()
+  const { applyRoleToFutureChildren } = useApplyRoleToFutureChildrensAsync()
 
   const roleSchema = useRoleFormSchema()
 
@@ -116,10 +116,7 @@ const RoleForm: React.FC<RoleFormProps> = ({
     behaviorCategories?.items?.[0]?.id || null
   )
   const [selectedPermissions, setSelectedPermissions] = useState<Record<number, number[]>>({})
-  const [selectedAccounts, setSelectedAccounts] = useState<number[]>([])
-  const [expandedNodes, setExpandedNodes] = useState<Set<number>>(new Set())
   const [permissionError, setPermissionError] = useState<string>('')
-  const [searchQuery, setSearchQuery] = useState<string>('')
 
   // Watch form values (must be declared before useEffect hooks that use them)
   const accountScope = watch('accountScope')
@@ -148,30 +145,6 @@ const RoleForm: React.FC<RoleFormProps> = ({
     ? getChildAccountsForParent(Number(parentAccount)).length > 0
     : false
 
-  const shouldShowAccount = useCallback(
-    (accountId: number, query: string): boolean => {
-      const checkAccountMatch = (id: number, searchQuery: string): boolean => {
-        if (!searchQuery.trim()) return true
-
-        const account = accounts?.find((acc) => acc.id === id)
-        if (!account) return false
-
-        // Check if current account matches
-        const accountName = account.companyOrOrganization || ''
-        if (accountName.toLowerCase().includes(searchQuery.toLowerCase())) {
-          return true
-        }
-
-        // Check if any child accounts match (recursive)
-        const childAccounts = getChildAccountsForParent(id)
-        return childAccounts.some((child) => checkAccountMatch(child.id, searchQuery))
-      }
-
-      return checkAccountMatch(accountId, query)
-    },
-    [accounts, getChildAccountsForParent]
-  )
-
   // Update parent account when user data loads - set to first account with create role permission
   useEffect(() => {
     if (accountUserBehaviorResults && accounts && accountUserBehaviorResults.length > 0) {
@@ -196,66 +169,15 @@ const RoleForm: React.FC<RoleFormProps> = ({
     }
   }, [user?.id, reset, accounts, accountUserBehaviorResults, getAccountsWithCreateRolePermission])
 
-  // Auto-expand nodes when searching
-  useEffect(() => {
-    if (searchQuery.trim() && accounts && parentAccount) {
-      const expandedIds = new Set<number>()
-
-      const expandParentsOfMatches = (accountId: number) => {
-        const account = accounts.find((acc) => acc.id === accountId)
-        if (!account) return
-
-        const accountName = account.companyOrOrganization || ''
-        if (accountName.toLowerCase().includes(searchQuery.toLowerCase())) {
-          // Expand all parents
-          let currentParentId = account.parentAccountId
-          while (currentParentId) {
-            expandedIds.add(currentParentId)
-            const parentAccount = accounts.find((acc) => acc.id === currentParentId)
-            currentParentId = parentAccount?.parentAccountId
-          }
-        }
-
-        // Check children recursively
-        const children = getChildAccountsForParent(accountId)
-        children.forEach((child) => expandParentsOfMatches(child.id))
-      }
-
-      expandParentsOfMatches(Number(parentAccount))
-      setExpandedNodes(expandedIds)
-    }
-  }, [searchQuery, accounts, parentAccount, getChildAccountsForParent])
-
   // Event handlers
   const handleParentAccountChange = (value: string) => {
     setValue('parentAccount', value)
-    setSelectedAccounts([])
     setValue('selectedAccounts', [])
 
     const newParentHasChildren = value ? getChildAccountsForParent(Number(value)).length > 0 : false
     if (!newParentHasChildren) {
       setValue('accountScope', '')
     }
-  }
-
-  const handleAccountSelection = (accountId: number, checked: boolean) => {
-    setSelectedAccounts((prev) => {
-      const newSelection = checked ? [...prev, accountId] : prev.filter((id) => id !== accountId)
-      setValue('selectedAccounts', newSelection)
-      return newSelection
-    })
-  }
-
-  const toggleNodeExpansion = (nodeId: number) => {
-    setExpandedNodes((prev) => {
-      const newSet = new Set(prev)
-      if (newSet.has(nodeId)) {
-        newSet.delete(nodeId)
-      } else {
-        newSet.add(nodeId)
-      }
-      return newSet
-    })
   }
 
   const handleCategorySelect = (category: number) => {
@@ -334,35 +256,6 @@ const RoleForm: React.FC<RoleFormProps> = ({
     }))
   }
 
-  const handleSelectAllAccounts = () => {
-    if (!parentAccount || !accounts) return
-
-    const getAllDescendants = (parentId: number): number[] => {
-      const directChildren = accounts.filter((acc) => acc.parentAccountId === parentId) || []
-      const descendants: number[] = []
-      directChildren.forEach((child) => {
-        // Only include accounts where user has create role permission
-        if (hasCreateRolePermission(child.id)) {
-          descendants.push(child.id)
-        }
-        descendants.push(...getAllDescendants(child.id))
-      })
-      return descendants
-    }
-
-    const allDescendantIds = getAllDescendants(Number(parentAccount))
-    setSelectedAccounts(allDescendantIds)
-    const allIds = new Set(accounts.map((acc) => acc.id) || [])
-    setExpandedNodes(allIds)
-    setValue('selectedAccounts', allDescendantIds)
-  }
-
-  const handleDeselectAllAccounts = () => {
-    setSelectedAccounts([])
-    setExpandedNodes(new Set())
-    setValue('selectedAccounts', [])
-  }
-
   // Form validation - Using useMemo to make it reactive to form and permission changes
   const hasSelectedPermissions = getAllSelectedBehaviors().length > 0
 
@@ -414,7 +307,7 @@ const RoleForm: React.FC<RoleFormProps> = ({
     } else if (data.accountScope === 'specific-child') {
       // Second radio button: Apply to specific child accounts
       // Include parent + selected child accounts
-      accountsToInclude = [parentAccountId, ...selectedAccounts]
+      accountsToInclude = [parentAccountId, ...(data.selectedAccounts || [])]
     } else if (data.accountScope === 'all-except') {
       // Third radio button: Apply to all child accounts except selected
       // Include parent + all child accounts and their nested children (recursive) that are NOT selected and have create role permission
@@ -434,7 +327,7 @@ const RoleForm: React.FC<RoleFormProps> = ({
       const allDescendantIds = getAllDescendants(parentAccountId)
       // Remove selected accounts from the list of descendants
       const unselectedDescendantIds = allDescendantIds.filter(
-        (id) => !selectedAccounts.includes(id)
+        (id) => !(data.selectedAccounts || []).includes(id)
       )
       accountsToInclude = [parentAccountId, ...unselectedDescendantIds]
     }
@@ -455,7 +348,7 @@ const RoleForm: React.FC<RoleFormProps> = ({
       // If applyToFutureChildren checkbox is selected and role was created successfully
       if (data.applyToFutureChildren && createdRole?.id) {
         try {
-          await applyRoleToFutureChildrens.mutateAsync({
+          await applyRoleToFutureChildren.mutateAsync({
             roleId: createdRole.id,
             accountId: parentAccountId,
             enabled: true,
@@ -541,7 +434,7 @@ const RoleForm: React.FC<RoleFormProps> = ({
       <AccountScopeSelector
         control={control}
         hasChildAccounts={hasChildAccounts}
-        selectedAccountsLength={selectedAccounts.length}
+        selectedAccountsLength={watch('selectedAccounts')?.length || 0}
         parentAccount={parentAccount}
         accounts={getAccountsWithCreateRolePermission()}
       />
@@ -554,17 +447,8 @@ const RoleForm: React.FC<RoleFormProps> = ({
             parentAccount={parentAccount}
             accountScope={accountScope}
             accounts={accounts}
-            selectedAccounts={selectedAccounts}
-            expandedNodes={expandedNodes}
-            searchQuery={searchQuery}
-            onSearchQueryChange={setSearchQuery}
-            onAccountSelection={handleAccountSelection}
-            onToggleNodeExpansion={toggleNodeExpansion}
-            onSelectAllAccounts={handleSelectAllAccounts}
-            onDeselectAllAccounts={handleDeselectAllAccounts}
-            shouldShowAccount={shouldShowAccount}
-            getChildAccountsForParent={getChildAccountsForParent}
-            hasCreateRolePermission={hasCreateRolePermission}
+            onAccountsChange={(accountIds) => setValue('selectedAccounts', accountIds)}
+            accountUserBehaviorResults={accountUserBehaviorResults}
           />
         )}
 

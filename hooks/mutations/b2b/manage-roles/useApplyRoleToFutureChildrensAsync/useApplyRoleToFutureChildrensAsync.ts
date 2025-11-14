@@ -50,7 +50,7 @@ export const useApplyRoleToFutureChildrensAsync = () => {
   const queryClient = useQueryClient()
 
   return {
-    applyRoleToFutureChildrens: useMutation({
+    applyRoleToFutureChildren: useMutation({
       mutationFn: applyRoleToFutureChildrensAsync,
       onSuccess: (data, variables) => {
         // Invalidate the roles list for the specific account

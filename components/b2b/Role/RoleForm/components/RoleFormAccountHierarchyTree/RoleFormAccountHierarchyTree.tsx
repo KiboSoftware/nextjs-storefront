@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useState, useCallback, useEffect } from 'react'
 
 import ChevronRightIcon from '@mui/icons-material/ChevronRight'
 import ClearIcon from '@mui/icons-material/Clear'
@@ -17,43 +17,162 @@ import {
 import { useTranslation } from 'next-i18next'
 
 import { roleFormAccountHierarchyTreeStyles } from './RoleFormAccountHierarchyTree.styles'
+import { CustomBehaviors } from '@/lib/constants'
 
 import { B2BAccount } from '@/lib/gql/types'
+
+interface AccountUserBehaviorResult {
+  accountId: number
+  behaviors: number[]
+  isLoading: boolean
+  isError: boolean
+  isSuccess: boolean
+  error: unknown
+}
 
 interface RoleFormAccountHierarchyTreeProps {
   parentAccount: string
   accountScope: string
   accounts?: B2BAccount[]
-  selectedAccounts: number[]
-  expandedNodes: Set<number>
-  searchQuery: string
-  onSearchQueryChange: (query: string) => void
-  onAccountSelection: (accountId: number, checked: boolean) => void
-  onToggleNodeExpansion: (nodeId: number) => void
-  onSelectAllAccounts: () => void
-  onDeselectAllAccounts: () => void
-  shouldShowAccount: (accountId: number, query: string) => boolean
-  getChildAccountsForParent: (parentId: number) => B2BAccount[]
-  hasCreateRolePermission: (accountId: number) => boolean
+  onAccountsChange: (accountIds: number[]) => void
+  accountUserBehaviorResults?: AccountUserBehaviorResult[]
 }
 
 const RoleFormAccountHierarchyTree: React.FC<RoleFormAccountHierarchyTreeProps> = ({
   parentAccount,
   accountScope,
   accounts,
-  selectedAccounts,
-  expandedNodes,
-  searchQuery,
-  onSearchQueryChange,
-  onAccountSelection,
-  onToggleNodeExpansion,
-  onSelectAllAccounts,
-  onDeselectAllAccounts,
-  shouldShowAccount,
-  getChildAccountsForParent,
-  hasCreateRolePermission,
+  onAccountsChange,
+  accountUserBehaviorResults,
 }) => {
   const { t } = useTranslation('common')
+
+  // Internal state management
+  const [selectedAccounts, setSelectedAccounts] = useState<number[]>([])
+  const [expandedNodes, setExpandedNodes] = useState<Set<number>>(new Set())
+  const [searchQuery, setSearchQuery] = useState<string>('')
+
+  // Helper functions
+  const hasCreateRolePermission = useCallback(
+    (accountId: number): boolean => {
+      if (!accountUserBehaviorResults) return false
+      const accountBehavior = accountUserBehaviorResults.find(
+        (result) => result.accountId === accountId
+      )
+      return accountBehavior
+        ? accountBehavior.behaviors.includes(CustomBehaviors.CreateRole)
+        : false
+    },
+    [accountUserBehaviorResults]
+  )
+
+  const getChildAccountsForParent = useCallback(
+    (parentId: number): B2BAccount[] => {
+      if (!accounts) return []
+      return accounts.filter((acc) => acc.parentAccountId === parentId)
+    },
+    [accounts]
+  )
+
+  const shouldShowAccount = useCallback(
+    (accountId: number, query: string): boolean => {
+      const checkAccountMatch = (id: number, searchQuery: string): boolean => {
+        if (!searchQuery.trim()) return true
+
+        const account = accounts?.find((acc) => acc.id === id)
+        if (!account) return false
+
+        const accountName = account.companyOrOrganization || ''
+        if (accountName.toLowerCase().includes(searchQuery.toLowerCase())) {
+          return true
+        }
+
+        const childAccounts = getChildAccountsForParent(id)
+        return childAccounts.some((child) => checkAccountMatch(child.id, searchQuery))
+      }
+
+      return checkAccountMatch(accountId, query)
+    },
+    [accounts, getChildAccountsForParent]
+  )
+
+  // Notify parent when selected accounts change
+  useEffect(() => {
+    onAccountsChange(selectedAccounts)
+  }, [selectedAccounts, onAccountsChange])
+
+  // Auto-expand nodes when searching
+  useEffect(() => {
+    if (searchQuery.trim() && accounts && parentAccount) {
+      const expandedIds = new Set<number>()
+
+      const expandParentsOfMatches = (accountId: number) => {
+        const account = accounts.find((acc) => acc.id === accountId)
+        if (!account) return
+
+        const accountName = account.companyOrOrganization || ''
+        if (accountName.toLowerCase().includes(searchQuery.toLowerCase())) {
+          let currentParentId = account.parentAccountId
+          while (currentParentId) {
+            expandedIds.add(currentParentId)
+            const parentAcc = accounts.find((acc) => acc.id === currentParentId)
+            currentParentId = parentAcc?.parentAccountId
+          }
+        }
+
+        const children = getChildAccountsForParent(accountId)
+        children.forEach((child) => expandParentsOfMatches(child.id))
+      }
+
+      expandParentsOfMatches(Number(parentAccount))
+      setExpandedNodes(expandedIds)
+    }
+  }, [searchQuery, accounts, parentAccount, getChildAccountsForParent])
+
+  // Event handlers
+  const toggleNodeExpansion = (nodeId: number) => {
+    setExpandedNodes((prev) => {
+      const newSet = new Set(prev)
+      if (newSet.has(nodeId)) {
+        newSet.delete(nodeId)
+      } else {
+        newSet.add(nodeId)
+      }
+      return newSet
+    })
+  }
+
+  const handleAccountSelection = (accountId: number, checked: boolean) => {
+    setSelectedAccounts((prev) => {
+      return checked ? [...prev, accountId] : prev.filter((id) => id !== accountId)
+    })
+  }
+
+  const handleSelectAllAccounts = () => {
+    if (!parentAccount || !accounts) return
+
+    const getAllDescendants = (parentId: number): number[] => {
+      const directChildren = accounts.filter((acc) => acc.parentAccountId === parentId) || []
+      const descendants: number[] = []
+      directChildren.forEach((child) => {
+        if (hasCreateRolePermission(child.id)) {
+          descendants.push(child.id)
+        }
+        descendants.push(...getAllDescendants(child.id))
+      })
+      return descendants
+    }
+
+    const allDescendantIds = getAllDescendants(Number(parentAccount))
+    setSelectedAccounts(allDescendantIds)
+    const allIds = new Set(accounts.map((acc) => acc.id))
+    setExpandedNodes(allIds)
+  }
+
+  const handleDeselectAllAccounts = () => {
+    setSelectedAccounts([])
+    setExpandedNodes(new Set())
+  }
 
   // Render account hierarchy tree recursively
   const renderAccountHierarchy = (accountId: number, level: number): React.ReactNode => {
@@ -86,7 +205,7 @@ const RoleFormAccountHierarchyTree: React.FC<RoleFormAccountHierarchyTreeProps> 
           {hasChildren ? (
             <IconButton
               size="small"
-              onClick={() => onToggleNodeExpansion(accountId)}
+              onClick={() => toggleNodeExpansion(accountId)}
               sx={roleFormAccountHierarchyTreeStyles.expandButton}
             >
               {isExpanded ? (
@@ -103,7 +222,7 @@ const RoleFormAccountHierarchyTree: React.FC<RoleFormAccountHierarchyTreeProps> 
             control={
               <Checkbox
                 checked={isSelected}
-                onChange={(e) => onAccountSelection(accountId, e.target.checked)}
+                onChange={(e) => handleAccountSelection(accountId, e.target.checked)}
                 disabled={isCheckboxDisabled}
                 size="small"
                 sx={roleFormAccountHierarchyTreeStyles.checkbox(isParentAccount)}
@@ -195,7 +314,7 @@ const RoleFormAccountHierarchyTree: React.FC<RoleFormAccountHierarchyTreeProps> 
           <Box sx={roleFormAccountHierarchyTreeStyles.searchContainer}>
             <TextField
               value={searchQuery}
-              onChange={(e) => onSearchQueryChange(e.target.value)}
+              onChange={(e) => setSearchQuery(e.target.value)}
               placeholder={t('search-accounts')}
               variant="outlined"
               size="small"
@@ -209,7 +328,7 @@ const RoleFormAccountHierarchyTree: React.FC<RoleFormAccountHierarchyTreeProps> 
                   <InputAdornment position="end">
                     <IconButton
                       size="small"
-                      onClick={() => onSearchQueryChange('')}
+                      onClick={() => setSearchQuery('')}
                       edge="end"
                       sx={roleFormAccountHierarchyTreeStyles.clearSearchButton}
                       title="Clear search"
@@ -243,10 +362,10 @@ const RoleFormAccountHierarchyTree: React.FC<RoleFormAccountHierarchyTreeProps> 
         </Box>
 
         <Box sx={roleFormAccountHierarchyTreeStyles.buttonContainer}>
-          <Button size="small" variant="outlined" onClick={onDeselectAllAccounts}>
+          <Button size="small" variant="outlined" onClick={handleDeselectAllAccounts}>
             {t('deselect-all-accounts')}
           </Button>
-          <Button size="small" variant="outlined" onClick={onSelectAllAccounts}>
+          <Button size="small" variant="outlined" onClick={handleSelectAllAccounts}>
             {t('select-all-accounts')}
           </Button>
         </Box>

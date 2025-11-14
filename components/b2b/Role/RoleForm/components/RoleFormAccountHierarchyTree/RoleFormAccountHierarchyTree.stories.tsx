@@ -1,414 +1,178 @@
-import React, { useState } from 'react'
+import React from 'react'
 
-import { Box } from '@mui/material'
-import { ComponentStory, ComponentMeta } from '@storybook/react'
+import { ComponentMeta, ComponentStory } from '@storybook/react'
 
 import RoleFormAccountHierarchyTree from './RoleFormAccountHierarchyTree'
-
-import { B2BAccount } from '@/lib/gql/types'
+import { b2BAccountHierarchyResult } from '@/__mocks__/stories/b2BAccountHierarchyResult'
+import { AccountScope, CustomBehaviors } from '@/lib/constants'
 
 export default {
-  title: 'B2B/Role/Components/RoleFormAccountHierarchyTree',
   component: RoleFormAccountHierarchyTree,
-  parameters: {
-    layout: 'padded',
+  title: 'B2B/Role/RoleFormAccountHierarchyTree',
+  argTypes: {
+    onAccountsChange: { action: 'onAccountsChange' },
   },
 } as ComponentMeta<typeof RoleFormAccountHierarchyTree>
 
-// Mock hierarchical B2B Accounts data
-const mockHierarchicalAccounts: B2BAccount[] = [
-  // Root/Parent Account
-  {
-    id: 1001,
-    parentAccountId: null,
-    taxId: '100001',
-    companyOrOrganization: 'Global Corporation',
-  },
-  // Level 1 Children
-  {
-    id: 1002,
-    parentAccountId: 1001,
-    taxId: '100002',
-    companyOrOrganization: 'North America Division',
-  },
-  {
-    id: 1003,
-    parentAccountId: 1001,
-    taxId: '100003',
-    companyOrOrganization: 'Europe Division',
-  },
-  {
-    id: 1004,
-    parentAccountId: 1001,
-    taxId: '100004',
-    companyOrOrganization: 'Asia Pacific Division',
-  },
-  // Level 2 Children (North America)
-  {
-    id: 1005,
-    parentAccountId: 1002,
-    taxId: '100005',
-    companyOrOrganization: 'USA Branch',
-  },
-  {
-    id: 1006,
-    parentAccountId: 1002,
-    taxId: '100006',
-    companyOrOrganization: 'Canada Branch',
-  },
-  // Level 2 Children (Europe)
-  {
-    id: 1007,
-    parentAccountId: 1003,
-    taxId: '100007',
-    companyOrOrganization: 'UK Branch',
-  },
-  {
-    id: 1008,
-    parentAccountId: 1003,
-    taxId: '100008',
-    companyOrOrganization: 'Germany Branch',
-  },
-  {
-    id: 1009,
-    parentAccountId: 1003,
-    taxId: '100009',
-    companyOrOrganization: 'France Branch',
-  },
-  // Level 3 Children (USA Branch)
-  {
-    id: 1010,
-    parentAccountId: 1005,
-    taxId: '100010',
-    companyOrOrganization: 'East Coast Office',
-  },
-  {
-    id: 1011,
-    parentAccountId: 1005,
-    taxId: '100011',
-    companyOrOrganization: 'West Coast Office',
-  },
-  // Level 3 Children (UK Branch)
-  {
-    id: 1012,
-    parentAccountId: 1007,
-    taxId: '100012',
-    companyOrOrganization: 'London Office',
-  },
-]
+const Template: ComponentStory<typeof RoleFormAccountHierarchyTree> = (args) => (
+  <RoleFormAccountHierarchyTree {...args} />
+)
 
-const Template: ComponentStory<typeof RoleFormAccountHierarchyTree> = (args) => {
-  const [selectedAccounts, setSelectedAccounts] = useState<number[]>([])
-  const [expandedNodes, setExpandedNodes] = useState<Set<number>>(new Set([1001]))
-  const [searchQuery, setSearchQuery] = useState('')
+// Mock data
+const mockAccounts = b2BAccountHierarchyResult.accounts?.map((account) => ({
+  id: account.id,
+  parentAccountId: account.parentAccountId,
+  companyOrOrganization: account.companyOrOrganization,
+  users: account.users,
+}))
 
-  const getChildAccountsForParent = (parentId: number): B2BAccount[] => {
-    return mockHierarchicalAccounts.filter((account) => account.parentAccountId === parentId)
-  }
+const parentAccountId = mockAccounts?.[0]?.id?.toString() || '1001'
 
-  const shouldShowAccount = (accountId: number, query: string): boolean => {
-    if (!query) return true
+const mockAccountUserBehaviorResults = mockAccounts?.map((account) => ({
+  accountId: account.id,
+  behaviors: [CustomBehaviors.CreateRole, 1, 2, 3, 5, 6, 7, 9, 10, 11, 13, 14, 15],
+  isLoading: false,
+  isError: false,
+  isSuccess: true,
+  error: null,
+}))
 
-    const account = mockHierarchicalAccounts.find((acc) => acc.id === accountId)
-    if (!account) return false
-
-    return account.companyOrOrganization?.toLowerCase().includes(query.toLowerCase()) || false
-  }
-
-  // Mock permission function - for stories, let's assume some accounts have permission
-  const hasCreateRolePermission = (accountId: number): boolean => {
-    // For demo purposes, let's say accounts 1001, 1002, 1005, 1007, 1010 have permission
-    return [1001, 1002, 1005, 1007, 1010].includes(accountId)
-  }
-
-  const handleAccountSelection = (accountId: number, checked: boolean) => {
-    setSelectedAccounts((prev) => {
-      if (checked) {
-        return [...prev, accountId]
-      } else {
-        return prev.filter((id) => id !== accountId)
-      }
-    })
-  }
-
-  const handleToggleNodeExpansion = (nodeId: number) => {
-    setExpandedNodes((prev) => {
-      const newSet = new Set(prev)
-      if (newSet.has(nodeId)) {
-        newSet.delete(nodeId)
-      } else {
-        newSet.add(nodeId)
-      }
-      return newSet
-    })
-  }
-
-  const handleSelectAllAccounts = () => {
-    // Select all non-parent accounts
-    const allChildAccountIds = mockHierarchicalAccounts
-      .filter((account) => account.id !== Number(args.parentAccount))
-      .map((account) => account.id)
-    setSelectedAccounts(allChildAccountIds)
-  }
-
-  const handleDeselectAllAccounts = () => {
-    setSelectedAccounts([])
-  }
-
-  const handleSearchQueryChange = (query: string) => {
-    setSearchQuery(query)
-  }
-
-  return (
-    <Box sx={{ maxWidth: 800, margin: '0 auto', padding: 2 }}>
-      <RoleFormAccountHierarchyTree
-        {...args}
-        selectedAccounts={selectedAccounts}
-        expandedNodes={expandedNodes}
-        searchQuery={searchQuery}
-        onAccountSelection={handleAccountSelection}
-        onToggleNodeExpansion={handleToggleNodeExpansion}
-        onSelectAllAccounts={handleSelectAllAccounts}
-        onDeselectAllAccounts={handleDeselectAllAccounts}
-        onSearchQueryChange={handleSearchQueryChange}
-        shouldShowAccount={shouldShowAccount}
-        getChildAccountsForParent={getChildAccountsForParent}
-        hasCreateRolePermission={hasCreateRolePermission}
-      />
-    </Box>
-  )
+// Default story - Specific Child selection
+export const SpecificChildSelection = Template.bind({})
+SpecificChildSelection.args = {
+  parentAccount: parentAccountId,
+  accountScope: AccountScope.SpecificChild,
+  accounts: mockAccounts,
+  accountUserBehaviorResults: mockAccountUserBehaviorResults,
 }
 
-export const SpecificChildAccounts = Template.bind({})
-SpecificChildAccounts.args = {
-  parentAccount: '1001',
-  accountScope: 'specific-child',
-  accounts: mockHierarchicalAccounts,
-  selectedAccounts: [1005, 1007, 1010],
+// All Except selection
+export const AllExceptSelection = Template.bind({})
+AllExceptSelection.args = {
+  parentAccount: parentAccountId,
+  accountScope: AccountScope.AllExcept,
+  accounts: mockAccounts,
+  accountUserBehaviorResults: mockAccountUserBehaviorResults,
 }
 
-export const AllExceptAccounts = Template.bind({})
-AllExceptAccounts.args = {
-  parentAccount: '1001',
-  accountScope: 'all-except',
-  accounts: mockHierarchicalAccounts,
-  selectedAccounts: [1004, 1009], // Excluded accounts
+// With limited accounts (small hierarchy)
+export const SmallHierarchy = Template.bind({})
+SmallHierarchy.args = {
+  parentAccount: parentAccountId,
+  accountScope: AccountScope.SpecificChild,
+  accounts: mockAccounts?.slice(0, 10),
+  accountUserBehaviorResults: mockAccountUserBehaviorResults?.slice(0, 10),
 }
 
-export const NoSelections = Template.bind({})
-NoSelections.args = {
-  parentAccount: '1001',
-  accountScope: 'specific-child',
-  accounts: mockHierarchicalAccounts,
-  selectedAccounts: [],
+// With mixed permissions (some accounts without create role permission)
+export const MixedPermissions = Template.bind({})
+MixedPermissions.args = {
+  parentAccount: parentAccountId,
+  accountScope: AccountScope.SpecificChild,
+  accounts: mockAccounts,
+  accountUserBehaviorResults: mockAccounts?.map((account, index) => ({
+    accountId: account.id,
+    behaviors: index % 2 === 0 ? [CustomBehaviors.CreateRole, 1, 5, 9] : [1, 5, 9], // Every other account has no create role permission
+    isLoading: false,
+    isError: false,
+    isSuccess: true,
+    error: null,
+  })),
 }
 
-export const SingleBranchExpanded: ComponentStory<typeof RoleFormAccountHierarchyTree> = (args) => {
-  const [selectedAccounts, setSelectedAccounts] = useState<number[]>([1005, 1010, 1011])
-  const [expandedNodes, setExpandedNodes] = useState<Set<number>>(new Set([1001, 1002, 1005]))
-  const [searchQuery, setSearchQuery] = useState('')
-
-  const getChildAccountsForParent = (parentId: number): B2BAccount[] => {
-    return mockHierarchicalAccounts.filter((account) => account.parentAccountId === parentId)
-  }
-
-  const shouldShowAccount = (accountId: number, query: string): boolean => {
-    if (!query) return true
-
-    const account = mockHierarchicalAccounts.find((acc) => acc.id === accountId)
-    if (!account) return false
-
-    return account.companyOrOrganization?.toLowerCase().includes(query.toLowerCase()) || false
-  }
-
-  // Mock permission function - for stories, let's assume some accounts have permission
-  const hasCreateRolePermission = (accountId: number): boolean => {
-    // For demo purposes, let's say accounts 1001, 1002, 1005, 1007, 1010 have permission
-    return [1001, 1002, 1005, 1007, 1010].includes(accountId)
-  }
-
-  const handleAccountSelection = (accountId: number, checked: boolean) => {
-    setSelectedAccounts((prev) => {
-      if (checked) {
-        return [...prev, accountId]
-      } else {
-        return prev.filter((id) => id !== accountId)
-      }
-    })
-  }
-
-  const handleToggleNodeExpansion = (nodeId: number) => {
-    setExpandedNodes((prev) => {
-      const newSet = new Set(prev)
-      if (newSet.has(nodeId)) {
-        newSet.delete(nodeId)
-      } else {
-        newSet.add(nodeId)
-      }
-      return newSet
-    })
-  }
-
-  const handleSelectAllAccounts = () => {
-    const allChildAccountIds = mockHierarchicalAccounts
-      .filter((account) => account.id !== Number(args.parentAccount))
-      .map((account) => account.id)
-    setSelectedAccounts(allChildAccountIds)
-  }
-
-  const handleDeselectAllAccounts = () => {
-    setSelectedAccounts([])
-  }
-
-  const handleSearchQueryChange = (query: string) => {
-    setSearchQuery(query)
-  }
-
-  return (
-    <Box sx={{ maxWidth: 800, margin: '0 auto', padding: 2 }}>
-      <RoleFormAccountHierarchyTree
-        {...args}
-        selectedAccounts={selectedAccounts}
-        expandedNodes={expandedNodes}
-        searchQuery={searchQuery}
-        onAccountSelection={handleAccountSelection}
-        onToggleNodeExpansion={handleToggleNodeExpansion}
-        onSelectAllAccounts={handleSelectAllAccounts}
-        onDeselectAllAccounts={handleDeselectAllAccounts}
-        onSearchQueryChange={handleSearchQueryChange}
-        shouldShowAccount={shouldShowAccount}
-        getChildAccountsForParent={getChildAccountsForParent}
-        hasCreateRolePermission={hasCreateRolePermission}
-      />
-    </Box>
-  )
+// Deep nested hierarchy
+export const DeepNestedHierarchy = Template.bind({})
+DeepNestedHierarchy.args = {
+  parentAccount: parentAccountId,
+  accountScope: AccountScope.SpecificChild,
+  accounts: mockAccounts?.slice(0, 30),
+  accountUserBehaviorResults: mockAccountUserBehaviorResults?.slice(0, 30),
 }
 
-SingleBranchExpanded.args = {
-  parentAccount: '1001',
-  accountScope: 'specific-child',
-  accounts: mockHierarchicalAccounts,
+// Single parent with direct children only
+export const DirectChildrenOnly = Template.bind({})
+DirectChildrenOnly.args = {
+  parentAccount: parentAccountId,
+  accountScope: AccountScope.SpecificChild,
+  accounts: mockAccounts?.filter(
+    (account) =>
+      account.id.toString() === parentAccountId ||
+      account.parentAccountId?.toString() === parentAccountId
+  ),
+  accountUserBehaviorResults: mockAccountUserBehaviorResults?.filter((result) =>
+    mockAccounts
+      ?.filter(
+        (account) =>
+          account.id.toString() === parentAccountId ||
+          account.parentAccountId?.toString() === parentAccountId
+      )
+      .some((acc) => acc.id === result.accountId)
+  ),
 }
 
-export const FlatHierarchy: ComponentStory<typeof RoleFormAccountHierarchyTree> = (args) => {
-  const flatAccounts: B2BAccount[] = [
-    {
-      id: 2001,
-      parentAccountId: null,
-      taxId: '200001',
-      companyOrOrganization: 'Simple Parent Corp',
-    },
-    {
-      id: 2002,
-      parentAccountId: 2001,
-      taxId: '200002',
-      companyOrOrganization: 'Child Company A',
-    },
-    {
-      id: 2003,
-      parentAccountId: 2001,
-      taxId: '200003',
-      companyOrOrganization: 'Child Company B',
-    },
-  ]
-
-  const [selectedAccounts, setSelectedAccounts] = useState<number[]>([2002])
-  const [expandedNodes, setExpandedNodes] = useState<Set<number>>(new Set([2001]))
-  const [searchQuery, setSearchQuery] = useState('')
-
-  const getChildAccountsForParent = (parentId: number): B2BAccount[] => {
-    return flatAccounts.filter((account) => account.parentAccountId === parentId)
-  }
-
-  const shouldShowAccount = (accountId: number, query: string): boolean => {
-    if (!query) return true
-
-    const account = flatAccounts.find((acc) => acc.id === accountId)
-    if (!account) return false
-
-    return account.companyOrOrganization?.toLowerCase().includes(query.toLowerCase()) || false
-  }
-
-  // Mock permission function - for flat hierarchy demo
-  const hasCreateRolePermission = (accountId: number): boolean => {
-    // For demo purposes, let's say account 2001 and 2002 have permission, but not 2003
-    return [2001, 2002].includes(accountId)
-  }
-
-  const handleAccountSelection = (accountId: number, checked: boolean) => {
-    setSelectedAccounts((prev) => {
-      if (checked) {
-        return [...prev, accountId]
-      } else {
-        return prev.filter((id) => id !== accountId)
-      }
-    })
-  }
-
-  const handleToggleNodeExpansion = (nodeId: number) => {
-    setExpandedNodes((prev) => {
-      const newSet = new Set(prev)
-      if (newSet.has(nodeId)) {
-        newSet.delete(nodeId)
-      } else {
-        newSet.add(nodeId)
-      }
-      return newSet
-    })
-  }
-
-  const handleSelectAllAccounts = () => {
-    const allChildAccountIds = flatAccounts
-      .filter((account) => account.id !== Number(args.parentAccount))
-      .map((account) => account.id)
-    setSelectedAccounts(allChildAccountIds)
-  }
-
-  const handleDeselectAllAccounts = () => {
-    setSelectedAccounts([])
-  }
-
-  const handleSearchQueryChange = (query: string) => {
-    setSearchQuery(query)
-  }
-
-  return (
-    <Box sx={{ maxWidth: 800, margin: '0 auto', padding: 2 }}>
-      <RoleFormAccountHierarchyTree
-        {...args}
-        accounts={flatAccounts}
-        selectedAccounts={selectedAccounts}
-        expandedNodes={expandedNodes}
-        searchQuery={searchQuery}
-        onAccountSelection={handleAccountSelection}
-        onToggleNodeExpansion={handleToggleNodeExpansion}
-        onSelectAllAccounts={handleSelectAllAccounts}
-        onDeselectAllAccounts={handleDeselectAllAccounts}
-        onSearchQueryChange={handleSearchQueryChange}
-        shouldShowAccount={shouldShowAccount}
-        getChildAccountsForParent={getChildAccountsForParent}
-        hasCreateRolePermission={hasCreateRolePermission}
-      />
-    </Box>
-  )
+// With no child accounts (edge case)
+export const NoChildAccounts = Template.bind({})
+NoChildAccounts.args = {
+  parentAccount: parentAccountId,
+  accountScope: AccountScope.SpecificChild,
+  accounts: mockAccounts?.filter((account) => account.id.toString() === parentAccountId),
+  accountUserBehaviorResults: mockAccountUserBehaviorResults?.filter(
+    (result) => result.accountId.toString() === parentAccountId
+  ),
 }
 
-FlatHierarchy.args = {
-  parentAccount: '2001',
-  accountScope: 'specific-child',
+// With all accounts having no permissions
+export const NoPermissions = Template.bind({})
+NoPermissions.args = {
+  parentAccount: parentAccountId,
+  accountScope: AccountScope.SpecificChild,
+  accounts: mockAccounts,
+  accountUserBehaviorResults: mockAccounts?.map((account) => ({
+    accountId: account.id,
+    behaviors: [1, 5, 9], // No CreateRole permission
+    isLoading: false,
+    isError: false,
+    isSuccess: true,
+    error: null,
+  })),
 }
 
+// Loading state
+export const LoadingBehaviors = Template.bind({})
+LoadingBehaviors.args = {
+  parentAccount: parentAccountId,
+  accountScope: AccountScope.SpecificChild,
+  accounts: mockAccounts,
+  accountUserBehaviorResults: mockAccounts?.map((account) => ({
+    accountId: account.id,
+    behaviors: [],
+    isLoading: true,
+    isError: false,
+    isSuccess: false,
+    error: null,
+  })),
+}
+
+// With long account names (test overflow)
+export const LongAccountNames = Template.bind({})
+LongAccountNames.args = {
+  parentAccount: parentAccountId,
+  accountScope: AccountScope.SpecificChild,
+  accounts: mockAccounts?.map((account, index) => ({
+    ...account,
+    companyOrOrganization:
+      index % 3 === 0
+        ? `${account.companyOrOrganization} - Very Long Company Name With Multiple Words That Should Wrap Or Truncate`
+        : account.companyOrOrganization,
+  })),
+  accountUserBehaviorResults: mockAccountUserBehaviorResults,
+}
+
+// Empty accounts array
 export const EmptyAccounts = Template.bind({})
 EmptyAccounts.args = {
-  parentAccount: '1001',
-  accountScope: 'specific-child',
-  accounts: [
-    {
-      id: 1001,
-      parentAccountId: null,
-      taxId: '100001',
-      companyOrOrganization: 'Standalone Company',
-    },
-  ],
-  selectedAccounts: [],
+  parentAccount: parentAccountId,
+  accountScope: AccountScope.SpecificChild,
+  accounts: [],
+  accountUserBehaviorResults: [],
 }
