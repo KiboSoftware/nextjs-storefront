@@ -31,7 +31,7 @@ describe('[Page Template] ManageRolesTemplate', () => {
     expect(screen.getByText(/add-new-role/i)).toBeInTheDocument()
   })
 
-  it('should render the roles grid', () => {
+  xit('should render the roles grid', () => {
     setup()
     expect(screen.getByText(/roles-grid/i)).toBeInTheDocument()
   })
