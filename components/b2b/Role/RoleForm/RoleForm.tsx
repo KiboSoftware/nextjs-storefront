@@ -20,6 +20,7 @@ import { roleFormStyles } from './RoleForm.styles'
 import { useSnackbarContext } from '@/context'
 import { useApplyRoleToFutureChildrensAsync } from '@/hooks/mutations/b2b/manage-roles/useApplyRoleToFutureChildrensAsync/useApplyRoleToFutureChildrensAsync'
 import { useCreateRoleAsync } from '@/hooks/mutations/b2b/manage-roles/useCreateRoleAsync/useCreateRoleAsync'
+import { useUpdateRoleAsync } from '@/hooks/mutations/b2b/manage-roles/useUpdateRoleAsync/useUpdateRoleAsync'
 import { AccountScope, CustomBehaviors } from '@/lib/constants'
 
 import { B2BAccount, CustomerAccount } from '@/lib/gql/types'
@@ -47,10 +48,9 @@ interface RoleFormProps {
   isReadOnly?: boolean
   isEditMode?: boolean
   initialData?: RoleFormData
-  pageTitle?: string
   isLoading?: boolean
   roleAccountIds?: number[]
-  submitButtonText?: string
+  roleId?: number
 }
 
 const useRoleFormSchema = () => {
@@ -73,14 +73,34 @@ const RoleForm: React.FC<RoleFormProps> = ({
   isReadOnly = false,
   isEditMode = false,
   initialData,
-  pageTitle,
   isLoading = false,
   roleAccountIds = [],
-  submitButtonText,
+  roleId,
 }) => {
   const { t } = useTranslation('common')
 
   const router = useRouter()
+
+  // Derive mode from router query
+  const { mode } = router.query
+  const isCopyMode = mode === 'copy'
+
+  // Calculate page title based on mode
+  const pageTitle = isReadOnly
+    ? t('view-role-details')
+    : isEditMode
+    ? t('edit-role')
+    : isCopyMode
+    ? t('copy-role')
+    : t('create-new-role')
+
+  // Calculate submit button text based on mode
+  const submitButtonText = isEditMode
+    ? t('edit-role')
+    : isCopyMode
+    ? t('copy-role')
+    : t('create-role')
+
   const styles = roleFormStyles
   const mdScreen = useMediaQuery((theme: Theme) => theme.breakpoints.up('md'))
   const { showSnackbar } = useSnackbarContext()
@@ -100,6 +120,9 @@ const RoleForm: React.FC<RoleFormProps> = ({
 
   // Initialize create role mutation
   const { createRole } = useCreateRoleAsync()
+
+  // Initialize update role mutation
+  const { updateRole } = useUpdateRoleAsync()
 
   // Initialize apply role to future children mutation
   const { applyRoleToFutureChildren } = useApplyRoleToFutureChildrensAsync()
@@ -196,7 +219,20 @@ const RoleForm: React.FC<RoleFormProps> = ({
     ? getChildAccountsForParent(Number(parentAccount)).length > 0
     : false
 
-  // Update parent account when user data loads - set to first account with create role permission
+  // Update form and selectedPermissions when initialData changes (for view/edit/copy modes)
+  useEffect(() => {
+    if (initialData) {
+      // Reset form with initialData
+      reset(initialData)
+
+      // Update selectedPermissions state
+      if (initialData.selectedPermissions) {
+        setSelectedPermissions(initialData.selectedPermissions)
+      }
+    }
+  }, [initialData, reset])
+
+  // Update parent account when user data loads - set to first account with create role permission (only for create mode)
   useEffect(() => {
     // Don't reset if we have initialData (viewing/editing/copying existing role)
     if (initialData) return
@@ -375,7 +411,7 @@ const RoleForm: React.FC<RoleFormProps> = ({
 
       const allDescendantIds = getAllDescendants(parentAccountId)
       accountsToInclude = [parentAccountId, ...allDescendantIds]
-    } else if (data.accountScope === 'specific-child') {
+    } else if (data.accountScope === AccountScope.SpecificChild) {
       // Second radio button: Apply to specific child accounts
       // Include parent + selected child accounts
       accountsToInclude = [parentAccountId, ...(data.selectedAccounts || [])]
@@ -403,42 +439,57 @@ const RoleForm: React.FC<RoleFormProps> = ({
       accountsToInclude = [parentAccountId, ...unselectedDescendantIds]
     }
 
-    // Create single payload with the specified format
-    const payload = {
-      b2BRoleInput: {
-        name: data.roleName,
-        behaviors: allSelectedBehaviorIds,
-        accountIds: accountsToInclude,
-        id: 0,
-      },
+    // Create payload
+    const b2BRoleInput = {
+      name: data.roleName,
+      behaviors: allSelectedBehaviorIds,
+      accountIds: accountsToInclude,
+      id: isEditMode && roleId ? roleId : 0,
     }
-    try {
-      // Execute role creation with single API call
-      const createdRole = await createRole.mutateAsync(payload)
 
-      // If applyToFutureChildren checkbox is selected and role was created successfully
-      if (data.applyToFutureChildren && createdRole?.id) {
-        try {
-          await applyRoleToFutureChildren.mutateAsync({
-            roleId: createdRole.id,
-            accountId: parentAccountId,
-            enabled: true,
-          })
-        } catch (applyError) {
-          // Show warning but don't prevent navigation since role was created
-          showSnackbar(t('role-created-but-failed-to-apply-to-future-children'), 'warning')
+    try {
+      if (isEditMode && roleId) {
+        // Update existing role
+        await updateRole.mutateAsync({
+          accountId: user?.id as number,
+          roleId,
+          b2BRoleInput,
+        })
+        showSnackbar(t('role-updated-successfully'), 'success')
+      } else {
+        // Create new role (for create mode or copy mode)
+        const createdRole = await createRole.mutateAsync({ b2BRoleInput })
+
+        // If applyToFutureChildren checkbox is selected and role was created successfully
+        if (data.applyToFutureChildren && createdRole?.id) {
+          try {
+            await applyRoleToFutureChildren.mutateAsync({
+              roleId: createdRole.id,
+              accountId: parentAccountId,
+              enabled: true,
+            })
+          } catch (applyError) {
+            // Show warning but don't prevent navigation since role was created
+            showSnackbar(t('role-created-but-failed-to-apply-to-future-children'), 'warning')
+          }
         }
+
+        showSnackbar(
+          isCopyMode ? t('role-copied-successfully') : t('role-created-successfully'),
+          'success'
+        )
       }
 
-      // Call onSave callback if provided
-      showSnackbar(t('role-created-successfully'), 'success')
+      // Navigate back to the roles page
       router.push('/my-account/b2b/manage-roles')
     } catch (error: unknown) {
-      console.error('Error creating role:', error)
+      console.error('Error saving role:', error)
       // Extract and show the API error message
       const errorMessage =
         error && typeof error === 'object' && 'message' in error
           ? String(error.message)
+          : isEditMode
+          ? t('error-updating-role')
           : t('role-creation-failed')
       showSnackbar(errorMessage, 'error')
     }
@@ -641,7 +692,7 @@ const RoleForm: React.FC<RoleFormProps> = ({
             onAccountsChange={handleAccountsChange}
             accountUserBehaviorResults={accountUserBehaviorResults}
           />
-      )}
+        )}
 
       {/* Account Hierarchy View Section - Shows which accounts the role is applied to */}
       {/* Show in readonly mode OR edit mode */}

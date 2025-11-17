@@ -21,13 +21,12 @@ interface UpdateRoleAsyncParams {
 }
 
 const updateRoleAsync = async ({
-  accountId,
   roleId,
   b2BRoleInput,
 }: UpdateRoleAsyncParams): Promise<B2BRole> => {
   const response = await client.request({
     document: updateRoleAsyncMutation,
-    variables: { accountId, roleId, b2BRoleInput },
+    variables: { roleId, b2BRoleInput },
   })
 
   return response?.updateRoleAsync
