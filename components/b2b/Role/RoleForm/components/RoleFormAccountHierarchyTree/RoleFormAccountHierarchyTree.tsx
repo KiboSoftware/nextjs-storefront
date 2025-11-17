@@ -17,7 +17,7 @@ import {
 import { useTranslation } from 'next-i18next'
 
 import { roleFormAccountHierarchyTreeStyles } from './RoleFormAccountHierarchyTree.styles'
-import { CustomBehaviors } from '@/lib/constants'
+import { AccountScope, CustomBehaviors } from '@/lib/constants'
 
 import { B2BAccount } from '@/lib/gql/types'
 
@@ -281,13 +281,13 @@ const RoleFormAccountHierarchyTree: React.FC<RoleFormAccountHierarchyTreeProps> 
   const totalAccounts = useMemo((): number => {
     let totalAccounts = 0
 
-    if (accountScope === 'specific-child') {
+    if (accountScope === AccountScope.SpecificChild) {
       // For specific child: parent + selected child accounts (that have permission)
       const selectedAccountsWithPermission = selectedAccounts.filter((accountId) =>
         hasCreateRolePermission(accountId)
       )
       totalAccounts = selectedAccountsWithPermission.length + 1 // +1 for parent
-    } else if (accountScope === 'all-except') {
+    } else if (accountScope === AccountScope.AllExcept) {
       // For all except: parent + all child accounts with permission - selected (excluded) accounts
       const getAllDescendants = (parentId: number): number[] => {
         const directChildren = accounts?.filter((acc) => acc.parentAccountId === parentId) || []
@@ -319,7 +319,7 @@ const RoleFormAccountHierarchyTree: React.FC<RoleFormAccountHierarchyTreeProps> 
       <Box sx={roleFormAccountHierarchyTreeStyles.headerContainer}>
         <Box sx={{ width: { xs: '100%', md: '80%' } }}>
           <Typography variant="subtitle2" sx={roleFormAccountHierarchyTreeStyles.titleText}>
-            {accountScope === 'specific-child'
+            {accountScope === AccountScope.SpecificChild
               ? t('select-child-accounts')
               : t('select-accounts-to-exclude')}
           </Typography>

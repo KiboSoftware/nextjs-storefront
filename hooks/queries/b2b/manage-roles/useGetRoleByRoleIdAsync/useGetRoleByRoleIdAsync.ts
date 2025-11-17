@@ -43,7 +43,7 @@ const getRoleByIdAsync = async ({ roleId }: any): Promise<B2BRole> => {
  * @returns 'response?.getRoleByIdAsync', which contains the role details.
  */
 
-export const useGetRoleByIdAsync = (roleId: number, initialData?: B2BRole) => {
+export const useGetRoleByRoleIdAsync = (roleId: number, initialData?: B2BRole) => {
   const { isLoading, isSuccess, isError, data, error } = useQuery({
     queryKey: rolesKeys.roleById(roleId),
     queryFn: () => getRoleByIdAsync({ roleId }),
@@ -62,4 +62,4 @@ export const useGetRoleByIdAsync = (roleId: number, initialData?: B2BRole) => {
   }
 }
 
-export default useGetRoleByIdAsync
+export default useGetRoleByRoleIdAsync
