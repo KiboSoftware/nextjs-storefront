@@ -1,26 +1,28 @@
-import React, { useEffect, useState } from 'react'
+import React, { useState } from 'react'
 
 import { yupResolver } from '@hookform/resolvers/yup'
-import CheckIcon from '@mui/icons-material/Check'
-import ClearIcon from '@mui/icons-material/Clear'
 import { LoadingButton } from '@mui/lab'
-import { Box, Grid, Stack, useMediaQuery, useTheme } from '@mui/material'
-import getConfig from 'next/config'
+import { Box, Grid } from '@mui/material'
 import { useTranslation } from 'next-i18next'
 import { useForm, Controller } from 'react-hook-form'
 import * as yup from 'yup'
 
 import userFormStyles from './UserForm.styles'
-import { KiboRadio, KiboSwitch, KiboTextBox } from '@/components/common'
+import { AccountRoleAssignments } from '@/components/b2b'
+import { KiboTextBox } from '@/components/common'
+import { useGetRolesByAccountIdAsync } from '@/hooks'
+import { CustomBehaviors } from '@/lib/constants'
 
-import { B2BUser, B2BUserInput } from '@/lib/gql/types'
+import { B2BUser, B2BUserInput, B2BAccount } from '@/lib/gql/types'
 
 interface UserFormProps {
   isEditMode: boolean
   isUserFormInDialog?: boolean
-  b2BUser?: B2BUser | any
+  b2BUser?: B2BUser
+  accounts?: B2BAccount[]
+  accountUserBehaviors?: Record<number, number[]>
   onClose: () => void
-  onSave: (formValues: B2BUserInput, b2BUser?: B2BUser) => void
+  onSave: (formValues: B2BUserInput & { roleAssignments?: Record<number, string[]> }, b2BUser?: B2BUser) => void
 }
 
 export const useFormSchema = () => {
@@ -36,60 +38,135 @@ export const useFormSchema = () => {
 }
 
 const UserForm = (props: UserFormProps) => {
-  const { isEditMode, isUserFormInDialog, b2BUser, onClose, onSave } = props
-
-  const { publicRuntimeConfig } = getConfig()
+  const { isEditMode, b2BUser, accounts = [], accountUserBehaviors, onClose, onSave } = props
 
   const classes = userFormStyles()
   const { t } = useTranslation('common')
-  const theme = useTheme()
-  const mdScreen = useMediaQuery(theme.breakpoints.up('md'))
   const userSchema = useFormSchema()
-  const userFormRadioOptions = publicRuntimeConfig.userFormRadioOptions
 
   const [isLoading, setLoading] = useState(false)
+  const [roleAssignments, setRoleAssignments] = useState<Record<number, string[]>>({})
 
-  const isDesktopView = !isEditMode && mdScreen
-  const isDesktopEditView = isEditMode && mdScreen
+  // Check if user has ViewRole permission for a specific account
+  const hasViewRolePermission = React.useCallback(
+    (accountId: number): boolean => {
+      const behaviors = accountUserBehaviors?.[accountId]
+      return behaviors ? behaviors.includes(CustomBehaviors.ViewRole) : false
+    },
+    [accountUserBehaviors]
+  )
+
+  // Fetch roles for all accounts only if user has permission
+  const rolesData = React.useMemo(
+    () =>
+      accounts.map((account) => {
+        const accountId = account.id || 0
+        const hasPermission = hasViewRolePermission(accountId)
+        // eslint-disable-next-line react-hooks/rules-of-hooks
+        return { accountId, hasPermission }
+      }),
+    [accounts, hasViewRolePermission]
+  )
+
+  // Use hooks conditionally based on permission
+  const roleQueries = rolesData.map(({ accountId, hasPermission }) => 
+    // eslint-disable-next-line react-hooks/rules-of-hooks
+    useGetRolesByAccountIdAsync(accountId, undefined, hasPermission)
+  )
+
+  // Transform accounts into the format needed by AccountRoleAssignments
+  // Only include accounts where user has ViewRole permission
+  const accountsWithRoles = React.useMemo(
+    () =>
+      accounts
+        .map((account, index) => {
+          const accountId = account.id || 0
+          const hasPermission = rolesData[index]?.hasPermission
+
+          // Skip accounts without permission
+          if (!hasPermission) return null
+
+          const { roles } = roleQueries[index]
+
+          const systemRoles =
+            roles?.items
+              ?.filter((role) => role.isSystemRole)
+              .map((role) => ({
+                id: String(role.id),
+                name: role.name || '',
+                isSystemRole: true,
+              })) || []
+
+          const customRoles =
+            roles?.items
+              ?.filter((role) => !role.isSystemRole)
+              .map((role) => ({
+                id: String(role.id),
+                name: role.name || '',
+                isSystemRole: false,
+              })) || []
+
+          return {
+            accountId,
+            accountName: account.companyOrOrganization || '',
+            systemRoles,
+            customRoles,
+          }
+        })
+        .filter(Boolean) as Array<{
+        accountId: number
+        accountName: string
+        systemRoles: Array<{ id: string; name: string; isSystemRole: boolean }>
+        customRoles: Array<{ id: string; name: string; isSystemRole: boolean }>
+      }>,
+    [accounts, rolesData, roleQueries]
+  )
+
+  // Memoize default values based on b2BUser
+  const defaultValues = React.useMemo(() => {
+    if (b2BUser) {
+      const { firstName, lastName, emailAddress, isActive, roles } = b2BUser
+      return {
+        emailAddress: emailAddress || '',
+        firstName: firstName || '',
+        lastName: lastName || '',
+        isActive: isActive || false,
+        role: roles?.length ? roles[0]?.roleName || '' : '',
+      }
+    }
+    return { role: 'Admin', emailAddress: '', firstName: '', lastName: '', isActive: true }
+  }, [b2BUser])
+
   const {
     getValues,
     handleSubmit,
     formState: { errors },
     control,
-    reset,
   } = useForm({
-    defaultValues: { role: 'Admin', emailAddress: '', firstName: '', lastName: '', isActive: true },
+    defaultValues,
     resolver: yupResolver(userSchema),
   })
-  const onSubmit = async () => {
+
+  const onSubmit = React.useCallback(async () => {
     if (isLoading) return
     setLoading(true)
     const formValues = getValues()
+    const extendedFormValues = {
+      ...formValues,
+      roleAssignments,
+    }
     if (isEditMode) {
-      await onSave(formValues, b2BUser)
+      await onSave(extendedFormValues, b2BUser)
     } else {
-      await onSave(formValues)
+      await onSave(extendedFormValues)
     }
     setLoading(false)
-    cancelAction()
-  }
-
-  useEffect(() => {
-    if (!b2BUser) return
-    const { firstName, lastName, emailAddress, isActive, roles } = b2BUser
-    reset({
-      emailAddress,
-      firstName,
-      lastName,
-      isActive,
-      role: roles?.length ? roles[0]?.roleName : '',
-    })
-  }, [b2BUser])
-
-  const cancelAction = () => {
     onClose()
-    reset()
-  }
+  }, [isLoading, getValues, roleAssignments, isEditMode, onSave, b2BUser, onClose])
+
+  const cancelAction = React.useCallback(() => {
+    onClose()
+  }, [onClose])
 
   return (
     <>
@@ -98,7 +175,7 @@ const UserForm = (props: UserFormProps) => {
         onSubmit={handleSubmit(onSubmit)}
         id="addUserForm"
         data-testid="user-form"
-        style={{ display: 'flex' }}
+        style={{ display: 'flex', width: '100%' }}
       >
         <Grid
           container
@@ -106,14 +183,13 @@ const UserForm = (props: UserFormProps) => {
           style={{
             marginTop: '5px',
             marginLeft: 0,
-            display: 'flex',
-            justifyContent: 'space-between',
+            width: '100%',
           }}
         >
           <Grid
             item
             xs={12}
-            md={isUserFormInDialog ? 12 : isDesktopEditView ? 3 : 3.5}
+            md={12}
             className={classes.textBoxGridStyle}
           >
             <Controller
@@ -140,7 +216,7 @@ const UserForm = (props: UserFormProps) => {
           <Grid
             item
             xs={12}
-            md={isUserFormInDialog ? 12 : isDesktopEditView ? 1.5 : 2}
+            md={12}
             className={classes.textBoxGridStyle}
           >
             <Controller
@@ -161,7 +237,7 @@ const UserForm = (props: UserFormProps) => {
           <Grid
             item
             xs={12}
-            md={isUserFormInDialog ? 12 : isDesktopEditView ? 1.5 : 2}
+            md={12}
             className={classes.textBoxGridStyle}
           >
             <Controller
@@ -179,57 +255,25 @@ const UserForm = (props: UserFormProps) => {
               )}
             />
           </Grid>
-          <Grid item xs={12} md={isUserFormInDialog ? 12 : 2} className={classes.textBoxGridStyle}>
-            <Controller
-              name="role"
-              control={control}
-              defaultValue={getValues('role')}
-              render={({ field }) => (
-                <KiboRadio
-                  {...field}
-                  align="center"
-                  onChange={(value) => field.onChange(value)}
-                  title={t('role')}
-                  radioOptions={userFormRadioOptions}
-                  selected={getValues('role')}
-                />
-              )}
+
+          {/* Account Role Assignments Section - Full Width */}
+          <Grid  xs={12}>
+            <AccountRoleAssignments
+              accounts={accountsWithRoles}
+              selectedRoles={roleAssignments}
+              onChange={setRoleAssignments}
             />
           </Grid>
-          {isEditMode && (
-            <Grid
-              item
-              xs={12}
-              md={isUserFormInDialog ? 12 : isDesktopEditView ? 1.7 : 1}
-              className={classes.kiboSwitchGridStyle}
-            >
-              <Controller
-                name="isActive"
-                control={control}
-                render={({ field }) => (
-                  <KiboSwitch
-                    checked={field.value}
-                    onLabel={t('active')}
-                    offLabel={t('in-active')}
-                    title={t('status')}
-                    onChange={(value) => field.onChange(value)}
-                  />
-                )}
-              />
-            </Grid>
-          )}
-          <Grid
-            item
-            xs={12}
-            md={isUserFormInDialog ? 12 : isDesktopEditView ? 1.1 : 1.4}
-            sx={{ paddingLeft: '0 !important', paddingTop: { xs: '15px !important' } }}
-          >
-            <Stack
-              gap={1}
+
+          {/* Action Buttons - Full Width */}
+          <Grid item xs={12}>
+            <Box
               sx={{
-                width: { xs: '100%' },
-                flexDirection: { xs: 'column', md: 'row' },
-                justifyContent: 'end',
+                display: 'flex',
+                justifyContent: 'flex-end',
+                gap: 2,
+                mt: 3,
+                mb: 2,
               }}
             >
               <LoadingButton
@@ -238,9 +282,8 @@ const UserForm = (props: UserFormProps) => {
                 data-testid="reset-button"
                 type="reset"
                 onClick={cancelAction}
-                sx={{ marginTop: { xs: 1.5, md: 0 } }}
               >
-                {isDesktopEditView && !isUserFormInDialog ? <ClearIcon /> : t('cancel')}
+                {t('cancel')}
               </LoadingButton>
 
               <LoadingButton
@@ -251,11 +294,9 @@ const UserForm = (props: UserFormProps) => {
                 loading={isLoading}
                 disabled={isLoading}
               >
-                {(isDesktopEditView && !isUserFormInDialog && <CheckIcon />) ||
-                  (isDesktopView && t('add-user')) ||
-                  t('save')}
+                {isEditMode ? t('save') : t('add-user')}
               </LoadingButton>
-            </Stack>
+            </Box>
           </Grid>
         </Grid>
       </form>

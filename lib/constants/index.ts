@@ -225,7 +225,9 @@ export const OutOfStockBehavior = {
 }
 
 export const CustomBehaviors = {
+  ViewRole: 2029,
   CreateRole: 2027,
+  AddUser: 1000
 }
 
 export const AccountScope = {

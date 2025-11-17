@@ -681,8 +681,21 @@ export const b2bHandlers = [
   }),
 
   // useDeleteRoleAsync
-  graphql.mutation('deleteRoleAsyncMutation', (_req, res, ctx) => {
-    return res(ctx.data({ deleteRoleAsyncMutation: true }))
+  graphql.mutation('deleteRoleAsync', (_req, res, ctx) => {
+    return res(ctx.data({ deleteRoleAsync: true }))
+  }),
+
+  // useUpdateRoleAsync
+  graphql.mutation('updateRoleAsync', (req, res, ctx) => {
+    const { roleId, b2BRoleInput } = req.variables
+    const updatedRole = {
+      id: roleId,
+      name: b2BRoleInput.name,
+      isSystemRole: false,
+      behaviors: b2BRoleInput.behaviors || [],
+      accountIds: b2BRoleInput.accountIds || [],
+    }
+    return res(ctx.data({ updateRoleAsync: updatedRole }))
   }),
 ]
 
