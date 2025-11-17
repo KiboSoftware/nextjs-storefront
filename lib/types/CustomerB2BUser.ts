@@ -7,6 +7,7 @@ export interface B2BUserInput {
   localeCode?: string | null
   isActive?: boolean | null
   role?: string | null
+  roleAssignments?: Record<number, string[]>
 }
 
 export interface QueryB2BUserArgs {
@@ -31,13 +32,13 @@ export interface B2BUserResultType {
   isLoading: boolean
   isSuccess: boolean
   isError: boolean
-  error: any
+  error: unknown
 }
 
 export interface CreateCustomerB2bUserParams {
   user: CustomerAccount | undefined
   values: B2BUserInput
-  roles: CustomerB2BUserRole[]
+  roles?: CustomerB2BUserRole[]
 }
 
 export interface UpdateCustomerB2bUserParams {

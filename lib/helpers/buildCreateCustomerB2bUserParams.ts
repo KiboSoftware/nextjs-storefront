@@ -1,14 +1,22 @@
 import { MutationCreateCustomerB2bAccountUserArgs } from '../gql/types'
-import { CreateCustomerB2bUserParams, CustomerB2BUserRole } from '../types/CustomerB2BUser'
+import { CreateCustomerB2bUserParams } from '../types/CustomerB2BUser'
 
 export const buildCreateCustomerB2bUserParams = (
   params: CreateCustomerB2bUserParams
 ): MutationCreateCustomerB2bAccountUserArgs => {
   const {
     user,
-    values: { firstName, lastName, emailAddress, role },
-    roles,
+    values: { firstName, lastName, emailAddress, roleAssignments },
   } = params
+
+  // Convert roleAssignments to roles array
+  const roles = roleAssignments
+    ? Object.values(roleAssignments).flatMap((roleIds) =>
+        roleIds.map((roleId) => ({
+          roleId: parseInt(roleId, 10),
+        }))
+      )
+    : []
 
   const createCustomerB2bUserParam = {
     accountId: user?.id as number,
@@ -19,12 +27,7 @@ export const buildCreateCustomerB2bUserParams = (
         emailAddress,
         userName: emailAddress,
         localeCode: 'en-US',
-        roles: [
-          {
-            roleId: roles.find(({ roleName }: CustomerB2BUserRole) => roleName === role)
-              ?.roleId as number,
-          },
-        ],
+        roles,
       },
     },
   }

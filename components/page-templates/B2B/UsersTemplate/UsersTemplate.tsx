@@ -1,6 +1,6 @@
 // Figma: https://www.figma.com/file/bKJuIwUx6VXmubHZo4rCBq/B2B?type=design&node-id=19-688&mode=design&t=MrZvIdPLzo5jsp19-0
 
-import { ChangeEvent, useState } from 'react'
+import React, { ChangeEvent, useState } from 'react'
 
 import {
   ChevronLeft as ChevronLeftIcon,
@@ -21,29 +21,27 @@ import {
 } from '@mui/material'
 import getConfig from 'next/config'
 import Link from 'next/link'
+import { useRouter } from 'next/router'
 import { useTranslation } from 'next-i18next'
 
 import { UsersTemplateStyle } from './UsersTemplate.styles'
-import { UserTable, UserForm } from '@/components/b2b'
+import { UserTable } from '@/components/b2b'
 import { SearchBar } from '@/components/common'
-import { ConfirmationDialog, UserFormDialog } from '@/components/dialogs'
+import { ConfirmationDialog } from '@/components/dialogs'
 import { useAuthContext, useModalContext } from '@/context'
 import {
   useAddRoleToCustomerB2bAccountMutation,
-  useCreateCustomerB2bUserMutation,
   useDebounce,
   useDeleteB2bAccountRoleMutation,
   useGetB2BUserQueries,
   useRemoveCustomerB2bUserMutation,
   useUpdateCustomerB2bUserMutation,
 } from '@/hooks'
+import { CustomBehaviors } from '@/lib/constants'
 import {
-  actions,
   buildB2bUserRoleParams,
-  buildCreateCustomerB2bUserParams,
   buildUpdateCustomerB2bUserParams,
   getPerPageItemText,
-  hasPermission,
 } from '@/lib/helpers'
 import { B2BUserInput, CustomerB2BUserRole } from '@/lib/types/CustomerB2BUser'
 
@@ -72,7 +70,11 @@ const PaginationContainer = styled(Box)(({ theme }: { theme: Theme }) => ({
   margin: '20px 0',
 }))
 
-const UsersTemplate = () => {
+interface UsersTemplateProps {
+  accountUserBehaviors?: Record<number, number[]>
+}
+
+const UsersTemplate = ({ accountUserBehaviors }: UsersTemplateProps) => {
   const {
     publicRuntimeConfig: {
       b2bUserRoles,
@@ -85,10 +87,9 @@ const UsersTemplate = () => {
   const theme = useTheme()
   const { user } = useAuthContext()
   const { t } = useTranslation('common')
-  const { showModal, closeModal } = useModalContext()
+  const { showModal } = useModalContext()
+  const router = useRouter()
   const mdScreen = useMediaQuery(theme.breakpoints.up('md'))
-
-  const [isUserFormOpen, setIsUserFormOpen] = useState<boolean>(false)
 
   const [paginationState, setPaginationState] = useState({
     searchTerm: '',
@@ -106,7 +107,6 @@ const UsersTemplate = () => {
   })
 
   const { removeCustomerB2bUser } = useRemoveCustomerB2bUserMutation()
-  const { createCustomerB2bUser } = useCreateCustomerB2bUserMutation()
   const { addRoleToCustomerB2bAccount } = useAddRoleToCustomerB2bAccountMutation()
   const { updateCustomerB2bUser } = useUpdateCustomerB2bUserMutation()
   const { deleteB2bAccountUserRole } = useDeleteB2bAccountRoleMutation()
@@ -139,13 +139,13 @@ const UsersTemplate = () => {
     })
   }
 
-  const handlePageChange = (event: ChangeEvent<any>, page: number) =>
+  const handlePageChange = (_event: ChangeEvent<unknown>, page: number) =>
     setPaginationState({
       ...paginationState,
       startIndex: (data?.pageSize ?? 0) * (page - 1),
     })
 
-  const addRoleToB2bUser = async (b2BUser: B2BUser, formValues: any) => {
+  const addRoleToB2bUser = async (b2BUser: B2BUser, formValues: B2BUserInput) => {
     const addRoleToCustomerB2bAccountVariables = buildB2bUserRoleParams({
       user,
       b2BUser: b2BUser,
@@ -155,23 +155,6 @@ const UsersTemplate = () => {
     await addRoleToCustomerB2bAccount.mutateAsync({
       ...addRoleToCustomerB2bAccountVariables,
     })
-  }
-  const handleAddUser = async (formValues: B2BUserInput) => {
-    try {
-      const variables = buildCreateCustomerB2bUserParams({
-        user,
-        values: formValues,
-        roles: userRoles,
-      })
-      const createUserResponse = await createCustomerB2bUser.mutateAsync({
-        ...variables,
-      })
-      if (createUserResponse?.userId) {
-        addRoleToB2bUser(createUserResponse, formValues)
-      }
-    } catch (e) {
-      console.error(e)
-    }
   }
 
   const handleUpdateUser = async (formValues: B2BUserInput, b2BUser?: B2BUser) => {
@@ -206,25 +189,16 @@ const UsersTemplate = () => {
   }
 
   const handleAddUserButtonClick = () => {
-    // if (mdScreen) {
-    //   setIsUserFormOpen(true)
-    // } else {
-    showModal({
-      Component: UserFormDialog,
-      props: {
-        isEditMode: false,
-        isUserFormInDialog: true,
-        formTitle: t('add-new-user'),
-        b2BUser: undefined,
-        onSave: (b2BUserInput: B2BUserInput) => handleAddUser(b2BUserInput),
-        onClose: () => {
-          setIsUserFormOpen(false)
-          closeModal()
-        },
-      },
-    })
-    // }
+    // Navigate to the add user page instead of showing modal
+    router.push('/my-account/b2b/users/add-user')
   }
+
+  // Check if user has add user permission (CustomBehaviors.AddUser = 1000)
+  const hasAddUserPermission = React.useMemo(() => {
+    if (!accountUserBehaviors || !user?.id) return false
+    const behaviors = accountUserBehaviors[user.id]
+    return behaviors ? behaviors.includes(CustomBehaviors.AddUser) : false
+  }, [accountUserBehaviors, user?.id])
 
   return (
     <Grid>
@@ -237,13 +211,12 @@ const UsersTemplate = () => {
           <Typography variant={mdScreen ? 'h1' : 'h2'}>{t('users')}</Typography>
         </Box>
         <NoSsr>
-          {hasPermission(actions.CREATE_ACCOUNT) && (
+          {hasAddUserPermission && (
             <Grid container>
               <Grid item xs={12} md={12}>
                 <Button
                   variant="contained"
                   color="inherit"
-                  disabled={isUserFormOpen}
                   onClick={handleAddUserButtonClick}
                   disableElevation
                   id="formOpenButton"

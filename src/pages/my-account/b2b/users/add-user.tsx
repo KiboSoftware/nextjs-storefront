@@ -1,10 +1,12 @@
 import { GetServerSidePropsContext, NextApiRequest, NextApiResponse, NextPage } from 'next'
 import { serverSideTranslations } from 'next-i18next/serverSideTranslations'
 
-import { UsersTemplate } from '@/components/page-templates'
+import { AddUserTemplate } from '@/components/page-templates'
 import { getB2BAccountHierarchy, getMultipleB2BAccountUserBehaviors } from '@/lib/api/operations'
+import { B2BAccountHierarchyResult } from '@/lib/types'
 
-interface UsersPageProps {
+interface AddUserPageProps {
+  initialData?: B2BAccountHierarchyResult
   accountUserBehaviors?: Record<number, number[]>
 }
 
@@ -35,18 +37,19 @@ export async function getServerSideProps(context: GetServerSidePropsContext) {
 
   return {
     props: {
+      initialData: hierarchyResponse,
       accountUserBehaviors: accountUserBehaviors || {},
       ...(await serverSideTranslations(locale as string, ['common'])),
     },
   }
 }
 
-const B2BUsersPage: NextPage<UsersPageProps> = (props) => {
+const AddUserPage: NextPage<AddUserPageProps> = (props) => {
   return (
     <>
-      <UsersTemplate {...props} />
+      <AddUserTemplate {...props} />
     </>
   )
 }
 
-export default B2BUsersPage
+export default AddUserPage
