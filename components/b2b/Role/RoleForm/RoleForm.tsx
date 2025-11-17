@@ -410,19 +410,20 @@ const RoleForm: React.FC<RoleFormProps> = ({
   }
 
   // Handle removing a behavior from the selected list
-  const handleRemoveBehavior = (category: number, behavior: number) => {
+  const handleRemoveBehavior = useCallback((category: number, behavior: number) => {
     setSelectedPermissions((prev) => ({
       ...prev,
       [category]: (prev[category] || []).filter((b) => b !== behavior),
     }))
-  }
+  }, [])
 
   // Form validation - Using useMemo to make it reactive to form and permission changes
-  const hasSelectedPermissions = getAllSelectedBehaviors().length > 0
-
   const isFormValid = useMemo(() => {
+    const hasSelectedPermissions = getAllSelectedBehaviors().length > 0
     return roleName?.trim() !== '' && parentAccount !== '' && hasSelectedPermissions
-  }, [roleName, parentAccount, hasSelectedPermissions])
+  }, [roleName, parentAccount, getAllSelectedBehaviors])
+
+  const hasSelectedPermissions = getAllSelectedBehaviors().length > 0
 
   const onSubmit = async (data: RoleFormData) => {
     // Validate that at least one permission is selected
