@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useMemo, useCallback } from 'react'
 
 import { Box, Grid } from '@mui/material'
 import { useRouter } from 'next/router'
@@ -6,7 +6,6 @@ import { useTranslation } from 'next-i18next'
 
 import { CreateRoleTemplateStyles } from './CreateRoleTemplate.styles'
 import { RoleForm } from '@/components/b2b/index'
-import { RoleFormData } from '@/components/b2b/Role/RoleForm/components'
 import { B2BAccountHierarchyResult } from '@/lib/types'
 
 import { CustomerAccount } from '@/lib/gql/types'
@@ -25,7 +24,6 @@ interface CreateRoleTemplateProps {
   behaviorCategories?: { items?: Array<{ id?: number; name?: string }> }
   behaviors?: { items?: Array<{ id?: number; name?: string; categoryId?: number }> }
   accountUserBehaviorResults?: Array<AccountUserBehaviorResult>
-  accountUserBehaviors?: Array<unknown>
 }
 
 const CreateRoleTemplate: React.FC<CreateRoleTemplateProps> = ({
@@ -35,36 +33,35 @@ const CreateRoleTemplate: React.FC<CreateRoleTemplateProps> = ({
   behaviorCategories,
   behaviors,
   accountUserBehaviorResults,
-  accountUserBehaviors,
 }) => {
   const { t } = useTranslation('common')
   const router = useRouter()
 
-  const breadcrumbList = [
-    {
-      key: 'create-role',
-      backText: t('manage-roles'),
-      redirectURL: '/my-account/b2b/manage-roles',
-    },
-  ]
+  // Memoize breadcrumb list to prevent recreation on every render
+  const breadcrumbList = useMemo(
+    () => [
+      {
+        key: 'create-role',
+        backText: t('manage-roles'),
+        redirectURL: '/my-account/b2b/manage-roles',
+      },
+    ],
+    [t]
+  )
   const activeBreadCrumb = breadcrumbList[0]
 
-  const handleBackClick = () => {
+  // Memoize callbacks to prevent creating new function references
+  const handleBackClick = useCallback(() => {
     if (onBackClick) {
       onBackClick()
     } else {
       router.push(activeBreadCrumb.redirectURL)
     }
-  }
+  }, [onBackClick, router, activeBreadCrumb.redirectURL])
 
-  const handleSave = (data: RoleFormData) => {
-    // For now, just navigate back to the roles page
+  const handleCancel = useCallback(() => {
     router.push('/my-account/b2b/manage-roles')
-  }
-
-  const handleCancel = () => {
-    router.push('/my-account/b2b/manage-roles')
-  }
+  }, [router])
 
   return (
     <Grid>
@@ -74,7 +71,6 @@ const CreateRoleTemplate: React.FC<CreateRoleTemplateProps> = ({
 
           {/* Role Form */}
           <RoleForm
-            onSave={handleSave}
             onCancel={handleCancel}
             user={user}
             accounts={initialData?.accounts}
@@ -82,7 +78,6 @@ const CreateRoleTemplate: React.FC<CreateRoleTemplateProps> = ({
             behaviorCategories={behaviorCategories}
             behaviors={behaviors}
             accountUserBehaviorResults={accountUserBehaviorResults}
-            accountUserBehaviors={accountUserBehaviors}
           />
         </Box>
       </Grid>
@@ -90,4 +85,4 @@ const CreateRoleTemplate: React.FC<CreateRoleTemplateProps> = ({
   )
 }
 
-export default CreateRoleTemplate
+export default React.memo(CreateRoleTemplate)

@@ -1,4 +1,4 @@
-import React, { useState, useCallback, useEffect } from 'react'
+import React, { useState, useCallback, useEffect, useMemo } from 'react'
 
 import ChevronRightIcon from '@mui/icons-material/ChevronRight'
 import ClearIcon from '@mui/icons-material/Clear'
@@ -34,6 +34,7 @@ interface RoleFormAccountHierarchyTreeProps {
   parentAccount: string
   accountScope: string
   accounts?: B2BAccount[]
+  selectedAccounts: number[]
   onAccountsChange: (accountIds: number[]) => void
   accountUserBehaviorResults?: AccountUserBehaviorResult[]
 }
@@ -42,13 +43,13 @@ const RoleFormAccountHierarchyTree: React.FC<RoleFormAccountHierarchyTreeProps> 
   parentAccount,
   accountScope,
   accounts,
+  selectedAccounts,
   onAccountsChange,
   accountUserBehaviorResults,
 }) => {
   const { t } = useTranslation('common')
 
-  // Internal state management
-  const [selectedAccounts, setSelectedAccounts] = useState<number[]>([])
+  // UI-local state only (not shared with parent)
   const [expandedNodes, setExpandedNodes] = useState<Set<number>>(new Set())
   const [searchQuery, setSearchQuery] = useState<string>('')
 
@@ -96,11 +97,6 @@ const RoleFormAccountHierarchyTree: React.FC<RoleFormAccountHierarchyTreeProps> 
     [accounts, getChildAccountsForParent]
   )
 
-  // Notify parent when selected accounts change
-  useEffect(() => {
-    onAccountsChange(selectedAccounts)
-  }, [selectedAccounts, onAccountsChange])
-
   // Auto-expand nodes when searching
   useEffect(() => {
     if (searchQuery.trim() && accounts && parentAccount) {
@@ -130,7 +126,7 @@ const RoleFormAccountHierarchyTree: React.FC<RoleFormAccountHierarchyTreeProps> 
   }, [searchQuery, accounts, parentAccount, getChildAccountsForParent])
 
   // Event handlers
-  const toggleNodeExpansion = (nodeId: number) => {
+  const toggleNodeExpansion = useCallback((nodeId: number) => {
     setExpandedNodes((prev) => {
       const newSet = new Set(prev)
       if (newSet.has(nodeId)) {
@@ -140,15 +136,19 @@ const RoleFormAccountHierarchyTree: React.FC<RoleFormAccountHierarchyTreeProps> 
       }
       return newSet
     })
-  }
+  }, [])
 
-  const handleAccountSelection = (accountId: number, checked: boolean) => {
-    setSelectedAccounts((prev) => {
-      return checked ? [...prev, accountId] : prev.filter((id) => id !== accountId)
-    })
-  }
+  const handleAccountSelection = useCallback(
+    (accountId: number, checked: boolean) => {
+      const newSelectedAccounts = checked
+        ? [...selectedAccounts, accountId]
+        : selectedAccounts.filter((id) => id !== accountId)
+      onAccountsChange(newSelectedAccounts)
+    },
+    [selectedAccounts, onAccountsChange]
+  )
 
-  const handleSelectAllAccounts = () => {
+  const handleSelectAllAccounts = useCallback(() => {
     if (!parentAccount || !accounts) return
 
     const getAllDescendants = (parentId: number): number[] => {
@@ -164,106 +164,121 @@ const RoleFormAccountHierarchyTree: React.FC<RoleFormAccountHierarchyTreeProps> 
     }
 
     const allDescendantIds = getAllDescendants(Number(parentAccount))
-    setSelectedAccounts(allDescendantIds)
+    onAccountsChange(allDescendantIds)
     const allIds = new Set(accounts.map((acc) => acc.id))
     setExpandedNodes(allIds)
-  }
+  }, [parentAccount, accounts, hasCreateRolePermission, onAccountsChange])
 
-  const handleDeselectAllAccounts = () => {
-    setSelectedAccounts([])
+  const handleDeselectAllAccounts = useCallback(() => {
+    onAccountsChange([])
     setExpandedNodes(new Set())
-  }
+  }, [onAccountsChange])
 
   // Render account hierarchy tree recursively
-  const renderAccountHierarchy = (accountId: number, level: number): React.ReactNode => {
-    const account = accounts?.find((acc) => acc.id === accountId)
-    if (!account) return null
+  const renderAccountHierarchy = useCallback(
+    (accountId: number, level: number): React.ReactNode => {
+      const account = accounts?.find((acc) => acc.id === accountId)
+      if (!account) return null
 
-    // Filter based on search query
-    if (!shouldShowAccount(accountId, searchQuery)) {
-      return null
-    }
+      // Filter based on search query
+      if (!shouldShowAccount(accountId, searchQuery)) {
+        return null
+      }
 
-    const childAccounts = getChildAccountsForParent(accountId).filter((child) =>
-      shouldShowAccount(child.id, searchQuery)
-    )
-    const hasChildren = childAccounts.length > 0
-    const isExpanded = expandedNodes.has(accountId)
-    const isSelected = selectedAccounts.includes(accountId)
-    const isParentAccount = accountId === Number(parentAccount)
-    const hasPermission = hasCreateRolePermission(accountId)
-    const isCheckboxDisabled = isParentAccount || !hasPermission
+      const childAccounts = getChildAccountsForParent(accountId).filter((child) =>
+        shouldShowAccount(child.id, searchQuery)
+      )
+      const hasChildren = childAccounts.length > 0
+      const isExpanded = expandedNodes.has(accountId)
+      const isSelected = selectedAccounts.includes(accountId)
+      const isParentAccount = accountId === Number(parentAccount)
+      const hasPermission = hasCreateRolePermission(accountId)
+      const isCheckboxDisabled = isParentAccount || !hasPermission
 
-    return (
-      <Box key={accountId}>
-        <Box
-          sx={{
-            ...roleFormAccountHierarchyTreeStyles.accountItem,
-            pl: level * 3,
-          }}
-        >
-          {hasChildren ? (
-            <IconButton
-              size="small"
-              onClick={() => toggleNodeExpansion(accountId)}
-              sx={roleFormAccountHierarchyTreeStyles.expandButton}
-            >
-              {isExpanded ? (
-                <ExpandMoreIcon fontSize="small" />
-              ) : (
-                <ChevronRightIcon fontSize="small" />
-              )}
-            </IconButton>
-          ) : (
-            <Box sx={roleFormAccountHierarchyTreeStyles.spacer} />
-          )}
-
-          <FormControlLabel
-            control={
-              <Checkbox
-                checked={isSelected}
-                onChange={(e) => handleAccountSelection(accountId, e.target.checked)}
-                disabled={isCheckboxDisabled}
+      return (
+        <Box key={accountId}>
+          <Box
+            sx={{
+              ...roleFormAccountHierarchyTreeStyles.accountItem,
+              pl: level * 3,
+            }}
+          >
+            {hasChildren ? (
+              <IconButton
                 size="small"
-                sx={roleFormAccountHierarchyTreeStyles.checkbox(isParentAccount)}
-              />
-            }
-            label={
-              <Typography
-                variant="body2"
-                sx={roleFormAccountHierarchyTreeStyles.accountLabel(
-                  isParentAccount,
-                  !hasPermission
-                )}
+                onClick={() => toggleNodeExpansion(accountId)}
+                sx={roleFormAccountHierarchyTreeStyles.expandButton}
               >
-                {account.companyOrOrganization || ''}
-                {isParentAccount && ` (${t('parent')})`}
-              </Typography>
-            }
-            sx={roleFormAccountHierarchyTreeStyles.formControlLabel}
-          />
+                {isExpanded ? (
+                  <ExpandMoreIcon fontSize="small" />
+                ) : (
+                  <ChevronRightIcon fontSize="small" />
+                )}
+              </IconButton>
+            ) : (
+              <Box sx={roleFormAccountHierarchyTreeStyles.spacer} />
+            )}
 
-          {hasChildren && (
-            <Typography
-              variant="caption"
-              color="text.secondary"
-              sx={roleFormAccountHierarchyTreeStyles.childCountText}
-            >
-              ({getChildAccountsForParent(accountId).length}{' '}
-              {getChildAccountsForParent(accountId).length === 1 ? t('child') : t('children')})
-            </Typography>
+            <FormControlLabel
+              control={
+                <Checkbox
+                  checked={isSelected}
+                  onChange={(e) => handleAccountSelection(accountId, e.target.checked)}
+                  disabled={isCheckboxDisabled}
+                  size="small"
+                  sx={roleFormAccountHierarchyTreeStyles.checkbox(isParentAccount)}
+                />
+              }
+              label={
+                <Typography
+                  variant="body2"
+                  sx={roleFormAccountHierarchyTreeStyles.accountLabel(
+                    isParentAccount,
+                    !hasPermission
+                  )}
+                >
+                  {account.companyOrOrganization || ''}
+                  {isParentAccount && ` (${t('parent')})`}
+                </Typography>
+              }
+              sx={roleFormAccountHierarchyTreeStyles.formControlLabel}
+            />
+
+            {hasChildren && (
+              <Typography
+                variant="caption"
+                color="text.secondary"
+                sx={roleFormAccountHierarchyTreeStyles.childCountText}
+              >
+                ({getChildAccountsForParent(accountId).length}{' '}
+                {getChildAccountsForParent(accountId).length === 1 ? t('child') : t('children')})
+              </Typography>
+            )}
+          </Box>
+
+          {hasChildren && isExpanded && (
+            <Box>{childAccounts.map((child) => renderAccountHierarchy(child.id, level + 1))}</Box>
           )}
         </Box>
-
-        {hasChildren && isExpanded && (
-          <Box>{childAccounts.map((child) => renderAccountHierarchy(child.id, level + 1))}</Box>
-        )}
-      </Box>
-    )
-  }
+      )
+    },
+    [
+      accounts,
+      shouldShowAccount,
+      searchQuery,
+      getChildAccountsForParent,
+      expandedNodes,
+      selectedAccounts,
+      parentAccount,
+      hasCreateRolePermission,
+      handleAccountSelection,
+      toggleNodeExpansion,
+      t,
+    ]
+  )
 
   // Calculate total accounts for display
-  const calculateTotalAccounts = (): number => {
+  const totalAccounts = useMemo((): number => {
     let totalAccounts = 0
 
     if (accountScope === 'specific-child') {
@@ -294,9 +309,8 @@ const RoleFormAccountHierarchyTree: React.FC<RoleFormAccountHierarchyTreeProps> 
     }
 
     return totalAccounts
-  }
+  }, [accountScope, selectedAccounts, hasCreateRolePermission, accounts, parentAccount])
 
-  const totalAccounts = calculateTotalAccounts()
   const accountText = totalAccounts === 1 ? t('account') : t('accounts')
   const includingParentText = t('including-parent')
 

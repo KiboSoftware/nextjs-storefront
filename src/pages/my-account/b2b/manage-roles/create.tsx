@@ -1,7 +1,6 @@
-import React from 'react'
+import React, { useMemo, useCallback } from 'react'
 
 import { GetServerSidePropsContext, NextApiRequest, NextApiResponse, NextPage } from 'next'
-import getConfig from 'next/config'
 import { useRouter } from 'next/router'
 import { serverSideTranslations } from 'next-i18next/serverSideTranslations'
 
@@ -92,36 +91,49 @@ const CreateRolePage: NextPage<CreateRolePageProps> = (props) => {
 
   const { user: customerAccountFromClient } = useAuthContext()
 
-  const customerAccount = {
-    ...customerAccountFromServer,
-    ...customerAccountFromClient,
-  } as CustomerAccount
-
-  // Convert accountUserBehaviors Record to array format expected by RoleForm
-  const accountUserBehaviorResults = Object.entries(accountUserBehaviors).map(
-    ([accountId, behaviors]) => ({
-      accountId: Number(accountId),
-      behaviors,
-      isLoading: false,
-      isError: false,
-      isSuccess: true,
-      error: null,
-    })
+  // Memoize merged customer account to prevent unnecessary re-renders
+  const customerAccount = useMemo(
+    () =>
+      ({
+        ...customerAccountFromServer,
+        ...customerAccountFromClient,
+      } as CustomerAccount),
+    [customerAccountFromServer, customerAccountFromClient]
   )
 
-  const handleBackClick = () => {
+  // Convert accountUserBehaviors Record to array format expected by RoleForm
+  const accountUserBehaviorResults = useMemo(
+    () =>
+      Object.entries(accountUserBehaviors).map(([accountId, behaviors]) => ({
+        accountId: Number(accountId),
+        behaviors,
+        isLoading: false,
+        isError: false,
+        isSuccess: true,
+        error: null,
+      })),
+    [accountUserBehaviors]
+  )
+
+  // Memoize behavior categories object to prevent creating new reference
+  const behaviorCategoriesObj = useMemo(() => ({ items: behaviorCategories }), [behaviorCategories])
+
+  // Memoize behaviors object to prevent creating new reference
+  const behaviorsObj = useMemo(() => ({ items: behaviors }), [behaviors])
+
+  // Memoize callback to prevent creating new function reference on every render
+  const handleBackClick = useCallback(() => {
     router.push('/my-account/b2b/manage-roles')
-  }
+  }, [router])
 
   return (
     <CreateRoleTemplate
       onBackClick={handleBackClick}
       user={customerAccount}
       initialData={initialData}
-      behaviorCategories={{ items: behaviorCategories }}
-      behaviors={{ items: behaviors }}
+      behaviorCategories={behaviorCategoriesObj}
+      behaviors={behaviorsObj}
       accountUserBehaviorResults={accountUserBehaviorResults}
-      accountUserBehaviors={Object.values(accountUserBehaviors).flat()}
     />
   )
 }

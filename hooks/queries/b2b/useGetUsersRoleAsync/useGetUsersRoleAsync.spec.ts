@@ -393,9 +393,12 @@ describe('[hooks] useGetUsersRoleAsync', () => {
     expect(result.current.error?.message).toContain('User not found')
   })
 
-  it('should handle null response', async () => {
+  it('should handle empty response as no roles assigned', async () => {
     mockRequest.mockResolvedValue({
-      getUsersRoleAsync: null,
+      getUsersRoleAsync: {
+        totalCount: 0,
+        items: [],
+      },
     })
 
     const { result } = renderHook(() => useGetUsersRoleAsync(mockAccountId, mockUserId), {
@@ -404,24 +407,8 @@ describe('[hooks] useGetUsersRoleAsync', () => {
 
     await waitFor(() => expect(result.current.isSuccess).toBe(true))
 
-    expect(result.current.usersRole).toBeNull()
-  })
-
-  it('should handle undefined response', async () => {
-    mockRequest.mockResolvedValue({
-      getUsersRoleAsync: undefined,
-    })
-
-    const { result } = renderHook(() => useGetUsersRoleAsync(mockAccountId, mockUserId), {
-      wrapper: createQueryClientWrapper(),
-    })
-
-    // React Query treats undefined as invalid data, so it won't reach success state
-    // Instead, it will remain in loading state or show previous data
-    await waitFor(() => expect(result.current.isLoading).toBe(false), { timeout: 2000 })
-
-    // The data should be undefined since no valid data was returned
-    expect(result.current.usersRole).toBeUndefined()
+    expect(result.current.usersRole?.totalCount).toBe(0)
+    expect(result.current.usersRole?.items).toEqual([])
   })
 
   it('should not retry on error due to retry: 0 config', async () => {

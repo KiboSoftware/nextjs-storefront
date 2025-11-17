@@ -6,7 +6,7 @@ import { useForm } from 'react-hook-form'
 
 import RoleBasicInfo, { RoleFormData } from './RoleBasicInfo'
 
-import { B2BAccount, CustomerAccount } from '@/lib/gql/types'
+import { B2BAccount } from '@/lib/gql/types'
 
 export default {
   title: 'B2B/Role/Components/RoleBasicInfo',
@@ -68,29 +68,6 @@ const mockAccounts: B2BAccount[] = [
   },
 ]
 
-// Mock Customer Account (User) data
-const mockUser: CustomerAccount = {
-  id: 1001,
-  userId: '3e69cbd5f3694a76916e64451cb76968',
-  firstName: 'John',
-  lastName: 'Smith',
-  emailAddress: 'john.smith@parentcorp.com',
-  userName: 'john.smith@parentcorp.com',
-  isAnonymous: false,
-  companyOrOrganization: 'Parent Corporation',
-}
-
-// Mock Customer Account without company name
-const mockUserWithoutCompany: CustomerAccount = {
-  id: 1005,
-  userId: '4f79dcdef4795b87a27e75562ec87079',
-  firstName: 'Jane',
-  lastName: 'Doe',
-  emailAddress: 'jane.doe@example.com',
-  userName: 'jane.doe@example.com',
-  isAnonymous: false,
-}
-
 const Template: ComponentStory<typeof RoleBasicInfo> = (args) => {
   const {
     control,
@@ -125,7 +102,6 @@ const Template: ComponentStory<typeof RoleBasicInfo> = (args) => {
 export const Default = Template.bind({})
 Default.args = {
   accounts: mockAccounts,
-  user: mockUser,
 }
 
 export const WithPrefilledData: ComponentStory<typeof RoleBasicInfo> = (args) => {
@@ -161,7 +137,6 @@ export const WithPrefilledData: ComponentStory<typeof RoleBasicInfo> = (args) =>
 
 WithPrefilledData.args = {
   accounts: mockAccounts,
-  user: mockUser,
 }
 
 export const WithValidationErrors: ComponentStory<typeof RoleBasicInfo> = (args) => {
@@ -210,77 +185,14 @@ export const WithValidationErrors: ComponentStory<typeof RoleBasicInfo> = (args)
 
 WithValidationErrors.args = {
   accounts: mockAccounts,
-  user: mockUser,
-}
-
-export const UserWithoutCompanyName = Template.bind({})
-UserWithoutCompanyName.args = {
-  accounts: mockAccounts,
-  user: mockUserWithoutCompany,
 }
 
 export const NoAccounts = Template.bind({})
 NoAccounts.args = {
   accounts: [],
-  user: mockUser,
-}
-
-export const NoUser = Template.bind({})
-NoUser.args = {
-  accounts: mockAccounts,
-  user: undefined,
 }
 
 export const EmptyState = Template.bind({})
 EmptyState.args = {
   accounts: [],
-  user: undefined,
-}
-
-export const MiddleLevelUser: ComponentStory<typeof RoleBasicInfo> = (args) => {
-  const {
-    control,
-    formState: { errors },
-  } = useForm<RoleFormData>({
-    defaultValues: {
-      roleName: '',
-      parentAccount: '',
-      accountScope: 'all-child',
-      applyToFutureChildren: false,
-      selectedAccounts: [],
-      selectedPermissions: {},
-    },
-  })
-
-  const handleParentAccountChange = (value: string) => {
-    console.log('Parent account changed to:', value)
-  }
-
-  // User is at middle level (Child Company A)
-  const middleLevelUser: CustomerAccount = {
-    id: 1002,
-    userId: '4f79dcdef4795b87a27e75562ec87079',
-    firstName: 'Jane',
-    lastName: 'Manager',
-    emailAddress: 'jane.manager@childcompanya.com',
-    userName: 'jane.manager@childcompanya.com',
-    isAnonymous: false,
-    companyOrOrganization: 'Child Company A',
-  }
-
-  return (
-    <Box sx={{ maxWidth: 600, margin: '0 auto', padding: 2 }}>
-      <RoleBasicInfo
-        {...args}
-        control={control}
-        errors={errors}
-        onParentAccountChange={handleParentAccountChange}
-        user={middleLevelUser}
-      />
-    </Box>
-  )
-}
-
-MiddleLevelUser.args = {
-  accounts: mockAccounts,
 }

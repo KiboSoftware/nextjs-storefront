@@ -151,27 +151,38 @@ jest.mock('./components/RoleFormAccountHierarchyTree/RoleFormAccountHierarchyTre
 jest.mock('./components/PermissionSelector/PermissionSelector', () => {
   return function MockPermissionSelector(props: {
     behaviorCategories?: { items?: BehaviorCategory[] }
-    onCategorySelect: (id: number) => void
+    behaviors?: { items?: Behavior[] }
+    selectedPermissions: Record<number, number[]>
+    permissionError: string
+    onBehaviorToggle: (category: number, behavior: number) => void
+    onBehaviorNameCheckboxChange: (selectedCategory: number) => void
     getAllSelectedBehaviors: () => Array<{ category: number; behavior: number }>
+    handleRemoveBehavior: (category: number, behavior: number) => void
   }) {
     return (
       <div data-testid="permission-selector">
         <div data-testid="behavior-categories">
-          {props.behaviorCategories?.items?.map((cat: BehaviorCategory) => (
+          {props.behaviorCategories?.items?.map((cat) => (
             <button
               key={cat.id}
               data-testid={`category-${cat.id}`}
-              onClick={() => cat.id && props.onCategorySelect(cat.id)}
+              onClick={() => {
+                if (cat.id) {
+                  // Simulate selecting all behaviors in category when category is clicked
+                  props.onBehaviorNameCheckboxChange(cat.id)
+                }
+              }}
             >
               {cat.categoryName}
             </button>
           ))}
         </div>
         <div data-testid="selected-behaviors">
-          {props.getAllSelectedBehaviors().map((item: { category: number; behavior: number }) => (
+          {props.getAllSelectedBehaviors().map((item) => (
             <div key={`${item.category}-${item.behavior}`}>Behavior {item.behavior}</div>
           ))}
         </div>
+        {props.permissionError && <div data-testid="permission-error">{props.permissionError}</div>}
       </div>
     )
   }
@@ -278,10 +289,7 @@ const mockAccountUserBehaviorResults: AccountUserBehaviorResult[] = [
   },
 ]
 
-const mockAccountUserBehaviors: Array<unknown> = []
-
 const defaultProps = {
-  onSave: jest.fn(),
   onCancel: jest.fn(),
   onBackClick: jest.fn(),
   user: mockUser,
@@ -289,7 +297,6 @@ const defaultProps = {
   behaviorCategories: mockBehaviorCategories,
   behaviors: mockBehaviors,
   accountUserBehaviorResults: mockAccountUserBehaviorResults,
-  accountUserBehaviors: mockAccountUserBehaviors,
 }
 
 const mockPush = jest.fn()

@@ -43,6 +43,7 @@ SpecificChildSelection.args = {
   parentAccount: parentAccountId,
   accountScope: AccountScope.SpecificChild,
   accounts: mockAccounts,
+  selectedAccounts: [],
   accountUserBehaviorResults: mockAccountUserBehaviorResults,
 }
 
@@ -52,6 +53,7 @@ AllExceptSelection.args = {
   parentAccount: parentAccountId,
   accountScope: AccountScope.AllExcept,
   accounts: mockAccounts,
+  selectedAccounts: [],
   accountUserBehaviorResults: mockAccountUserBehaviorResults,
 }
 
@@ -61,6 +63,7 @@ SmallHierarchy.args = {
   parentAccount: parentAccountId,
   accountScope: AccountScope.SpecificChild,
   accounts: mockAccounts?.slice(0, 10),
+  selectedAccounts: [],
   accountUserBehaviorResults: mockAccountUserBehaviorResults?.slice(0, 10),
 }
 
@@ -70,6 +73,7 @@ MixedPermissions.args = {
   parentAccount: parentAccountId,
   accountScope: AccountScope.SpecificChild,
   accounts: mockAccounts,
+  selectedAccounts: [],
   accountUserBehaviorResults: mockAccounts?.map((account, index) => ({
     accountId: account.id,
     behaviors: index % 2 === 0 ? [CustomBehaviors.CreateRole, 1, 5, 9] : [1, 5, 9], // Every other account has no create role permission
@@ -86,6 +90,7 @@ DeepNestedHierarchy.args = {
   parentAccount: parentAccountId,
   accountScope: AccountScope.SpecificChild,
   accounts: mockAccounts?.slice(0, 30),
+  selectedAccounts: [],
   accountUserBehaviorResults: mockAccountUserBehaviorResults?.slice(0, 30),
 }
 
@@ -99,6 +104,7 @@ DirectChildrenOnly.args = {
       account.id.toString() === parentAccountId ||
       account.parentAccountId?.toString() === parentAccountId
   ),
+  selectedAccounts: [],
   accountUserBehaviorResults: mockAccountUserBehaviorResults?.filter((result) =>
     mockAccounts
       ?.filter(
@@ -116,6 +122,7 @@ NoChildAccounts.args = {
   parentAccount: parentAccountId,
   accountScope: AccountScope.SpecificChild,
   accounts: mockAccounts?.filter((account) => account.id.toString() === parentAccountId),
+  selectedAccounts: [],
   accountUserBehaviorResults: mockAccountUserBehaviorResults?.filter(
     (result) => result.accountId.toString() === parentAccountId
   ),
@@ -127,6 +134,7 @@ NoPermissions.args = {
   parentAccount: parentAccountId,
   accountScope: AccountScope.SpecificChild,
   accounts: mockAccounts,
+  selectedAccounts: [],
   accountUserBehaviorResults: mockAccounts?.map((account) => ({
     accountId: account.id,
     behaviors: [1, 5, 9], // No CreateRole permission
@@ -143,6 +151,7 @@ LoadingBehaviors.args = {
   parentAccount: parentAccountId,
   accountScope: AccountScope.SpecificChild,
   accounts: mockAccounts,
+  selectedAccounts: [],
   accountUserBehaviorResults: mockAccounts?.map((account) => ({
     accountId: account.id,
     behaviors: [],
@@ -165,6 +174,7 @@ LongAccountNames.args = {
         ? `${account.companyOrOrganization} - Very Long Company Name With Multiple Words That Should Wrap Or Truncate`
         : account.companyOrOrganization,
   })),
+  selectedAccounts: [],
   accountUserBehaviorResults: mockAccountUserBehaviorResults,
 }
 
@@ -174,5 +184,6 @@ EmptyAccounts.args = {
   parentAccount: parentAccountId,
   accountScope: AccountScope.SpecificChild,
   accounts: [],
+  selectedAccounts: [],
   accountUserBehaviorResults: [],
 }

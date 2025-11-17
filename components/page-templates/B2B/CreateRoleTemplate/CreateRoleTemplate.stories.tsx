@@ -12,7 +12,6 @@ import {
   mockBehaviorCategories,
   mockBehaviors,
   mockAccountUserBehaviorResults,
-  mockAccountUserBehaviors,
 } from '@/__mocks__/stories/createRoleTemplateMock'
 import { CustomBehaviors } from '@/lib/constants'
 
@@ -36,7 +35,6 @@ Default.args = {
   behaviorCategories: mockBehaviorCategories,
   behaviors: mockBehaviors,
   accountUserBehaviorResults: mockAccountUserBehaviorResults,
-  accountUserBehaviors: mockAccountUserBehaviors,
 }
 
 // With no child accounts
@@ -51,7 +49,6 @@ WithNoChildAccounts.args = {
   behaviorCategories: mockBehaviorCategories,
   behaviors: mockBehaviors,
   accountUserBehaviorResults: mockAccountUserBehaviorResults?.slice(0, 1),
-  accountUserBehaviors: mockAccountUserBehaviors?.slice(0, 1),
 }
 
 // With limited permissions
@@ -69,10 +66,6 @@ WithLimitedPermissions.args = {
     isSuccess: true,
     error: null,
   })),
-  accountUserBehaviors: b2BAccountHierarchyResult.accounts?.map((account) => ({
-    accountId: account.id,
-    behaviors: [1, 5, 9, 13],
-  })),
 }
 
 // With small account hierarchy
@@ -87,7 +80,6 @@ WithSmallAccountHierarchy.args = {
   behaviorCategories: mockBehaviorCategories,
   behaviors: mockBehaviors,
   accountUserBehaviorResults: mockAccountUserBehaviorResults?.slice(0, 10),
-  accountUserBehaviors: mockAccountUserBehaviors?.slice(0, 10),
 }
 
 // With minimal behavior categories
@@ -118,10 +110,6 @@ WithMinimalBehaviorCategories.args = {
     isSuccess: true,
     error: null,
   })),
-  accountUserBehaviors: b2BAccountHierarchyResult.accounts?.map((account) => ({
-    accountId: account.id,
-    behaviors: [CustomBehaviors.CreateRole, 1, 2, 9, 10],
-  })),
 }
 
 // Loading state
@@ -139,7 +127,6 @@ WithLoadingBehaviors.args = {
     isSuccess: false,
     error: null,
   })),
-  accountUserBehaviors: [],
 }
 
 // With error state
@@ -157,7 +144,6 @@ WithErrorLoadingBehaviors.args = {
     isSuccess: false,
     error: new Error('Failed to load behaviors'),
   })),
-  accountUserBehaviors: [],
 }
 
 // With no behavior categories
@@ -168,7 +154,6 @@ WithNoBehaviorCategories.args = {
   behaviorCategories: { items: [] },
   behaviors: { items: [] },
   accountUserBehaviorResults: mockAccountUserBehaviorResults,
-  accountUserBehaviors: mockAccountUserBehaviors,
 }
 
 // With custom back handler
@@ -179,5 +164,4 @@ WithCustomBackHandler.args = {
   behaviorCategories: mockBehaviorCategories,
   behaviors: mockBehaviors,
   accountUserBehaviorResults: mockAccountUserBehaviorResults,
-  accountUserBehaviors: mockAccountUserBehaviors,
 }

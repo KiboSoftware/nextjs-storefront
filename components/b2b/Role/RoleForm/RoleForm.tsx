@@ -54,7 +54,6 @@ const useRoleFormSchema = () => {
 }
 
 const RoleForm: React.FC<RoleFormProps> = ({
-  onSave,
   onCancel,
   user,
   accounts,
@@ -62,7 +61,6 @@ const RoleForm: React.FC<RoleFormProps> = ({
   behaviorCategories,
   behaviors,
   accountUserBehaviorResults,
-  accountUserBehaviors,
 }) => {
   const { t } = useTranslation('common')
 
@@ -112,9 +110,6 @@ const RoleForm: React.FC<RoleFormProps> = ({
   })
 
   // State management
-  const [selectedCategory, setSelectedCategory] = useState<number | null>(
-    behaviorCategories?.items?.[0]?.id || null
-  )
   const [selectedPermissions, setSelectedPermissions] = useState<Record<number, number[]>>({})
   const [permissionError, setPermissionError] = useState<string>('')
 
@@ -122,6 +117,17 @@ const RoleForm: React.FC<RoleFormProps> = ({
   const accountScope = watch('accountScope')
   const parentAccount = watch('parentAccount')
   const roleName = watch('roleName')
+
+  // Memoize callback to prevent child re-renders
+  const handleAccountsChange = useCallback(
+    (accountIds: number[]) => {
+      setValue('selectedAccounts', accountIds)
+    },
+    [setValue]
+  )
+
+  // Memoize selected accounts to prevent unnecessary re-renders
+  const selectedAccountsValue = watch('selectedAccounts') || []
 
   // Helper functions
   const getChildAccountsForParent = useCallback(
@@ -140,6 +146,12 @@ const RoleForm: React.FC<RoleFormProps> = ({
 
     return accountsWithPermission
   }, [accounts, accountUserBehaviorResults, hasCreateRolePermission])
+
+  // Memoize accounts with permission to prevent re-creating array on every render
+  const accountsWithPermission = useMemo(
+    () => getAccountsWithCreateRolePermission(),
+    [getAccountsWithCreateRolePermission]
+  )
 
   const hasChildAccounts = parentAccount
     ? getChildAccountsForParent(Number(parentAccount)).length > 0
@@ -167,78 +179,82 @@ const RoleForm: React.FC<RoleFormProps> = ({
         })
       }
     }
-  }, [user?.id, reset, accounts, accountUserBehaviorResults, getAccountsWithCreateRolePermission])
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [user?.id, accounts, accountUserBehaviorResults])
 
   // Event handlers
-  const handleParentAccountChange = (value: string) => {
-    setValue('parentAccount', value)
-    setValue('selectedAccounts', [])
+  const handleParentAccountChange = useCallback(
+    (value: string) => {
+      setValue('parentAccount', value)
+      setValue('selectedAccounts', [])
 
-    const newParentHasChildren = value ? getChildAccountsForParent(Number(value)).length > 0 : false
-    if (!newParentHasChildren) {
-      setValue('accountScope', '')
-    }
-  }
-
-  const handleCategorySelect = (category: number) => {
-    setSelectedCategory(category)
-  }
-
-  const handleBehaviorToggle = (category: number, behavior: number) => {
-    setSelectedPermissions((prev) => {
-      const categoryPermissions = prev[category] || []
-      const isSelected = categoryPermissions.includes(behavior)
-
-      if (isSelected) {
-        return {
-          ...prev,
-          [category]: categoryPermissions.filter((b) => b !== behavior),
-        }
-      } else {
-        return {
-          ...prev,
-          [category]: [...categoryPermissions, behavior],
-        }
+      const newParentHasChildren = value
+        ? getChildAccountsForParent(Number(value)).length > 0
+        : false
+      if (!newParentHasChildren) {
+        setValue('accountScope', '')
       }
-    })
+    },
+    [setValue, getChildAccountsForParent]
+  )
 
-    if (permissionError) {
-      setPermissionError('')
-    }
-  }
+  const handleBehaviorToggle = useCallback(
+    (category: number, behavior: number) => {
+      setSelectedPermissions((prev) => {
+        const categoryPermissions = prev[category] || []
+        const isSelected = categoryPermissions.includes(behavior)
 
-  const handleBehaviorNameCheckboxChange = () => {
-    const selectedCategoryBehaviors =
-      behaviors?.items?.filter((behavior) => behavior.categoryId === selectedCategory) || []
+        if (isSelected) {
+          return {
+            ...prev,
+            [category]: categoryPermissions.filter((b) => b !== behavior),
+          }
+        } else {
+          return {
+            ...prev,
+            [category]: [...categoryPermissions, behavior],
+          }
+        }
+      })
 
-    const allSelected = selectedCategoryBehaviors.every((behavior) =>
-      selectedPermissions[selectedCategory || 0]?.includes(behavior.id || 0)
-    )
+      if (permissionError) {
+        setPermissionError('')
+      }
+    },
+    [permissionError]
+  )
 
-    if (allSelected) {
-      setSelectedPermissions((prev) => ({
-        ...prev,
-        [selectedCategory || 0]: [],
-      }))
-    } else {
-      const allBehaviorIds = selectedCategoryBehaviors.map((behavior) => behavior.id || 0)
-      setSelectedPermissions((prev) => ({
-        ...prev,
-        [selectedCategory || 0]: allBehaviorIds,
-      }))
-    }
+  const handleBehaviorNameCheckboxChange = useCallback(
+    (selectedCategory: number) => {
+      const selectedCategoryBehaviors =
+        behaviors?.items?.filter((behavior) => behavior.categoryId === selectedCategory) || []
 
-    if (permissionError) {
-      setPermissionError('')
-    }
-  }
+      const allSelected = selectedCategoryBehaviors.every((behavior) =>
+        selectedPermissions[selectedCategory || 0]?.includes(behavior.id || 0)
+      )
 
-  // Get behaviors for the selected category
-  const selectedCategoryBehaviors =
-    behaviors?.items?.filter((behavior) => behavior.categoryId === selectedCategory) || []
+      if (allSelected) {
+        setSelectedPermissions((prev) => ({
+          ...prev,
+          [selectedCategory || 0]: [],
+        }))
+      } else {
+        const allBehaviorIds = selectedCategoryBehaviors.map((behavior) => behavior.id || 0)
+        setSelectedPermissions((prev) => ({
+          ...prev,
+          [selectedCategory || 0]: allBehaviorIds,
+        }))
+      }
+
+      if (permissionError) {
+        setPermissionError('')
+      }
+    },
+    [behaviors?.items, selectedPermissions, permissionError]
+  )
 
   // Get all selected behaviors for the "Selected Behavior" column
-  const getAllSelectedBehaviors = () => {
+  const getAllSelectedBehaviors = useCallback(() => {
     const allBehaviors: Array<{ category: number; behavior: number }> = []
     Object.entries(selectedPermissions).forEach(([category, behaviors]) => {
       behaviors.forEach((behavior) => {
@@ -246,22 +262,23 @@ const RoleForm: React.FC<RoleFormProps> = ({
       })
     })
     return allBehaviors
-  }
+  }, [selectedPermissions])
 
   // Handle removing a behavior from the selected list
-  const handleRemoveBehavior = (category: number, behavior: number) => {
+  const handleRemoveBehavior = useCallback((category: number, behavior: number) => {
     setSelectedPermissions((prev) => ({
       ...prev,
       [category]: (prev[category] || []).filter((b) => b !== behavior),
     }))
-  }
+  }, [])
 
   // Form validation - Using useMemo to make it reactive to form and permission changes
-  const hasSelectedPermissions = getAllSelectedBehaviors().length > 0
-
   const isFormValid = useMemo(() => {
+    const hasSelectedPermissions = getAllSelectedBehaviors().length > 0
     return roleName?.trim() !== '' && parentAccount !== '' && hasSelectedPermissions
-  }, [roleName, parentAccount, hasSelectedPermissions])
+  }, [roleName, parentAccount, getAllSelectedBehaviors])
+
+  const hasSelectedPermissions = getAllSelectedBehaviors().length > 0
 
   const onSubmit = async (data: RoleFormData) => {
     // Validate that at least one permission is selected
@@ -425,19 +442,12 @@ const RoleForm: React.FC<RoleFormProps> = ({
       <RoleBasicInfo
         control={control}
         errors={errors}
-        accounts={getAccountsWithCreateRolePermission()}
-        user={user}
+        accounts={accountsWithPermission}
         onParentAccountChange={handleParentAccountChange}
       />
 
       {/* Account Scope Section */}
-      <AccountScopeSelector
-        control={control}
-        hasChildAccounts={hasChildAccounts}
-        selectedAccountsLength={watch('selectedAccounts')?.length || 0}
-        parentAccount={parentAccount}
-        accounts={getAccountsWithCreateRolePermission()}
-      />
+      <AccountScopeSelector control={control} hasChildAccounts={hasChildAccounts} />
 
       {/* Account Hierarchy Tree - Show when specific-child or all-except is selected AND parent has children */}
       {parentAccount &&
@@ -447,7 +457,8 @@ const RoleForm: React.FC<RoleFormProps> = ({
             parentAccount={parentAccount}
             accountScope={accountScope}
             accounts={accounts}
-            onAccountsChange={(accountIds) => setValue('selectedAccounts', accountIds)}
+            selectedAccounts={selectedAccountsValue}
+            onAccountsChange={handleAccountsChange}
             accountUserBehaviorResults={accountUserBehaviorResults}
           />
         )}
@@ -456,15 +467,12 @@ const RoleForm: React.FC<RoleFormProps> = ({
       <PermissionSelector
         behaviorCategories={behaviorCategories}
         behaviors={behaviors}
-        selectedCategory={selectedCategory}
         selectedPermissions={selectedPermissions}
         permissionError={permissionError}
-        onCategorySelect={handleCategorySelect}
         onBehaviorToggle={handleBehaviorToggle}
         onBehaviorNameCheckboxChange={handleBehaviorNameCheckboxChange}
         getAllSelectedBehaviors={getAllSelectedBehaviors}
         handleRemoveBehavior={handleRemoveBehavior}
-        selectedCategoryBehaviors={selectedCategoryBehaviors}
       />
 
       {!mdScreen && (

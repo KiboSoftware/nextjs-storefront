@@ -10,7 +10,6 @@ export default {
   component: RoleForm,
   title: 'B2B/Role/RoleForm',
   argTypes: {
-    onSave: { action: 'onSave' },
     onCancel: { action: 'onCancel' },
     onBackClick: { action: 'onBackClick' },
   },
@@ -19,13 +18,6 @@ export default {
 const Template: ComponentStory<typeof RoleForm> = (args) => <RoleForm {...args} />
 
 // Mock data
-const mockUser = {
-  id: 1001,
-  firstName: 'John',
-  lastName: 'Doe',
-  emailAddress: 'john.doe@example.com',
-}
-
 const mockAccounts = b2BAccountHierarchyResult.accounts?.map((account) => ({
   id: account.id,
   parentAccountId: account.parentAccountId,
@@ -75,7 +67,6 @@ const mockAccountUserBehaviorResults = mockAccounts?.map((account) => ({
 // Default story
 export const Default = Template.bind({})
 Default.args = {
-  user: mockUser,
   accounts: mockAccounts,
   behaviorCategories: mockBehaviorCategories,
   behaviors: mockBehaviors,
@@ -85,7 +76,6 @@ Default.args = {
 // Story with no child accounts
 export const WithNoChildAccounts = Template.bind({})
 WithNoChildAccounts.args = {
-  user: mockUser,
   accounts: mockAccounts?.filter((account) => !account.parentAccountId),
   behaviorCategories: mockBehaviorCategories,
   behaviors: mockBehaviors,
@@ -97,7 +87,6 @@ WithNoChildAccounts.args = {
 // Story with limited permissions
 export const WithLimitedPermissions = Template.bind({})
 WithLimitedPermissions.args = {
-  user: mockUser,
   accounts: mockAccounts,
   behaviorCategories: mockBehaviorCategories,
   behaviors: mockBehaviors,
@@ -114,7 +103,6 @@ WithLimitedPermissions.args = {
 // Story with single account hierarchy
 export const WithSingleAccountHierarchy = Template.bind({})
 WithSingleAccountHierarchy.args = {
-  user: mockUser,
   accounts: mockAccounts?.slice(0, 5),
   behaviorCategories: mockBehaviorCategories,
   behaviors: mockBehaviors,
@@ -124,7 +112,6 @@ WithSingleAccountHierarchy.args = {
 // Story with no permissions
 export const WithNoCreateRolePermission = Template.bind({})
 WithNoCreateRolePermission.args = {
-  user: mockUser,
   accounts: mockAccounts,
   behaviorCategories: mockBehaviorCategories,
   behaviors: mockBehaviors,
@@ -141,7 +128,6 @@ WithNoCreateRolePermission.args = {
 // Story with loading state
 export const WithLoadingBehaviors = Template.bind({})
 WithLoadingBehaviors.args = {
-  user: mockUser,
   accounts: mockAccounts,
   behaviorCategories: mockBehaviorCategories,
   behaviors: mockBehaviors,
@@ -158,7 +144,6 @@ WithLoadingBehaviors.args = {
 // Story with minimal behavior categories
 export const WithMinimalBehaviorCategories = Template.bind({})
 WithMinimalBehaviorCategories.args = {
-  user: mockUser,
   accounts: mockAccounts,
   behaviorCategories: {
     items: [

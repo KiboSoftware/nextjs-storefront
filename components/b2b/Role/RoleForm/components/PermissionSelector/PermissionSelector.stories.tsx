@@ -66,15 +66,10 @@ const mockBehaviors = {
 }
 
 const Template: ComponentStory<typeof PermissionSelector> = (args) => {
-  const [selectedCategory, setSelectedCategory] = useState<number | null>(1)
   const [selectedPermissions, setSelectedPermissions] = useState<Record<number, number[]>>({
     1: [101, 103], // Order Management: View Orders, Edit Orders
     2: [201], // Product Management: View Products
   })
-
-  const selectedCategoryBehaviors = mockBehaviors.items.filter(
-    (behavior) => behavior.categoryId === selectedCategory
-  )
 
   const getAllSelectedBehaviors = () => {
     const allSelected: Array<{ category: number; behavior: number }> = []
@@ -84,10 +79,6 @@ const Template: ComponentStory<typeof PermissionSelector> = (args) => {
       })
     })
     return allSelected
-  }
-
-  const handleCategorySelect = (category: number) => {
-    setSelectedCategory(category)
   }
 
   const handleBehaviorToggle = (category: number, behavior: number) => {
@@ -109,10 +100,10 @@ const Template: ComponentStory<typeof PermissionSelector> = (args) => {
     })
   }
 
-  const handleBehaviorNameCheckboxChange = () => {
-    if (!selectedCategory) return
-
-    const categoryBehaviors = selectedCategoryBehaviors.map((b) => b.id || 0)
+  const handleBehaviorNameCheckboxChange = (selectedCategory: number) => {
+    const categoryBehaviors = mockBehaviors.items
+      .filter((b) => b.categoryId === selectedCategory)
+      .map((b) => b.id || 0)
     const currentSelected = selectedPermissions[selectedCategory] || []
     const allSelected = categoryBehaviors.every((id) => currentSelected.includes(id))
 
@@ -142,10 +133,7 @@ const Template: ComponentStory<typeof PermissionSelector> = (args) => {
     <Box sx={{ maxWidth: 1200, margin: '0 auto', padding: 2 }}>
       <PermissionSelector
         {...args}
-        selectedCategory={selectedCategory}
         selectedPermissions={selectedPermissions}
-        selectedCategoryBehaviors={selectedCategoryBehaviors}
-        onCategorySelect={handleCategorySelect}
         onBehaviorToggle={handleBehaviorToggle}
         onBehaviorNameCheckboxChange={handleBehaviorNameCheckboxChange}
         getAllSelectedBehaviors={getAllSelectedBehaviors}
@@ -177,12 +165,7 @@ EmptyData.args = {
 }
 
 export const NoSelections: ComponentStory<typeof PermissionSelector> = (args) => {
-  const [selectedCategory, setSelectedCategory] = useState<number | null>(1)
   const [selectedPermissions] = useState<Record<number, number[]>>({})
-
-  const selectedCategoryBehaviors = mockBehaviors.items.filter(
-    (behavior) => behavior.categoryId === selectedCategory
-  )
 
   const getAllSelectedBehaviors = () => []
   const handleBehaviorToggle = () => {
@@ -199,10 +182,7 @@ export const NoSelections: ComponentStory<typeof PermissionSelector> = (args) =>
     <Box sx={{ maxWidth: 1200, margin: '0 auto', padding: 2 }}>
       <PermissionSelector
         {...args}
-        selectedCategory={selectedCategory}
         selectedPermissions={selectedPermissions}
-        selectedCategoryBehaviors={selectedCategoryBehaviors}
-        onCategorySelect={setSelectedCategory}
         onBehaviorToggle={handleBehaviorToggle}
         onBehaviorNameCheckboxChange={handleBehaviorNameCheckboxChange}
         getAllSelectedBehaviors={getAllSelectedBehaviors}

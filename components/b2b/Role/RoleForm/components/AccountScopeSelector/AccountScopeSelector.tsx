@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useMemo } from 'react'
 
 import InfoIcon from '@mui/icons-material/Info'
 import {
@@ -18,24 +18,45 @@ import { Control, Controller } from 'react-hook-form'
 import { accountScopeSelectorStyles } from './AccountScopeSelector.styles'
 import { RoleFormData } from '../RoleBasicInfo/RoleBasicInfo'
 
-import { B2BAccount } from '@/lib/gql/types'
 interface AccountScopeSelectorProps {
   control: Control<RoleFormData>
   hasChildAccounts: boolean
-  selectedAccountsLength: number
-  parentAccount: string
-  accounts?: B2BAccount[]
 }
 
 const AccountScopeSelector: React.FC<AccountScopeSelectorProps> = ({
   control,
   hasChildAccounts,
-  selectedAccountsLength,
-  parentAccount,
-  accounts,
 }) => {
   const { t } = useTranslation('common')
   const theme = useTheme()
+
+  // Memoize translation strings
+  const accountHierarchyScopeLabel = useMemo(() => t('account-hierarchy-scope'), [t])
+  const applyToAllChildAccountsLabel = useMemo(() => t('apply-to-all-child-accounts'), [t])
+  const applyToAllChildAccountsTooltip = useMemo(
+    () => t('apply-to-all-child-accounts-tooltip'),
+    [t]
+  )
+  const applyToFutureChildAccountsLabel = useMemo(() => t('apply-to-future-child-accounts'), [t])
+  const applyToSpecificChildAccountsLabel = useMemo(
+    () => t('apply-to-specific-child-accounts'),
+    [t]
+  )
+  const applyToSpecificChildAccountsTooltip = useMemo(
+    () => t('apply-to-specific-child-accounts-tooltip'),
+    [t]
+  )
+  const applyToAllChildAccountsExceptLabel = useMemo(
+    () => t('apply-to-all-child-accounts-except'),
+    [t]
+  )
+  const applyToAllChildAccountsExceptTooltip = useMemo(
+    () => t('apply-to-all-child-accounts-except-tooltip'),
+    [t]
+  )
+
+  // Memoize theme-based styles
+  const infoIconStyle = useMemo(() => accountScopeSelectorStyles.infoIcon(theme), [theme])
 
   return (
     <Box sx={accountScopeSelectorStyles.container}>
@@ -45,7 +66,7 @@ const AccountScopeSelector: React.FC<AccountScopeSelectorProps> = ({
         render={({ field }) => (
           <FormControl component="fieldset" fullWidth>
             <Typography variant="body2" sx={accountScopeSelectorStyles.sectionTitle}>
-              {t('account-hierarchy-scope')}
+              {accountHierarchyScopeLabel}
             </Typography>
             <RadioGroup {...field}>
               <Box>
@@ -53,12 +74,12 @@ const AccountScopeSelector: React.FC<AccountScopeSelectorProps> = ({
                   <FormControlLabel
                     value="all-child"
                     control={<Radio size="small" />}
-                    label={t('apply-to-all-child-accounts')}
+                    label={applyToAllChildAccountsLabel}
                     disabled={!hasChildAccounts}
                     sx={accountScopeSelectorStyles.formControlLabelNoMargin}
                   />
-                  <Tooltip title={t('apply-to-all-child-accounts-tooltip')} placement="top">
-                    <InfoIcon sx={accountScopeSelectorStyles.infoIcon(theme)} />
+                  <Tooltip title={applyToAllChildAccountsTooltip} placement="top">
+                    <InfoIcon sx={infoIconStyle} />
                   </Tooltip>
                 </Box>
                 {/* Checkbox for future children - shown when "all-child" is selected */}
@@ -74,12 +95,12 @@ const AccountScopeSelector: React.FC<AccountScopeSelectorProps> = ({
                               size="small"
                               checked={checkboxField.value}
                               disabled={!hasChildAccounts}
-                              onChange={(e) => checkboxField.onChange(e.target.checked)}
+                              onChange={checkboxField.onChange}
                             />
                           }
                           label={
                             <Typography variant="body2">
-                              {t('apply-to-future-child-accounts')}
+                              {applyToFutureChildAccountsLabel}
                             </Typography>
                           }
                           disabled={!hasChildAccounts}
@@ -93,24 +114,24 @@ const AccountScopeSelector: React.FC<AccountScopeSelectorProps> = ({
                 <FormControlLabel
                   value="specific-child"
                   control={<Radio size="small" />}
-                  label={t('apply-to-specific-child-accounts')}
+                  label={applyToSpecificChildAccountsLabel}
                   disabled={!hasChildAccounts}
                   sx={accountScopeSelectorStyles.formControlLabelNoMargin}
                 />
-                <Tooltip title={t('apply-to-specific-child-accounts-tooltip')} placement="top">
-                  <InfoIcon sx={accountScopeSelectorStyles.infoIcon(theme)} />
+                <Tooltip title={applyToSpecificChildAccountsTooltip} placement="top">
+                  <InfoIcon sx={infoIconStyle} />
                 </Tooltip>
               </Box>
               <Box sx={accountScopeSelectorStyles.flexContainer}>
                 <FormControlLabel
                   value="all-except"
                   control={<Radio size="small" />}
-                  label={t('apply-to-all-child-accounts-except')}
+                  label={applyToAllChildAccountsExceptLabel}
                   disabled={!hasChildAccounts}
                   sx={accountScopeSelectorStyles.formControlLabelNoMargin}
                 />
-                <Tooltip title={t('apply-to-all-child-accounts-except-tooltip')} placement="top">
-                  <InfoIcon sx={accountScopeSelectorStyles.infoIcon(theme)} />
+                <Tooltip title={applyToAllChildAccountsExceptTooltip} placement="top">
+                  <InfoIcon sx={infoIconStyle} />
                 </Tooltip>
               </Box>
             </RadioGroup>
@@ -121,4 +142,4 @@ const AccountScopeSelector: React.FC<AccountScopeSelectorProps> = ({
   )
 }
 
-export default AccountScopeSelector
+export default React.memo(AccountScopeSelector)

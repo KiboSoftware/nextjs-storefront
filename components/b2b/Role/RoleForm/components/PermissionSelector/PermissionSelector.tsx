@@ -1,10 +1,9 @@
-import React from 'react'
+import React, { useMemo, useCallback, useState } from 'react'
 
 import CloseIcon from '@mui/icons-material/Close'
 import {
   Box,
   Checkbox,
-  CircularProgress,
   IconButton,
   List,
   ListItem,
@@ -29,51 +28,108 @@ interface Behavior {
 interface PermissionSelectorProps {
   behaviorCategories?: { items?: BehaviorCategory[] }
   behaviors?: { items?: Behavior[] }
-  selectedCategory: number | null
   selectedPermissions: Record<number, number[]>
   permissionError: string
-  onCategorySelect: (category: number) => void
   onBehaviorToggle: (category: number, behavior: number) => void
-  onBehaviorNameCheckboxChange: () => void
+  onBehaviorNameCheckboxChange: (selectedCategory: number) => void
   getAllSelectedBehaviors: () => Array<{ category: number; behavior: number }>
   handleRemoveBehavior: (category: number, behavior: number) => void
-  selectedCategoryBehaviors: Behavior[]
 }
 
 const PermissionSelector: React.FC<PermissionSelectorProps> = ({
   behaviorCategories,
   behaviors,
-  selectedCategory,
   selectedPermissions,
   permissionError,
-  onCategorySelect,
   onBehaviorToggle,
   onBehaviorNameCheckboxChange,
   getAllSelectedBehaviors,
   handleRemoveBehavior,
-  selectedCategoryBehaviors,
 }) => {
   const { t } = useTranslation('common')
 
-  // Computed properties for checkbox state
-  const hasCategoryBehaviors = selectedCategoryBehaviors.length > 0
-  const allBehaviorsSelected =
-    hasCategoryBehaviors &&
-    selectedCategoryBehaviors.every((behavior) =>
-      selectedPermissions[selectedCategory || 0]?.includes(behavior.id || 0)
-    )
-  const someBehaviorsSelected = selectedCategoryBehaviors.some((behavior) =>
-    selectedPermissions[selectedCategory || 0]?.includes(behavior.id || 0)
+  // Local UI state - which category is selected in the left column
+  const [selectedCategory, setSelectedCategory] = useState<number | null>(
+    behaviorCategories?.items?.[0]?.id || null
   )
-  const isIndeterminate = someBehaviorsSelected && !allBehaviorsSelected
+
+  // Memoize translation strings
+  const permissionConfigurationLabel = useMemo(() => t('permission-configuration'), [t])
+  const permissionConfigurationDescription = useMemo(
+    () => t('permission-configuration-description'),
+    [t]
+  )
+  const behaviorCategoryLabel = useMemo(() => t('behavior-category'), [t])
+  const behaviorNameLabel = useMemo(() => t('behavior-name'), [t])
+  const selectedBehaviorLabel = useMemo(() => t('selected-behavior'), [t])
+  const noBehaviorsSelectedLabel = useMemo(() => t('no-behaviors-selected'), [t])
+
+  // Memoize all selected behaviors to avoid calling function multiple times
+  const allSelectedBehaviors = useMemo(() => getAllSelectedBehaviors(), [getAllSelectedBehaviors])
+
+  // Get behaviors for the selected category - computed from local state
+  const selectedCategoryBehaviors = useMemo(
+    () => behaviors?.items?.filter((behavior) => behavior.categoryId === selectedCategory) || [],
+    [behaviors?.items, selectedCategory]
+  )
+
+  // Computed properties for checkbox state - memoized
+  const hasCategoryBehaviors = useMemo(
+    () => selectedCategoryBehaviors.length > 0,
+    [selectedCategoryBehaviors.length]
+  )
+
+  const allBehaviorsSelected = useMemo(
+    () =>
+      hasCategoryBehaviors &&
+      selectedCategoryBehaviors.every((behavior) =>
+        selectedPermissions[selectedCategory || 0]?.includes(behavior.id || 0)
+      ),
+    [hasCategoryBehaviors, selectedCategoryBehaviors, selectedPermissions, selectedCategory]
+  )
+
+  const someBehaviorsSelected = useMemo(
+    () =>
+      selectedCategoryBehaviors.some((behavior) =>
+        selectedPermissions[selectedCategory || 0]?.includes(behavior.id || 0)
+      ),
+    [selectedCategoryBehaviors, selectedPermissions, selectedCategory]
+  )
+
+  const isIndeterminate = useMemo(
+    () => someBehaviorsSelected && !allBehaviorsSelected,
+    [someBehaviorsSelected, allBehaviorsSelected]
+  )
+
+  // Memoize inline arrow functions
+  const handleCategoryClick = useCallback(
+    (categoryId: number) => () => setSelectedCategory(categoryId),
+    []
+  )
+
+  const handleBehaviorNameCheckbox = useCallback(() => {
+    if (selectedCategory !== null) {
+      onBehaviorNameCheckboxChange(selectedCategory)
+    }
+  }, [selectedCategory, onBehaviorNameCheckboxChange])
+
+  const handleBehaviorClick = useCallback(
+    (categoryId: number, behaviorId: number) => () => onBehaviorToggle(categoryId, behaviorId),
+    [onBehaviorToggle]
+  )
+
+  const handleRemoveClick = useCallback(
+    (categoryId: number, behaviorId: number) => () => handleRemoveBehavior(categoryId, behaviorId),
+    [handleRemoveBehavior]
+  )
 
   return (
     <Box sx={permissionSelectorStyles.container}>
       <Typography variant="h6" sx={permissionSelectorStyles.title}>
-        {t('permission-configuration')}
+        {permissionConfigurationLabel}
       </Typography>
       <Typography sx={permissionSelectorStyles.description}>
-        {t('permission-configuration-description')}
+        {permissionConfigurationDescription}
       </Typography>
 
       {/* Show permission error if exists */}
@@ -87,13 +143,13 @@ const PermissionSelector: React.FC<PermissionSelectorProps> = ({
         {/* Behavior Category Column */}
         <Box sx={permissionSelectorStyles.categoryColumn}>
           <Typography sx={permissionSelectorStyles.columnHeader}>
-            {t('behavior-category')}
+            {behaviorCategoryLabel}
           </Typography>
           <List sx={permissionSelectorStyles.list}>
             {behaviorCategories?.items?.map((cat) => (
               <ListItemButton
                 key={cat.id}
-                onClick={() => onCategorySelect(cat.id || 0)}
+                onClick={handleCategoryClick(cat.id || 0)}
                 selected={selectedCategory === cat.id}
                 sx={permissionSelectorStyles.categoryListItem}
               >
@@ -110,10 +166,10 @@ const PermissionSelector: React.FC<PermissionSelectorProps> = ({
               size="small"
               checked={allBehaviorsSelected}
               indeterminate={isIndeterminate}
-              onChange={onBehaviorNameCheckboxChange}
+              onChange={handleBehaviorNameCheckbox}
               sx={permissionSelectorStyles.headerCheckbox}
             />
-            <Typography sx={permissionSelectorStyles.headerTitle}>{t('behavior-name')}</Typography>
+            <Typography sx={permissionSelectorStyles.headerTitle}>{behaviorNameLabel}</Typography>
           </Box>
           <List sx={permissionSelectorStyles.list}>
             {selectedCategoryBehaviors.map((behavior) => {
@@ -123,7 +179,7 @@ const PermissionSelector: React.FC<PermissionSelectorProps> = ({
               return (
                 <ListItem key={behavior.id} disablePadding>
                   <ListItemButton
-                    onClick={() => onBehaviorToggle(selectedCategory || 0, behavior.id || 0)}
+                    onClick={handleBehaviorClick(selectedCategory || 0, behavior.id || 0)}
                     sx={permissionSelectorStyles.behaviorListItem}
                   >
                     <Checkbox
@@ -142,15 +198,15 @@ const PermissionSelector: React.FC<PermissionSelectorProps> = ({
         {/* Selected Behavior Column */}
         <Box sx={permissionSelectorStyles.selectedColumn}>
           <Typography sx={permissionSelectorStyles.columnHeader}>
-            {t('selected-behavior')}
+            {selectedBehaviorLabel}
           </Typography>
-          {getAllSelectedBehaviors().length === 0 ? (
+          {allSelectedBehaviors.length === 0 ? (
             <Typography sx={permissionSelectorStyles.emptyStateText}>
-              {t('no-behaviors-selected')}
+              {noBehaviorsSelectedLabel}
             </Typography>
           ) : (
             <List sx={permissionSelectorStyles.list}>
-              {getAllSelectedBehaviors().map(({ category, behavior }) => {
+              {allSelectedBehaviors.map(({ category, behavior }) => {
                 const behaviorObj = behaviors?.items?.find((b) => b.id === behavior)
                 return (
                   <ListItem key={`${category}-${behavior}`} disablePadding>
@@ -160,7 +216,7 @@ const PermissionSelector: React.FC<PermissionSelectorProps> = ({
                       </Typography>
                       <IconButton
                         size="small"
-                        onClick={() => handleRemoveBehavior(category, behavior)}
+                        onClick={handleRemoveClick(category, behavior)}
                         sx={permissionSelectorStyles.removeButton}
                       >
                         <CloseIcon fontSize="small" />
@@ -177,4 +233,4 @@ const PermissionSelector: React.FC<PermissionSelectorProps> = ({
   )
 }
 
-export default PermissionSelector
+export default React.memo(PermissionSelector)

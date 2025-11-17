@@ -5,7 +5,6 @@ import { useForm } from 'react-hook-form'
 import AccountScopeSelector from './AccountScopeSelector'
 
 import type { RoleFormData } from '../RoleBasicInfo/RoleBasicInfo'
-import type { B2BAccount } from '@/lib/gql/types'
 
 // Mock translations
 jest.mock('next-i18next', () => ({
@@ -17,15 +16,9 @@ jest.mock('next-i18next', () => ({
 // Test wrapper component to provide form context
 const TestWrapper = ({
   hasChildAccounts = true,
-  selectedAccountsLength = 0,
-  parentAccount = '1',
-  accounts = [],
   defaultValues = {},
 }: {
   hasChildAccounts?: boolean
-  selectedAccountsLength?: number
-  parentAccount?: string
-  accounts?: B2BAccount[]
   defaultValues?: Partial<RoleFormData>
 }) => {
   const { control } = useForm<RoleFormData>({
@@ -39,36 +32,8 @@ const TestWrapper = ({
     },
   })
 
-  return (
-    <AccountScopeSelector
-      control={control}
-      hasChildAccounts={hasChildAccounts}
-      selectedAccountsLength={selectedAccountsLength}
-      parentAccount={parentAccount}
-      accounts={accounts}
-    />
-  )
+  return <AccountScopeSelector control={control} hasChildAccounts={hasChildAccounts} />
 }
-
-const createMockAccount = (
-  id: number,
-  name: string,
-  parentAccountId: number | null = null
-): B2BAccount => ({
-  id,
-  companyOrOrganization: name,
-  parentAccountId,
-  users: [],
-  isActive: true,
-  taxId: '',
-  accountType: '',
-})
-
-const mockAccountsWithChildren: B2BAccount[] = [
-  createMockAccount(1, 'Parent Account', null),
-  createMockAccount(2, 'Child Account 1', 1),
-  createMockAccount(3, 'Child Account 2', 1),
-]
 
 describe('AccountScopeSelector Component', () => {
   describe('Component Rendering', () => {
@@ -398,29 +363,11 @@ describe('AccountScopeSelector Component', () => {
   })
 
   describe('Props Integration', () => {
-    it('should work with different parent account values', () => {
-      const { rerender } = render(<TestWrapper parentAccount="1" />)
+    it('should work with hasChildAccounts prop', () => {
+      const { rerender } = render(<TestWrapper hasChildAccounts={true} />)
       expect(screen.getByText('account-hierarchy-scope')).toBeInTheDocument()
 
-      rerender(<TestWrapper parentAccount="999" />)
-      expect(screen.getByText('account-hierarchy-scope')).toBeInTheDocument()
-    })
-
-    it('should work with different selected accounts length values', () => {
-      const { rerender } = render(<TestWrapper selectedAccountsLength={0} />)
-      expect(screen.getByText('account-hierarchy-scope')).toBeInTheDocument()
-
-      rerender(<TestWrapper selectedAccountsLength={5} />)
-      expect(screen.getByText('account-hierarchy-scope')).toBeInTheDocument()
-    })
-
-    it('should work with empty accounts array', () => {
-      render(<TestWrapper accounts={[]} />)
-      expect(screen.getByText('account-hierarchy-scope')).toBeInTheDocument()
-    })
-
-    it('should work with populated accounts array', () => {
-      render(<TestWrapper accounts={mockAccountsWithChildren} />)
+      rerender(<TestWrapper hasChildAccounts={false} />)
       expect(screen.getByText('account-hierarchy-scope')).toBeInTheDocument()
     })
   })
@@ -571,24 +518,13 @@ describe('AccountScopeSelector Component', () => {
 
       expect(screen.getByLabelText('apply-to-specific-child-accounts')).toBeDisabled()
     })
-
-    it('should maintain component stability with null/undefined accounts', () => {
-      render(<TestWrapper accounts={undefined} />)
-      expect(screen.getByText('account-hierarchy-scope')).toBeInTheDocument()
-    })
   })
 
   describe('Scenario-Based Tests', () => {
     describe('Scenario 1: User with parent account having multiple children', () => {
       it('should enable all radio options and allow selection', async () => {
         const user = userEvent.setup()
-        render(
-          <TestWrapper
-            hasChildAccounts={true}
-            accounts={mockAccountsWithChildren}
-            parentAccount="1"
-          />
-        )
+        render(<TestWrapper hasChildAccounts={true} />)
 
         // All options should be enabled
         expect(screen.getByLabelText('apply-to-all-child-accounts')).toBeEnabled()
@@ -674,11 +610,7 @@ describe('AccountScopeSelector Component', () => {
       it('should allow selecting all-except option', async () => {
         const user = userEvent.setup()
         render(
-          <TestWrapper
-            hasChildAccounts={true}
-            accounts={mockAccountsWithChildren}
-            defaultValues={{ accountScope: 'all-child' }}
-          />
+          <TestWrapper hasChildAccounts={true} defaultValues={{ accountScope: 'all-child' }} />
         )
 
         // User selects all-except
@@ -729,7 +661,7 @@ describe('AccountScopeSelector Component', () => {
 
     describe('Scenario 7: User with limited permissions (no children visible)', () => {
       it('should disable all options when hasChildAccounts is false', () => {
-        render(<TestWrapper hasChildAccounts={false} accounts={[]} />)
+        render(<TestWrapper hasChildAccounts={false} />)
 
         expect(screen.getByLabelText('apply-to-all-child-accounts')).toBeDisabled()
         expect(screen.getByLabelText('apply-to-specific-child-accounts')).toBeDisabled()

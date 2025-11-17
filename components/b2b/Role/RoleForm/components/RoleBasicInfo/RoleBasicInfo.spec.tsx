@@ -4,7 +4,7 @@ import { useForm } from 'react-hook-form'
 
 import RoleBasicInfo, { RoleFormData } from './RoleBasicInfo'
 
-import type { B2BAccount, CustomerAccount } from '@/lib/gql/types'
+import type { B2BAccount } from '@/lib/gql/types'
 
 // Mock translations
 jest.mock('next-i18next', () => ({
@@ -100,23 +100,13 @@ const mockAccounts: B2BAccount[] = [
   } as unknown as B2BAccount,
 ]
 
-const mockUser: CustomerAccount = {
-  id: 1,
-  userId: 'user123',
-  emailAddress: 'user@example.com',
-  firstName: 'John',
-  lastName: 'Doe',
-} as CustomerAccount
-
 // Wrapper component with react-hook-form
 const TestWrapper = ({
   accounts,
-  user,
   onParentAccountChange,
   defaultValues,
 }: {
   accounts?: B2BAccount[]
-  user?: CustomerAccount
   onParentAccountChange: (value: string) => void
   defaultValues?: Partial<RoleFormData>
 }) => {
@@ -141,7 +131,6 @@ const TestWrapper = ({
       control={control}
       errors={errors}
       accounts={accounts}
-      user={user}
       onParentAccountChange={onParentAccountChange}
     />
   )
@@ -398,26 +387,13 @@ describe('RoleBasicInfo Component', () => {
       expect(screen.getByTestId('parent-account-select')).toBeInTheDocument()
     })
 
-    it('should handle user prop correctly', () => {
-      const onParentAccountChange = jest.fn()
-
-      render(
-        <TestWrapper
-          accounts={mockAccounts}
-          user={mockUser}
-          onParentAccountChange={onParentAccountChange}
-        />
-      )
-
-      expect(screen.getByText('role-information')).toBeInTheDocument()
-    })
-
-    it('should work without user prop', () => {
+    it('should work with provided accounts', () => {
       const onParentAccountChange = jest.fn()
 
       render(<TestWrapper accounts={mockAccounts} onParentAccountChange={onParentAccountChange} />)
 
       expect(screen.getByText('role-information')).toBeInTheDocument()
+      expect(screen.getByTestId('parent-account-select')).toBeEnabled()
     })
 
     it('should handle different account arrays', () => {

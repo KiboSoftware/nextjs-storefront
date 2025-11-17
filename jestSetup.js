@@ -12,7 +12,32 @@ setGlobalConfig(globalStorybookConfig)
 jest.mock('next-i18next', () => ({
   useTranslation: () => {
     return {
-      t: (str) => str,
+      t: (str, params) => {
+        // Handle specific translation keys
+        if (str === 'including-parent') {
+          return 'including parent'
+        }
+        // Handle translation with interpolation
+        if (params) {
+          // For role-applied translations
+          if (str === 'role-applied-to-single' && params.totalAccounts && params.accountText) {
+            return `Role will be applied to ${params.totalAccounts} ${params.accountText}`
+          }
+          if (
+            str === 'role-applied-to-multiple' &&
+            params.totalAccounts &&
+            params.accountText &&
+            params.includingParentText
+          ) {
+            return `Role will be applied to ${params.totalAccounts} ${params.accountText} (${params.includingParentText})`
+          }
+          // Generic interpolation fallback
+          return Object.keys(params).reduce((result, key) => {
+            return result.replace(new RegExp(`{{\\s*${key}\\s*}}`, 'g'), params[key])
+          }, str)
+        }
+        return str
+      },
       i18n: {
         changeLanguage: () => Promise.resolve(),
       },

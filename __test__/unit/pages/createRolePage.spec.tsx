@@ -34,22 +34,32 @@ jest.mock('@/components/page-templates', () => ({
       behaviorCategories,
       behaviors,
       accountUserBehaviorResults,
-      accountUserBehaviors,
-    }) => (
-      <div data-testid="create-role-template">
-        <button data-testid="back-button" onClick={onBackClick}>
-          Back
-        </button>
-        <div data-testid="user-data">{JSON.stringify(user)}</div>
-        <div data-testid="initial-data">{JSON.stringify(initialData)}</div>
-        <div data-testid="behavior-categories-count">{behaviorCategories?.items?.length || 0}</div>
-        <div data-testid="behaviors-count">{behaviors?.items?.length || 0}</div>
-        <div data-testid="account-user-behavior-results-count">
-          {accountUserBehaviorResults?.length || 0}
+    }) => {
+      // Calculate total behaviors from accountUserBehaviorResults
+      const totalBehaviors =
+        accountUserBehaviorResults?.reduce(
+          (sum: number, result: { behaviors: number[] }) => sum + (result.behaviors?.length || 0),
+          0
+        ) || 0
+
+      return (
+        <div data-testid="create-role-template">
+          <button data-testid="back-button" onClick={onBackClick}>
+            Back
+          </button>
+          <div data-testid="user-data">{JSON.stringify(user)}</div>
+          <div data-testid="initial-data">{JSON.stringify(initialData)}</div>
+          <div data-testid="behavior-categories-count">
+            {behaviorCategories?.items?.length || 0}
+          </div>
+          <div data-testid="behaviors-count">{behaviors?.items?.length || 0}</div>
+          <div data-testid="account-user-behavior-results-count">
+            {accountUserBehaviorResults?.length || 0}
+          </div>
+          <div data-testid="account-user-behaviors-count">{totalBehaviors}</div>
         </div>
-        <div data-testid="account-user-behaviors-count">{accountUserBehaviors?.length || 0}</div>
-      </div>
-    )
+      )
+    }
   ),
 }))
 

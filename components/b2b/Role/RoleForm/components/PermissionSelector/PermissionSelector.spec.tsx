@@ -54,24 +54,15 @@ const mockBehaviors = {
   ],
 }
 
-const mockSelectedCategoryBehaviors = [
-  createMockBehavior(1, 'Create Role', 1),
-  createMockBehavior(2, 'Edit Role', 1),
-  createMockBehavior(3, 'Delete Role', 1),
-]
-
 const defaultProps = {
   behaviorCategories: mockBehaviorCategories,
   behaviors: mockBehaviors,
-  selectedCategory: 1,
   selectedPermissions: {},
   permissionError: '',
-  onCategorySelect: jest.fn(),
   onBehaviorToggle: jest.fn(),
   onBehaviorNameCheckboxChange: jest.fn(),
   getAllSelectedBehaviors: jest.fn(() => []),
   handleRemoveBehavior: jest.fn(),
-  selectedCategoryBehaviors: mockSelectedCategoryBehaviors,
 }
 
 describe('PermissionSelector Component', () => {
@@ -112,8 +103,11 @@ describe('PermissionSelector Component', () => {
       expect(screen.getByText('Delete Role')).toBeInTheDocument()
     })
 
-    it('should highlight selected category', () => {
-      render(<PermissionSelector {...defaultProps} selectedCategory={2} />)
+    it('should highlight selected category when clicked', async () => {
+      const user = userEvent.setup()
+      render(<PermissionSelector {...defaultProps} />)
+
+      await user.click(screen.getByText('Users'))
 
       const usersButton = screen.getByRole('button', { name: 'Users' })
       expect(usersButton).toHaveClass('Mui-selected')
@@ -146,30 +140,24 @@ describe('PermissionSelector Component', () => {
 
     it('should allow clicking on category to select it', async () => {
       const user = userEvent.setup()
-      const onCategorySelect = jest.fn()
+      render(<PermissionSelector {...defaultProps} />)
 
-      render(<PermissionSelector {...defaultProps} onCategorySelect={onCategorySelect} />)
+      const usersCategory = screen.getByText('Users')
+      await user.click(usersCategory)
 
-      await user.click(screen.getByText('Users'))
-
-      expect(onCategorySelect).toHaveBeenCalledWith(2)
-      expect(onCategorySelect).toHaveBeenCalledTimes(1)
+      // Verify the category becomes selected (visually indicated)
+      const usersButton = screen.getByRole('button', { name: 'Users' })
+      expect(usersButton).toHaveClass('Mui-selected')
     })
 
-    it('should show behaviors for the selected category', () => {
-      const userBehaviors = [
-        createMockBehavior(4, 'Create User', 2),
-        createMockBehavior(5, 'Edit User', 2),
-      ]
+    it('should show behaviors for the selected category', async () => {
+      const user = userEvent.setup()
+      render(<PermissionSelector {...defaultProps} />)
 
-      render(
-        <PermissionSelector
-          {...defaultProps}
-          selectedCategory={2}
-          selectedCategoryBehaviors={userBehaviors}
-        />
-      )
+      // Click on Users category to select it
+      await user.click(screen.getByText('Users'))
 
+      // Behaviors for Users category should now be displayed
       expect(screen.getByText('Create User')).toBeInTheDocument()
       expect(screen.getByText('Edit User')).toBeInTheDocument()
     })
@@ -248,13 +236,14 @@ describe('PermissionSelector Component', () => {
       expect(headerCheckbox).toHaveAttribute('data-indeterminate', 'true')
     })
 
-    it('should handle select all with empty category', () => {
+    it('should handle select all with category that has no behaviors', () => {
+      const emptyBehaviors = { items: [] }
       const onBehaviorNameCheckboxChange = jest.fn()
 
       render(
         <PermissionSelector
           {...defaultProps}
-          selectedCategoryBehaviors={[]}
+          behaviors={emptyBehaviors}
           onBehaviorNameCheckboxChange={onBehaviorNameCheckboxChange}
         />
       )
@@ -378,44 +367,44 @@ describe('PermissionSelector Component', () => {
   })
 
   describe('Category Selection Behavior', () => {
-    it('should call onCategorySelect with correct category ID', async () => {
+    it('should select category when clicked', async () => {
       const user = userEvent.setup()
-      const onCategorySelect = jest.fn()
+      render(<PermissionSelector {...defaultProps} />)
 
-      render(<PermissionSelector {...defaultProps} onCategorySelect={onCategorySelect} />)
-
+      // Click Roles category
       await user.click(screen.getByText('Roles'))
-      expect(onCategorySelect).toHaveBeenCalledWith(1)
+      expect(screen.getByRole('button', { name: 'Roles' })).toHaveClass('Mui-selected')
 
+      // Click Users category
       await user.click(screen.getByText('Users'))
-      expect(onCategorySelect).toHaveBeenCalledWith(2)
+      expect(screen.getByRole('button', { name: 'Users' })).toHaveClass('Mui-selected')
 
+      // Click Orders category
       await user.click(screen.getByText('Orders'))
-      expect(onCategorySelect).toHaveBeenCalledWith(3)
+      expect(screen.getByRole('button', { name: 'Orders' })).toHaveClass('Mui-selected')
     })
 
-    it('should visually indicate the currently selected category', () => {
-      render(<PermissionSelector {...defaultProps} selectedCategory={3} />)
+    it('should visually indicate the currently selected category', async () => {
+      const user = userEvent.setup()
+      render(<PermissionSelector {...defaultProps} />)
+
+      await user.click(screen.getByText('Orders'))
 
       const ordersButton = screen.getByRole('button', { name: 'Orders' })
       expect(ordersButton).toHaveClass('Mui-selected')
     })
 
-    it('should update behaviors list when category changes', () => {
-      const { rerender } = render(<PermissionSelector {...defaultProps} selectedCategory={1} />)
+    it('should update behaviors list when category changes', async () => {
+      const user = userEvent.setup()
+      render(<PermissionSelector {...defaultProps} />)
 
+      // Initially shows Roles behaviors
       expect(screen.getByText('Create Role')).toBeInTheDocument()
 
-      const orderBehaviors = [createMockBehavior(6, 'View Orders', 3)]
+      // Switch to Orders category
+      await user.click(screen.getByText('Orders'))
 
-      rerender(
-        <PermissionSelector
-          {...defaultProps}
-          selectedCategory={3}
-          selectedCategoryBehaviors={orderBehaviors}
-        />
-      )
-
+      // Should now show Orders behaviors
       expect(screen.getByText('View Orders')).toBeInTheDocument()
     })
   })
@@ -477,37 +466,25 @@ describe('PermissionSelector Component', () => {
     })
 
     it('should handle empty behaviors list', () => {
-      render(
-        <PermissionSelector
-          {...defaultProps}
-          behaviors={{ items: [] }}
-          selectedCategoryBehaviors={[]}
-        />
-      )
+      render(<PermissionSelector {...defaultProps} behaviors={{ items: [] }} />)
 
       expect(screen.getByText('behavior-name')).toBeInTheDocument()
     })
 
     it('should handle undefined behaviors', () => {
-      render(
-        <PermissionSelector
-          {...defaultProps}
-          behaviors={undefined}
-          selectedCategoryBehaviors={[]}
-        />
-      )
+      render(<PermissionSelector {...defaultProps} behaviors={undefined} />)
 
       expect(screen.getByText('selected-behavior')).toBeInTheDocument()
     })
 
-    it('should handle null selectedCategory', () => {
-      render(<PermissionSelector {...defaultProps} selectedCategory={null} />)
+    it('should handle empty behavior categories gracefully', () => {
+      render(<PermissionSelector {...defaultProps} behaviorCategories={{ items: [] }} />)
 
       expect(screen.getByText('permission-configuration')).toBeInTheDocument()
     })
 
     it('should handle category with no behaviors', () => {
-      render(<PermissionSelector {...defaultProps} selectedCategoryBehaviors={[]} />)
+      render(<PermissionSelector {...defaultProps} behaviors={{ items: [] }} />)
 
       const behaviorHeader = screen.getByText('behavior-name')
       expect(behaviorHeader).toBeInTheDocument()
@@ -526,14 +503,11 @@ describe('PermissionSelector Component', () => {
     })
 
     it('should handle behaviors without id or name', () => {
-      const behaviorsWithMissingData = [{ id: 1 }, { name: 'Test' }, {}]
+      const behaviorsWithMissingData = {
+        items: [{ id: 1, categoryId: 1 }, { name: 'Test', categoryId: 1 }, { categoryId: 1 }],
+      }
 
-      render(
-        <PermissionSelector
-          {...defaultProps}
-          selectedCategoryBehaviors={behaviorsWithMissingData}
-        />
-      )
+      render(<PermissionSelector {...defaultProps} behaviors={behaviorsWithMissingData} />)
 
       expect(screen.getByText('behavior-name')).toBeInTheDocument()
     })
@@ -543,20 +517,18 @@ describe('PermissionSelector Component', () => {
     describe('Scenario 1: User selects a category and views its behaviors', () => {
       it('should display category behaviors when category is selected', async () => {
         const user = userEvent.setup()
-        const onCategorySelect = jest.fn()
-
-        render(
-          <PermissionSelector
-            {...defaultProps}
-            selectedCategory={null}
-            onCategorySelect={onCategorySelect}
-          />
-        )
+        render(<PermissionSelector {...defaultProps} />)
 
         // User clicks on Users category
         await user.click(screen.getByText('Users'))
 
-        expect(onCategorySelect).toHaveBeenCalledWith(2)
+        // Verify category is visually selected
+        const usersButton = screen.getByRole('button', { name: 'Users' })
+        expect(usersButton).toHaveClass('Mui-selected')
+
+        // Verify behaviors for Users category are displayed
+        expect(screen.getByText('Create User')).toBeInTheDocument()
+        expect(screen.getByText('Edit User')).toBeInTheDocument()
       })
     })
 
@@ -624,37 +596,19 @@ describe('PermissionSelector Component', () => {
     describe('Scenario 5: User switches between categories', () => {
       it('should update displayed behaviors when switching categories', async () => {
         const user = userEvent.setup()
-        const onCategorySelect = jest.fn()
+        render(<PermissionSelector {...defaultProps} />)
 
-        const { rerender } = render(
-          <PermissionSelector
-            {...defaultProps}
-            selectedCategory={1}
-            onCategorySelect={onCategorySelect}
-          />
-        )
-
+        // Initially, first category (Roles) is selected
         expect(screen.getByText('Create Role')).toBeInTheDocument()
 
-        // Simulate category switch
+        // Switch to Orders category
         await user.click(screen.getByText('Orders'))
-        expect(onCategorySelect).toHaveBeenCalledWith(3)
 
-        // Update with new behaviors
-        const orderBehaviors = [
-          createMockBehavior(6, 'View Orders', 3),
-          createMockBehavior(7, 'Create Orders', 3),
-        ]
+        // Verify Orders category is now selected
+        const ordersButton = screen.getByRole('button', { name: 'Orders' })
+        expect(ordersButton).toHaveClass('Mui-selected')
 
-        rerender(
-          <PermissionSelector
-            {...defaultProps}
-            selectedCategory={3}
-            selectedCategoryBehaviors={orderBehaviors}
-            onCategorySelect={onCategorySelect}
-          />
-        )
-
+        // Verify behaviors for Orders category are displayed
         expect(screen.getByText('View Orders')).toBeInTheDocument()
         expect(screen.getByText('Create Orders')).toBeInTheDocument()
       })
@@ -678,15 +632,17 @@ describe('PermissionSelector Component', () => {
           ),
         }
 
-        const manyBehaviors = Array.from({ length: 50 }, (_, i) =>
-          createMockBehavior(i + 1, `Behavior ${i + 1}`, 1)
-        )
+        const manyBehaviors = {
+          items: Array.from({ length: 50 }, (_, i) =>
+            createMockBehavior(i + 1, `Behavior ${i + 1}`, 1)
+          ),
+        }
 
         render(
           <PermissionSelector
             {...defaultProps}
             behaviorCategories={manyCategories}
-            selectedCategoryBehaviors={manyBehaviors}
+            behaviors={manyBehaviors}
           />
         )
 
@@ -699,7 +655,6 @@ describe('PermissionSelector Component', () => {
     describe('Scenario 8: Complete permission selection workflow', () => {
       it('should handle complete workflow from selection to display', async () => {
         const user = userEvent.setup()
-        const onCategorySelect = jest.fn()
         const onBehaviorToggle = jest.fn()
         const handleRemoveBehavior = jest.fn()
 
@@ -710,16 +665,15 @@ describe('PermissionSelector Component', () => {
         const { rerender } = render(
           <PermissionSelector
             {...defaultProps}
-            onCategorySelect={onCategorySelect}
             onBehaviorToggle={onBehaviorToggle}
             handleRemoveBehavior={handleRemoveBehavior}
             getAllSelectedBehaviors={getAllSelectedBehaviors}
           />
         )
 
-        // Step 1: Select a category
-        await user.click(screen.getByText('Roles'))
-        expect(onCategorySelect).toHaveBeenCalledWith(1)
+        // Step 1: Verify first category is selected by default
+        const rolesButton = screen.getByRole('button', { name: 'Roles' })
+        expect(rolesButton).toHaveClass('Mui-selected')
 
         // Step 2: Select behaviors
         await user.click(screen.getByText('Create Role'))
@@ -738,7 +692,6 @@ describe('PermissionSelector Component', () => {
           <PermissionSelector
             {...defaultProps}
             selectedPermissions={{ 1: [1, 2] }}
-            onCategorySelect={onCategorySelect}
             onBehaviorToggle={onBehaviorToggle}
             handleRemoveBehavior={handleRemoveBehavior}
             getAllSelectedBehaviors={getAllSelectedBehaviors}
@@ -829,9 +782,9 @@ describe('PermissionSelector Component', () => {
     it('should maintain component stability across re-renders', () => {
       const { rerender } = render(<PermissionSelector {...defaultProps} />)
 
-      rerender(<PermissionSelector {...defaultProps} selectedCategory={2} />)
-      rerender(<PermissionSelector {...defaultProps} selectedCategory={3} />)
-      rerender(<PermissionSelector {...defaultProps} selectedCategory={1} />)
+      rerender(<PermissionSelector {...defaultProps} selectedPermissions={{ 1: [1] }} />)
+      rerender(<PermissionSelector {...defaultProps} selectedPermissions={{ 2: [4, 5] }} />)
+      rerender(<PermissionSelector {...defaultProps} selectedPermissions={{}} />)
 
       expect(screen.getByText('permission-configuration')).toBeInTheDocument()
     })
