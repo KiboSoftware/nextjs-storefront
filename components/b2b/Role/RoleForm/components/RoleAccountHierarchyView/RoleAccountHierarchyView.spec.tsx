@@ -143,7 +143,10 @@ describe('[Component] RoleAccountHierarchyView', () => {
       setup()
 
       // Parent Company has 2 children (Child Company 1 and Child Company 2)
-      expect(screen.getByText(/\(2 children\)/i)).toBeInTheDocument()
+      // Child Company 1 also has 2 children, so we use getAllByText
+      const childCountElements = screen.getAllByText(/\(2 children\)/i)
+      expect(childCountElements.length).toBeGreaterThan(0)
+      expect(childCountElements[0]).toBeInTheDocument()
     })
 
     it('should display child count in singular form for single child', () => {
@@ -222,9 +225,9 @@ describe('[Component] RoleAccountHierarchyView', () => {
       // Parent should be expanded
       expect(screen.getByText(/Parent Company/i)).toBeInTheDocument()
       // Child Company 1 should be expanded (contains selected grandchild)
-      expect(screen.getByText(/Child Company 1/i)).toBeInTheDocument()
+      expect(screen.getByText('Child Company 1')).toBeInTheDocument()
       // Grandchild should be visible
-      expect(screen.getByText(/Grandchild Company 1/i)).toBeInTheDocument()
+      expect(screen.getByText('Grandchild Company 1')).toBeInTheDocument()
     })
 
     it('should collapse node when clicking expand button', async () => {
@@ -362,7 +365,7 @@ describe('[Component] RoleAccountHierarchyView', () => {
         parentAccountId: 9999,
       })
 
-      expect(screen.getByText('Account 9999')).toBeInTheDocument()
+      expect(screen.getByText(/Account 9999/)).toBeInTheDocument()
     })
 
     it('should handle account with null companyOrOrganization', () => {
@@ -378,7 +381,7 @@ describe('[Component] RoleAccountHierarchyView', () => {
         parentAccountId: 8888,
       })
 
-      expect(screen.getByText('Account 8888')).toBeInTheDocument()
+      expect(screen.getByText(/Account 8888/)).toBeInTheDocument()
     })
   })
 
@@ -503,8 +506,8 @@ describe('[Component] RoleAccountHierarchyView', () => {
         parentAccountId: 100,
       })
 
-      expect(screen.getByText('Account A')).toBeInTheDocument()
-      expect(screen.getByText('Account B')).toBeInTheDocument()
+      expect(screen.getByText(/Account A/)).toBeInTheDocument()
+      expect(screen.getByText(/Account B/)).toBeInTheDocument()
     })
 
     it('should handle selectedAccountIds with non-existent IDs', () => {

@@ -47,7 +47,8 @@ import {
   useGetUsersByRoleAsync,
 } from '@/hooks'
 import type { GetRolesAsyncResponse } from '@/lib/api/operations/get-roles-by-account-id'
-import { AccountScope, AccountType, RoleType } from '@/lib/constants'
+import type { B2BRole } from '@/lib/api/operations/get-roles-by-account-id'
+import { AccountScope, RoleType } from '@/lib/constants'
 
 import type { CustomerAccount } from '@/lib/gql/types'
 
@@ -57,6 +58,7 @@ interface Role {
   roleType: 'System' | 'Custom'
   accountScope: string
   assignedUsers: number
+  accountIds: number[]
 }
 
 interface ManageRolesTemplateProps {
@@ -65,27 +67,90 @@ interface ManageRolesTemplateProps {
   onAccountTitleClick?: () => void
 }
 
-// Component to fetch and display user count for a specific role
-const RoleUserCount = ({
+// Component to fetch and display user count for a single account-role pair
+const SingleAccountUserCountComponent = ({
   accountId,
   roleId,
-  onCountUpdate,
+  onCountFetched,
 }: {
   accountId: number
   roleId: number
-  onCountUpdate: (roleId: number, count: number) => void
+  onCountFetched: (accountId: number, count: number) => void
 }) => {
   const { users, isLoading } = useGetUsersByRoleAsync(accountId, roleId)
 
   useEffect(() => {
     if (!isLoading && users) {
-      onCountUpdate(roleId, users.length)
+      onCountFetched(accountId, users.length)
     }
-  }, [users, isLoading, roleId, onCountUpdate])
+  }, [users, isLoading, accountId, onCountFetched])
 
-  if (isLoading) return <>...</>
-  return <>{users?.length || 0}</>
+  return null // This component only fetches data, doesn't render
 }
+
+SingleAccountUserCountComponent.displayName = 'SingleAccountUserCount'
+const SingleAccountUserCount = React.memo(SingleAccountUserCountComponent)
+
+// Component to aggregate user counts across multiple accounts for a role
+const RoleUserCountAggregatorComponent = ({
+  accountIds,
+  roleId,
+  onCountUpdate,
+}: {
+  accountIds: number[]
+  roleId: number
+  onCountUpdate: (roleId: number, count: number) => void
+}) => {
+  const [accountCounts, setAccountCounts] = useState<Record<number, number>>({})
+  const [loadedAccounts, setLoadedAccounts] = useState<Set<number>>(new Set())
+
+  // Callback when a single account's count is fetched
+  const handleAccountCountFetched = useCallback((accountId: number, count: number) => {
+    setAccountCounts((prev) => {
+      if (prev[accountId] !== count) {
+        return { ...prev, [accountId]: count }
+      }
+      return prev
+    })
+    setLoadedAccounts((prev) => new Set(prev).add(accountId))
+  }, [])
+
+  // Calculate total count
+  const totalCount = useMemo(() => {
+    return Object.values(accountCounts).reduce((sum, count) => sum + count, 0)
+  }, [accountCounts])
+
+  // Check if all accounts are loaded
+  const allLoaded = useMemo(() => {
+    return accountIds.every((id) => loadedAccounts.has(id))
+  }, [accountIds, loadedAccounts])
+
+  // Update parent when all counts are loaded
+  useEffect(() => {
+    if (allLoaded) {
+      onCountUpdate(roleId, totalCount)
+    }
+  }, [allLoaded, roleId, totalCount, onCountUpdate])
+
+  return (
+    <>
+      {/* Render invisible components to fetch data for each account */}
+      {accountIds.map((accountId) => (
+        <SingleAccountUserCount
+          key={`${accountId}-${roleId}`}
+          accountId={accountId}
+          roleId={roleId}
+          onCountFetched={handleAccountCountFetched}
+        />
+      ))}
+      {/* Display the count */}
+      {allLoaded ? totalCount : '...'}
+    </>
+  )
+}
+
+RoleUserCountAggregatorComponent.displayName = 'RoleUserCountAggregator'
+const RoleUserCountAggregator = React.memo(RoleUserCountAggregatorComponent)
 
 const ManageRolesTemplate = ({
   customerAccount,
@@ -99,7 +164,6 @@ const ManageRolesTemplate = ({
   const { showSnackbar } = useSnackbarContext()
   const { deleteRole } = useDeleteRoleAsync()
 
- // const [roles, setRoles] = useState<Role[]>([])
   const [searchQuery, setSearchQuery] = useState('')
   const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null)
   const [selectedRoleId, setSelectedRoleId] = useState<string | null>(null)
@@ -124,6 +188,7 @@ const ManageRolesTemplate = ({
       roleType: item.isSystemRole ? RoleType.System : RoleType.Custom,
       accountScope: AccountScope.AllChild,
       assignedUsers: 0,
+      accountIds: (item as B2BRole).accountIds || [],
     })) as Role[]
   }, [rolesData])
 
@@ -138,55 +203,58 @@ const ManageRolesTemplate = ({
     })
   }, [])
 
-  // Get user count for a role (from cached counts or default to 0)
-  const getUserCount = (roleId: string): number => {
+  // Get user count for a role (from cached counts or default to 0) - memoized
+  const getUserCount = useCallback((roleId: string): number => {
     return userCounts[parseInt(roleId)] ?? 0
-  }
+  }, [userCounts])
 
-  const handleMenuOpen = (event: React.MouseEvent<HTMLElement>, roleId: string) => {
+  const handleMenuOpen = useCallback((event: React.MouseEvent<HTMLElement>, roleId: string) => {
     setAnchorEl(event.currentTarget)
     setSelectedRoleId(roleId)
-  }
+  }, [])
 
-  const handleMenuClose = () => {
+  const handleMenuClose = useCallback(() => {
     setAnchorEl(null)
     setSelectedRoleId(null)
-  }
+  }, [])
 
-  const selectedRole = roles.find((role) => role.id === selectedRoleId)
+  const selectedRole = useMemo(
+    () => roles.find((role) => role.id === selectedRoleId),
+    [roles, selectedRoleId]
+  )
 
-  const handleSearch = (searchText: string) => {
+  const handleSearch = useCallback((searchText: string) => {
     setSearchQuery(searchText)
     setCurrentPage(1) // Reset to first page on search
-  }
+  }, [])
 
-  const handlePageChange = (event: ChangeEvent<any>, page: number) => {
+  const handlePageChange = useCallback((_event: ChangeEvent<unknown>, page: number) => {
     setCurrentPage(page)
-  }
+  }, [])
 
-  const handleAddNewRole = () => {
+  const handleAddNewRole = useCallback(() => {
     router.push('/my-account/b2b/manage-roles/create')
-  }
+  }, [router])
 
-  const handleViewRole = (roleId: string) => {
+  const handleViewRole = useCallback((roleId: string) => {
     handleMenuClose()
     // Navigate to create role page in readonly mode
     router.push(`/my-account/b2b/manage-roles/create?roleId=${roleId}&mode=view`)
-  }
+  }, [router, handleMenuClose])
 
-  const handleEditRole = (roleId: string) => {
+  const handleEditRole = useCallback((roleId: string) => {
     handleMenuClose()
     // TODO: Implement edit role
     router.push(`/my-account/b2b/manage-roles/create?roleId=${roleId}&mode=edit`)
-  }
+  }, [router, handleMenuClose])
 
-  const handleCopyRole = (roleId: string) => {
+  const handleCopyRole = useCallback((roleId: string) => {
     handleMenuClose()
     // Navigate to create role page with copy mode
     router.push(`/my-account/b2b/manage-roles/create?roleId=${roleId}&mode=copy`)
-  }
+  }, [router, handleMenuClose])
 
-  const handleDeleteRole = (roleId: string) => {
+  const handleDeleteRole = useCallback((roleId: string) => {
     handleMenuClose()
     // Show confirmation dialog before deleting
     showModal({
@@ -201,9 +269,6 @@ const ManageRolesTemplate = ({
               roleId: parseInt(roleId),
             })
 
-            // Remove role from local state
-            setRoles((prevRoles) => prevRoles.filter((role) => role.id !== roleId))
-
             // Show success message
             showSnackbar(t('role-deleted-successfully'), 'success')
           } catch (error) {
@@ -213,21 +278,28 @@ const ManageRolesTemplate = ({
         },
       },
     })
-  }
+  }, [handleMenuClose, showModal, t, deleteRole, showSnackbar])
 
-  const filteredRoles = roles.filter((role: Role) =>
-    role.name.toLowerCase().includes(searchQuery.toLowerCase())
+  const filteredRoles = useMemo(
+    () => roles.filter((role: Role) => role.name.toLowerCase().includes(searchQuery.toLowerCase())),
+    [roles, searchQuery]
   )
 
-  // Pagination logic
-  const totalCount = filteredRoles.length
-  const pageCount = Math.ceil(totalCount / pageSize)
-  const startIndex = (currentPage - 1) * pageSize
-  const endIndex = startIndex + pageSize
-  const paginatedRoles = filteredRoles.slice(startIndex, endIndex)
+  // Pagination logic - memoized
+  const paginationData = useMemo(() => {
+    const totalCount = filteredRoles.length
+    const pageCount = Math.ceil(totalCount / pageSize)
+    const startIndex = (currentPage - 1) * pageSize
+    const endIndex = startIndex + pageSize
+    const paginatedRoles = filteredRoles.slice(startIndex, endIndex)
+    
+    return { totalCount, pageCount, startIndex, endIndex, paginatedRoles }
+  }, [filteredRoles, currentPage, pageSize])
 
-  // Helper function for displaying pagination text
-  const getPerPageItemText = () => {
+  const { totalCount, pageCount, startIndex, endIndex, paginatedRoles } = paginationData
+
+  // Helper function for displaying pagination text - memoized
+  const getPerPageItemText = useCallback(() => {
     if (totalCount === 0) return ''
     const start = startIndex + 1
     const end = Math.min(endIndex, totalCount)
@@ -235,7 +307,7 @@ const ManageRolesTemplate = ({
       return `${t('displaying')} ${start} - ${end} of ${totalCount}`
     }
     return `${start} - ${end} of ${totalCount}`
-  }
+  }, [totalCount, startIndex, endIndex, mdScreen, t])
 
   return (
     <Grid>
@@ -320,9 +392,9 @@ const ManageRolesTemplate = ({
                     />
                   </TableCell>
                   <TableCell>
-                    {customerAccount?.id ? (
-                      <RoleUserCount
-                        accountId={customerAccount.id}
+                    {role.accountIds?.length > 0 ? (
+                      <RoleUserCountAggregator
+                        accountIds={role.accountIds}
                         roleId={parseInt(role.id)}
                         onCountUpdate={handleUserCountUpdate}
                       />
@@ -433,4 +505,5 @@ const ManageRolesTemplate = ({
   )
 }
 
-export default ManageRolesTemplate
+// Memoize component to prevent unnecessary re-renders
+export default React.memo(ManageRolesTemplate)
