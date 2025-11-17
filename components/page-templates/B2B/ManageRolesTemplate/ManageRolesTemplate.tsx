@@ -40,7 +40,7 @@ import {
 } from './ManageRolesTemplate.styles'
 import { SearchBar } from '@/components/common'
 import { ConfirmationDialog } from '@/components/dialogs'
-import { useAuthContext, useModalContext, useSnackbarContext } from '@/context'
+import { useModalContext, useSnackbarContext } from '@/context'
 import {
   useGetRolesByAccountIdAsync,
   useDeleteRoleAsync,
@@ -89,7 +89,6 @@ const RoleUserCount = ({
 const ManageRolesTemplate = ({
   customerAccount,
   initialData,
-  onAccountTitleClick,
 }: ManageRolesTemplateProps) => {
   const { t } = useTranslation('common')
   const theme = useTheme()
@@ -97,7 +96,6 @@ const ManageRolesTemplate = ({
   const mdScreen = useMediaQuery(theme.breakpoints.up('md'))
   const { showModal } = useModalContext()
   const { showSnackbar } = useSnackbarContext()
-  const { user } = useAuthContext()
   const { deleteRole } = useDeleteRoleAsync()
 
   const [roles, setRoles] = useState<Role[]>([])
