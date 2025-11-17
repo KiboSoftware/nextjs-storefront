@@ -17,6 +17,7 @@ import { Control, Controller } from 'react-hook-form'
 
 import { accountScopeSelectorStyles } from './AccountScopeSelector.styles'
 import { RoleFormData } from '../RoleBasicInfo/RoleBasicInfo'
+import { AccountScope } from '@/lib/constants'
 
 interface AccountScopeSelectorProps {
   control: Control<RoleFormData>
@@ -84,7 +85,7 @@ const AccountScopeSelector: React.FC<AccountScopeSelectorProps> = ({
                   </Tooltip>
                 </Box>
                 {/* Checkbox for future children - shown when "all-child" is selected */}
-                {field.value === 'all-child' && (
+                {field.value === AccountScope.AllChild && (
                   <Box sx={accountScopeSelectorStyles.checkboxContainer}>
                     <Controller
                       name="applyToFutureChildren"

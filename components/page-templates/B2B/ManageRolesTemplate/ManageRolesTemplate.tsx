@@ -1,4 +1,4 @@
-import React, { useState, useEffect, ChangeEvent, useCallback } from 'react'
+import React, { useState, useEffect, ChangeEvent, useCallback, useMemo } from 'react'
 
 import {
   AddCircleOutline as AddCircleOutlineIcon,
@@ -47,6 +47,7 @@ import {
   useGetUsersByRoleAsync,
 } from '@/hooks'
 import type { GetRolesAsyncResponse } from '@/lib/api/operations/get-roles-by-account-id'
+import { AccountScope, AccountType, RoleType } from '@/lib/constants'
 
 import type { CustomerAccount } from '@/lib/gql/types'
 
@@ -98,7 +99,7 @@ const ManageRolesTemplate = ({
   const { showSnackbar } = useSnackbarContext()
   const { deleteRole } = useDeleteRoleAsync()
 
-  const [roles, setRoles] = useState<Role[]>([])
+ // const [roles, setRoles] = useState<Role[]>([])
   const [searchQuery, setSearchQuery] = useState('')
   const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null)
   const [selectedRoleId, setSelectedRoleId] = useState<string | null>(null)
@@ -114,18 +115,16 @@ const ManageRolesTemplate = ({
     isError,
   } = useGetRolesByAccountIdAsync(customerAccount?.id as number, initialData)
 
-  // Transform API response to Role interface when data is loaded
-  useEffect(() => {
-    if (rolesData?.items) {
-      const transformedRoles: Role[] = rolesData.items.map((item) => ({
-        id: item.id?.toString() || '',
-        name: item.name || '',
-        roleType: item.isSystemRole ? 'System' : 'Custom',
-        accountScope: 'all-child',
-        assignedUsers: 0,
-      }))
-      setRoles(transformedRoles)
-    }
+  const roles = useMemo(() => {
+    if (!rolesData?.items) return []
+    
+    return rolesData.items.map((item) => ({
+      id: item.id?.toString() || '',
+      name: item.name || '',
+      roleType: item.isSystemRole ? RoleType.System : RoleType.Custom,
+      accountScope: AccountScope.AllChild,
+      assignedUsers: 0,
+    })) as Role[]
   }, [rolesData])
 
   // Callback to update user count for a role (memoized to prevent infinite loops)
@@ -381,7 +380,7 @@ const ManageRolesTemplate = ({
             <ListItemText>{t('view-details')}</ListItemText>
           </MenuItem>
 
-          {selectedRole?.roleType === 'Custom' && (
+          {selectedRole?.roleType === RoleType.Custom && (
             <MenuItem onClick={() => selectedRoleId && handleEditRole(selectedRoleId)}>
               <ListItemIcon>
                 <EditIcon fontSize="small" />
@@ -390,7 +389,7 @@ const ManageRolesTemplate = ({
             </MenuItem>
           )}
 
-          {selectedRole?.roleType === 'Custom' && (
+          {selectedRole?.roleType === RoleType.Custom && (
             <MenuItem onClick={() => selectedRoleId && handleCopyRole(selectedRoleId)}>
               <ListItemIcon>
                 <ContentCopyIcon fontSize="small" />
@@ -399,7 +398,7 @@ const ManageRolesTemplate = ({
             </MenuItem>
           )}
 
-          {selectedRole?.roleType === 'Custom' && (
+          {selectedRole?.roleType === RoleType.Custom && (
             <Tooltip
               title={
                 getUserCount(selectedRoleId || '') > 0 ? t('cannot-delete-role-with-users') : ''

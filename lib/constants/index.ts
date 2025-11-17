@@ -229,6 +229,12 @@ export const CustomBehaviors = {
 }
 
 export const AccountScope = {
+  AllChild: 'all-child',
   SpecificChild: 'specific-child',
   AllExcept: 'all-except',
+}
+
+export const RoleType = {
+  System: 'System',
+  Custom: 'Custom',
 }

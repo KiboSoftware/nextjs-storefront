@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react'
+import React, { useState } from 'react'
 
 import ChevronRightIcon from '@mui/icons-material/ChevronRight'
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore'
@@ -22,8 +22,8 @@ const RoleAccountHierarchyView: React.FC<RoleAccountHierarchyViewProps> = ({
 }) => {
   const { t } = useTranslation('common')
 
-  // Auto-expand all nodes that have selected accounts in their hierarchy
-  const getInitialExpandedNodes = (): Set<number> => {
+  // Auto-expand all nodes that have selected accounts in their hierarchy (calculated only once on mount)
+  const [expandedNodes, setExpandedNodes] = useState<Set<number>>(() => {
     const expandedSet = new Set<number>()
 
     // Always expand parent account if it exists
@@ -44,15 +44,7 @@ const RoleAccountHierarchyView: React.FC<RoleAccountHierarchyViewProps> = ({
     })
 
     return expandedSet
-  }
-
-  const [expandedNodes, setExpandedNodes] = useState<Set<number>>(getInitialExpandedNodes())
-
-  // Re-initialize expanded nodes when accounts or selectedAccountIds change
-  useEffect(() => {
-    setExpandedNodes(getInitialExpandedNodes())
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [accounts, selectedAccountIds, parentAccountId])
+  })
 
   // Toggle node expansion
   const handleToggleNodeExpansion = (nodeId: number) => {
