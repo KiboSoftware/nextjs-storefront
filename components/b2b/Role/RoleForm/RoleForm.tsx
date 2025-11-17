@@ -35,7 +35,6 @@ interface AccountUserBehaviorResult {
 }
 
 interface RoleFormProps {
-  onSave?: (data: RoleFormData) => void
   onCancel: () => void
   onBackClick: () => void
   user?: CustomerAccount
@@ -43,8 +42,6 @@ interface RoleFormProps {
   behaviorCategories?: { items?: Array<{ id?: number; name?: string }> }
   behaviors?: { items?: Array<{ id?: number; name?: string; categoryId?: number }> }
   accountUserBehaviorResults?: AccountUserBehaviorResult[]
-  accountUserBehaviors?: Array<unknown>
-  behaviorLoading?: boolean
   isReadOnly?: boolean
   isEditMode?: boolean
   initialData?: RoleFormData
