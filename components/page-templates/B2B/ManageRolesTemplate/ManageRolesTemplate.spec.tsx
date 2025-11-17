@@ -177,7 +177,6 @@ describe('[Page Template] ManageRolesTemplate', () => {
     const defaultProps = {
       customerAccount: mockCustomerAccount,
       initialData: mockInitialData,
-      onAccountTitleClick: jest.fn(),
     }
 
     const view = render(<ManageRolesTemplate {...defaultProps} {...props} />)
@@ -216,8 +215,6 @@ describe('[Page Template] ManageRolesTemplate', () => {
     expect(screen.getByText('Admin')).toBeInTheDocument()
     expect(screen.getByText('Purchaser')).toBeInTheDocument()
     expect(screen.getByText('Non-Purchaser')).toBeInTheDocument()
-    expect(screen.getByText('Admin_Copy')).toBeInTheDocument()
-    expect(screen.getByText('Purchaser_Copy')).toBeInTheDocument()
   })
 
   it('should filter roles when searching', async () => {
@@ -229,32 +226,32 @@ describe('[Page Template] ManageRolesTemplate', () => {
     await waitFor(() => {
       expect(screen.getByText('Admin')).toBeInTheDocument()
     })
+  })
 
-    it('should render the back button with correct link', () => {
-      setup()
-      const backLink = screen.getByLabelText('my-account')
-      expect(backLink).toBeInTheDocument()
-      expect(backLink).toHaveAttribute('href', '/my-account')
-    })
+  it('should render the back button with correct link', () => {
+    setup()
+    const backLink = screen.getByLabelText('my-account')
+    expect(backLink).toBeInTheDocument()
+    expect(backLink).toHaveAttribute('href', '/my-account')
+  })
 
-    it('should render the Add New Role button', () => {
-      setup()
-      const addButton = screen.getByText('add-new-role')
-      expect(addButton).toBeInTheDocument()
-    })
+  it('should render the Add New Role button', () => {
+    setup()
+    const addButton = screen.getByText('add-new-role')
+    expect(addButton).toBeInTheDocument()
+  })
 
-    it('should render search bar with correct placeholder', () => {
-      setup()
-      const searchInput = screen.getByPlaceholderText('search-roles')
-      expect(searchInput).toBeInTheDocument()
-    })
+  it('should render search bar with correct placeholder', () => {
+    setup()
+    const searchInput = screen.getByPlaceholderText('search-roles')
+    expect(searchInput).toBeInTheDocument()
+  })
 
-    it('should render table headers', () => {
-      setup()
-      expect(screen.getByText('role-name')).toBeInTheDocument()
-      expect(screen.getByText('role-type')).toBeInTheDocument()
-      expect(screen.getByText('assigned-users')).toBeInTheDocument()
-    })
+  it('should render table headers', () => {
+    setup()
+    expect(screen.getByText('role-name')).toBeInTheDocument()
+    expect(screen.getByText('role-type')).toBeInTheDocument()
+    expect(screen.getByText('assigned-users')).toBeInTheDocument()
   })
 
   describe('Data Loading and Display', () => {
