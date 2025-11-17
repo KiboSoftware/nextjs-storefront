@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useState, useEffect, useCallback, useMemo } from 'react'
 
 import ChevronRightIcon from '@mui/icons-material/ChevronRight'
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore'
@@ -22,8 +22,8 @@ const RoleAccountHierarchyView: React.FC<RoleAccountHierarchyViewProps> = ({
 }) => {
   const { t } = useTranslation('common')
 
-  // Auto-expand all nodes that have selected accounts in their hierarchy (calculated only once on mount)
-  const [expandedNodes, setExpandedNodes] = useState<Set<number>>(() => {
+  // Helper function to calculate expanded nodes
+  const getInitialExpandedNodes = useCallback((): Set<number> => {
     const expandedSet = new Set<number>()
 
     // Always expand parent account if it exists
@@ -44,10 +44,18 @@ const RoleAccountHierarchyView: React.FC<RoleAccountHierarchyViewProps> = ({
     })
 
     return expandedSet
-  })
+  }, [accounts, selectedAccountIds, parentAccountId])
 
-  // Toggle node expansion
-  const handleToggleNodeExpansion = (nodeId: number) => {
+  // Auto-expand all nodes that have selected accounts in their hierarchy
+  const [expandedNodes, setExpandedNodes] = useState<Set<number>>(getInitialExpandedNodes)
+
+  // Re-initialize expanded nodes when accounts, selectedAccountIds or parentAccountId change
+  useEffect(() => {
+    setExpandedNodes(getInitialExpandedNodes())
+  }, [getInitialExpandedNodes])
+
+  // Toggle node expansion (memoized to prevent recreating on every render)
+  const handleToggleNodeExpansion = useCallback((nodeId: number) => {
     setExpandedNodes((prev) => {
       const newSet = new Set(prev)
       if (newSet.has(nodeId)) {
@@ -57,17 +65,41 @@ const RoleAccountHierarchyView: React.FC<RoleAccountHierarchyViewProps> = ({
       }
       return newSet
     })
-  }
+  }, [])
 
-  // Get child accounts for a parent
-  const getChildAccountsForParent = (parentId: number): B2BAccount[] => {
-    return accounts.filter((acc) => acc.parentAccountId === parentId)
-  }
+  // Memoize account lookup map for better performance
+  const accountsById = useMemo(() => {
+    const map = new Map<number, B2BAccount>()
+    accounts.forEach((acc) => acc.id && map.set(acc.id, acc))
+    return map
+  }, [accounts])
 
-  // Render account hierarchy tree recursively
-  const renderAccountHierarchy = (accountId: number, level: number): React.ReactNode => {
-    const account = accounts.find((acc) => acc.id === accountId)
-    if (!account) return null
+  // Memoize children map for efficient lookups
+  const childrenByParentId = useMemo(() => {
+    const map = new Map<number, B2BAccount[]>()
+    accounts.forEach((acc) => {
+      if (acc.parentAccountId) {
+        const children = map.get(acc.parentAccountId) || []
+        children.push(acc)
+        map.set(acc.parentAccountId, children)
+      }
+    })
+    return map
+  }, [accounts])
+
+  // Get child accounts for a parent (memoized via childrenByParentId)
+  const getChildAccountsForParent = useCallback(
+    (parentId: number): B2BAccount[] => {
+      return childrenByParentId.get(parentId) || []
+    },
+    [childrenByParentId]
+  )
+
+  // Render account hierarchy tree recursively (memoized to prevent unnecessary re-renders)
+  const renderAccountHierarchy = useCallback(
+    (accountId: number, level: number): React.ReactNode => {
+      const account = accountsById.get(accountId)
+      if (!account) return null
 
     const childAccounts = getChildAccountsForParent(accountId)
     const hasChildren = childAccounts.length > 0
@@ -125,11 +157,25 @@ const RoleAccountHierarchyView: React.FC<RoleAccountHierarchyViewProps> = ({
         </Box>
 
         {hasChildren && isExpanded && (
-          <Box>{childAccounts.map((child) => renderAccountHierarchy(child.id, level + 1))}</Box>
+          <Box>
+            {childAccounts.map((child: B2BAccount) =>
+              renderAccountHierarchy(child.id as number, level + 1)
+            )}
+          </Box>
         )}
       </Box>
     )
-  }
+    },
+    [
+      accountsById,
+      getChildAccountsForParent,
+      expandedNodes,
+      selectedAccountIds,
+      parentAccountId,
+      handleToggleNodeExpansion,
+      t,
+    ]
+  )
 
   if (!accounts || accounts.length === 0 || !parentAccountId) {
     return (
@@ -163,4 +209,5 @@ const RoleAccountHierarchyView: React.FC<RoleAccountHierarchyViewProps> = ({
   )
 }
 
-export default RoleAccountHierarchyView
+// Memoize component to prevent unnecessary re-renders when parent re-renders
+export default React.memo(RoleAccountHierarchyView)
