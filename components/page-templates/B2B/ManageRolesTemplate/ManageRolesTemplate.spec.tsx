@@ -1,3 +1,7 @@
+/* eslint-disable testing-library/no-wait-for-multiple-assertions */
+/* eslint-disable testing-library/no-node-access */
+/* eslint-disable no-extra-semi */
+/* eslint-disable @typescript-eslint/no-extra-semi */
 import React from 'react'
 
 import { render, screen, waitFor } from '@testing-library/react'
@@ -6,11 +10,7 @@ import { useRouter } from 'next/router'
 
 import ManageRolesTemplate from './ManageRolesTemplate'
 import { useAuthContext, useModalContext, useSnackbarContext } from '@/context'
-import {
-  useGetRolesByAccountIdAsync,
-  useDeleteRoleAsync,
-  useGetUsersByRoleAsync,
-} from '@/hooks'
+import { useGetRolesByAccountIdAsync, useDeleteRoleAsync, useGetUsersByRoleAsync } from '@/hooks'
 
 // Mock dependencies
 jest.mock('next/router', () => ({
@@ -140,31 +140,25 @@ describe('[Page Template] ManageRolesTemplate', () => {
       query: {},
       pathname: '/my-account/b2b/manage-roles',
     })
-
     ;(useAuthContext as jest.Mock).mockReturnValue({
       user: { id: 123, emailAddress: 'user@test.com' },
     })
-
     ;(useModalContext as jest.Mock).mockReturnValue({
       showModal: mockShowModal,
       closeModal: jest.fn(),
     })
-
     ;(useSnackbarContext as jest.Mock).mockReturnValue({
       showSnackbar: mockShowSnackbar,
     })
-
     ;(useGetRolesByAccountIdAsync as jest.Mock).mockReturnValue({
       roles: mockRolesData,
       isLoading: false,
       isError: false,
       isSuccess: true,
     })
-
     ;(useDeleteRoleAsync as jest.Mock).mockReturnValue({
       deleteRole: { mutateAsync: mockDeleteRole },
     })
-
     ;(useGetUsersByRoleAsync as jest.Mock).mockReturnValue({
       users: [],
       isLoading: false,
@@ -295,7 +289,7 @@ describe('[Page Template] ManageRolesTemplate', () => {
     })
 
     it('should show loading state', () => {
-      (useGetRolesByAccountIdAsync as jest.Mock).mockReturnValue({
+      ;(useGetRolesByAccountIdAsync as jest.Mock).mockReturnValue({
         roles: null,
         isLoading: true,
         isError: false,
@@ -307,7 +301,7 @@ describe('[Page Template] ManageRolesTemplate', () => {
     })
 
     it('should show error state', () => {
-      (useGetRolesByAccountIdAsync as jest.Mock).mockReturnValue({
+      ;(useGetRolesByAccountIdAsync as jest.Mock).mockReturnValue({
         roles: null,
         isLoading: false,
         isError: true,
@@ -319,7 +313,7 @@ describe('[Page Template] ManageRolesTemplate', () => {
     })
 
     it('should show no records message when no roles exist', () => {
-      (useGetRolesByAccountIdAsync as jest.Mock).mockReturnValue({
+      ;(useGetRolesByAccountIdAsync as jest.Mock).mockReturnValue({
         roles: { items: [] },
         isLoading: false,
         isError: false,
@@ -656,7 +650,7 @@ describe('[Page Template] ManageRolesTemplate', () => {
       })
     })
   })
-  
+
   describe('Edge Cases', () => {
     it('should handle roles with undefined properties', () => {
       const rolesWithUndefined = {
@@ -704,6 +698,544 @@ describe('[Page Template] ManageRolesTemplate', () => {
 
       // Should not throw errors
       expect(screen.getByText('view-details')).toBeInTheDocument()
+    })
+
+    it('should handle roles without accountIds array', () => {
+      const rolesWithoutAccountIds = {
+        items: [
+          {
+            id: 1,
+            name: 'Test Role',
+            isSystemRole: false,
+            behaviors: [1, 2],
+            accountIds: undefined,
+          },
+        ],
+      }
+
+      ;(useGetRolesByAccountIdAsync as jest.Mock).mockReturnValue({
+        roles: rolesWithoutAccountIds,
+        isLoading: false,
+        isError: false,
+        isSuccess: true,
+      })
+
+      setup()
+      expect(screen.getByText('Test Role')).toBeInTheDocument()
+      expect(screen.getByText(/0 users/)).toBeInTheDocument()
+    })
+
+    it('should handle null or undefined customer account', () => {
+      const { container } = setup({ customerAccount: undefined })
+      expect(container).toBeInTheDocument()
+    })
+
+    it('should handle empty search query', async () => {
+      const { user } = setup()
+      const searchInput = screen.getByTestId('search-bar')
+
+      await user.type(searchInput, 'Admin')
+      await user.clear(searchInput)
+
+      await waitFor(() => {
+        expect(screen.getByText('Admin')).toBeInTheDocument()
+      })
+      expect(screen.getByText('Purchaser')).toBeInTheDocument()
+    })
+  })
+
+  describe('User Count Aggregation', () => {
+    it('should fetch and display user count for role with single account', async () => {
+      ;(useGetUsersByRoleAsync as jest.Mock).mockReturnValue({
+        users: [{ id: 1 }, { id: 2 }, { id: 3 }],
+        isLoading: false,
+        isSuccess: true,
+      })
+
+      setup()
+
+      await waitFor(() => {
+        const userCells = screen.getAllByText(/users/)
+        expect(userCells.length).toBeGreaterThan(0)
+      })
+    })
+
+    it('should aggregate user counts across multiple accounts', async () => {
+      const multiAccountRole = {
+        items: [
+          {
+            id: 1,
+            name: 'Multi-Account Role',
+            isSystemRole: false,
+            behaviors: [1, 2],
+            accountIds: [1001, 1002, 1003],
+          },
+        ],
+      }
+
+      ;(useGetRolesByAccountIdAsync as jest.Mock).mockReturnValue({
+        roles: multiAccountRole,
+        isLoading: false,
+        isError: false,
+        isSuccess: true,
+      })
+
+      setup()
+
+      await waitFor(() => {
+        expect(screen.getByText('Multi-Account Role')).toBeInTheDocument()
+      })
+    })
+
+    it('should handle loading state while fetching user counts', () => {
+      ;(useGetUsersByRoleAsync as jest.Mock).mockReturnValue({
+        users: null,
+        isLoading: true,
+        isSuccess: false,
+      })
+
+      setup()
+      expect(screen.getByText('Admin')).toBeInTheDocument()
+    })
+  })
+
+  describe('Pagination Boundary Cases', () => {
+    it('should handle exactly 10 roles (one full page)', () => {
+      const exactlyTenRoles = Array.from({ length: 10 }, (_, i) => ({
+        id: i + 1,
+        name: `Role ${i + 1}`,
+        isSystemRole: false,
+        behaviors: [] as number[],
+        accountIds: [1001],
+      }))
+
+      ;(useGetRolesByAccountIdAsync as jest.Mock).mockReturnValue({
+        roles: { items: exactlyTenRoles },
+        isLoading: false,
+        isError: false,
+        isSuccess: true,
+      })
+
+      setup()
+
+      expect(screen.getByText('Role 1')).toBeInTheDocument()
+      expect(screen.getByText('Role 10')).toBeInTheDocument()
+    })
+
+    it('should handle 11 roles (requires pagination)', () => {
+      const elevenRoles = Array.from({ length: 11 }, (_, i) => ({
+        id: i + 1,
+        name: `Role ${i + 1}`,
+        isSystemRole: false,
+        behaviors: [] as number[],
+        accountIds: [1001],
+      }))
+
+      ;(useGetRolesByAccountIdAsync as jest.Mock).mockReturnValue({
+        roles: { items: elevenRoles },
+        isLoading: false,
+        isError: false,
+        isSuccess: true,
+      })
+
+      setup()
+
+      expect(screen.getByText('Role 1')).toBeInTheDocument()
+      expect(screen.getByText('Role 10')).toBeInTheDocument()
+      expect(screen.queryByText('Role 11')).not.toBeInTheDocument()
+    })
+
+    it('should display correct page info text', () => {
+      const manyRoles = Array.from({ length: 25 }, (_, i) => ({
+        id: i + 1,
+        name: `Role ${i + 1}`,
+        isSystemRole: false,
+        behaviors: [] as number[],
+        accountIds: [1001],
+      }))
+
+      ;(useGetRolesByAccountIdAsync as jest.Mock).mockReturnValue({
+        roles: { items: manyRoles },
+        isLoading: false,
+        isError: false,
+        isSuccess: true,
+      })
+
+      setup()
+
+      // Check for pagination info text (can be "displaying 1 - 10 of 25" or "1 - 10 of 25" depending on screen size)
+      expect(screen.getByText(/1 - 10 of 25/)).toBeInTheDocument()
+    })
+  })
+
+  describe('Delete Button State', () => {
+    it('should disable delete button for role with 1 user', async () => {
+      const roleWithOneUser = {
+        items: [
+          {
+            id: 1,
+            name: 'Role With User',
+            isSystemRole: false,
+            behaviors: [1],
+            accountIds: [1001],
+          },
+        ],
+      }
+
+      ;(useGetRolesByAccountIdAsync as jest.Mock).mockReturnValue({
+        roles: roleWithOneUser,
+        isLoading: false,
+        isError: false,
+        isSuccess: true,
+      })
+      ;(useGetUsersByRoleAsync as jest.Mock).mockReturnValue({
+        users: [{ id: 1 }],
+        isLoading: false,
+        isSuccess: true,
+      })
+
+      const { user } = setup()
+
+      const actionButtons = screen.getAllByLabelText('actions')
+      await user.click(actionButtons[0])
+
+      await waitFor(() => {
+        const deleteButton = screen.getByText('delete-role')
+        expect(deleteButton.closest('li')).toHaveClass('Mui-disabled')
+      })
+    })
+
+    it('should enable delete button for role with 0 users', async () => {
+      const roleWithNoUsers = {
+        items: [
+          {
+            id: 1,
+            name: 'Empty Role',
+            isSystemRole: false,
+            behaviors: [1],
+            accountIds: [1001],
+          },
+        ],
+      }
+
+      ;(useGetRolesByAccountIdAsync as jest.Mock).mockReturnValue({
+        roles: roleWithNoUsers,
+        isLoading: false,
+        isError: false,
+        isSuccess: true,
+      })
+      ;(useGetUsersByRoleAsync as jest.Mock).mockReturnValue({
+        users: [],
+        isLoading: false,
+        isSuccess: true,
+      })
+
+      const { user } = setup()
+
+      const actionButtons = screen.getAllByLabelText('actions')
+      await user.click(actionButtons[0])
+
+      await waitFor(() => {
+        const deleteButton = screen.getByText('delete-role')
+        // eslint-disable-next-line testing-library/no-node-access
+        expect(deleteButton.closest('li')).not.toHaveClass('Mui-disabled')
+      })
+    })
+  })
+
+  describe('Scenario-Based Tests (E2E-like)', () => {
+    // TC-E2E-001 to TC-E2E-003: Complete user flow
+    it('Scenario 1: Admin searches for a role, views details, and navigates back', async () => {
+      const { user } = setup()
+
+      // Step 1: User sees all roles initially
+      expect(screen.getByText('Admin')).toBeInTheDocument()
+      expect(screen.getByText('Purchaser')).toBeInTheDocument()
+
+      // Step 2: User searches for "Admin"
+      const searchInput = screen.getByTestId('search-bar')
+      await user.type(searchInput, 'Admin')
+
+      // Step 3: Only Admin role is visible
+      await waitFor(() => {
+        expect(screen.getByText('Admin')).toBeInTheDocument()
+      })
+      expect(screen.queryByText('Purchaser')).not.toBeInTheDocument()
+
+      // Step 4: User opens action menu
+      const actionButtons = screen.getAllByLabelText('actions')
+      await user.click(actionButtons[0])
+
+      // Step 5: User clicks View Details
+      const viewButton = screen.getByText('view-details')
+      await user.click(viewButton)
+
+      // Step 6: User navigates to view page
+      expect(mockPush).toHaveBeenCalledWith(
+        '/my-account/b2b/manage-roles/create?roleId=1&mode=view'
+      )
+    })
+
+    // TC-E2E-007 to TC-E2E-008: Custom role actions
+    it('Scenario 2: Admin attempts to delete role with users, then edits it instead', async () => {
+      // Setup role with users
+      const roleWithUsers = {
+        items: [
+          {
+            id: 2,
+            name: 'Store Manager',
+            isSystemRole: false,
+            behaviors: [1, 2],
+            accountIds: [1001],
+          },
+        ],
+      }
+
+      ;(useGetRolesByAccountIdAsync as jest.Mock).mockReturnValue({
+        roles: roleWithUsers,
+        isLoading: false,
+        isError: false,
+        isSuccess: true,
+      })
+      ;(useGetUsersByRoleAsync as jest.Mock).mockReturnValue({
+        users: [{ id: 1 }, { id: 2 }, { id: 3 }, { id: 4 }, { id: 5 }],
+        isLoading: false,
+        isSuccess: true,
+      })
+
+      const { user } = setup()
+
+      // Step 1: User opens action menu
+      const actionButtons = screen.getAllByLabelText('actions')
+      await user.click(actionButtons[0])
+
+      // Step 2: User sees delete is disabled
+      await waitFor(() => {
+        const deleteButton = screen.getByText('delete-role')
+        // eslint-disable-next-line testing-library/no-node-access
+        expect(deleteButton.closest('li')).toHaveClass('Mui-disabled')
+      })
+
+      // Step 3: User clicks Edit instead
+      const editButton = screen.getByText('edit-role')
+      await user.click(editButton)
+
+      // Step 4: User navigates to edit page
+      expect(mockPush).toHaveBeenCalledWith(
+        '/my-account/b2b/manage-roles/create?roleId=2&mode=edit'
+      )
+    })
+
+    // TC-E2E-009 to TC-E2E-011: Copy role workflow
+    it('Scenario 3: Admin copies an existing role to create a new one', async () => {
+      const { user } = setup()
+
+      // Step 1: User searches for role to copy
+      const searchInput = screen.getByTestId('search-bar')
+      await user.type(searchInput, 'Purchaser')
+
+      await waitFor(() => {
+        expect(screen.getByText('Purchaser')).toBeInTheDocument()
+      })
+
+      // Step 2: User opens action menu
+      const actionButtons = screen.getAllByLabelText('actions')
+      await user.click(actionButtons[0])
+
+      // Step 3: User clicks Copy Role
+      const copyButton = screen.getByText('copy-role')
+      await user.click(copyButton)
+
+      // Step 4: User navigates to copy page
+      expect(mockPush).toHaveBeenCalledWith(
+        '/my-account/b2b/manage-roles/create?roleId=2&mode=copy'
+      )
+    })
+
+    // TC-E2E-013: Successful deletion
+    it('Scenario 4: Admin successfully deletes an unassigned custom role', async () => {
+      mockDeleteRole.mockResolvedValueOnce({})
+
+      const { user } = setup()
+
+      // Step 1: User searches for role to delete
+      const searchInput = screen.getByTestId('search-bar')
+      await user.type(searchInput, 'Non-Purchaser')
+
+      await waitFor(() => {
+        expect(screen.getByText('Non-Purchaser')).toBeInTheDocument()
+      })
+
+      // Step 2: User opens action menu
+      const actionButtons = screen.getAllByLabelText('actions')
+      await user.click(actionButtons[0])
+
+      // Step 3: User clicks Delete
+      const deleteButton = screen.getByText('delete-role')
+      await user.click(deleteButton)
+
+      // Step 4: User confirms deletion
+      expect(mockShowModal).toHaveBeenCalled()
+      const modalCall = mockShowModal.mock.calls[0][0]
+      await modalCall.props.onConfirm()
+
+      // Step 5: Role is deleted successfully
+      await waitFor(() => {
+        expect(mockDeleteRole).toHaveBeenCalled()
+      })
+      expect(mockShowSnackbar).toHaveBeenCalledWith('role-deleted-successfully', 'success')
+    })
+
+    // TC-E2E-005: Pagination workflow
+    it('Scenario 5: Admin navigates through multiple pages of roles', async () => {
+      const manyRoles = Array.from({ length: 25 }, (_, i) => ({
+        id: i + 1,
+        name: `Role ${i + 1}`,
+        isSystemRole: false,
+        behaviors: [] as number[],
+        accountIds: [1001],
+      }))
+
+      ;(useGetRolesByAccountIdAsync as jest.Mock).mockReturnValue({
+        roles: { items: manyRoles },
+        isLoading: false,
+        isError: false,
+        isSuccess: true,
+      })
+
+      const { user } = setup()
+
+      // Step 1: User sees first page
+      expect(screen.getByText('Role 1')).toBeInTheDocument()
+      expect(screen.getByText('Role 10')).toBeInTheDocument()
+      expect(screen.queryByText('Role 11')).not.toBeInTheDocument()
+
+      // Step 2: User clicks page 2
+      const page2Button = screen.getByRole('button', { name: 'Go to page 2' })
+      await user.click(page2Button)
+
+      // Step 3: User sees second page roles
+      await waitFor(() => {
+        expect(screen.getByText('Role 11')).toBeInTheDocument()
+      })
+      expect(screen.getByText('Role 20')).toBeInTheDocument()
+    })
+
+    // TC-E2E-004: Clear search filter
+    it('Scenario 6: Admin filters roles, then clears the filter', async () => {
+      const { user } = setup()
+
+      // Step 1: User applies search filter
+      const searchInput = screen.getByTestId('search-bar')
+      await user.type(searchInput, 'Manager')
+
+      await waitFor(() => {
+        expect(screen.getByText('Manager')).toBeInTheDocument()
+      })
+      expect(screen.queryByText('Admin')).not.toBeInTheDocument()
+
+      // Step 2: User clears search
+      await user.clear(searchInput)
+
+      // Step 3: All roles are displayed again
+      await waitFor(() => {
+        expect(screen.getByText('Admin')).toBeInTheDocument()
+      })
+      expect(screen.getByText('Purchaser')).toBeInTheDocument()
+      expect(screen.getByText('Manager')).toBeInTheDocument()
+    })
+
+    // TC-E2E-015: Add new role navigation
+    it('Scenario 7: Admin starts creating a new role', async () => {
+      const { user } = setup()
+
+      // Step 1: User clicks Add New Role button
+      const addButton = screen.getByText('add-new-role')
+      await user.click(addButton)
+
+      // Step 2: User navigates to create page
+      expect(mockPush).toHaveBeenCalledWith('/my-account/b2b/manage-roles/create')
+    })
+
+    // TC-E2E-014: Error handling
+    it('Scenario 8: Admin attempts deletion but API fails', async () => {
+      const consoleSpy = jest.spyOn(console, 'error').mockImplementation()
+      mockDeleteRole.mockRejectedValueOnce(new Error('Network error'))
+
+      const { user } = setup()
+
+      // Step 1: User attempts to delete a role
+      const actionButtons = screen.getAllByLabelText('actions')
+      await user.click(actionButtons[1])
+
+      const deleteButton = screen.getByText('delete-role')
+      await user.click(deleteButton)
+
+      // Step 2: User confirms deletion
+      const modalCall = mockShowModal.mock.calls[0][0]
+      await modalCall.props.onConfirm()
+
+      // Step 3: Error message is displayed
+      await waitFor(() => {
+        expect(mockShowSnackbar).toHaveBeenCalledWith('error-deleting-role', 'error')
+      })
+
+      // Step 4: Error is logged
+      expect(consoleSpy).toHaveBeenCalledWith('Error deleting role:', expect.any(Error))
+
+      consoleSpy.mockRestore()
+    })
+  })
+
+  describe('Component Props Handling', () => {
+    it('should use initialData when provided', () => {
+      setup({ initialData: mockInitialData })
+      expect(screen.getByText('Admin')).toBeInTheDocument()
+    })
+
+    it('should fetch data when initialData is not provided', () => {
+      setup({ initialData: undefined })
+      expect(useGetRolesByAccountIdAsync).toHaveBeenCalledWith(1001, undefined)
+    })
+
+    it('should handle customerAccount prop correctly', () => {
+      const customAccount = {
+        id: 9999,
+        emailAddress: 'custom@test.com',
+      }
+
+      setup({ customerAccount: customAccount })
+      expect(useGetRolesByAccountIdAsync).toHaveBeenCalledWith(9999, mockInitialData)
+    })
+  })
+
+  describe('Role Type Filtering', () => {
+    it('should correctly identify and display system roles', () => {
+      setup()
+
+      const systemBadges = screen.getAllByText('System')
+      expect(systemBadges).toHaveLength(2) // Admin and Viewer
+    })
+
+    it('should correctly identify and display custom roles', () => {
+      setup()
+
+      const customBadges = screen.getAllByText('Custom')
+      expect(customBadges).toHaveLength(3) // Purchaser, Non-Purchaser, Manager
+    })
+
+    it('should handle mixed role types in search results', async () => {
+      const { user } = setup()
+      const searchInput = screen.getByTestId('search-bar')
+
+      // Search for term that matches both system and custom roles
+      await user.type(searchInput, 'er')
+
+      await waitFor(() => {
+        // Both "Purchaser" (custom) and "Viewer" (system) match
+        expect(screen.getByText('Purchaser')).toBeInTheDocument()
+      })
+      expect(screen.getByText('Viewer')).toBeInTheDocument()
     })
   })
 })

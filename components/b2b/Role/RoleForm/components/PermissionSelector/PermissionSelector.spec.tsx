@@ -789,4 +789,343 @@ describe('PermissionSelector Component', () => {
       expect(screen.getByText('permission-configuration')).toBeInTheDocument()
     })
   })
+
+  describe('Disabled/ReadOnly State', () => {
+    describe('Basic Disabled Functionality', () => {
+      it('should render component in readonly mode', () => {
+        render(<PermissionSelector {...defaultProps} isReadOnly={true} />)
+
+        expect(screen.getByText('permission-configuration')).toBeInTheDocument()
+        expect(screen.getByText('behavior-category')).toBeInTheDocument()
+      })
+
+      it('should disable all checkboxes when isReadOnly is true', () => {
+        render(<PermissionSelector {...defaultProps} isReadOnly={true} />)
+
+        const checkboxes = screen.getAllByRole('checkbox')
+        checkboxes.forEach((checkbox) => {
+          expect(checkbox).toBeDisabled()
+        })
+      })
+
+      it('should disable header checkbox in readonly mode', () => {
+        render(<PermissionSelector {...defaultProps} isReadOnly={true} />)
+
+        const checkboxes = screen.getAllByRole('checkbox')
+        // First checkbox should be the header checkbox
+        expect(checkboxes[0]).toBeDisabled()
+      })
+
+      it('should disable behavior checkboxes in readonly mode', () => {
+        render(<PermissionSelector {...defaultProps} isReadOnly={true} />)
+
+        const checkboxes = screen.getAllByRole('checkbox')
+        // All checkboxes after header should be disabled
+        checkboxes.slice(1).forEach((checkbox) => {
+          expect(checkbox).toBeDisabled()
+        })
+      })
+
+      it('should not call onBehaviorToggle when checkbox is disabled', () => {
+        const onBehaviorToggle = jest.fn()
+
+        render(
+          <PermissionSelector
+            {...defaultProps}
+            isReadOnly={true}
+            onBehaviorToggle={onBehaviorToggle}
+          />
+        )
+
+        const checkboxes = screen.getAllByRole('checkbox')
+        // Verify checkboxes are disabled, preventing user interaction
+        checkboxes.forEach((checkbox) => {
+          expect(checkbox).toBeDisabled()
+        })
+
+        // onBehaviorToggle should never be called when isReadOnly is true
+        expect(onBehaviorToggle).not.toHaveBeenCalled()
+      })
+
+      it('should not call onBehaviorNameCheckboxChange when header checkbox is disabled', () => {
+        const onBehaviorNameCheckboxChange = jest.fn()
+
+        render(
+          <PermissionSelector
+            {...defaultProps}
+            isReadOnly={true}
+            onBehaviorNameCheckboxChange={onBehaviorNameCheckboxChange}
+          />
+        )
+
+        const checkboxes = screen.getAllByRole('checkbox')
+        // Verify header checkbox is disabled
+        expect(checkboxes[0]).toBeDisabled()
+
+        // Callback should never be called when isReadOnly is true
+        expect(onBehaviorNameCheckboxChange).not.toHaveBeenCalled()
+      })
+    })
+
+    describe('Disabled State with Selections', () => {
+      it('should display selected permissions in readonly mode', () => {
+        const getAllSelectedBehaviors = jest.fn(() => [
+          { category: 1, behavior: 1 },
+          { category: 1, behavior: 2 },
+        ])
+
+        render(
+          <PermissionSelector
+            {...defaultProps}
+            isReadOnly={true}
+            selectedPermissions={{ 1: [1, 2] }}
+            getAllSelectedBehaviors={getAllSelectedBehaviors}
+          />
+        )
+
+        const createRoleElements = screen.getAllByText('Create Role')
+        expect(createRoleElements.length).toBeGreaterThanOrEqual(1)
+      })
+
+      it('should show disabled checkboxes with selected permissions in readonly mode', () => {
+        render(
+          <PermissionSelector
+            {...defaultProps}
+            isReadOnly={true}
+            selectedPermissions={{ 1: [1, 2, 3] }}
+          />
+        )
+
+        const checkboxes = screen.getAllByRole('checkbox')
+        // All checkboxes should be disabled in readonly mode
+        checkboxes.forEach((checkbox) => {
+          expect(checkbox).toBeDisabled()
+        })
+        // Component should maintain selected state visually
+        expect(checkboxes.length).toBeGreaterThan(0)
+      })
+
+      it('should disable remove buttons in readonly mode', () => {
+        const getAllSelectedBehaviors = jest.fn(() => [
+          { category: 1, behavior: 1 },
+          { category: 1, behavior: 2 },
+        ])
+
+        render(
+          <PermissionSelector
+            {...defaultProps}
+            isReadOnly={true}
+            selectedPermissions={{ 1: [1, 2] }}
+            getAllSelectedBehaviors={getAllSelectedBehaviors}
+          />
+        )
+
+        const removeButtons = screen.getAllByRole('button', { name: '' })
+        // Filter for IconButtons (remove buttons have no name)
+        const iconButtons = removeButtons.filter(
+          (btn) => !btn.textContent || btn.textContent.trim() === ''
+        )
+        iconButtons.forEach((button) => {
+          expect(button).toBeDisabled()
+        })
+      })
+
+      it('should not allow removing behaviors when buttons are disabled', () => {
+        const handleRemoveBehavior = jest.fn()
+        const getAllSelectedBehaviors = jest.fn(() => [{ category: 1, behavior: 1 }])
+
+        render(
+          <PermissionSelector
+            {...defaultProps}
+            isReadOnly={true}
+            selectedPermissions={{ 1: [1] }}
+            getAllSelectedBehaviors={getAllSelectedBehaviors}
+            handleRemoveBehavior={handleRemoveBehavior}
+          />
+        )
+
+        const removeButtons = screen.getAllByRole('button', { name: '' })
+        const iconButtons = removeButtons.filter(
+          (btn) => !btn.textContent || btn.textContent.trim() === ''
+        )
+
+        // Verify remove buttons are disabled, preventing removal
+        iconButtons.forEach((button) => {
+          expect(button).toBeDisabled()
+        })
+
+        // handleRemoveBehavior should never be called
+        expect(handleRemoveBehavior).not.toHaveBeenCalled()
+      })
+    })
+
+    describe('Disabled State with Errors', () => {
+      it('should display error message in readonly mode', () => {
+        render(
+          <PermissionSelector
+            {...defaultProps}
+            isReadOnly={true}
+            permissionError="At least one permission must be selected"
+          />
+        )
+
+        expect(screen.getByText('At least one permission must be selected')).toBeInTheDocument()
+      })
+
+      it('should render error with disabled controls', () => {
+        render(
+          <PermissionSelector
+            {...defaultProps}
+            isReadOnly={true}
+            permissionError="Invalid permissions"
+          />
+        )
+
+        expect(screen.getByText('Invalid permissions')).toBeInTheDocument()
+
+        const checkboxes = screen.getAllByRole('checkbox')
+        checkboxes.forEach((checkbox) => {
+          expect(checkbox).toBeDisabled()
+        })
+      })
+    })
+
+    describe('Disabled State Category Navigation', () => {
+      it('should allow category selection in readonly mode', async () => {
+        const user = userEvent.setup()
+        render(<PermissionSelector {...defaultProps} isReadOnly={true} />)
+
+        const usersCategory = screen.getByText('Users')
+        await user.click(usersCategory)
+
+        // Should show Users category behaviors
+        expect(screen.getByText('Create User')).toBeInTheDocument()
+        expect(screen.getByText('Edit User')).toBeInTheDocument()
+      })
+
+      it('should navigate between categories while maintaining disabled state', async () => {
+        const user = userEvent.setup()
+        render(<PermissionSelector {...defaultProps} isReadOnly={true} />)
+
+        // Click on Orders category
+        const ordersCategory = screen.getByText('Orders')
+        await user.click(ordersCategory)
+
+        expect(screen.getByText('View Orders')).toBeInTheDocument()
+        expect(screen.getByText('Create Orders')).toBeInTheDocument()
+
+        // All checkboxes should still be disabled
+        const checkboxes = screen.getAllByRole('checkbox')
+        checkboxes.forEach((checkbox) => {
+          expect(checkbox).toBeDisabled()
+        })
+      })
+    })
+
+    describe('Disabled State with Empty Data', () => {
+      it('should handle empty selections in readonly mode', () => {
+        render(
+          <PermissionSelector
+            {...defaultProps}
+            isReadOnly={true}
+            selectedPermissions={{}}
+            getAllSelectedBehaviors={() => []}
+          />
+        )
+
+        expect(screen.getByText('no-behaviors-selected')).toBeInTheDocument()
+      })
+
+      it('should disable controls even with no selections', () => {
+        render(<PermissionSelector {...defaultProps} isReadOnly={true} selectedPermissions={{}} />)
+
+        const checkboxes = screen.getAllByRole('checkbox')
+        checkboxes.forEach((checkbox) => {
+          expect(checkbox).toBeDisabled()
+        })
+      })
+    })
+
+    describe('Disabled State Scenarios', () => {
+      it('Scenario: Admin viewing existing role permissions in readonly mode', () => {
+        const getAllSelectedBehaviors = jest.fn(() => [
+          { category: 1, behavior: 1 },
+          { category: 1, behavior: 2 },
+          { category: 2, behavior: 4 },
+        ])
+
+        render(
+          <PermissionSelector
+            {...defaultProps}
+            isReadOnly={true}
+            selectedPermissions={{ 1: [1, 2], 2: [4] }}
+            getAllSelectedBehaviors={getAllSelectedBehaviors}
+          />
+        )
+
+        // Should show all selected permissions
+        const createRoleElements = screen.getAllByText('Create Role')
+        expect(createRoleElements.length).toBeGreaterThanOrEqual(1)
+
+        // All controls should be disabled
+        const checkboxes = screen.getAllByRole('checkbox')
+        checkboxes.forEach((checkbox) => {
+          expect(checkbox).toBeDisabled()
+        })
+      })
+
+      it('Scenario: Readonly mode with validation error displayed', () => {
+        render(
+          <PermissionSelector
+            {...defaultProps}
+            isReadOnly={true}
+            permissionError="Cannot modify system role permissions"
+            selectedPermissions={{ 1: [1] }}
+          />
+        )
+
+        expect(screen.getByText('Cannot modify system role permissions')).toBeInTheDocument()
+
+        const checkboxes = screen.getAllByRole('checkbox')
+        checkboxes.forEach((checkbox) => {
+          expect(checkbox).toBeDisabled()
+        })
+      })
+
+      it('Scenario: Disabled state prevents all modification interactions', () => {
+        const onBehaviorToggle = jest.fn()
+        const handleRemoveBehavior = jest.fn()
+        const getAllSelectedBehaviors = jest.fn(() => [{ category: 1, behavior: 1 }])
+
+        render(
+          <PermissionSelector
+            {...defaultProps}
+            isReadOnly={true}
+            selectedPermissions={{ 1: [1] }}
+            onBehaviorToggle={onBehaviorToggle}
+            handleRemoveBehavior={handleRemoveBehavior}
+            getAllSelectedBehaviors={getAllSelectedBehaviors}
+          />
+        )
+
+        // Verify all interactive elements are disabled
+        const checkboxes = screen.getAllByRole('checkbox')
+        checkboxes.forEach((checkbox) => {
+          expect(checkbox).toBeDisabled()
+        })
+
+        const removeButtons = screen.getAllByRole('button', { name: '' })
+        const iconButtons = removeButtons.filter(
+          (btn) => !btn.textContent || btn.textContent.trim() === ''
+        )
+        iconButtons.forEach((button) => {
+          expect(button).toBeDisabled()
+        })
+
+        // Verify no modification callbacks are triggered
+        expect(onBehaviorToggle).not.toHaveBeenCalled()
+        expect(handleRemoveBehavior).not.toHaveBeenCalled()
+      })
+    })
+  })
 })

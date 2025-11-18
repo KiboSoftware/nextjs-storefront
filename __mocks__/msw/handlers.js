@@ -680,6 +680,48 @@ export const b2bHandlers = [
     return res(ctx.data({ getRolesByAccountIdAsync: rolesMock }))
   }),
 
+  // useGetRoleByRoleIdAsync
+  graphql.query('getRoleByRoleIdAsync', (req, res, ctx) => {
+    const { roleId } = req.variables
+    const role = rolesMock.items.find((r) => r.id === roleId)
+    return res(ctx.data({ getRoleByRoleIdAsync: role || rolesMock.items[0] }))
+  }),
+
+  // useGetUsersByRoleAsync
+  graphql.query('getUsersByRoleAsync', (_req, res, ctx) => {
+    const mockUsers = [
+      {
+        emailAddress: 'admin@example.com',
+        userName: 'admin',
+        firstName: 'Admin',
+        lastName: 'User',
+        localeCode: 'en-US',
+        userId: 'user1',
+        roles: [{ roleId: 1, roleName: 'Administrator', roleTags: ['admin'] }],
+        isLocked: false,
+        isActive: true,
+        isRemoved: false,
+        acceptsMarketing: true,
+        hasExternalPassword: false,
+      },
+      {
+        emailAddress: 'manager@example.com',
+        userName: 'manager',
+        firstName: 'Store',
+        lastName: 'Manager',
+        localeCode: 'en-US',
+        userId: 'user2',
+        roles: [{ roleId: 1, roleName: 'Administrator', roleTags: ['manager'] }],
+        isLocked: false,
+        isActive: true,
+        isRemoved: false,
+        acceptsMarketing: false,
+        hasExternalPassword: true,
+      },
+    ]
+    return res(ctx.data({ getUsersByRoleAsync: mockUsers }))
+  }),
+
   // useDeleteRoleAsync
   graphql.mutation('deleteRoleAsyncMutation', (_req, res, ctx) => {
     return res(ctx.data({ deleteRoleAsyncMutation: true }))

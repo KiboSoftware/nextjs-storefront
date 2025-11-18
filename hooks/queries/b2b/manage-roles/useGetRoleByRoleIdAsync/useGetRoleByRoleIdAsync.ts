@@ -1,5 +1,5 @@
 /**
- * @module useGetRoleByIdAsync
+ * @module useGetRoleByRoleIdAsync
  */
 import { useQuery } from '@tanstack/react-query'
 
@@ -32,7 +32,7 @@ const getRoleByIdAsync = async ({ roleId }: any): Promise<B2BRole> => {
 }
 
 /**
- * [Query hook] useGetRoleByIdAsync uses the graphQL query
+ * [Query hook] useGetRoleByRoleIdAsync uses the graphQL query
  *
  * <b>getRoleByIdAsync(accountId: Int!, roleId: Int!): B2BRole</b>
  *

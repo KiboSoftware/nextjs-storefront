@@ -330,7 +330,7 @@ const RoleForm: React.FC<RoleFormProps> = ({
     }))
   }, [])
 
-  const onSubmit = async (data: RoleFormData) => {  
+  const onSubmit = async (data: RoleFormData) => {
     // Validate that at least one permission is selected
     if (!hasSelectedPermissions) {
       setPermissionError(t('at-least-one-permission-required'))
@@ -417,7 +417,6 @@ const RoleForm: React.FC<RoleFormProps> = ({
       if (isEditMode && roleId) {
         // Update existing role
         await updateRole.mutateAsync({
-          accountId: user?.id as number,
           roleId,
           b2BRoleInput,
         })
@@ -535,7 +534,8 @@ const RoleForm: React.FC<RoleFormProps> = ({
       )}
 
       {/* Account Hierarchy Tree - Show when specific-child or all-except is selected AND parent has children */}
-      {!(isReadOnly || isEditMode) && parentAccount &&
+      {!(isReadOnly || isEditMode) &&
+        parentAccount &&
         (accountScope === AccountScope.SpecificChild ||
           accountScope === AccountScope.AllExcept) && (
           <RoleFormAccountHierarchyTree
