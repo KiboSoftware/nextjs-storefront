@@ -124,29 +124,6 @@ const RoleForm: React.FC<RoleFormProps> = ({
   // Initialize apply role to future children mutation
   const { applyRoleToFutureChildren } = useApplyRoleToFutureChildrensAsync()
 
-  // Use default values for loading states if not provided
-  const isLoadingCategories = categoriesLoading || false
-  const isLoadingBehaviors = behaviorsLoading || false
-  // Check if user has behavior (create role permission) for a specific account
-  const hasCreateRolePermission = useCallback(
-    (accountId: number): boolean => {
-      if (!accountUserBehaviorResults) return false
-      const accountBehavior = accountUserBehaviorResults.find(
-        (result) => result.accountId === accountId
-      )
-      return accountBehavior
-        ? accountBehavior.behaviors.includes(CustomBehaviors.CreateRole)
-        : false //Need to replace with constant
-    },
-    [accountUserBehaviorResults]
-  )
-
-  // Initialize create role mutation
-  const { createRole } = useCreateRoleAsync()
-
-  // Initialize apply role to future children mutation
-  const { applyRoleToFutureChildrens } = useApplyRoleToFutureChildrensAsync()
-
   const roleSchema = useRoleFormSchema()
 
   const {
@@ -353,15 +330,7 @@ const RoleForm: React.FC<RoleFormProps> = ({
     }))
   }, [])
 
-  // Form validation - Using useMemo to make it reactive to form and permission changes
-  const isFormValid = useMemo(() => {
-    const hasSelectedPermissions = getAllSelectedBehaviors().length > 0
-    return roleName?.trim() !== '' && parentAccount !== '' && hasSelectedPermissions
-  }, [roleName, parentAccount, getAllSelectedBehaviors])
-
-  const hasSelectedPermissions = getAllSelectedBehaviors().length > 0
-
-  const onSubmit = async (data: RoleFormData) => {
+  const onSubmit = async (data: RoleFormData) => {  
     // Validate that at least one permission is selected
     if (!hasSelectedPermissions) {
       setPermissionError(t('at-least-one-permission-required'))
@@ -489,16 +458,10 @@ const RoleForm: React.FC<RoleFormProps> = ({
           ? t('error-updating-role')
           : t('role-creation-failed')
       showSnackbar(errorMessage, 'error')
+      // Handle error - you might want to show an error message to the user
+      setPermissionError(t('role-creation-failed'))
     }
   }
-
-  // Handle removing a behavior from the selected list
-  const handleRemoveBehavior = useCallback((category: number, behavior: number) => {
-    setSelectedPermissions((prev) => ({
-      ...prev,
-      [category]: (prev[category] || []).filter((b) => b !== behavior),
-    }))
-  }, [])
 
   // Form validation - Using useMemo to make it reactive to form and permission changes
   const isFormValid = useMemo(() => {
@@ -507,112 +470,6 @@ const RoleForm: React.FC<RoleFormProps> = ({
   }, [roleName, parentAccount, getAllSelectedBehaviors])
 
   const hasSelectedPermissions = getAllSelectedBehaviors().length > 0
-
-  const onSubmit = async (data: RoleFormData) => {
-    // Validate that at least one permission is selected
-    if (!hasSelectedPermissions) {
-      setPermissionError(t('at-least-one-permission-required'))
-      return
-    }
-
-    // Clear permission error if validation passes
-    setPermissionError('')
-
-    // Extract all selected behavior IDs from selectedPermissions
-    const allSelectedBehaviorIds: number[] = []
-    Object.values(selectedPermissions).forEach((behaviorIds) => {
-      allSelectedBehaviorIds.push(...behaviorIds)
-    })
-
-    // Determine which accounts to include based on account scope selection
-    let accountsToInclude: number[] = []
-    const parentAccountId = Number(data.parentAccount)
-
-    // If parent has no child accounts, only include the parent account
-    if (!hasChildAccounts) {
-      accountsToInclude = [parentAccountId]
-    } else if (data.accountScope === 'all-child') {
-      // First radio button: Apply to all child accounts
-      // Include parent + all child accounts and their nested children (recursive) that have create role permission
-      const getAllDescendants = (parentId: number): number[] => {
-        const directChildren = accounts?.filter((acc) => acc.parentAccountId === parentId) || []
-        const descendants: number[] = []
-        directChildren.forEach((child) => {
-          // Only include if user has create role permission for this account
-          if (hasCreateRolePermission(child.id)) {
-            descendants.push(child.id)
-          }
-          descendants.push(...getAllDescendants(child.id)) // Recursively get nested children
-        })
-        return descendants
-      }
-
-      const allDescendantIds = getAllDescendants(parentAccountId)
-      accountsToInclude = [parentAccountId, ...allDescendantIds]
-    } else if (data.accountScope === 'specific-child') {
-      // Second radio button: Apply to specific child accounts
-      // Include parent + selected child accounts
-      accountsToInclude = [parentAccountId, ...(data.selectedAccounts || [])]
-    } else if (data.accountScope === 'all-except') {
-      // Third radio button: Apply to all child accounts except selected
-      // Include parent + all child accounts and their nested children (recursive) that are NOT selected and have create role permission
-      const getAllDescendants = (parentId: number): number[] => {
-        const directChildren = accounts?.filter((acc) => acc.parentAccountId === parentId) || []
-        const descendants: number[] = []
-        directChildren.forEach((child) => {
-          // Only include if user has create role permission for this account
-          if (hasCreateRolePermission(child.id)) {
-            descendants.push(child.id)
-          }
-          descendants.push(...getAllDescendants(child.id)) // Recursively get nested children
-        })
-        return descendants
-      }
-
-      const allDescendantIds = getAllDescendants(parentAccountId)
-      // Remove selected accounts from the list of descendants
-      const unselectedDescendantIds = allDescendantIds.filter(
-        (id) => !(data.selectedAccounts || []).includes(id)
-      )
-      accountsToInclude = [parentAccountId, ...unselectedDescendantIds]
-    }
-
-    // Create single payload with the specified format
-    const payload = {
-      b2BRoleInput: {
-        name: data.roleName,
-        behaviors: allSelectedBehaviorIds,
-        accountIds: accountsToInclude,
-        id: 0,
-      },
-    }
-    try {
-      // Execute role creation with single API call
-      const createdRole = await createRole.mutateAsync(payload)
-
-      // If applyToFutureChildren checkbox is selected and role was created successfully
-      if (data.applyToFutureChildren && createdRole?.id) {
-        try {
-          await applyRoleToFutureChildren.mutateAsync({
-            roleId: createdRole.id,
-            accountId: parentAccountId,
-            enabled: true,
-          })
-        } catch (applyError) {
-          // Show warning but don't prevent navigation since role was created
-          showSnackbar(t('role-created-but-failed-to-apply-to-future-children'), 'warning')
-        }
-      }
-
-      // Call onSave callback if provided
-      showSnackbar(t('role-created-successfully'), 'success')
-      router.push('/my-account/b2b/manage-roles')
-    } catch (error) {
-      console.error('Error creating role:', error)
-      // Handle error - you might want to show an error message to the user
-      setPermissionError(t('role-creation-failed'))
-    }
-  }
 
   return (
     <Box
