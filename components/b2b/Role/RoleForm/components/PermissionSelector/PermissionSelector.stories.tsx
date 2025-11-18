@@ -197,3 +197,95 @@ NoSelections.args = {
   behaviors: mockBehaviors,
   permissionError: '',
 }
+
+export const ReadOnlyMode = Template.bind({})
+ReadOnlyMode.args = {
+  behaviorCategories: mockBehaviorCategories,
+  behaviors: mockBehaviors,
+  permissionError: '',
+  isReadOnly: true,
+}
+
+export const DisabledWithSelections: ComponentStory<typeof PermissionSelector> = (args) => {
+  const [selectedPermissions] = useState<Record<number, number[]>>({
+    1: [101, 102, 103, 104, 105], // All Order Management permissions
+    2: [201, 203], // Product Management: View and Edit
+    3: [301], // Customer Management: View Customers
+    4: [401, 403], // Payment Processing: Process Payments and View History
+  })
+
+  const getAllSelectedBehaviors = () => {
+    const allSelected: Array<{ category: number; behavior: number }> = []
+    Object.entries(selectedPermissions).forEach(([categoryId, behaviorIds]) => {
+      behaviorIds.forEach((behaviorId) => {
+        allSelected.push({ category: Number(categoryId), behavior: behaviorId })
+      })
+    })
+    return allSelected
+  }
+
+  const handleBehaviorToggle = () => {
+    // No-op for disabled story
+  }
+  const handleBehaviorNameCheckboxChange = () => {
+    // No-op for disabled story
+  }
+  const handleRemoveBehavior = () => {
+    // No-op for disabled story
+  }
+
+  return (
+    <Box sx={{ maxWidth: 1200, margin: '0 auto', padding: 2 }}>
+      <PermissionSelector
+        {...args}
+        selectedPermissions={selectedPermissions}
+        onBehaviorToggle={handleBehaviorToggle}
+        onBehaviorNameCheckboxChange={handleBehaviorNameCheckboxChange}
+        getAllSelectedBehaviors={getAllSelectedBehaviors}
+        handleRemoveBehavior={handleRemoveBehavior}
+      />
+    </Box>
+  )
+}
+
+DisabledWithSelections.args = {
+  behaviorCategories: mockBehaviorCategories,
+  behaviors: mockBehaviors,
+  permissionError: '',
+  isReadOnly: true,
+}
+
+export const DisabledWithError: ComponentStory<typeof PermissionSelector> = (args) => {
+  const [selectedPermissions] = useState<Record<number, number[]>>({})
+
+  const getAllSelectedBehaviors = () => []
+  const handleBehaviorToggle = () => {
+    // No-op for disabled story
+  }
+  const handleBehaviorNameCheckboxChange = () => {
+    // No-op for disabled story
+  }
+  const handleRemoveBehavior = () => {
+    // No-op for disabled story
+  }
+
+  return (
+    <Box sx={{ maxWidth: 1200, margin: '0 auto', padding: 2 }}>
+      <PermissionSelector
+        {...args}
+        selectedPermissions={selectedPermissions}
+        onBehaviorToggle={handleBehaviorToggle}
+        onBehaviorNameCheckboxChange={handleBehaviorNameCheckboxChange}
+        getAllSelectedBehaviors={getAllSelectedBehaviors}
+        handleRemoveBehavior={handleRemoveBehavior}
+      />
+    </Box>
+  )
+}
+
+DisabledWithError.args = {
+  behaviorCategories: mockBehaviorCategories,
+  behaviors: mockBehaviors,
+  permissionError: 'At least one permission must be selected for each role.',
+  isReadOnly: true,
+}

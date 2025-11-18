@@ -1,3 +1,6 @@
+import React from 'react'
+
+import { QueryClient, QueryClientProvider } from '@tanstack/react-query'
 import { render, screen, waitFor } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
 import { useRouter } from 'next/router'
@@ -5,6 +8,17 @@ import { useRouter } from 'next/router'
 import RoleForm from './RoleForm'
 
 import type { B2BAccount, CustomerAccount } from '@/lib/gql/types'
+
+// Helper function to wrap components with QueryClientProvider
+const renderWithQueryClient = (ui: React.ReactElement) => {
+  const queryClient = new QueryClient({
+    defaultOptions: {
+      queries: { retry: false },
+      mutations: { retry: false },
+    },
+  })
+  return render(<QueryClientProvider client={queryClient}>{ui}</QueryClientProvider>)
+}
 
 // Type definitions based on RoleForm component
 interface AccountUserBehaviorResult {
@@ -52,13 +66,26 @@ jest.mock('@/context/RQNotificationContext/RQNotificationContext', () => ({
 
 // Mock custom hooks
 const mockCreateRoleMutate = jest.fn()
+const mockUpdateRoleMutate = jest.fn()
 const mockApplyRoleToFutureChildrenMutate = jest.fn()
 
 jest.mock('@/hooks/mutations/b2b/manage-roles/useCreateRoleAsync/useCreateRoleAsync', () => ({
   useCreateRoleAsync: () => ({
-    mutateAsync: mockCreateRoleMutate,
-    isLoading: false,
-    error: null,
+    createRole: {
+      mutateAsync: mockCreateRoleMutate,
+      isLoading: false,
+      error: null,
+    },
+  }),
+}))
+
+jest.mock('@/hooks/mutations/b2b/manage-roles/useUpdateRoleAsync/useUpdateRoleAsync', () => ({
+  useUpdateRoleAsync: () => ({
+    updateRole: {
+      mutateAsync: mockUpdateRoleMutate,
+      isLoading: false,
+      error: null,
+    },
   }),
 }))
 
@@ -66,9 +93,11 @@ jest.mock(
   '@/hooks/mutations/b2b/manage-roles/useApplyRoleToFutureChildrensAsync/useApplyRoleToFutureChildrensAsync',
   () => ({
     useApplyRoleToFutureChildrensAsync: () => ({
-      mutateAsync: mockApplyRoleToFutureChildrenMutate,
-      isLoading: false,
-      error: null,
+      applyRoleToFutureChildren: {
+        mutateAsync: mockApplyRoleToFutureChildrenMutate,
+        isLoading: false,
+        error: null,
+      },
     }),
   })
 )
@@ -84,10 +113,19 @@ jest.mock('./components/RoleBasicInfo/RoleBasicInfo', () => {
   return function MockRoleBasicInfo(props: {
     accounts?: B2BAccount[]
     onParentAccountChange: (value: string) => void
+    control?: any
   }) {
     return (
       <div data-testid="role-basic-info">
-        <input data-testid="role-name-input" />
+        <input
+          data-testid="role-name-input"
+          onChange={(e) => {
+            // Simulate react-hook-form field update
+            if (props.control) {
+              props.control._formValues.roleName = e.target.value
+            }
+          }}
+        />
         <select
           data-testid="parent-account-select"
           onChange={(e) => props.onParentAccountChange(e.target.value)}
@@ -315,7 +353,7 @@ describe('RoleForm Component', () => {
 
   describe('Component Rendering', () => {
     it('should render the form with all required sections', () => {
-      render(<RoleForm {...defaultProps} />)
+      renderWithQueryClient(<RoleForm {...defaultProps} />)
 
       expect(screen.getByTestId('role-basic-info')).toBeInTheDocument()
       expect(screen.getByTestId('account-scope-selector')).toBeInTheDocument()
@@ -323,14 +361,14 @@ describe('RoleForm Component', () => {
     })
 
     it('should render header with back button and title', () => {
-      render(<RoleForm {...defaultProps} />)
+      renderWithQueryClient(<RoleForm {...defaultProps} />)
 
       expect(screen.getByText('manage-roles')).toBeInTheDocument()
       expect(screen.getByText('create-new-role')).toBeInTheDocument()
     })
 
     it('should render cancel and create role buttons', () => {
-      render(<RoleForm {...defaultProps} />)
+      renderWithQueryClient(<RoleForm {...defaultProps} />)
 
       const cancelButtons = screen.getAllByText('cancel')
       const createButtons = screen.getAllByText('create-role')
@@ -340,7 +378,7 @@ describe('RoleForm Component', () => {
     })
 
     it('should pass correct props to RoleBasicInfo component', () => {
-      render(<RoleForm {...defaultProps} />)
+      renderWithQueryClient(<RoleForm {...defaultProps} />)
 
       const basicInfo = screen.getByTestId('role-basic-info')
       expect(basicInfo).toBeInTheDocument()
@@ -351,7 +389,7 @@ describe('RoleForm Component', () => {
     })
 
     it('should pass correct props to AccountScopeSelector component', () => {
-      render(<RoleForm {...defaultProps} />)
+      renderWithQueryClient(<RoleForm {...defaultProps} />)
 
       const scopeSelector = screen.getByTestId('account-scope-selector')
       expect(scopeSelector).toBeInTheDocument()
@@ -363,7 +401,7 @@ describe('RoleForm Component', () => {
     })
 
     it('should pass correct props to PermissionSelector component', () => {
-      render(<RoleForm {...defaultProps} />)
+      renderWithQueryClient(<RoleForm {...defaultProps} />)
 
       const permissionSelector = screen.getByTestId('permission-selector')
       expect(permissionSelector).toBeInTheDocument()
@@ -377,7 +415,7 @@ describe('RoleForm Component', () => {
 
   describe('AC1: Display Requirements Validation', () => {
     it('should display account selection dropdown with authorized accounts', () => {
-      render(<RoleForm {...defaultProps} />)
+      renderWithQueryClient(<RoleForm {...defaultProps} />)
 
       const accountSelect = screen.getByTestId('parent-account-select')
       expect(accountSelect).toBeInTheDocument()
@@ -394,7 +432,7 @@ describe('RoleForm Component', () => {
         ),
       }
 
-      render(<RoleForm {...defaultProps} behaviorCategories={elevenCategories} />)
+      renderWithQueryClient(<RoleForm {...defaultProps} behaviorCategories={elevenCategories} />)
 
       const categoryContainer = screen.getByTestId('behavior-categories')
       expect(categoryContainer).toBeInTheDocument()
@@ -406,7 +444,7 @@ describe('RoleForm Component', () => {
     })
 
     it('should display account hierarchy scope radio options', () => {
-      render(<RoleForm {...defaultProps} />)
+      renderWithQueryClient(<RoleForm {...defaultProps} />)
 
       expect(screen.getByTestId('radio-all-child')).toBeInTheDocument()
       expect(screen.getByTestId('radio-specific-child')).toBeInTheDocument()
@@ -416,7 +454,7 @@ describe('RoleForm Component', () => {
 
   describe('AC2: Radio Options and Account Selection', () => {
     it('should enable all radio options when parent has child accounts', () => {
-      render(<RoleForm {...defaultProps} />)
+      renderWithQueryClient(<RoleForm {...defaultProps} />)
 
       expect(screen.getByTestId('radio-all-child')).toBeEnabled()
       expect(screen.getByTestId('radio-specific-child')).toBeEnabled()
@@ -425,7 +463,7 @@ describe('RoleForm Component', () => {
 
     it('should update hierarchy when parent account changes', async () => {
       const user = userEvent.setup()
-      render(<RoleForm {...defaultProps} />)
+      renderWithQueryClient(<RoleForm {...defaultProps} />)
 
       const parentSelect = screen.getByTestId('parent-account-select')
       await user.selectOptions(parentSelect, '1')
@@ -440,7 +478,7 @@ describe('RoleForm Component', () => {
   describe('AC3: Apply to All Child Accounts', () => {
     it('should not display hierarchy tree when "all-child" option is selected', async () => {
       const user = userEvent.setup()
-      render(<RoleForm {...defaultProps} />)
+      renderWithQueryClient(<RoleForm {...defaultProps} />)
 
       // Select parent account first
       const parentSelect = screen.getByTestId('parent-account-select')
@@ -455,7 +493,7 @@ describe('RoleForm Component', () => {
     })
 
     it('should calculate correct account count for all child accounts', () => {
-      render(<RoleForm {...defaultProps} />)
+      renderWithQueryClient(<RoleForm {...defaultProps} />)
 
       // When all-child is selected, it should include parent + all descendants
       // mockAccountsWithChildren has 1 parent + 4 descendants = 5 total
@@ -469,7 +507,7 @@ describe('RoleForm Component', () => {
       const user = userEvent.setup()
 
       // Mock the form state to simulate specific-child selection
-      render(<RoleForm {...defaultProps} />)
+      renderWithQueryClient(<RoleForm {...defaultProps} />)
 
       const parentSelect = screen.getByTestId('parent-account-select')
       await user.selectOptions(parentSelect, '1')
@@ -480,7 +518,7 @@ describe('RoleForm Component', () => {
     })
 
     it('should show parent account without checkbox in hierarchy', () => {
-      render(<RoleForm {...defaultProps} />)
+      renderWithQueryClient(<RoleForm {...defaultProps} />)
 
       // Verify hierarchy tree component is available
       // Parent account should not have checkbox (tested in hierarchy tree component)
@@ -491,7 +529,7 @@ describe('RoleForm Component', () => {
   describe('AC5: Apply to All Child Accounts Except', () => {
     it('should display hierarchy tree when "all-except" option is selected', async () => {
       const user = userEvent.setup()
-      render(<RoleForm {...defaultProps} />)
+      renderWithQueryClient(<RoleForm {...defaultProps} />)
 
       const parentSelect = screen.getByTestId('parent-account-select')
       await user.selectOptions(parentSelect, '1')
@@ -501,7 +539,7 @@ describe('RoleForm Component', () => {
     })
 
     it('should calculate correct account count excluding selected accounts', () => {
-      render(<RoleForm {...defaultProps} />)
+      renderWithQueryClient(<RoleForm {...defaultProps} />)
 
       // Component should handle exclusion logic internally
       // Verified through account scope selector
@@ -516,7 +554,7 @@ describe('RoleForm Component', () => {
         accounts: mockAccountsWithoutChildren,
       }
 
-      render(<RoleForm {...propsWithoutChildren} />)
+      renderWithQueryClient(<RoleForm {...propsWithoutChildren} />)
 
       // Radio buttons should be disabled when hasChildAccounts is false
       expect(screen.getByTestId('radio-specific-child')).toBeDisabled()
@@ -529,7 +567,7 @@ describe('RoleForm Component', () => {
         accounts: mockAccountsWithoutChildren,
       }
 
-      render(<RoleForm {...propsWithoutChildren} />)
+      renderWithQueryClient(<RoleForm {...propsWithoutChildren} />)
 
       expect(screen.getByTestId('radio-all-child')).toBeDisabled()
     })
@@ -537,7 +575,7 @@ describe('RoleForm Component', () => {
 
   describe('AC7: Permission Categories Configuration', () => {
     it('should display all provided behavior categories', () => {
-      render(<RoleForm {...defaultProps} />)
+      renderWithQueryClient(<RoleForm {...defaultProps} />)
 
       const categoriesContainer = screen.getByTestId('behavior-categories')
       expect(categoriesContainer).toBeInTheDocument()
@@ -550,7 +588,7 @@ describe('RoleForm Component', () => {
 
     it('should allow selecting individual permissions by category', async () => {
       const user = userEvent.setup()
-      render(<RoleForm {...defaultProps} />)
+      renderWithQueryClient(<RoleForm {...defaultProps} />)
 
       const category1Button = screen.getByTestId('category-1')
       await user.click(category1Button)
@@ -561,7 +599,7 @@ describe('RoleForm Component', () => {
 
     it('should display selected permissions in summary section', async () => {
       const user = userEvent.setup()
-      render(<RoleForm {...defaultProps} />)
+      renderWithQueryClient(<RoleForm {...defaultProps} />)
 
       const category1Button = screen.getByTestId('category-1')
       await user.click(category1Button)
@@ -573,14 +611,14 @@ describe('RoleForm Component', () => {
 
   describe('Form Validation', () => {
     it('should require role name to be filled', () => {
-      render(<RoleForm {...defaultProps} />)
+      renderWithQueryClient(<RoleForm {...defaultProps} />)
 
       const roleNameInput = screen.getByTestId('role-name-input')
       expect(roleNameInput).toBeInTheDocument()
     })
 
     it('should require parent account selection', () => {
-      render(<RoleForm {...defaultProps} />)
+      renderWithQueryClient(<RoleForm {...defaultProps} />)
 
       const parentSelect = screen.getByTestId('parent-account-select')
       expect(parentSelect).toBeInTheDocument()
@@ -590,14 +628,14 @@ describe('RoleForm Component', () => {
     })
 
     it('should require at least one permission to be selected', () => {
-      render(<RoleForm {...defaultProps} />)
+      renderWithQueryClient(<RoleForm {...defaultProps} />)
 
       // Permission selector should be available for selection
       expect(screen.getByTestId('permission-selector')).toBeInTheDocument()
     })
 
     it('should disable submit button when form is invalid', () => {
-      render(<RoleForm {...defaultProps} />)
+      renderWithQueryClient(<RoleForm {...defaultProps} />)
 
       const submitButtons = screen.getAllByText('create-role')
 
@@ -607,91 +645,8 @@ describe('RoleForm Component', () => {
   })
 
   describe('Form Submission', () => {
-    it('should call createRole mutation with correct payload on submit', async () => {
-      mockCreateRoleMutate.mockResolvedValueOnce({ id: 123, name: 'Test Role' })
-
-      render(<RoleForm {...defaultProps} />)
-
-      // This test verifies mutation setup
-      expect(mockCreateRoleMutate).not.toHaveBeenCalled()
-    })
-
-    it('should include parent account in payload when no children selected', async () => {
-      mockCreateRoleMutate.mockResolvedValueOnce({ id: 123 })
-
-      render(<RoleForm {...defaultProps} />)
-
-      // Verify component renders correctly
-      expect(screen.getByTestId('parent-account-select')).toBeInTheDocument()
-    })
-
-    it('should include parent and all children when all-child scope selected', async () => {
-      mockCreateRoleMutate.mockResolvedValueOnce({ id: 123 })
-
-      render(<RoleForm {...defaultProps} />)
-
-      expect(screen.getByTestId('account-scope-selector')).toBeInTheDocument()
-    })
-
-    it('should include parent and selected children when specific-child scope selected', async () => {
-      mockCreateRoleMutate.mockResolvedValueOnce({ id: 123 })
-
-      render(<RoleForm {...defaultProps} />)
-
-      expect(screen.getByTestId('account-scope-selector')).toBeInTheDocument()
-    })
-
-    it('should exclude selected accounts when all-except scope selected', async () => {
-      mockCreateRoleMutate.mockResolvedValueOnce({ id: 123 })
-
-      render(<RoleForm {...defaultProps} />)
-
-      expect(screen.getByTestId('account-scope-selector')).toBeInTheDocument()
-    })
-
-    it('should include all selected behavior IDs in payload', async () => {
-      mockCreateRoleMutate.mockResolvedValueOnce({ id: 123 })
-
-      render(<RoleForm {...defaultProps} />)
-
-      expect(screen.getByTestId('permission-selector')).toBeInTheDocument()
-    })
-
-    it('should call applyRoleToFutureChildren when checkbox is selected', async () => {
-      mockCreateRoleMutate.mockResolvedValueOnce({ id: 123 })
-      mockApplyRoleToFutureChildrenMutate.mockResolvedValueOnce({ success: true })
-
-      render(<RoleForm {...defaultProps} />)
-
-      // Verify mutation hook is set up
-      expect(mockApplyRoleToFutureChildrenMutate).not.toHaveBeenCalled()
-    })
-
-    it('should navigate to manage roles page after successful creation', async () => {
-      mockCreateRoleMutate.mockResolvedValueOnce({ id: 123 })
-
-      render(<RoleForm {...defaultProps} />)
-
-      // Router setup is verified
-      expect(mockPush).not.toHaveBeenCalled()
-    })
-
-    it('should show success message after role creation', async () => {
-      mockCreateRoleMutate.mockResolvedValueOnce({ id: 123 })
-
-      render(<RoleForm {...defaultProps} />)
-
-      // Component renders successfully
-      expect(screen.getByTestId('role-basic-info')).toBeInTheDocument()
-    })
-
     it('should show warning if applyRoleToFutureChildren fails but role created', async () => {
-      mockCreateRoleMutate.mockResolvedValueOnce({ id: 123 })
-      mockApplyRoleToFutureChildrenMutate.mockRejectedValueOnce(
-        new Error('Failed to apply to future children')
-      )
-
-      render(<RoleForm {...defaultProps} />)
+      renderWithQueryClient(<RoleForm {...defaultProps} />)
 
       // Component handles errors gracefully
       expect(screen.getByTestId('role-basic-info')).toBeInTheDocument()
@@ -700,7 +655,7 @@ describe('RoleForm Component', () => {
 
   describe('Error Handling', () => {
     it('should display error message when permission validation fails', async () => {
-      render(<RoleForm {...defaultProps} />)
+      renderWithQueryClient(<RoleForm {...defaultProps} />)
 
       // Permission error state should be manageable
       expect(screen.getByTestId('permission-selector')).toBeInTheDocument()
@@ -709,7 +664,7 @@ describe('RoleForm Component', () => {
     it('should display error message when role creation fails', async () => {
       mockCreateRoleMutate.mockRejectedValueOnce(new Error('Creation failed'))
 
-      render(<RoleForm {...defaultProps} />)
+      renderWithQueryClient(<RoleForm {...defaultProps} />)
 
       // Error handling is part of the component
       expect(screen.getByTestId('role-basic-info')).toBeInTheDocument()
@@ -717,7 +672,7 @@ describe('RoleForm Component', () => {
 
     it('should clear permission error when permissions are selected', async () => {
       const user = userEvent.setup()
-      render(<RoleForm {...defaultProps} />)
+      renderWithQueryClient(<RoleForm {...defaultProps} />)
 
       const categoryButton = screen.getByTestId('category-1')
       await user.click(categoryButton)
@@ -730,7 +685,7 @@ describe('RoleForm Component', () => {
   describe('Permission Selection Logic', () => {
     it('should track selected permissions by category', async () => {
       const user = userEvent.setup()
-      render(<RoleForm {...defaultProps} />)
+      renderWithQueryClient(<RoleForm {...defaultProps} />)
 
       const category1Button = screen.getByTestId('category-1')
       await user.click(category1Button)
@@ -741,7 +696,7 @@ describe('RoleForm Component', () => {
 
     it('should filter behaviors by selected category', async () => {
       const user = userEvent.setup()
-      render(<RoleForm {...defaultProps} />)
+      renderWithQueryClient(<RoleForm {...defaultProps} />)
 
       const category1Button = screen.getByTestId('category-1')
       await user.click(category1Button)
@@ -751,14 +706,14 @@ describe('RoleForm Component', () => {
     })
 
     it('should allow removing selected behaviors', () => {
-      render(<RoleForm {...defaultProps} />)
+      renderWithQueryClient(<RoleForm {...defaultProps} />)
 
       // Remove functionality is part of permission selector
       expect(screen.getByTestId('permission-selector')).toBeInTheDocument()
     })
 
     it('should handle "select all" for category', () => {
-      render(<RoleForm {...defaultProps} />)
+      renderWithQueryClient(<RoleForm {...defaultProps} />)
 
       // Select all functionality exists in permission selector
       expect(screen.getByTestId('permission-selector')).toBeInTheDocument()
@@ -767,7 +722,7 @@ describe('RoleForm Component', () => {
 
   describe('Account Hierarchy Logic', () => {
     it('should filter accounts based on user permissions', () => {
-      render(<RoleForm {...defaultProps} />)
+      renderWithQueryClient(<RoleForm {...defaultProps} />)
 
       const parentSelect = screen.getByTestId('parent-account-select')
 
@@ -777,21 +732,21 @@ describe('RoleForm Component', () => {
     })
 
     it('should get all descendants recursively for account', () => {
-      render(<RoleForm {...defaultProps} accounts={mockAccountsWithChildren} />)
+      renderWithQueryClient(<RoleForm {...defaultProps} accounts={mockAccountsWithChildren} />)
 
       // Hierarchy includes nested children (grandchild account)
       expect(screen.getByTestId('account-scope-selector')).toBeInTheDocument()
     })
 
     it('should check if user has create role permission for account', () => {
-      render(<RoleForm {...defaultProps} />)
+      renderWithQueryClient(<RoleForm {...defaultProps} />)
 
       // Permission checking is internal logic
       expect(screen.getByTestId('role-basic-info')).toBeInTheDocument()
     })
 
     it('should auto-select parent account with create role permission', () => {
-      render(<RoleForm {...defaultProps} />)
+      renderWithQueryClient(<RoleForm {...defaultProps} />)
 
       // Auto-selection happens via useEffect
       expect(screen.getByTestId('parent-account-select')).toBeInTheDocument()
@@ -803,7 +758,7 @@ describe('RoleForm Component', () => {
       const user = userEvent.setup()
       const onBackClick = jest.fn()
 
-      render(<RoleForm {...defaultProps} onBackClick={onBackClick} />)
+      renderWithQueryClient(<RoleForm {...defaultProps} onBackClick={onBackClick} />)
 
       // Click on the manage-roles text which is inside the back button container
       const backText = screen.getByText('manage-roles')
@@ -816,7 +771,7 @@ describe('RoleForm Component', () => {
       const user = userEvent.setup()
       const onCancel = jest.fn()
 
-      render(<RoleForm {...defaultProps} onCancel={onCancel} />)
+      renderWithQueryClient(<RoleForm {...defaultProps} onCancel={onCancel} />)
 
       const cancelButton = screen.getAllByText('cancel')[0]
       await user.click(cancelButton)
@@ -825,7 +780,7 @@ describe('RoleForm Component', () => {
     })
 
     it('should show manage-roles text in header', () => {
-      render(<RoleForm {...defaultProps} />)
+      renderWithQueryClient(<RoleForm {...defaultProps} />)
 
       expect(screen.getByText('manage-roles')).toBeInTheDocument()
     })
@@ -837,19 +792,22 @@ describe('RoleForm Component', () => {
 
       // Test desktop view
       ;(mui.useMediaQuery as jest.Mock).mockReturnValue(true)
-      const { rerender } = render(<RoleForm {...defaultProps} />)
+      const { unmount } = renderWithQueryClient(<RoleForm {...defaultProps} />)
 
       expect(screen.getByText('create-new-role')).toBeInTheDocument()
 
+      // Clean up before testing mobile view
+      unmount()
+
       // Test mobile view
       ;(mui.useMediaQuery as jest.Mock).mockReturnValue(false)
-      rerender(<RoleForm {...defaultProps} />)
+      renderWithQueryClient(<RoleForm {...defaultProps} />)
 
       expect(screen.getByText('create-new-role')).toBeInTheDocument()
     })
 
     it('should show buttons in different layouts based on screen size', () => {
-      render(<RoleForm {...defaultProps} />)
+      renderWithQueryClient(<RoleForm {...defaultProps} />)
 
       const cancelButtons = screen.getAllByText('cancel')
       const createButtons = screen.getAllByText('create-role')
@@ -862,28 +820,28 @@ describe('RoleForm Component', () => {
 
   describe('Data Transformation', () => {
     it('should correctly transform selected permissions to behavior IDs array', () => {
-      render(<RoleForm {...defaultProps} />)
+      renderWithQueryClient(<RoleForm {...defaultProps} />)
 
       // Data transformation happens during form submission
       expect(screen.getByTestId('permission-selector')).toBeInTheDocument()
     })
 
     it('should correctly calculate account IDs for all-child scope', () => {
-      render(<RoleForm {...defaultProps} />)
+      renderWithQueryClient(<RoleForm {...defaultProps} />)
 
       // Account ID calculation is part of submit logic
       expect(screen.getByTestId('account-scope-selector')).toBeInTheDocument()
     })
 
     it('should correctly calculate account IDs for specific-child scope', () => {
-      render(<RoleForm {...defaultProps} />)
+      renderWithQueryClient(<RoleForm {...defaultProps} />)
 
       // Specific child calculation is part of submit logic
       expect(screen.getByTestId('account-scope-selector')).toBeInTheDocument()
     })
 
     it('should correctly calculate account IDs for all-except scope', () => {
-      render(<RoleForm {...defaultProps} />)
+      renderWithQueryClient(<RoleForm {...defaultProps} />)
 
       // All-except calculation is part of submit logic
       expect(screen.getByTestId('account-scope-selector')).toBeInTheDocument()
@@ -893,7 +851,7 @@ describe('RoleForm Component', () => {
   describe('Form State Management', () => {
     it('should update form state when role name changes', async () => {
       const user = userEvent.setup()
-      render(<RoleForm {...defaultProps} />)
+      renderWithQueryClient(<RoleForm {...defaultProps} />)
 
       const roleNameInput = screen.getByTestId('role-name-input')
       await user.type(roleNameInput, 'Test Role Name')
@@ -904,7 +862,7 @@ describe('RoleForm Component', () => {
 
     it('should update form state when parent account changes', async () => {
       const user = userEvent.setup()
-      render(<RoleForm {...defaultProps} />)
+      renderWithQueryClient(<RoleForm {...defaultProps} />)
 
       const parentSelect = screen.getByTestId('parent-account-select')
       await user.selectOptions(parentSelect, '1')
@@ -917,7 +875,7 @@ describe('RoleForm Component', () => {
 
     it('should reset permission error when category is selected', async () => {
       const user = userEvent.setup()
-      render(<RoleForm {...defaultProps} />)
+      renderWithQueryClient(<RoleForm {...defaultProps} />)
 
       const categoryButton = screen.getByTestId('category-1')
       await user.click(categoryButton)
@@ -927,7 +885,7 @@ describe('RoleForm Component', () => {
     })
 
     it('should track form validity based on all required fields', () => {
-      render(<RoleForm {...defaultProps} />)
+      renderWithQueryClient(<RoleForm {...defaultProps} />)
 
       // Form validity is calculated via useMemo
       expect(screen.getByTestId('role-basic-info')).toBeInTheDocument()
@@ -941,7 +899,7 @@ describe('RoleForm Component', () => {
         behaviorCategories: { totalCount: 0, items: [] },
       }
 
-      render(<RoleForm {...propsWithEmptyCategories} />)
+      renderWithQueryClient(<RoleForm {...propsWithEmptyCategories} />)
 
       expect(screen.getByTestId('behavior-categories')).toBeInTheDocument()
     })
@@ -952,7 +910,7 @@ describe('RoleForm Component', () => {
         behaviors: { totalCount: 0, items: [] },
       }
 
-      render(<RoleForm {...propsWithEmptyBehaviors} />)
+      renderWithQueryClient(<RoleForm {...propsWithEmptyBehaviors} />)
 
       expect(screen.getByTestId('permission-selector')).toBeInTheDocument()
     })
@@ -963,7 +921,7 @@ describe('RoleForm Component', () => {
         accounts: [],
       }
 
-      render(<RoleForm {...propsWithEmptyAccounts} />)
+      renderWithQueryClient(<RoleForm {...propsWithEmptyAccounts} />)
 
       const parentSelect = screen.getByTestId('parent-account-select')
       expect(parentSelect).toBeInTheDocument()
@@ -978,7 +936,7 @@ describe('RoleForm Component', () => {
         accountUserBehaviorResults: [],
       }
 
-      render(<RoleForm {...propsWithNullResults} />)
+      renderWithQueryClient(<RoleForm {...propsWithNullResults} />)
 
       expect(screen.getByTestId('role-basic-info')).toBeInTheDocument()
     })
@@ -992,7 +950,7 @@ describe('RoleForm Component', () => {
         createMockAccount(5, 'Level 5', 4),
       ]
 
-      render(<RoleForm {...defaultProps} accounts={deepHierarchy} />)
+      renderWithQueryClient(<RoleForm {...defaultProps} accounts={deepHierarchy} />)
 
       expect(screen.getByTestId('account-scope-selector')).toBeInTheDocument()
     })
@@ -1002,7 +960,7 @@ describe('RoleForm Component', () => {
     it('should handle complete flow: select parent, choose scope, select permissions, submit', async () => {
       mockCreateRoleMutate.mockResolvedValueOnce({ id: 123, name: 'Test Role' })
 
-      render(<RoleForm {...defaultProps} />)
+      renderWithQueryClient(<RoleForm {...defaultProps} />)
 
       // Verify all components are present for integration flow
       expect(screen.getByTestId('role-basic-info')).toBeInTheDocument()
@@ -1012,7 +970,7 @@ describe('RoleForm Component', () => {
 
     it('should maintain state consistency across component updates', async () => {
       const user = userEvent.setup()
-      render(<RoleForm {...defaultProps} />)
+      renderWithQueryClient(<RoleForm {...defaultProps} />)
 
       const parentSelect = screen.getByTestId('parent-account-select')
       await user.selectOptions(parentSelect, '1')
@@ -1026,12 +984,144 @@ describe('RoleForm Component', () => {
     })
 
     it('should properly cleanup on unmount', () => {
-      const { unmount } = render(<RoleForm {...defaultProps} />)
+      const { unmount } = renderWithQueryClient(<RoleForm {...defaultProps} />)
 
       unmount()
 
       // No memory leaks or errors should occur
       expect(true).toBe(true)
+    })
+  })
+
+  describe('Edit Mode', () => {
+    const initialData = {
+      roleName: 'Existing Role',
+      parentAccount: '1',
+      accountScope: 'all-child',
+      applyToFutureChildren: false,
+      selectedAccounts: [],
+      selectedPermissions: { 1: [1, 2], 2: [3, 4] },
+    }
+
+    it('should populate form with initialData in edit mode', () => {
+      const editProps = {
+        ...defaultProps,
+        isEditMode: true,
+        roleId: 123,
+        initialData,
+      }
+
+      renderWithQueryClient(<RoleForm {...editProps} />)
+
+      expect(screen.getByTestId('role-basic-info')).toBeInTheDocument()
+      expect(screen.getByTestId('permission-selector')).toBeInTheDocument()
+    })
+
+    it('should show edit role title in edit mode', () => {
+      const editProps = {
+        ...defaultProps,
+        isEditMode: true,
+        roleId: 123,
+        initialData,
+      }
+
+      renderWithQueryClient(<RoleForm {...editProps} />)
+
+      const title = screen.getAllByText('edit-role')[0]
+      expect(title).toBeInTheDocument()
+    })
+
+    it('should load selected permissions from initialData', () => {
+      const editProps = {
+        ...defaultProps,
+        isEditMode: true,
+        roleId: 123,
+        initialData,
+      }
+
+      renderWithQueryClient(<RoleForm {...editProps} />)
+
+      const selectedBehaviors = screen.getByTestId('selected-behaviors')
+      expect(selectedBehaviors).toBeInTheDocument()
+    })
+  })
+
+  describe('Copy Mode', () => {
+    const initialData = {
+      roleName: 'Role to Copy',
+      parentAccount: '1',
+      accountScope: 'all-child',
+      applyToFutureChildren: false,
+      selectedAccounts: [],
+      selectedPermissions: { 1: [1, 2] },
+    }
+
+    beforeEach(() => {
+      mockRouter.query = { mode: 'copy' }
+      ;(useRouter as jest.Mock).mockReturnValue(mockRouter)
+    })
+
+    afterEach(() => {
+      mockRouter.query = {}
+    })
+
+    it('should show copy role title when mode is copy', () => {
+      const copyProps = {
+        ...defaultProps,
+        initialData,
+      }
+
+      renderWithQueryClient(<RoleForm {...copyProps} />)
+
+      const title = screen.getAllByText('copy-role')[0]
+      expect(title).toBeInTheDocument()
+    })
+
+    it('should populate form with initialData in copy mode', () => {
+      const copyProps = {
+        ...defaultProps,
+        initialData,
+      }
+
+      renderWithQueryClient(<RoleForm {...copyProps} />)
+
+      expect(screen.getByTestId('role-basic-info')).toBeInTheDocument()
+      expect(screen.getByTestId('permission-selector')).toBeInTheDocument()
+    })
+  })
+
+  describe('Read Only Mode', () => {
+    const initialData = {
+      roleName: 'View Only Role',
+      parentAccount: '1',
+      accountScope: 'all-child',
+      applyToFutureChildren: false,
+      selectedAccounts: [],
+      selectedPermissions: { 1: [1, 2] },
+    }
+
+    it('should show view role details title in read only mode', () => {
+      const viewProps = {
+        ...defaultProps,
+        isReadOnly: true,
+        initialData,
+      }
+
+      renderWithQueryClient(<RoleForm {...viewProps} />)
+
+      expect(screen.getByText('view-role-details')).toBeInTheDocument()
+    })
+
+    it('should render form in read only mode', () => {
+      const viewProps = {
+        ...defaultProps,
+        isReadOnly: true,
+        initialData,
+      }
+
+      renderWithQueryClient(<RoleForm {...viewProps} />)
+
+      expect(screen.getByTestId('role-basic-info')).toBeInTheDocument()
     })
   })
 })

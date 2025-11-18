@@ -1,6 +1,6 @@
 const deleteRoleAsyncMutation = /* GraphQL */ `
-  mutation deleteRoleAsync($accountId: Int!, $roleId: Int!) {
-    deleteRoleAsync(accountId: $accountId, roleId: $roleId)
+  mutation deleteRoleAsync($roleId: Int!) {
+    deleteRoleAsync(roleId: $roleId)
   }
 `
 

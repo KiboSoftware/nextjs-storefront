@@ -150,6 +150,9 @@ export enum DateFormat {
 export enum ActionName {
   PAUSE = 'Pause',
   CANCEL = 'Cancel',
+  VIEW = 'view',
+  EDIT = 'edit',
+  COPY = 'copy',
 }
 
 export const CurrencyCode = {
@@ -229,6 +232,17 @@ export const CustomBehaviors = {
 }
 
 export const AccountScope = {
+  AllChild: 'all-child',
   SpecificChild: 'specific-child',
   AllExcept: 'all-except',
+}
+
+export const RoleType = {
+  System: 'System',
+  Custom: 'Custom',
+}
+
+export const Routes = {
+  ManageRoles: '/my-account/b2b/manage-roles',
+  CreateRole: '/my-account/b2b/manage-roles/create',
 }

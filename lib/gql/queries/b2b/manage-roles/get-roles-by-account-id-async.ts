@@ -13,5 +13,4 @@ const getRolesByAccountIdAsyncQuery = /* GraphQL */ `
     }
   }
 `
-
 export default getRolesByAccountIdAsyncQuery

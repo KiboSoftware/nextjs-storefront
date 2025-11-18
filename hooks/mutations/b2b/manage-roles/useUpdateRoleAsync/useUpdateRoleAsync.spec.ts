@@ -17,7 +17,6 @@ jest.mock('@/lib/gql/client', () => ({
 const mockRequest = mockRequestRef.current
 
 describe('[hooks] useUpdateRoleAsync', () => {
-  const mockAccountId = 1001
   const mockRoleId = 5
   const mockRoleInput = {
     name: 'Updated Role Name',
@@ -56,7 +55,6 @@ describe('[hooks] useUpdateRoleAsync', () => {
     })
 
     result.current.updateRole.mutate({
-      accountId: mockAccountId,
       roleId: mockRoleId,
       b2BRoleInput: mockRoleInput,
     })
@@ -66,7 +64,6 @@ describe('[hooks] useUpdateRoleAsync', () => {
     expect(mockRequest).toHaveBeenCalledWith(
       expect.objectContaining({
         variables: {
-          accountId: mockAccountId,
           roleId: mockRoleId,
           b2BRoleInput: mockRoleInput,
         },
@@ -84,7 +81,6 @@ describe('[hooks] useUpdateRoleAsync', () => {
     })
 
     result.current.updateRole.mutate({
-      accountId: mockAccountId,
       roleId: mockRoleId,
       b2BRoleInput: mockRoleInput,
     })
@@ -102,7 +98,6 @@ describe('[hooks] useUpdateRoleAsync', () => {
     })
 
     result.current.updateRole.mutate({
-      accountId: mockAccountId,
       roleId: mockRoleId,
       b2BRoleInput: mockRoleInput,
     })
@@ -132,7 +127,6 @@ describe('[hooks] useUpdateRoleAsync', () => {
     })
 
     result.current.updateRole.mutate({
-      accountId: mockAccountId,
       roleId: mockRoleId,
       b2BRoleInput: nameOnlyInput,
     })
@@ -162,7 +156,6 @@ describe('[hooks] useUpdateRoleAsync', () => {
     })
 
     result.current.updateRole.mutate({
-      accountId: mockAccountId,
       roleId: mockRoleId,
       b2BRoleInput: behaviorsOnlyInput,
     })
@@ -192,7 +185,6 @@ describe('[hooks] useUpdateRoleAsync', () => {
     })
 
     result.current.updateRole.mutate({
-      accountId: mockAccountId,
       roleId: mockRoleId,
       b2BRoleInput: multiAccountInput,
     })
@@ -219,7 +211,6 @@ describe('[hooks] useUpdateRoleAsync', () => {
     })
 
     result.current.updateRole.mutate({
-      accountId: mockAccountId,
       roleId: 999,
       b2BRoleInput: mockRoleInput,
     })
@@ -237,7 +228,6 @@ describe('[hooks] useUpdateRoleAsync', () => {
     })
 
     result.current.updateRole.mutate({
-      accountId: mockAccountId,
       roleId: mockRoleId,
       b2BRoleInput: { name: 'Duplicate Role' },
     })
@@ -267,7 +257,6 @@ describe('[hooks] useUpdateRoleAsync', () => {
     })
 
     result.current.updateRole.mutate({
-      accountId: mockAccountId,
       roleId: 1,
       b2BRoleInput: systemRoleInput,
     })
@@ -286,7 +275,6 @@ describe('[hooks] useUpdateRoleAsync', () => {
     })
 
     result.current.updateRole.mutate({
-      accountId: mockAccountId,
       roleId: mockRoleId,
       b2BRoleInput: mockRoleInput,
     })
@@ -320,7 +308,6 @@ describe('[hooks] useUpdateRoleAsync', () => {
     })
 
     result.current.updateRole.mutate({
-      accountId: mockAccountId,
       roleId: mockRoleId,
       b2BRoleInput: mockRoleInput,
     })
@@ -338,7 +325,6 @@ describe('[hooks] useUpdateRoleAsync', () => {
     })
 
     result.current.updateRole.mutate({
-      accountId: mockAccountId,
       roleId: mockRoleId,
       b2BRoleInput: mockRoleInput,
     })
@@ -367,7 +353,6 @@ describe('[hooks] useUpdateRoleAsync', () => {
     })
 
     result.current.updateRole.mutate({
-      accountId: mockAccountId,
       roleId: mockRoleId,
       b2BRoleInput: noBehaviorsInput,
     })
@@ -387,7 +372,6 @@ describe('[hooks] useUpdateRoleAsync', () => {
 
     // First update
     result.current.updateRole.mutate({
-      accountId: mockAccountId,
       roleId: mockRoleId,
       b2BRoleInput: { name: 'First Update' },
     })
@@ -398,7 +382,6 @@ describe('[hooks] useUpdateRoleAsync', () => {
 
     // Second update
     result.current.updateRole.mutate({
-      accountId: mockAccountId,
       roleId: mockRoleId,
       b2BRoleInput: { name: 'Second Update' },
     })
@@ -417,7 +400,6 @@ describe('[hooks] useUpdateRoleAsync', () => {
     })
 
     result.current.updateRole.mutate({
-      accountId: mockAccountId,
       roleId: mockRoleId,
       b2BRoleInput: mockRoleInput,
     })
@@ -447,7 +429,6 @@ describe('[hooks] useUpdateRoleAsync', () => {
     })
 
     result.current.updateRole.mutate({
-      accountId: mockAccountId,
       roleId: mockRoleId,
       b2BRoleInput: largeInput,
     })
@@ -456,9 +437,14 @@ describe('[hooks] useUpdateRoleAsync', () => {
     expect(result.current.updateRole.data?.behaviors).toHaveLength(50)
   })
 
-  it('should handle update for different account', async () => {
+  it('should handle update for different role', async () => {
     mockRequest.mockResolvedValue({
-      updateRoleAsync: mockRoleResponse,
+      updateRoleAsync: {
+        id: 10,
+        name: 'Updated Role Name',
+        isSystemRole: false,
+        behaviors: [1, 2, 3, 5, 7, 9],
+      },
     })
 
     const { result } = renderHook(() => useUpdateRoleAsync(), {
@@ -466,8 +452,7 @@ describe('[hooks] useUpdateRoleAsync', () => {
     })
 
     result.current.updateRole.mutate({
-      accountId: 2001,
-      roleId: mockRoleId,
+      roleId: 10,
       b2BRoleInput: mockRoleInput,
     })
 
@@ -476,7 +461,7 @@ describe('[hooks] useUpdateRoleAsync', () => {
     expect(mockRequest).toHaveBeenCalledWith(
       expect.objectContaining({
         variables: expect.objectContaining({
-          accountId: 2001,
+          roleId: 10,
         }),
       })
     )

@@ -17,7 +17,6 @@ jest.mock('@/lib/gql/client', () => ({
 const mockRequest = mockRequestRef.current
 
 describe('[hooks] useDeleteRoleAsync', () => {
-  const mockAccountId = 1001
   const mockRoleId = 5
 
   beforeEach(() => {
@@ -42,17 +41,13 @@ describe('[hooks] useDeleteRoleAsync', () => {
       wrapper: createQueryClientWrapper(),
     })
 
-    result.current.deleteRole.mutate({
-      accountId: mockAccountId,
-      roleId: mockRoleId,
-    })
+    result.current.deleteRole.mutate({ roleId: mockRoleId })
 
     await waitFor(() => expect(result.current.deleteRole.isSuccess).toBe(true))
 
     expect(mockRequest).toHaveBeenCalledWith(
       expect.objectContaining({
         variables: {
-          accountId: mockAccountId,
           roleId: mockRoleId,
         },
       })
@@ -68,10 +63,7 @@ describe('[hooks] useDeleteRoleAsync', () => {
       wrapper: createQueryClientWrapper(),
     })
 
-    result.current.deleteRole.mutate({
-      accountId: mockAccountId,
-      roleId: mockRoleId,
-    })
+    result.current.deleteRole.mutate({ roleId: mockRoleId })
 
     await waitFor(() => expect(result.current.deleteRole.isSuccess).toBe(true))
     expect(result.current.deleteRole.data).toBe(true)
@@ -85,10 +77,7 @@ describe('[hooks] useDeleteRoleAsync', () => {
       wrapper: createQueryClientWrapper(),
     })
 
-    result.current.deleteRole.mutate({
-      accountId: mockAccountId,
-      roleId: mockRoleId,
-    })
+    result.current.deleteRole.mutate({ roleId: mockRoleId })
 
     await waitFor(() => expect(result.current.deleteRole.isError).toBe(true))
     expect(result.current.deleteRole.error).toBeDefined()
@@ -102,10 +91,7 @@ describe('[hooks] useDeleteRoleAsync', () => {
       wrapper: createQueryClientWrapper(),
     })
 
-    result.current.deleteRole.mutate({
-      accountId: mockAccountId,
-      roleId: 999,
-    })
+    result.current.deleteRole.mutate({ roleId: 999 })
 
     await waitFor(() => expect(result.current.deleteRole.isError).toBe(true))
     expect(result.current.deleteRole.error?.message).toContain('not found')
@@ -120,10 +106,7 @@ describe('[hooks] useDeleteRoleAsync', () => {
       wrapper: createQueryClientWrapper(),
     })
 
-    result.current.deleteRole.mutate({
-      accountId: mockAccountId,
-      roleId: 1, // System role
-    })
+    result.current.deleteRole.mutate({ roleId: 1 }) // System role
 
     await waitFor(() => expect(result.current.deleteRole.isSuccess).toBe(true))
     expect(result.current.deleteRole.data).toBe(true)
@@ -137,10 +120,7 @@ describe('[hooks] useDeleteRoleAsync', () => {
       wrapper: createQueryClientWrapper(),
     })
 
-    result.current.deleteRole.mutate({
-      accountId: mockAccountId,
-      roleId: mockRoleId,
-    })
+    result.current.deleteRole.mutate({ roleId: mockRoleId })
 
     await waitFor(() => expect(result.current.deleteRole.isError).toBe(true))
     expect(result.current.deleteRole.error?.message).toContain('Permission denied')
@@ -154,10 +134,7 @@ describe('[hooks] useDeleteRoleAsync', () => {
       wrapper: createQueryClientWrapper(),
     })
 
-    result.current.deleteRole.mutate({
-      accountId: mockAccountId,
-      roleId: mockRoleId,
-    })
+    result.current.deleteRole.mutate({ roleId: mockRoleId })
 
     await waitFor(() => expect(result.current.deleteRole.isError).toBe(true))
     expect(result.current.deleteRole.error?.message).toContain('assigned to this role')
@@ -172,10 +149,7 @@ describe('[hooks] useDeleteRoleAsync', () => {
       wrapper: createQueryClientWrapper(),
     })
 
-    result.current.deleteRole.mutate({
-      accountId: mockAccountId,
-      roleId: mockRoleId,
-    })
+    result.current.deleteRole.mutate({ roleId: mockRoleId })
 
     await waitFor(() => expect(result.current.deleteRole.isSuccess).toBe(true))
 
@@ -205,10 +179,7 @@ describe('[hooks] useDeleteRoleAsync', () => {
       wrapper: createQueryClientWrapper(),
     })
 
-    result.current.deleteRole.mutate({
-      accountId: mockAccountId,
-      roleId: mockRoleId,
-    })
+    result.current.deleteRole.mutate({ roleId: mockRoleId })
 
     await waitFor(() => expect(result.current.deleteRole.isPending).toBe(true))
     await waitFor(() => expect(result.current.deleteRole.isSuccess).toBe(true))
@@ -224,20 +195,14 @@ describe('[hooks] useDeleteRoleAsync', () => {
     })
 
     // First deletion
-    result.current.deleteRole.mutate({
-      accountId: mockAccountId,
-      roleId: 5,
-    })
+    result.current.deleteRole.mutate({ roleId: 5 })
 
     await waitFor(() => expect(result.current.deleteRole.isSuccess).toBe(true))
 
     result.current.deleteRole.reset()
 
     // Second deletion
-    result.current.deleteRole.mutate({
-      accountId: mockAccountId,
-      roleId: 6,
-    })
+    result.current.deleteRole.mutate({ roleId: 6 })
 
     await waitFor(() => expect(result.current.deleteRole.isSuccess).toBe(true))
 
@@ -252,16 +217,13 @@ describe('[hooks] useDeleteRoleAsync', () => {
       wrapper: createQueryClientWrapper(),
     })
 
-    result.current.deleteRole.mutate({
-      accountId: mockAccountId,
-      roleId: mockRoleId,
-    })
+    result.current.deleteRole.mutate({ roleId: mockRoleId })
 
     await waitFor(() => expect(result.current.deleteRole.isError).toBe(true))
     expect(result.current.deleteRole.error?.message).toContain('Network error')
   })
 
-  it('should handle deletion for different account IDs', async () => {
+  it('should handle deletion for different role IDs', async () => {
     mockRequest.mockResolvedValue({
       deleteRoleAsync: true,
     })
@@ -270,18 +232,14 @@ describe('[hooks] useDeleteRoleAsync', () => {
       wrapper: createQueryClientWrapper(),
     })
 
-    result.current.deleteRole.mutate({
-      accountId: 2001,
-      roleId: mockRoleId,
-    })
+    result.current.deleteRole.mutate({ roleId: 10 })
 
     await waitFor(() => expect(result.current.deleteRole.isSuccess).toBe(true))
 
     expect(mockRequest).toHaveBeenCalledWith(
       expect.objectContaining({
         variables: {
-          accountId: 2001,
-          roleId: mockRoleId,
+          roleId: 10,
         },
       })
     )
@@ -296,12 +254,89 @@ describe('[hooks] useDeleteRoleAsync', () => {
       wrapper: createQueryClientWrapper(),
     })
 
-    result.current.deleteRole.mutate({
-      accountId: mockAccountId,
-      roleId: mockRoleId,
-    })
+    result.current.deleteRole.mutate({ roleId: mockRoleId })
 
     await waitFor(() => expect(result.current.deleteRole.isSuccess).toBe(true))
     expect(result.current.deleteRole.data).toBe(false)
+  })
+
+  it('should use mutateAsync for async/await pattern', async () => {
+    mockRequest.mockResolvedValue({
+      deleteRoleAsync: true,
+    })
+
+    const { result } = renderHook(() => useDeleteRoleAsync(), {
+      wrapper: createQueryClientWrapper(),
+    })
+
+    const deletePromise = result.current.deleteRole.mutateAsync({ roleId: mockRoleId })
+
+    await expect(deletePromise).resolves.toBe(true)
+  })
+
+  it('should handle GraphQL error response', async () => {
+    const mockError = new Error('GraphQL Error: Invalid role ID')
+    mockRequest.mockRejectedValue(mockError)
+
+    const { result } = renderHook(() => useDeleteRoleAsync(), {
+      wrapper: createQueryClientWrapper(),
+    })
+
+    result.current.deleteRole.mutate({ roleId: mockRoleId })
+
+    await waitFor(() => expect(result.current.deleteRole.isError).toBe(true))
+    expect(result.current.deleteRole.error?.message).toContain('GraphQL Error')
+  })
+
+  it('should invalidate queries on successful deletion', async () => {
+    mockRequest.mockResolvedValue({
+      deleteRoleAsync: true,
+    })
+
+    const wrapper = createQueryClientWrapper()
+    const { result } = renderHook(() => useDeleteRoleAsync(), {
+      wrapper,
+    })
+
+    result.current.deleteRole.mutate({ roleId: mockRoleId })
+
+    await waitFor(() => expect(result.current.deleteRole.isSuccess).toBe(true))
+
+    // Verify the mutation was successful
+    expect(result.current.deleteRole.data).toBe(true)
+  })
+
+  it('should handle timeout error', async () => {
+    const mockError = new Error('Request timeout: The server did not respond in time')
+    mockRequest.mockRejectedValue(mockError)
+
+    const { result } = renderHook(() => useDeleteRoleAsync(), {
+      wrapper: createQueryClientWrapper(),
+    })
+
+    result.current.deleteRole.mutate({ roleId: mockRoleId })
+
+    await waitFor(() => expect(result.current.deleteRole.isError).toBe(true))
+    expect(result.current.deleteRole.error?.message).toContain('timeout')
+  })
+
+  it('should handle concurrent deletion attempts', async () => {
+    mockRequest.mockResolvedValue({
+      deleteRoleAsync: true,
+    })
+
+    const { result } = renderHook(() => useDeleteRoleAsync(), {
+      wrapper: createQueryClientWrapper(),
+    })
+
+    // Trigger multiple mutations
+    result.current.deleteRole.mutate({ roleId: 5 })
+
+    result.current.deleteRole.mutate({ roleId: 6 })
+
+    await waitFor(() => expect(result.current.deleteRole.isSuccess).toBe(true))
+
+    // Last mutation should win
+    expect(mockRequest).toHaveBeenCalled()
   })
 })

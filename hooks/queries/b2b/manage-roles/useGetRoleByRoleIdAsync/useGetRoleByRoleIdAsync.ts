@@ -1,5 +1,5 @@
 /**
- * @module useGetRoleByIdAsync
+ * @module useGetRoleByRoleIdAsync
  */
 import { useQuery } from '@tanstack/react-query'
 
@@ -14,32 +14,25 @@ import { rolesKeys } from '@/lib/react-query/queryKeys'
 const client = makeGraphQLClient()
 
 // Define the B2BRole interface based on the GraphQL fragment
-export interface B2BRole {
+interface B2BRole {
   id?: number
   name?: string
   isSystemRole?: boolean
   behaviors?: number[]
+  accountIds?: number[]
 }
 
-interface UseGetRoleByIdAsyncParams {
-  accountId: number
-  roleId: number
-}
-
-const getRoleByIdAsync = async ({
-  accountId,
-  roleId,
-}: UseGetRoleByIdAsyncParams): Promise<B2BRole> => {
+const getRoleByIdAsync = async ({ roleId }: any): Promise<B2BRole> => {
   const response = await client.request({
     document: getRoleByRoleIdAsyncQuery,
-    variables: { accountId, roleId },
+    variables: { roleId },
   })
 
   return response?.getRoleByRoleIdAsync
 }
 
 /**
- * [Query hook] useGetRoleByIdAsync uses the graphQL query
+ * [Query hook] useGetRoleByRoleIdAsync uses the graphQL query
  *
  * <b>getRoleByIdAsync(accountId: Int!, roleId: Int!): B2BRole</b>
  *
@@ -50,11 +43,11 @@ const getRoleByIdAsync = async ({
  * @returns 'response?.getRoleByIdAsync', which contains the role details.
  */
 
-export const useGetRoleByIdAsync = (accountId: number, roleId: number, initialData?: B2BRole) => {
+export const useGetRoleByRoleIdAsync = (roleId: number, initialData?: B2BRole) => {
   const { isLoading, isSuccess, isError, data, error } = useQuery({
-    queryKey: rolesKeys.roleById(accountId, roleId),
-    queryFn: () => getRoleByIdAsync({ accountId, roleId }),
-    enabled: !!accountId && !!roleId,
+    queryKey: rolesKeys.roleById(roleId),
+    queryFn: () => getRoleByIdAsync({ roleId }),
+    enabled: !!roleId,
     placeholderData: (previousData) => previousData ?? undefined,
     initialData,
     retry: 0,
@@ -69,4 +62,4 @@ export const useGetRoleByIdAsync = (accountId: number, roleId: number, initialDa
   }
 }
 
-export default useGetRoleByIdAsync
+export default useGetRoleByRoleIdAsync

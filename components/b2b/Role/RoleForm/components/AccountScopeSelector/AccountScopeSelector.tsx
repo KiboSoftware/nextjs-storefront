@@ -17,6 +17,7 @@ import { Control, Controller } from 'react-hook-form'
 
 import { accountScopeSelectorStyles } from './AccountScopeSelector.styles'
 import { RoleFormData } from '../RoleBasicInfo/RoleBasicInfo'
+import { AccountScope } from '@/lib/constants'
 
 interface AccountScopeSelectorProps {
   control: Control<RoleFormData>
@@ -77,13 +78,14 @@ const AccountScopeSelector: React.FC<AccountScopeSelectorProps> = ({
                     label={applyToAllChildAccountsLabel}
                     disabled={!hasChildAccounts}
                     sx={accountScopeSelectorStyles.formControlLabelNoMargin}
+                    name="account-scope"
                   />
                   <Tooltip title={applyToAllChildAccountsTooltip} placement="top">
                     <InfoIcon sx={infoIconStyle} />
                   </Tooltip>
                 </Box>
                 {/* Checkbox for future children - shown when "all-child" is selected */}
-                {field.value === 'all-child' && (
+                {field.value === AccountScope.AllChild && (
                   <Box sx={accountScopeSelectorStyles.checkboxContainer}>
                     <Controller
                       name="applyToFutureChildren"
@@ -117,6 +119,7 @@ const AccountScopeSelector: React.FC<AccountScopeSelectorProps> = ({
                   label={applyToSpecificChildAccountsLabel}
                   disabled={!hasChildAccounts}
                   sx={accountScopeSelectorStyles.formControlLabelNoMargin}
+                  name="account-scope"
                 />
                 <Tooltip title={applyToSpecificChildAccountsTooltip} placement="top">
                   <InfoIcon sx={infoIconStyle} />
@@ -129,6 +132,7 @@ const AccountScopeSelector: React.FC<AccountScopeSelectorProps> = ({
                   label={applyToAllChildAccountsExceptLabel}
                   disabled={!hasChildAccounts}
                   sx={accountScopeSelectorStyles.formControlLabelNoMargin}
+                  name="account-scope"
                 />
                 <Tooltip title={applyToAllChildAccountsExceptTooltip} placement="top">
                   <InfoIcon sx={infoIconStyle} />

@@ -165,3 +165,151 @@ WithCustomBackHandler.args = {
   behaviors: mockBehaviors,
   accountUserBehaviorResults: mockAccountUserBehaviorResults,
 }
+
+// View Mode (Read-only) - Simulated with query params
+export const ViewMode = Template.bind({})
+ViewMode.args = {
+  user: mockUser,
+  initialData: { ...b2BAccountHierarchyResult, hierarchy: hierarchyTreeMock },
+  behaviorCategories: mockBehaviorCategories,
+  behaviors: mockBehaviors,
+  accountUserBehaviorResults: mockAccountUserBehaviorResults,
+}
+ViewMode.parameters = {
+  nextRouter: {
+    query: { roleId: '1', mode: 'view' },
+  },
+}
+
+// Edit Mode - Simulated with query params
+export const EditMode = Template.bind({})
+EditMode.args = {
+  user: mockUser,
+  initialData: { ...b2BAccountHierarchyResult, hierarchy: hierarchyTreeMock },
+  behaviorCategories: mockBehaviorCategories,
+  behaviors: mockBehaviors,
+  accountUserBehaviorResults: mockAccountUserBehaviorResults,
+}
+EditMode.parameters = {
+  nextRouter: {
+    query: { roleId: '1', mode: 'edit' },
+  },
+}
+
+// Copy Mode - Simulated with query params
+export const CopyMode = Template.bind({})
+CopyMode.args = {
+  user: mockUser,
+  initialData: { ...b2BAccountHierarchyResult, hierarchy: hierarchyTreeMock },
+  behaviorCategories: mockBehaviorCategories,
+  behaviors: mockBehaviors,
+  accountUserBehaviorResults: mockAccountUserBehaviorResults,
+}
+CopyMode.parameters = {
+  nextRouter: {
+    query: { roleId: '1', mode: 'copy' },
+  },
+}
+
+// With Deep Account Hierarchy (Many Levels)
+export const WithDeepAccountHierarchy = Template.bind({})
+WithDeepAccountHierarchy.args = {
+  user: mockUser,
+  initialData: {
+    accounts: Array.from({ length: 50 }, (_, i) => ({
+      id: i + 1000,
+      companyOrOrganization: `Account Level ${Math.floor(i / 10)} - ${i + 1}`,
+      parentAccountId: i > 0 ? Math.floor((i - 1) / 10) + 1000 : undefined,
+    })),
+    hierarchy: hierarchyTreeMock,
+  },
+  behaviorCategories: mockBehaviorCategories,
+  behaviors: mockBehaviors,
+  accountUserBehaviorResults: Array.from({ length: 50 }, (_, i) => ({
+    accountId: i + 1000,
+    behaviors: [CustomBehaviors.CreateRole, 1, 2, 3],
+    isLoading: false,
+    isError: false,
+    isSuccess: true,
+    error: null,
+  })),
+}
+
+// With No User (Edge Case)
+export const WithNoUser = Template.bind({})
+WithNoUser.args = {
+  user: undefined,
+  initialData: { ...b2BAccountHierarchyResult, hierarchy: hierarchyTreeMock },
+  behaviorCategories: mockBehaviorCategories,
+  behaviors: mockBehaviors,
+  accountUserBehaviorResults: mockAccountUserBehaviorResults,
+}
+
+// With Mixed Behavior Loading States
+export const WithMixedBehaviorStates = Template.bind({})
+WithMixedBehaviorStates.args = {
+  user: mockUser,
+  initialData: { ...b2BAccountHierarchyResult, hierarchy: hierarchyTreeMock },
+  behaviorCategories: mockBehaviorCategories,
+  behaviors: mockBehaviors,
+  accountUserBehaviorResults: [
+    {
+      accountId: 1004,
+      behaviors: [CustomBehaviors.CreateRole],
+      isLoading: false,
+      isError: false,
+      isSuccess: true,
+      error: null,
+    },
+    {
+      accountId: 1005,
+      behaviors: [],
+      isLoading: true,
+      isError: false,
+      isSuccess: false,
+      error: null,
+    },
+    {
+      accountId: 1006,
+      behaviors: [],
+      isLoading: false,
+      isError: true,
+      isSuccess: false,
+      error: new Error('Failed to load'),
+    },
+  ],
+}
+
+// With Single Behavior Category
+export const WithSingleBehaviorCategory = Template.bind({})
+WithSingleBehaviorCategory.args = {
+  user: mockUser,
+  initialData: { ...b2BAccountHierarchyResult, hierarchy: hierarchyTreeMock },
+  behaviorCategories: {
+    items: [{ id: 1, name: 'Roles' }],
+  },
+  behaviors: {
+    items: [
+      { id: 1, name: 'View Roles', categoryId: 1 },
+      { id: 2, name: 'Create Role', categoryId: 1 },
+      { id: CustomBehaviors.CreateRole, name: 'Create Roles', categoryId: 1 },
+    ],
+  },
+  accountUserBehaviorResults: mockAccountUserBehaviorResults,
+}
+
+// With Complex Permissions Structure
+export const WithComplexPermissions = Template.bind({})
+WithComplexPermissions.args = {
+  user: mockUser,
+  initialData: { ...b2BAccountHierarchyResult, hierarchy: hierarchyTreeMock },
+  behaviorCategories: mockBehaviorCategories,
+  behaviors: {
+    items: Array.from({ length: 100 }, (_, i) => ({
+      id: i + 1,
+      name: `Permission ${i + 1}`,
+      categoryId: (i % 11) + 1,
+    })),
+  },
+  accountUserBehaviorResults: mockAccountUserBehaviorResults,
+}
