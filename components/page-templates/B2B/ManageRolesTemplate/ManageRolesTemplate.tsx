@@ -48,7 +48,7 @@ import {
 } from '@/hooks'
 import type { GetRolesAsyncResponse } from '@/lib/api/operations/get-roles-by-account-id'
 import type { B2BRole } from '@/lib/api/operations/get-roles-by-account-id'
-import { AccountScope, RoleType } from '@/lib/constants'
+import { AccountScope, RoleType, Routes } from '@/lib/constants'
 
 import type { CustomerAccount } from '@/lib/gql/types'
 
@@ -226,25 +226,25 @@ const ManageRolesTemplate = ({
   }, [])
 
   const handleAddNewRole = useCallback(() => {
-    router.push('/my-account/b2b/manage-roles/create')
+    router.push(Routes.CreateRole)
   }, [router])
 
   const handleViewRole = useCallback((roleId: string) => {
     handleMenuClose()
     // Navigate to create role page in readonly mode
-    router.push(`/my-account/b2b/manage-roles/create?roleId=${roleId}&mode=view`)
+    router.push(`${Routes.CreateRole}?roleId=${roleId}&mode=view`)
   }, [router, handleMenuClose])
 
   const handleEditRole = useCallback((roleId: string) => {
     handleMenuClose()
     // TODO: Implement edit role
-    router.push(`/my-account/b2b/manage-roles/create?roleId=${roleId}&mode=edit`)
+    router.push(`${Routes.CreateRole}?roleId=${roleId}&mode=edit`)
   }, [router, handleMenuClose])
 
   const handleCopyRole = useCallback((roleId: string) => {
     handleMenuClose()
     // Navigate to create role page with copy mode
-    router.push(`/my-account/b2b/manage-roles/create?roleId=${roleId}&mode=copy`)
+    router.push(`${Routes.CreateRole}?roleId=${roleId}&mode=copy`)
   }, [router, handleMenuClose])
 
   const handleDeleteRole = useCallback((roleId: string) => {
