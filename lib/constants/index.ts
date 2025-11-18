@@ -150,6 +150,9 @@ export enum DateFormat {
 export enum ActionName {
   PAUSE = 'Pause',
   CANCEL = 'Cancel',
+  VIEW = 'view',
+  EDIT = 'edit',
+  COPY = 'copy',
 }
 
 export const CurrencyCode = {

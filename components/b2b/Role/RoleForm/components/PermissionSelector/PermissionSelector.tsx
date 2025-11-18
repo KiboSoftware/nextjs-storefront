@@ -30,6 +30,7 @@ interface PermissionSelectorProps {
   behaviors?: { items?: Behavior[] }
   selectedPermissions: Record<number, number[]>
   permissionError: string
+  isReadOnly?: boolean
   onBehaviorToggle: (category: number, behavior: number) => void
   onBehaviorNameCheckboxChange: (selectedCategory: number) => void
   getAllSelectedBehaviors: () => Array<{ category: number; behavior: number }>
@@ -41,6 +42,7 @@ const PermissionSelector: React.FC<PermissionSelectorProps> = ({
   behaviors,
   selectedPermissions,
   permissionError,
+  isReadOnly = false,
   onBehaviorToggle,
   onBehaviorNameCheckboxChange,
   getAllSelectedBehaviors,
@@ -167,6 +169,7 @@ const PermissionSelector: React.FC<PermissionSelectorProps> = ({
               checked={allBehaviorsSelected}
               indeterminate={isIndeterminate}
               onChange={handleBehaviorNameCheckbox}
+              disabled={isReadOnly}
               sx={permissionSelectorStyles.headerCheckbox}
             />
             <Typography sx={permissionSelectorStyles.headerTitle}>{behaviorNameLabel}</Typography>
@@ -181,10 +184,12 @@ const PermissionSelector: React.FC<PermissionSelectorProps> = ({
                   <ListItemButton
                     onClick={handleBehaviorClick(selectedCategory || 0, behavior.id || 0)}
                     sx={permissionSelectorStyles.behaviorListItem}
+                    disabled={isReadOnly}
                   >
                     <Checkbox
                       checked={isSelected}
                       size="small"
+                      disabled={isReadOnly}
                       sx={permissionSelectorStyles.checkbox}
                     />
                     <Typography variant="body2">{behavior.name}</Typography>
@@ -217,6 +222,7 @@ const PermissionSelector: React.FC<PermissionSelectorProps> = ({
                       <IconButton
                         size="small"
                         onClick={handleRemoveClick(category, behavior)}
+                        disabled={isReadOnly}
                         sx={permissionSelectorStyles.removeButton}
                       >
                         <CloseIcon fontSize="small" />

@@ -199,7 +199,7 @@ const RoleAccountHierarchyView: React.FC<RoleAccountHierarchyViewProps> = ({
         color="text.secondary"
         sx={roleAccountHierarchyViewStyles.countText}
       >
-        {`Role is applied to ${selectedCount} ${accountText}`}
+        {t('role-applied-to-single', { totalAccounts: selectedCount, accountText })}
       </Typography>
 
       <Box sx={roleAccountHierarchyViewStyles.treeContainer}>

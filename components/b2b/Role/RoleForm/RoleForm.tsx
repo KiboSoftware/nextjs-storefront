@@ -707,6 +707,7 @@ const RoleForm: React.FC<RoleFormProps> = ({
         behaviors={behaviors}
         selectedPermissions={selectedPermissions}
         permissionError={permissionError}
+        isReadOnly={isReadOnly}
         onBehaviorToggle={handleBehaviorToggle}
         onBehaviorNameCheckboxChange={handleBehaviorNameCheckboxChange}
         getAllSelectedBehaviors={getAllSelectedBehaviors}
