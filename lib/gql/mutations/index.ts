@@ -57,6 +57,10 @@ export { default as removeCustomerB2bUserMutation } from './b2b/remove-customer-
 export { default as updateCustomerB2bUserMutation } from './b2b/update-customer-b2b-user'
 export { default as deleteB2bAccountRoleMutation } from './b2b/delete-b2b-account-role'
 export { default as addRoleToCustomerB2bAccountMutation } from './b2b/add-role-to-customer-b2b-account'
+export { default as createRoleAsyncMutation } from './b2b/manage-roles/create-role-async'
+export { default as deleteRoleAsyncMutation } from './b2b/manage-roles/delete-role-async'
+export { default as updateRoleAsyncMutation } from './b2b/manage-roles/update-role-async'
+export { default as applyRoleToFutureChildrensAsyncMutation } from './b2b/manage-roles/apply-role-to-future-childrens-async'
 // Address validation
 export { default as validateCustomerAddress } from './address/validate-customer-address'
 

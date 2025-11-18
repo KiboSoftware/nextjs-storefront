@@ -17,7 +17,8 @@ import { RQNotificationContextProvider } from '@/context'
 
 // make a function to generate unique query client for each test
 const generateTestQueryClient = () => {
-  const client = generateQueryClient()
+  const mockShowSnackbar = jest.fn()
+  const client = generateQueryClient(mockShowSnackbar)
   const options = client.getDefaultOptions()
   options.queries = { ...options.queries, retry: false }
 

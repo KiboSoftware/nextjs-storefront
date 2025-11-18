@@ -223,3 +223,12 @@ export const OutOfStockBehavior = {
   DisplayMessage: 'DisplayMessage',
   HideProduct: 'HideProduct',
 }
+
+export const CustomBehaviors = {
+  CreateRole: 2027,
+}
+
+export const AccountScope = {
+  SpecificChild: 'specific-child',
+  AllExcept: 'all-except',
+}

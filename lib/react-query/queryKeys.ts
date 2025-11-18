@@ -166,3 +166,24 @@ export const customerWishlistKeys = {
 export const cartTakeoverKeys = {
   all: ['cartTakeover'] as const,
 }
+
+export const behaviorCategoriesKeys = {
+  all: ['behaviorCategories'] as const,
+}
+
+export const behaviorsKeys = {
+  all: ['behaviors'] as const,
+  accountUserBehaviors: (accountId: number, userId: string) =>
+    [...behaviorsKeys.all, 'account', accountId, 'user', userId] as const,
+  multipleAccountUserBehaviors: (accountIds: number[], userId: string) =>
+    [...behaviorsKeys.all, 'accounts', accountIds.sort().join(','), 'user', userId] as const,
+}
+
+export const rolesKeys = {
+  all: ['roles'] as const,
+  rolesByAccount: (accountId: number) => [...rolesKeys.all, accountId] as const,
+  roleById: (accountId: number, roleId: number) => [...rolesKeys.all, accountId, roleId] as const,
+  usersRole: (accountId: number) => [...rolesKeys.all, 'users', accountId] as const,
+  usersRoleByUser: (accountId: number, userId: string) =>
+    [...rolesKeys.all, 'users', accountId, userId] as const,
+}

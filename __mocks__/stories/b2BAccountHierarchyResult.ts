@@ -568,6 +568,7 @@ export const b2BAccountHierarchyResult = {
       contacts: null,
     },
   ],
+  hierarchy: [],
 }
 
 export const hierarchyTreeMock = [
