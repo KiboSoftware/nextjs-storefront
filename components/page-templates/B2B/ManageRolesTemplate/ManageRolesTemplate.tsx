@@ -71,19 +71,19 @@ interface ManageRolesTemplateProps {
 const SingleAccountUserCountComponent = ({
   accountId,
   roleId,
-  onCountFetched,
+  setUserCount,
 }: {
   accountId: number
   roleId: number
-  onCountFetched: (accountId: number, count: number) => void
+  setUserCount: (accountId: number, count: number) => void
 }) => {
   const { users, isLoading } = useGetUsersByRoleAsync(accountId, roleId)
 
   useEffect(() => {
     if (!isLoading && users) {
-      onCountFetched(accountId, users.length)
+      setUserCount(accountId, users.length)
     }
-  }, [users, isLoading, accountId, onCountFetched])
+  }, [users, isLoading, accountId, setUserCount])
 
   return null // This component only fetches data, doesn't render
 }
@@ -104,8 +104,8 @@ const RoleUserCountAggregatorComponent = ({
   const [accountCounts, setAccountCounts] = useState<Record<number, number>>({})
   const [loadedAccounts, setLoadedAccounts] = useState<Set<number>>(new Set())
 
-  // Callback when a single account's count is fetched
-  const handleAccountCountFetched = useCallback((accountId: number, count: number) => {
+  // Callback when a single account's user count is set
+  const setAccountUserCount = useCallback((accountId: number, count: number) => {
     setAccountCounts((prev) => {
       if (prev[accountId] !== count) {
         return { ...prev, [accountId]: count }
@@ -116,14 +116,10 @@ const RoleUserCountAggregatorComponent = ({
   }, [])
 
   // Calculate total count
-  const totalCount = useMemo(() => {
-    return Object.values(accountCounts).reduce((sum, count) => sum + count, 0)
-  }, [accountCounts])
+  const totalCount = Object.values(accountCounts).reduce((sum, count) => sum + count, 0)
 
   // Check if all accounts are loaded
-  const allLoaded = useMemo(() => {
-    return accountIds.every((id) => loadedAccounts.has(id))
-  }, [accountIds, loadedAccounts])
+  const allLoaded = accountIds.every((id) => loadedAccounts.has(id))
 
   // Update parent when all counts are loaded
   useEffect(() => {
@@ -140,7 +136,7 @@ const RoleUserCountAggregatorComponent = ({
           key={`${accountId}-${roleId}`}
           accountId={accountId}
           roleId={roleId}
-          onCountFetched={handleAccountCountFetched}
+          setUserCount={setAccountUserCount}
         />
       ))}
       {/* Display the count */}
@@ -218,10 +214,7 @@ const ManageRolesTemplate = ({
     setSelectedRoleId(null)
   }, [])
 
-  const selectedRole = useMemo(
-    () => roles.find((role) => role.id === selectedRoleId),
-    [roles, selectedRoleId]
-  )
+  const selectedRole = roles.find((role) => role.id === selectedRoleId)
 
   const handleSearch = useCallback((searchText: string) => {
     setSearchQuery(searchText)
@@ -384,8 +377,7 @@ const ManageRolesTemplate = ({
                       label={role.roleType}
                       size="small"
                       sx={{
-                        backgroundColor: role.roleType === 'System' ? '#e3f2fd' : '#f3e5f5',
-                        color: role.roleType === 'System' ? '#1565c0' : '#6a1b9a',
+                        color: role.roleType === 'System' ? '#7c7c7c' : '#2b2b2b',
                         fontSize: '0.75rem',
                         fontWeight: 500,
                       }}
