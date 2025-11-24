@@ -1,11 +1,11 @@
 import getConfig from 'next/config'
-import { serverSideTranslations } from 'next-i18next/serverSideTranslations'
 import { ReCaptchaProvider } from 'next-recaptcha-v3'
 
 import { B2BTemplate, MyAccountTemplate } from '@/components/page-templates'
 import { useAuthContext } from '@/context'
 import { getCurrentUser } from '@/lib/api/operations'
 import { AccountType } from '@/lib/constants'
+import { serverSideTranslations } from '@/lib/helpers/serverSideTranslations'
 
 import type {
   GetServerSideProps,

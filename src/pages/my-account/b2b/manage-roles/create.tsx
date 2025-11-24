@@ -2,7 +2,6 @@ import React, { useMemo, useCallback } from 'react'
 
 import { GetServerSidePropsContext, NextApiRequest, NextApiResponse, NextPage } from 'next'
 import { useRouter } from 'next/router'
-import { serverSideTranslations } from 'next-i18next/serverSideTranslations'
 
 import { CreateRoleTemplate } from '@/components/page-templates'
 import { useAuthContext } from '@/context'
@@ -15,6 +14,7 @@ import {
 } from '@/lib/api/operations'
 import type { BehaviorCategory } from '@/lib/api/operations/get-behavior-categories'
 import type { Behavior } from '@/lib/api/operations/get-behaviors'
+import { serverSideTranslations } from '@/lib/helpers/serverSideTranslations'
 import { B2BAccountHierarchyResult } from '@/lib/types'
 
 import { CustomerAccount } from '@/lib/gql/types'

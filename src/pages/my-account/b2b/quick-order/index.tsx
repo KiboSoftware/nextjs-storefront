@@ -1,9 +1,9 @@
 import getConfig from 'next/config'
 import { useRouter } from 'next/router'
-import { serverSideTranslations } from 'next-i18next/serverSideTranslations'
 
 import { QuickOrderTemplate } from '@/components/page-templates'
 import { getCart } from '@/lib/api/operations'
+import { serverSideTranslations } from '@/lib/helpers/serverSideTranslations'
 
 import type {
   GetServerSideProps,

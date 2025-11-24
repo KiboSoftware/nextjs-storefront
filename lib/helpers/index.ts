@@ -30,6 +30,8 @@ export * from './buildAccountHierarchy'
 export * from './buildCreateCustomerB2bAccountParams'
 export * from './buildUpdateCustomerB2bAccountParams'
 export * from './buildPurchaseOrderPaymentActionForCheckoutParams'
+// NOTE: serverSideTranslations is NOT exported here to prevent client-side bundling
+// Import it directly from './serverSideTranslations' in getServerSideProps/getStaticProps only
 
 export * from './b2b/buildQuotesFilterParam'
 export * from './b2b/parseFilterParamToObject'

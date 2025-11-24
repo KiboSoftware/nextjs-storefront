@@ -1,9 +1,8 @@
-import { serverSideTranslations } from 'next-i18next/serverSideTranslations'
-
 import { LoginDialog } from '@/components/layout'
 import { WishlistTemplate } from '@/components/page-templates'
 import { useAuthContext } from '@/context'
 import { decodeParseCookieValue, getAuthCookieName } from '@/lib/helpers/cookieHelper'
+import { serverSideTranslations } from '@/lib/helpers/serverSideTranslations'
 
 import type { NextPage, GetServerSidePropsContext } from 'next'
 

@@ -1,9 +1,9 @@
 import { useRouter } from 'next/router'
-import { serverSideTranslations } from 'next-i18next/serverSideTranslations'
 
 import { QuoteDetailsTemplate } from '@/components/page-templates'
 import { useGetQuoteByID } from '@/hooks/queries/b2b/quotes/useGetQuoteById/useGetQuoteById'
 import { getB2BAccount, getB2BUsers, getQuote } from '@/lib/api/operations'
+import { serverSideTranslations } from '@/lib/helpers/serverSideTranslations'
 
 import type { Quote } from '@/lib/gql/types'
 import type { NextPage, GetServerSidePropsContext, NextApiRequest, NextApiResponse } from 'next'

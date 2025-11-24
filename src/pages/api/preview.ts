@@ -2,7 +2,7 @@ import { setCookie } from 'cookies-next'
 import { NextApiResponse } from 'next'
 
 import withLogger from '@/lib/api/util/with-logger'
-import {} from '@/lib/helpers'
+import {} from '@/lib/helpers/serverSideTranslations'
 import { NextApiRequestWithLogger } from '@/lib/types'
 
 function previewHandler(req: NextApiRequestWithLogger, res: NextApiResponse) {

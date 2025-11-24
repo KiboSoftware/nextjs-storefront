@@ -3,13 +3,13 @@ import { useEffect, useRef, useState } from 'react'
 import getConfig from 'next/config'
 import ErrorPage from 'next/error'
 import { useRouter } from 'next/router'
-import { serverSideTranslations } from 'next-i18next/serverSideTranslations'
 
 import { ProductListingTemplate } from '@/components/page-templates'
 import { useGetSearchedProducts } from '@/hooks'
 import { getCategoryTree, productSearch } from '@/lib/api/operations'
 import { productSearchGetters, facetGetters } from '@/lib/getters'
 import { categoryTreeSearchByCode, buildCategoryPath } from '@/lib/helpers'
+import { serverSideTranslations } from '@/lib/helpers/serverSideTranslations'
 import type { CategorySearchParams, MetaData, PageWithMetaData } from '@/lib/types'
 
 import type {

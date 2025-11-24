@@ -1,6 +1,5 @@
 import getConfig from 'next/config'
 import { useTranslation } from 'next-i18next'
-import { serverSideTranslations } from 'next-i18next/serverSideTranslations'
 
 import {
   StandardShipCheckoutTemplate,
@@ -8,6 +7,7 @@ import {
 } from '@/components/page-templates'
 import { CheckoutStepProvider } from '@/context/CheckoutStepContext/CheckoutStepContext'
 import { getCheckout, getMultiShipCheckout, updateOrder } from '@/lib/api/operations'
+import { serverSideTranslations } from '@/lib/helpers/serverSideTranslations'
 
 import type { Checkout, CrOrder, CrOrderInput } from '@/lib/gql/types'
 import type { NextPage, GetServerSidePropsContext, NextApiRequest, NextApiResponse } from 'next'

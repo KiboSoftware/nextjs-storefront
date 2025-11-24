@@ -1,13 +1,13 @@
 import getConfig from 'next/config'
 import { useRouter } from 'next/router'
-import { serverSideTranslations } from 'next-i18next/serverSideTranslations'
 
 import { ProductDetailTemplate, ProductDetailSkeleton } from '@/components/page-templates'
 import { useGetProduct } from '@/hooks'
 import { getProduct, getCategoryTree, productSearch } from '@/lib/api/operations'
 import { productGetters } from '@/lib/getters'
 import { buildProductPath } from '@/lib/helpers'
-import type { CategorySearchParams, MetaData, PageWithMetaData, ProductCustom } from '@/lib/types'
+import { serverSideTranslations } from '@/lib/helpers/serverSideTranslations'
+import type { CategorySearchParams, MetaData, PageWithMetaData } from '@/lib/types'
 
 import { PrCategory, Product } from '@/lib/gql/types'
 import type {

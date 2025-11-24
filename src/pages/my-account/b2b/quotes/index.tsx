@@ -1,11 +1,11 @@
 import { GetServerSidePropsContext, NextApiRequest, NextApiResponse, NextPage } from 'next'
-import { serverSideTranslations } from 'next-i18next/serverSideTranslations'
 
 import { QuotesTemplate } from '@/components/page-templates'
 import { useAuthContext } from '@/context'
 import { useB2BQuote, useGetQuotes } from '@/hooks'
 import { getCurrentUser, getQuotes } from '@/lib/api/operations'
 import { parseFilterParamToObject } from '@/lib/helpers'
+import { serverSideTranslations } from '@/lib/helpers/serverSideTranslations'
 
 import { QuoteCollection } from '@/lib/gql/types'
 

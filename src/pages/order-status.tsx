@@ -1,7 +1,6 @@
-import { serverSideTranslations } from 'next-i18next/serverSideTranslations'
-
 import { OrderStatusTemplate } from '@/components/page-templates'
 import { useAuthContext } from '@/context'
+import { serverSideTranslations } from '@/lib/helpers/serverSideTranslations'
 
 import type { NextPage, GetServerSidePropsContext } from 'next'
 

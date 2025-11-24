@@ -1,8 +1,8 @@
 import { useRouter } from 'next/router'
-import { serverSideTranslations } from 'next-i18next/serverSideTranslations'
 
 import { ResetPasswordConfirmationTemplate } from '@/components/page-templates'
 import { getCustomerAccount } from '@/lib/api/operations'
+import { serverSideTranslations } from '@/lib/helpers/serverSideTranslations'
 
 import type { NextPage } from 'next'
 

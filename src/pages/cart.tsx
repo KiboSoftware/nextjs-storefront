@@ -1,8 +1,8 @@
 import getConfig from 'next/config'
-import { serverSideTranslations } from 'next-i18next/serverSideTranslations'
 
 import { CartTemplate } from '@/components/page-templates'
 import { getCart } from '@/lib/api/operations/'
+import { serverSideTranslations } from '@/lib/helpers/serverSideTranslations'
 import { MetaData, PageWithMetaData } from '@/lib/types'
 
 import { CrCart } from '@/lib/gql/types'

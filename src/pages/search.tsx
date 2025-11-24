@@ -3,12 +3,12 @@ import { useEffect, useState } from 'react'
 import getConfig from 'next/config'
 import { useRouter } from 'next/router'
 import { useTranslation } from 'next-i18next'
-import { serverSideTranslations } from 'next-i18next/serverSideTranslations'
 
 import { ProductListingTemplate } from '@/components/page-templates'
 import { useGetSearchedProducts } from '@/hooks'
 import { productSearch } from '@/lib/api/operations'
 import { facetGetters, productSearchGetters } from '@/lib/getters'
+import { serverSideTranslations } from '@/lib/helpers/serverSideTranslations'
 import type { CategorySearchParams, MetaData, PageWithMetaData } from '@/lib/types'
 
 import type { Facet, FacetValue, Product, ProductSearchResult } from '@/lib/gql/types'

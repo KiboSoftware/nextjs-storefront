@@ -2,9 +2,9 @@ import { useCallback } from 'react'
 
 import getConfig from 'next/config'
 import { useRouter } from 'next/router'
-import { serverSideTranslations } from 'next-i18next/serverSideTranslations'
 
 import { SubscriptionList } from '@/components/my-account'
+import { serverSideTranslations } from '@/lib/helpers/serverSideTranslations'
 
 import type { GetServerSideProps, GetServerSidePropsContext, NextPage } from 'next'
 

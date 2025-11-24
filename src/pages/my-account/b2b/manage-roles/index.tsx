@@ -1,10 +1,10 @@
 import { GetServerSidePropsContext, NextApiRequest, NextApiResponse, NextPage } from 'next'
 import { useRouter } from 'next/router'
-import { serverSideTranslations } from 'next-i18next/serverSideTranslations'
 
 import { ManageRolesTemplate } from '@/components/page-templates'
 import { getCurrentUser, getRolesByAccountId } from '@/lib/api/operations'
 import type { GetRolesAsyncResponse } from '@/lib/api/operations/get-roles-by-account-id'
+import { serverSideTranslations } from '@/lib/helpers/serverSideTranslations'
 
 import type { CustomerAccount } from '@/lib/gql/types'
 

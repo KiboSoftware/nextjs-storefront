@@ -1,9 +1,9 @@
 import { GetServerSidePropsContext, NextApiRequest, NextApiResponse, NextPage } from 'next'
-import { serverSideTranslations } from 'next-i18next/serverSideTranslations'
 
 import { AccountHierarchyTemplate } from '@/components/page-templates'
 import { useAuthContext } from '@/context'
 import { getB2BAccountHierarchy, getCurrentUser } from '@/lib/api/operations'
+import { serverSideTranslations } from '@/lib/helpers/serverSideTranslations'
 
 interface AccountHierarchyPageProps {
   customerAccount?: any
