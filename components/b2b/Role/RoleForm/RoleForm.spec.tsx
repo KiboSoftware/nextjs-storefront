@@ -371,10 +371,10 @@ describe('RoleForm Component', () => {
       renderWithQueryClient(<RoleForm {...defaultProps} />)
 
       const cancelButtons = screen.getAllByText('cancel')
-      const createButtons = screen.getAllByText('create-role')
+      const saveButtons = screen.getAllByText('save')
 
       expect(cancelButtons.length).toBeGreaterThan(0)
-      expect(createButtons.length).toBeGreaterThan(0)
+      expect(saveButtons.length).toBeGreaterThan(0)
     })
 
     it('should pass correct props to RoleBasicInfo component', () => {
@@ -637,7 +637,7 @@ describe('RoleForm Component', () => {
     it('should disable submit button when form is invalid', () => {
       renderWithQueryClient(<RoleForm {...defaultProps} />)
 
-      const submitButtons = screen.getAllByText('create-role')
+      const submitButtons = screen.getAllByText('save')
 
       // Submit buttons exist but may be disabled based on form validity
       expect(submitButtons.length).toBeGreaterThan(0)
@@ -810,11 +810,11 @@ describe('RoleForm Component', () => {
       renderWithQueryClient(<RoleForm {...defaultProps} />)
 
       const cancelButtons = screen.getAllByText('cancel')
-      const createButtons = screen.getAllByText('create-role')
+      const saveButtons = screen.getAllByText('save')
 
       // Buttons should exist regardless of screen size
       expect(cancelButtons.length).toBeGreaterThan(0)
-      expect(createButtons.length).toBeGreaterThan(0)
+      expect(saveButtons.length).toBeGreaterThan(0)
     })
   })
 

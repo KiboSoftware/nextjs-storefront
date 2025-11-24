@@ -232,10 +232,7 @@ const RoleFormAccountHierarchyTree: React.FC<RoleFormAccountHierarchyTreeProps> 
               label={
                 <Typography
                   variant="body2"
-                  sx={roleFormAccountHierarchyTreeStyles.accountLabel(
-                    isParentAccount,
-                    !hasPermission
-                  )}
+                  sx={roleFormAccountHierarchyTreeStyles.accountLabel(isParentAccount)}
                 >
                   {account.companyOrOrganization || ''}
                   {isParentAccount && ` (${t('parent')})`}

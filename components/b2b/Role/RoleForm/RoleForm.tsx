@@ -176,12 +176,26 @@ const RoleForm: React.FC<RoleFormProps> = ({
 
   // Get all accounts where user has create role permission (for parent dropdown)
   const getAccountsWithCreateRolePermission = useCallback((): B2BAccount[] => {
-    if (!accounts || !accountUserBehaviorResults) return []
+    if (!accounts || accounts.length === 0) {
+      // If accounts data is not available, use user data
+      return user ? [user as unknown as B2BAccount] : []
+    }
 
-    const accountsWithPermission = accounts.filter((account) => hasCreateRolePermission(account.id))
+    if (!accountUserBehaviorResults || accountUserBehaviorResults.length === 0) {
+      // If behavior results not loaded yet, return empty or use user
+      return user ? [user as unknown as B2BAccount] : []
+    }
 
-    return accountsWithPermission
-  }, [accounts, accountUserBehaviorResults, hasCreateRolePermission])
+    const accountsWithPermission = accounts.filter((account) => {
+      const hasPermission = hasCreateRolePermission(account.id)
+      return hasPermission
+    })
+    return accountsWithPermission.length > 0
+      ? accountsWithPermission
+      : user
+      ? [user as unknown as B2BAccount]
+      : []
+  }, [accounts, accountUserBehaviorResults, hasCreateRolePermission, user])
 
   // Memoize accounts with permission to prevent re-creating array on every render
   const accountsWithPermission = useMemo(
@@ -206,39 +220,35 @@ const RoleForm: React.FC<RoleFormProps> = ({
     }
   }, [initialData, reset])
 
-  // Update parent account when user data loads - set to first account with create role permission (only for create mode)
+  // Update parent account when user data loads - set to logged in user's account (only for create mode)
   useEffect(() => {
     // Don't reset if we have initialData (viewing/editing/copying existing role)
     if (initialData) return
 
-    if (accountUserBehaviorResults && accounts && accountUserBehaviorResults.length > 0) {
-      const accountsWithPermission = getAccountsWithCreateRolePermission()
+    // Wait for user data to be available
+    if (!user?.id) return
 
-      // Find user's current account or first account with permission
-      const userAccount = accountsWithPermission.find((acc) => acc.id === user?.id)
-      const defaultAccount = userAccount || accountsWithPermission[0]
+    const accountsWithPermission = getAccountsWithCreateRolePermission()
 
-      if (defaultAccount) {
-        const userHasChildren =
-          accounts.filter((acc) => acc.parentAccountId === defaultAccount.id).length > 0
-        reset({
-          roleName: '',
-          parentAccount: String(defaultAccount.id),
-          accountScope: userHasChildren ? 'all-child' : '',
-          applyToFutureChildren: false,
-          selectedAccounts: [],
-          selectedPermissions: {},
-        })
-      }
+    // Find logged-in user's account first, fallback to first account with permission
+    const userAccount = accountsWithPermission.find((acc) => acc.id === user?.id)
+    const defaultAccount = userAccount || accountsWithPermission[0]
+
+    if (defaultAccount) {
+      const userHasChildren = accounts
+        ? accounts.filter((acc) => acc.parentAccountId === defaultAccount.id).length > 0
+        : false
+
+      reset({
+        roleName: '',
+        parentAccount: String(defaultAccount.id),
+        accountScope: userHasChildren ? 'all-child' : '',
+        applyToFutureChildren: false,
+        selectedAccounts: [],
+        selectedPermissions: {},
+      })
     }
-  }, [
-    user?.id,
-    reset,
-    accounts,
-    accountUserBehaviorResults,
-    getAccountsWithCreateRolePermission,
-    initialData,
-  ])
+  }, [user?.id, reset, accounts, getAccountsWithCreateRolePermission, initialData])
 
   // Event handlers
   const handleParentAccountChange = useCallback(
@@ -449,14 +459,6 @@ const RoleForm: React.FC<RoleFormProps> = ({
       router.push('/my-account/b2b/manage-roles')
     } catch (error: unknown) {
       console.error('Error saving role:', error)
-      // Extract and show the API error message
-      const errorMessage =
-        error && typeof error === 'object' && 'message' in error
-          ? String(error.message)
-          : isEditMode
-          ? t('error-updating-role')
-          : t('role-creation-failed')
-      showSnackbar(errorMessage, 'error')
       // Handle error - you might want to show an error message to the user
       setPermissionError(t('role-creation-failed'))
     }
@@ -510,7 +512,7 @@ const RoleForm: React.FC<RoleFormProps> = ({
                     },
                   }}
                 >
-                  {submitButtonText || t('create-role')}
+                  {t('save')}
                 </Button>
               </>
             )}
@@ -597,7 +599,7 @@ const RoleForm: React.FC<RoleFormProps> = ({
               },
             }}
           >
-            {submitButtonText || t('create-role')}
+            {t('save')}
           </Button>
         </Box>
       )}
