@@ -78,16 +78,22 @@ export const roleFormAccountHierarchyTreeStyles = {
 
   checkbox: (isParentAccount: boolean) => ({
     visibility: isParentAccount ? 'hidden' : 'visible',
+    '&.Mui-disabled': {
+      cursor: 'not-allowed',
+    },
   }),
 
   formControlLabel: {
     m: 0,
     flex: 1,
+    '& .MuiFormControlLabel-label.Mui-disabled': {
+      color: 'text.primary',
+      cursor: 'default',
+    },
   },
 
-  accountLabel: (isParentAccount: boolean, isDisabled?: boolean) => ({
+  accountLabel: (isParentAccount: boolean) => ({
     fontWeight: isParentAccount ? 600 : 400,
-    color: isDisabled ? 'text.disabled' : 'text.primary',
   }),
 
   childCountText: {
