@@ -16,7 +16,12 @@ import { useTranslation } from 'next-i18next'
 
 import { UserForm } from '@/components/b2b'
 import { useAuthContext } from '@/context'
-import { useAddUserRolesAsync } from '@/hooks'
+import {
+  useAddRoleToCustomerB2bAccountMutation,
+  useCreateCustomerB2bUserMutation,
+} from '@/hooks'
+import { Routes } from '@/lib/constants'
+import { buildCreateCustomerB2bUserParams } from '@/lib/helpers'
 import { B2BAccountHierarchyResult } from '@/lib/types'
 import { B2BUserInput } from '@/lib/types/CustomerB2BUser'
 
@@ -39,58 +44,89 @@ interface AddUserTemplateProps {
   accountUserBehaviors?: Record<number, number[]>
 }
 
-const AddUserTemplate = ({ initialData, accountUserBehaviors }: AddUserTemplateProps) => {
+const AddUserTemplate = ({
+  initialData,
+  accountUserBehaviors,
+}: AddUserTemplateProps) => {
   const router = useRouter()
   const { t } = useTranslation('common')
   const theme = useTheme()
   const mdScreen = useMediaQuery(theme.breakpoints.up('md'))
   const { user } = useAuthContext()
 
-  const { addUserRoles } = useAddUserRolesAsync()
+  const { createCustomerB2bUser } = useCreateCustomerB2bUserMutation()
+  const { addRoleToCustomerB2bAccount } = useAddRoleToCustomerB2bAccountMutation()
 
-  const handleAddUser = async (formValues: B2BUserInput & { roleAssignments?: Record<number, string[]> }) => {
+  const handleAddUser = async (
+    formValues: B2BUserInput & { roleAssignments?: Record<number, string[]> }
+  ) => {
     try {
-      if (!user?.userId) {
-        console.error('User ID not found')
-        return
-      }
+      // Create mode - create user in each account where roles are selected
+        const roleAssignments = formValues.roleAssignments || {}
+        const accountIds = Object.keys(roleAssignments).map(Number)
 
-      const userId = user.userId
-      const roleAssignments = formValues.roleAssignments || {}
-      
-      // Assign each role for each account
-      const roleAssignmentPromises: Promise<boolean>[] = []
-      
-      Object.entries(roleAssignments).forEach(([accountId, roleIds]) => {
-        roleIds.forEach((roleId) => {
-          roleAssignmentPromises.push(
-            addUserRoles.mutateAsync({
-              accountId: parseInt(accountId),
-              userId: userId,
-              roleId: parseInt(roleId),
+        if (accountIds.length === 0) {
+          console.error('No roles selected for any account')
+          return
+        }
+
+        // Step 1: Create users in parallel for all accounts
+        const userCreationPromises = accountIds.map((accountId) => {
+          const createUserVariables = buildCreateCustomerB2bUserParams({
+            user: { ...user, id: accountId },
+            values: formValues,
+          })
+          return createCustomerB2bUser
+            .mutateAsync(createUserVariables)
+            .then((response) => ({ accountId, response }))
+            .catch((error) => {
+              console.error(`Failed to create user for account ${accountId}:`, error)
+              return { accountId, response: null, error }
             })
-          )
         })
-      })
-      
-      // Wait for all role assignments to complete
-      await Promise.all(roleAssignmentPromises)
-      
-      // Navigate back to users list after successful role assignment
-      router.push('/my-account/b2b/users')
+
+        const userCreationResults = await Promise.all(userCreationPromises)
+
+        // Step 2: Collect all role assignments for all accounts
+        const roleAssignmentPromises: Promise<boolean>[] = []
+
+        userCreationResults.forEach(({ accountId, response }) => {
+          if (response?.userId) {
+            const roleIds = roleAssignments[accountId] || []
+            roleIds.forEach((roleId) => {
+              roleAssignmentPromises.push(
+                addRoleToCustomerB2bAccount.mutateAsync({
+                  accountId,
+                  userId: response.userId as string,
+                  roleId: parseInt(roleId),
+                })
+              )
+            })
+          }
+        })
+
+        // Step 3: Execute all role assignments in parallel
+        if (roleAssignmentPromises.length > 0) {
+          await Promise.all(roleAssignmentPromises).catch((error) => {
+            console.error('Some role assignments failed:', error)
+          })
+        }
+
+      // Navigate back to users list after all operations complete
+      router.push(Routes.Users)
     } catch (e) {
-      console.error(e)
+      console.error('Error in handleAddUser:', e)
     }
   }
 
   const handleClose = () => {
-    router.push('/my-account/b2b/users')
+    router.push(Routes.Users)
   }
 
   return (
     <Grid>
       <Grid item style={{ marginTop: '15px', marginBottom: '20px' }}>
-        <BackButtonLink aria-label={t('users')} href="/my-account/b2b/users">
+        <BackButtonLink aria-label={t('users')} href={Routes.Users}>
           <ChevronLeftIcon />
           {mdScreen && <Typography variant="body1">{t('users')}</Typography>}
         </BackButtonLink>
@@ -102,9 +138,7 @@ const AddUserTemplate = ({ initialData, accountUserBehaviors }: AddUserTemplateP
       {/* Form Content in Paper */}
       <ContentPaper elevation={0}>
         <UserForm
-          isEditMode={false}
           isUserFormInDialog={false}
-          b2BUser={undefined}
           onSave={handleAddUser}
           onClose={handleClose}
           accounts={initialData?.accounts || []}

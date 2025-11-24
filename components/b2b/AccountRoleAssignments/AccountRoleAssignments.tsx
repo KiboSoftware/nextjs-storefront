@@ -15,6 +15,7 @@ import {
   Typography,
   styled,
 } from '@mui/material'
+import { useTranslation } from 'next-i18next'
 
 import { useGetRolesByAccountIdAsync } from '@/hooks'
 
@@ -27,8 +28,6 @@ interface Role {
 interface AccountWithRoles {
   accountId: number
   accountName: string
-  systemRoles?: Role[]
-  customRoles?: Role[]
 }
 
 interface AccountRoleAssignmentsProps {
@@ -102,9 +101,10 @@ const AccountAccordionItem: React.FC<AccountAccordionItemProps> = React.memo(({
   onRoleToggle,
   searchTerm,
 }) => {
-  const [hasBeenExpanded, setHasBeenExpanded] = useState(false)
+  const { t } = useTranslation('common')
+  const [hasBeenExpanded, setHasBeenExpanded] = useState(isExpanded)
 
-  // Only fetch roles when accordion has been expanded at least once
+  // Fetch roles when accordion has been expanded
   const { roles: rolesData, isLoading, isSuccess } = useGetRolesByAccountIdAsync(
     account.accountId,
     undefined,
@@ -161,9 +161,10 @@ const AccountAccordionItem: React.FC<AccountAccordionItemProps> = React.memo(({
     [hasBeenExpanded, onExpandChange, account.accountId]
   )
 
-  // Memoize role click handler to prevent RoleChip re-renders
+  // Memoize role click handler to prevent RoleChip re-renders and accordion collapse
   const handleRoleClick = React.useCallback(
-    (roleId: string) => {
+    (event: React.MouseEvent, roleId: string) => {
+      event.stopPropagation() // Prevent accordion from collapsing
       onRoleToggle(account.accountId, roleId)
     },
     [onRoleToggle, account.accountId]
@@ -177,9 +178,88 @@ const AccountAccordionItem: React.FC<AccountAccordionItemProps> = React.memo(({
     [selectedRoles, account.accountId]
   )
 
-  // Don't render if API call failed after expansion
-  if (hasBeenExpanded && !isLoading && !isSuccess) return null
-  // Don't hide accordion during search - show "No matching roles" message instead
+  // Show loading state, error message, or roles
+  const getAccordionContent = () => {
+    if (isLoading) {
+      return (
+        <Box sx={{ display: 'flex', justifyContent: 'center', p: 3 }}>
+          <CircularProgress size={24} />
+        </Box>
+      )
+    }
+
+    // If fetched but failed, show error message
+    if (hasBeenExpanded && !isLoading && !isSuccess) {
+      return (
+        <Box sx={{ display: 'flex', justifyContent: 'center', p: 3 }}>
+          <Typography variant="body2" color="error">
+            {t('failed-to-load-roles')}
+          </Typography>
+        </Box>
+      )
+    }
+
+    // If no roles available yet (not expanded or loading)
+    if (!hasVisibleRoles && !searchTerm) {
+      return (
+        <Box sx={{ display: 'flex', justifyContent: 'center', p: 3 }}>
+          <Typography variant="body2" color="text.secondary">
+            {t('no-roles-available')}
+          </Typography>
+        </Box>
+      )
+    }
+
+    // If searching and no matches
+    if (!hasVisibleRoles && searchTerm) {
+      return (
+        <Box sx={{ display: 'flex', justifyContent: 'center', p: 3 }}>
+          <Typography variant="body2" color="text.secondary">
+            {t('no-roles-match', { searchTerm })}
+          </Typography>
+        </Box>
+      )
+    }
+
+    // Show roles
+    return (
+      <>
+        {filteredSystemRoles.length > 0 && (
+          <>
+            <SectionTitle variant="subtitle2">{t('system-roles')}</SectionTitle>
+            <Box sx={{ display: 'flex', flexWrap: 'wrap', gap: 1, mb: 2 }}>
+              {filteredSystemRoles.map((role) => (
+                <RoleChip
+                  key={role.id}
+                  label={role.name}
+                  selected={isRoleSelected(role.id)}
+                  onClick={(e) => handleRoleClick(e, role.id)}
+                />
+              ))}
+            </Box>
+          </>
+        )}
+
+        {filteredCustomRoles.length > 0 && (
+          <>
+            <SectionTitle variant="subtitle2">
+              {t('custom-roles', { accountName: account.accountName.split(' ')[1] })}
+            </SectionTitle>
+            <Box sx={{ display: 'flex', flexWrap: 'wrap', gap: 1 }}>
+              {filteredCustomRoles.map((role) => (
+                <RoleChip
+                  key={role.id}
+                  label={role.name}
+                  selected={isRoleSelected(role.id)}
+                  onClick={(e) => handleRoleClick(e, role.id)}
+                />
+              ))}
+            </Box>
+          </>
+        )}
+      </>
+    )
+  }
 
   return (
     <StyledAccordion expanded={isExpanded} onChange={handleExpansionChange}>
@@ -193,53 +273,7 @@ const AccountAccordionItem: React.FC<AccountAccordionItemProps> = React.memo(({
         </Box>
       </StyledAccordionSummary>
       <AccordionDetails>
-        {isLoading ? (
-          <Box sx={{ display: 'flex', justifyContent: 'center', p: 3 }}>
-            <CircularProgress size={24} />
-          </Box>
-        ) : !hasVisibleRoles && searchTerm ? (
-          <Box sx={{ display: 'flex', justifyContent: 'center', p: 3 }}>
-            <Typography variant="body2" color="text.secondary">
-              No roles match &quot;{searchTerm}&quot;
-            </Typography>
-          </Box>
-        ) : (
-          <>
-            {filteredSystemRoles.length > 0 && (
-              <>
-                <SectionTitle variant="subtitle2">System Roles</SectionTitle>
-                <Box sx={{ display: 'flex', flexWrap: 'wrap', gap: 1, mb: 2 }}>
-                  {filteredSystemRoles.map((role) => (
-                    <RoleChip
-                      key={role.id}
-                      label={role.name}
-                      selected={isRoleSelected(role.id)}
-                      onClick={() => handleRoleClick(role.id)}
-                    />
-                  ))}
-                </Box>
-              </>
-            )}
-
-            {filteredCustomRoles.length > 0 && (
-              <>
-                <SectionTitle variant="subtitle2">
-                  {account.accountName.split(' ')[1]} Custom Roles
-                </SectionTitle>
-                <Box sx={{ display: 'flex', flexWrap: 'wrap', gap: 1 }}>
-                  {filteredCustomRoles.map((role) => (
-                    <RoleChip
-                      key={role.id}
-                      label={role.name}
-                      selected={isRoleSelected(role.id)}
-                      onClick={() => handleRoleClick(role.id)}
-                    />
-                  ))}
-                </Box>
-              </>
-            )}
-          </>
-        )}
+        {getAccordionContent()}
       </AccordionDetails>
     </StyledAccordion>
   )
@@ -252,6 +286,8 @@ const AccountRoleAssignments: React.FC<AccountRoleAssignmentsProps> = ({
   selectedRoles,
   onChange,
 }) => {
+  const { t } = useTranslation('common')
+  
   const [expandedAccounts, setExpandedAccounts] = useState<Record<number, boolean>>({})
   const [searchTerm, setSearchTerm] = useState('')
 
@@ -307,21 +343,21 @@ const AccountRoleAssignments: React.FC<AccountRoleAssignmentsProps> = ({
         }}
       >
         <Typography variant="h6" sx={{ fontWeight: 600 }}>
-          Account Role Assignments
+          {t('account-role-assignments')}
         </Typography>
         <Box sx={{ display: 'flex', gap: 1 }}>
           <Button variant="outlined" size="small" onClick={handleExpandAll}>
-            Expand All
+            {t('expand-all')}
           </Button>
           <Button variant="outlined" size="small" onClick={handleMinimizeAll}>
-            Minimize All
+            {t('minimize-all')}
           </Button>
         </Box>
       </Box>
 
       <TextField
         fullWidth
-        placeholder="Search roles..."
+        placeholder={t('search-roles')}
         value={searchTerm}
         onChange={handleSearchChange}
         InputProps={{

@@ -247,4 +247,6 @@ export const RoleType = {
 export const Routes = {
   ManageRoles: '/my-account/b2b/manage-roles',
   CreateRole: '/my-account/b2b/manage-roles/create',
+  Users: '/my-account/b2b/users',
+  AddUser: '/my-account/b2b/users/add-user',
 }

@@ -1,6 +1,6 @@
 // Figma: https://www.figma.com/file/bKJuIwUx6VXmubHZo4rCBq/B2B?type=design&node-id=19-688&mode=design&t=MrZvIdPLzo5jsp19-0
 
-import React, { ChangeEvent, useState } from 'react'
+import { ChangeEvent, useState } from 'react'
 
 import {
   ChevronLeft as ChevronLeftIcon,
@@ -30,20 +30,17 @@ import { SearchBar } from '@/components/common'
 import { ConfirmationDialog } from '@/components/dialogs'
 import { useAuthContext, useModalContext } from '@/context'
 import {
-  useAddRoleToCustomerB2bAccountMutation,
   useDebounce,
-  useDeleteB2bAccountRoleMutation,
   useGetB2BUserQueries,
   useRemoveCustomerB2bUserMutation,
-  useUpdateCustomerB2bUserMutation,
 } from '@/hooks'
-import { CustomBehaviors } from '@/lib/constants'
+import { CustomBehaviors, Routes } from '@/lib/constants'
 import {
-  buildB2bUserRoleParams,
-  buildUpdateCustomerB2bUserParams,
+  actions,
   getPerPageItemText,
+  hasB2BPermissions,
+  hasPermission,
 } from '@/lib/helpers'
-import { B2BUserInput, CustomerB2BUserRole } from '@/lib/types/CustomerB2BUser'
 
 import { B2BUser } from '@/lib/gql/types'
 
@@ -77,12 +74,10 @@ interface UsersTemplateProps {
 const UsersTemplate = ({ accountUserBehaviors }: UsersTemplateProps) => {
   const {
     publicRuntimeConfig: {
-      b2bUserRoles,
       debounceTimeout,
       b2bUserListing: { defaultPageSize, defaultStartIndex, defaultFilter },
     },
   } = getConfig()
-  const userRoles = b2bUserRoles
 
   const theme = useTheme()
   const { user } = useAuthContext()
@@ -107,9 +102,6 @@ const UsersTemplate = ({ accountUserBehaviors }: UsersTemplateProps) => {
   })
 
   const { removeCustomerB2bUser } = useRemoveCustomerB2bUserMutation()
-  const { addRoleToCustomerB2bAccount } = useAddRoleToCustomerB2bAccountMutation()
-  const { updateCustomerB2bUser } = useUpdateCustomerB2bUserMutation()
-  const { deleteB2bAccountUserRole } = useDeleteB2bAccountRoleMutation()
 
   const handleDelete = (id: string | undefined | null) => {
     showModal({
@@ -145,60 +137,13 @@ const UsersTemplate = ({ accountUserBehaviors }: UsersTemplateProps) => {
       startIndex: (data?.pageSize ?? 0) * (page - 1),
     })
 
-  const addRoleToB2bUser = async (b2BUser: B2BUser, formValues: B2BUserInput) => {
-    const addRoleToCustomerB2bAccountVariables = buildB2bUserRoleParams({
-      user,
-      b2BUser: b2BUser,
-      values: formValues,
-      roles: userRoles,
-    })
-    await addRoleToCustomerB2bAccount.mutateAsync({
-      ...addRoleToCustomerB2bAccountVariables,
-    })
-  }
-
-  const handleUpdateUser = async (formValues: B2BUserInput, b2BUser?: B2BUser) => {
-    const variables = buildUpdateCustomerB2bUserParams({ user, b2BUser, values: formValues })
-    const updateUserResponse = await updateCustomerB2bUser.mutateAsync({
-      ...variables,
-    })
-    const previousRoles = b2BUser?.roles as CustomerB2BUserRole[]
-    if (
-      updateUserResponse &&
-      previousRoles &&
-      previousRoles.length &&
-      formValues.role !== previousRoles[0]?.roleName
-    ) {
-      try {
-        await deleteB2bAccountUserRole.mutateAsync(
-          buildB2bUserRoleParams({
-            user,
-            b2BUser,
-            values: {
-              ...formValues,
-              role: previousRoles[0]?.roleName,
-            },
-            roles: userRoles,
-          })
-        )
-      } catch (e) {
-        console.error(e)
-      }
-    }
-    addRoleToB2bUser(updateUserResponse, formValues)
-  }
-
   const handleAddUserButtonClick = () => {
     // Navigate to the add user page instead of showing modal
-    router.push('/my-account/b2b/users/add-user')
+    router.push(Routes.AddUser)
   }
 
-  // Check if user has add user permission (CustomBehaviors.AddUser = 1000)
-  const hasAddUserPermission = React.useMemo(() => {
-    if (!accountUserBehaviors || !user?.id) return false
-    const behaviors = accountUserBehaviors[user.id]
-    return behaviors ? behaviors.includes(CustomBehaviors.AddUser) : false
-  }, [accountUserBehaviors, user?.id])
+  // Check if user has add user permission (CustomBehaviors.AddUser = 1000 || B2B permission Add User = 2000)
+  const hasAddUserPermission = hasB2BPermissions(CustomBehaviors.AddUser, accountUserBehaviors, user?.id)
 
   return (
     <Grid>
@@ -211,7 +156,7 @@ const UsersTemplate = ({ accountUserBehaviors }: UsersTemplateProps) => {
           <Typography variant={mdScreen ? 'h1' : 'h2'}>{t('users')}</Typography>
         </Box>
         <NoSsr>
-          {hasAddUserPermission && (
+          {(hasPermission(actions.CREATE_ACCOUNT) || hasAddUserPermission) && (
             <Grid container>
               <Grid item xs={12} md={12}>
                 <Button
@@ -249,7 +194,6 @@ const UsersTemplate = ({ accountUserBehaviors }: UsersTemplateProps) => {
             <UserTable
               mdScreen={mdScreen}
               b2bUsers={data?.items as B2BUser[]}
-              onSave={handleUpdateUser}
               onDelete={handleDelete}
             />
             <PaginationContainer>

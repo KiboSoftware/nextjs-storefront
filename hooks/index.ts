@@ -184,7 +184,6 @@ export * from './mutations/b2b/manage-roles/useUpdateRoleAsync/useUpdateRoleAsyn
 export * from './mutations/b2b/manage-roles/useCreateRoleAsync/useCreateRoleAsync'
 export * from './queries/b2b/manage-roles/useGetRolesByAccountIdAsync/useGetRolesByAccountIdAsync'
 export * from './mutations/b2b/manage-roles/useApplyRoleToFutureChildrensAsync/useApplyRoleToFutureChildrensAsync'
-export * from './mutations/b2b/assign-roles/useAddUserRolesAsync/useAddUserRolesAsync'
 
 //quotes
 export * from './mutations/b2b/quotes/useDeleteQuoteItem/useDeleteQuoteItem'

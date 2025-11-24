@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React from 'react'
 
 import CircleIcon from '@mui/icons-material/Circle'
 import DeleteIcon from '@mui/icons-material/Delete'
@@ -17,12 +17,8 @@ import {
 } from '@mui/material'
 import { useTranslation } from 'next-i18next'
 
-import UserForm from '../UserForm/UserForm'
-import { UserFormDialog } from '@/components/dialogs'
-import { useModalContext } from '@/context'
 import { userGetters } from '@/lib/getters'
 import { actions, hasPermission } from '@/lib/helpers'
-import { B2BUserInput } from '@/lib/types'
 
 import { B2BUser } from '@/lib/gql/types'
 
@@ -32,7 +28,6 @@ interface UserTableProps {
   showActionButtons?: boolean
   onView?: (b2BUser: B2BUser) => void
   onDelete?: (id: string | undefined) => void
-  onSave?: (formValues: B2BUserInput, b2BUser?: B2BUser | undefined) => void
 }
 
 const style = {
@@ -45,28 +40,14 @@ const style = {
 }
 
 const UserTable = (props: UserTableProps) => {
-  const { mdScreen, b2bUsers, showActionButtons = true, onView, onDelete, onSave } = props
+  const { mdScreen, b2bUsers, showActionButtons = true, onView, onDelete } = props
 
   const { t } = useTranslation('common')
-  const { showModal, closeModal } = useModalContext()
   const theme = useTheme()
-  const [editUserId, setEditUserId] = useState<string | undefined>(undefined)
 
   const onEditUserButtonClick = (b2BUser: B2BUser) => {
-    showModal({
-      Component: UserFormDialog,
-      props: {
-        isEditMode: true,
-        isUserFormInDialog: true,
-        formTitle: t('edit-user'),
-        b2BUser,
-        onSave: (b2BUserInput: B2BUserInput) => onSave?.(b2BUserInput, b2BUser),
-        onClose: () => {
-          setEditUserId(undefined)
-          closeModal()
-        },
-      },
-    })
+    // Navigate to edit page instead of showing modal
+    const userId = b2BUser?.userId
   }
 
   return (
@@ -94,20 +75,8 @@ const UserTable = (props: UserTableProps) => {
         </TableRow>
       </TableHead>
       <TableBody>
-        {b2bUsers?.map((b2bUser: B2BUser) =>
-          editUserId && editUserId === b2bUser?.userId ? (
-            <TableRow key={b2bUser?.userId}>
-              <TableCell colSpan={7} style={{ width: '100%', padding: 0 }}>
-                <UserForm
-                  isEditMode={true}
-                  b2BUser={b2bUser}
-                  onClose={() => setEditUserId(undefined)}
-                  onSave={(formValues: B2BUserInput) => onSave?.(formValues, b2bUser)}
-                />
-              </TableCell>
-            </TableRow>
-          ) : (
-            <TableRow key={b2bUser?.userId} onClick={() => !mdScreen && onView?.(b2bUser)}>
+        {b2bUsers?.map((b2bUser: B2BUser) => (
+          <TableRow key={b2bUser?.userId} onClick={() => !mdScreen && onView?.(b2bUser)}>
               <TableCell colSpan={2} sx={style.emailAddressCell}>
                 {userGetters.getEmailAddress(b2bUser)}
               </TableCell>

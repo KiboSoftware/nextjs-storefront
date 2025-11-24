@@ -10,19 +10,16 @@ import * as yup from 'yup'
 import userFormStyles from './UserForm.styles'
 import { AccountRoleAssignments } from '@/components/b2b'
 import { KiboTextBox } from '@/components/common'
-import { useGetRolesByAccountIdAsync } from '@/hooks'
 import { CustomBehaviors } from '@/lib/constants'
 
-import { B2BUser, B2BUserInput, B2BAccount } from '@/lib/gql/types'
+import { B2BUserInput, B2BAccount } from '@/lib/gql/types'
 
 interface UserFormProps {
-  isEditMode: boolean
   isUserFormInDialog?: boolean
-  b2BUser?: B2BUser
   accounts?: B2BAccount[]
   accountUserBehaviors?: Record<number, number[]>
   onClose: () => void
-  onSave: (formValues: B2BUserInput & { roleAssignments?: Record<number, string[]> }, b2BUser?: B2BUser) => void
+  onSave: (formValues: B2BUserInput & { roleAssignments?: Record<number, string[]> }) => void
 }
 
 export const useFormSchema = () => {
@@ -38,7 +35,7 @@ export const useFormSchema = () => {
 }
 
 const UserForm = (props: UserFormProps) => {
-  const { isEditMode, b2BUser, accounts = [], accountUserBehaviors, onClose, onSave } = props
+  const { accounts = [], accountUserBehaviors, onClose, onSave } = props
 
   const classes = userFormStyles()
   const { t } = useTranslation('common')
@@ -56,86 +53,33 @@ const UserForm = (props: UserFormProps) => {
     [accountUserBehaviors]
   )
 
-  // Fetch roles for all accounts only if user has permission
-  const rolesData = React.useMemo(
-    () =>
-      accounts.map((account) => {
-        const accountId = account.id || 0
-        const hasPermission = hasViewRolePermission(accountId)
-        // eslint-disable-next-line react-hooks/rules-of-hooks
-        return { accountId, hasPermission }
-      }),
-    [accounts, hasViewRolePermission]
-  )
-
-  // Use hooks conditionally based on permission
-  const roleQueries = rolesData.map(({ accountId, hasPermission }) => 
-    // eslint-disable-next-line react-hooks/rules-of-hooks
-    useGetRolesByAccountIdAsync(accountId, undefined, hasPermission)
-  )
-
   // Transform accounts into the format needed by AccountRoleAssignments
-  // Only include accounts where user has ViewRole permission
   const accountsWithRoles = React.useMemo(
     () =>
       accounts
-        .map((account, index) => {
+        .map((account) => {
           const accountId = account.id || 0
-          const hasPermission = rolesData[index]?.hasPermission
+          const hasPermission = hasViewRolePermission(accountId)
 
           // Skip accounts without permission
           if (!hasPermission) return null
 
-          const { roles } = roleQueries[index]
-
-          const systemRoles =
-            roles?.items
-              ?.filter((role) => role.isSystemRole)
-              .map((role) => ({
-                id: String(role.id),
-                name: role.name || '',
-                isSystemRole: true,
-              })) || []
-
-          const customRoles =
-            roles?.items
-              ?.filter((role) => !role.isSystemRole)
-              .map((role) => ({
-                id: String(role.id),
-                name: role.name || '',
-                isSystemRole: false,
-              })) || []
-
           return {
             accountId,
             accountName: account.companyOrOrganization || '',
-            systemRoles,
-            customRoles,
           }
         })
         .filter(Boolean) as Array<{
         accountId: number
         accountName: string
-        systemRoles: Array<{ id: string; name: string; isSystemRole: boolean }>
-        customRoles: Array<{ id: string; name: string; isSystemRole: boolean }>
       }>,
-    [accounts, rolesData, roleQueries]
+    [accounts, hasViewRolePermission]
   )
 
-  // Memoize default values based on b2BUser
+  // Memoize default values
   const defaultValues = React.useMemo(() => {
-    if (b2BUser) {
-      const { firstName, lastName, emailAddress, isActive, roles } = b2BUser
-      return {
-        emailAddress: emailAddress || '',
-        firstName: firstName || '',
-        lastName: lastName || '',
-        isActive: isActive || false,
-        role: roles?.length ? roles[0]?.roleName || '' : '',
-      }
-    }
     return { role: 'Admin', emailAddress: '', firstName: '', lastName: '', isActive: true }
-  }, [b2BUser])
+  }, [])
 
   const {
     getValues,
@@ -155,14 +99,10 @@ const UserForm = (props: UserFormProps) => {
       ...formValues,
       roleAssignments,
     }
-    if (isEditMode) {
-      await onSave(extendedFormValues, b2BUser)
-    } else {
-      await onSave(extendedFormValues)
-    }
+    await onSave(extendedFormValues)
     setLoading(false)
     onClose()
-  }, [isLoading, getValues, roleAssignments, isEditMode, onSave, b2BUser, onClose])
+  }, [isLoading, getValues, roleAssignments, onSave, onClose])
 
   const cancelAction = React.useCallback(() => {
     onClose()
@@ -294,7 +234,7 @@ const UserForm = (props: UserFormProps) => {
                 loading={isLoading}
                 disabled={isLoading}
               >
-                {isEditMode ? t('save') : t('add-user')}
+                {t('add-user')}
               </LoadingButton>
             </Box>
           </Grid>

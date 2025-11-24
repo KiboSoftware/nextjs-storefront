@@ -24,3 +24,15 @@ export const hasPermission = (action: any) => {
 
   return canAccess
 }
+
+
+export const hasB2BPermissions = (action: number, accountUserBehaviors?: Record<number, number[]>, userId?: number) => {
+  let canAccess = false
+
+  if (!accountUserBehaviors || !userId) return false
+  
+  const behaviors = accountUserBehaviors[userId]
+  canAccess = behaviors ? behaviors.includes(action) : false
+
+  return canAccess
+}
