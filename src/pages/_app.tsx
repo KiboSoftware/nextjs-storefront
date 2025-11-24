@@ -1,14 +1,11 @@
 import React from 'react'
 
 import { CacheProvider, EmotionCache } from '@emotion/react'
-// eslint-disable-next-line import/order
 import { AppProps } from 'next/app'
 import getConfig from 'next/config'
 import Head from 'next/head'
-import { appWithTranslation } from 'next-i18next'
-import 'next-i18next.config'
-// eslint-disable-next-line import/order
 import Router from 'next/router'
+import { appWithTranslation } from 'next-i18next'
 import NProgress from 'nprogress'
 
 import { DefaultLayout } from '@/components/layout'
@@ -18,6 +15,9 @@ import type { NextPageWithLayout } from '@/lib/types'
 
 import '@/styles/global.css'
 import '@splidejs/react-splide/css'
+
+// eslint-disable-next-line @typescript-eslint/no-var-requires
+const nextI18NextConfig = require('../../next-i18next.config')
 
 // Client-side cache, shared for the whole session of the user in the browser.
 const clientSideEmotionCache = createEmotionCache()
@@ -57,4 +57,4 @@ const App = (props: KiboAppProps) => {
     </CacheProvider>
   )
 }
-export default appWithTranslation<KiboAppProps>(App)
+export default appWithTranslation<KiboAppProps>(App, nextI18NextConfig)
