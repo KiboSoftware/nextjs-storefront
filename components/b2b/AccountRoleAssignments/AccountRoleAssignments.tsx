@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useState, memo } from 'react'
 
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore'
 import SearchIcon from '@mui/icons-material/Search'
@@ -9,32 +9,53 @@ import {
   Box,
   Button,
   Chip,
-  CircularProgress,
   InputAdornment,
   TextField,
   Typography,
   styled,
 } from '@mui/material'
 import { useTranslation } from 'next-i18next'
+import { text } from 'stream/consumers'
 
-import { useGetRolesByAccountIdAsync } from '@/hooks'
+import type { GetRolesAsyncResponse } from '@/lib/api/operations/get-roles-across-accounts'
 
+/** Represents a role that can be assigned to a user */
 interface Role {
   id: string
   name: string
   isSystemRole: boolean
 }
 
+/** Account information with basic details */
 interface AccountWithRoles {
   accountId: number
   accountName: string
 }
 
+/** Props for the AccountRoleAssignments component */
 interface AccountRoleAssignmentsProps {
+  /** List of accounts available for role assignment */
   accounts: AccountWithRoles[]
-  selectedRoles: Record<number, string[]> // accountId -> roleIds[]
+  /** Map of account IDs to selected role IDs */
+  selectedRoles: Record<number, string[]>
+  /** Callback when role selection changes */
   onChange: (selectedRoles: Record<number, string[]>) => void
+  /** Map of account IDs to their available roles data */
+  accountRoles?: Record<number, GetRolesAsyncResponse>
 }
+
+/** Props for individual account accordion item */
+interface AccountAccordionItemProps {
+  account: AccountWithRoles
+  isExpanded: boolean
+  onExpandChange: (accountId: number, isExpanded: boolean) => void
+  selectedAccountRoles: string[]
+  onRoleToggle: (accountId: number, roleId: string) => void
+  searchTerm: string
+  rolesData?: GetRolesAsyncResponse
+}
+
+/** Styled components */
 
 const StyledAccordion = styled(Accordion)(({ theme }) => ({
   backgroundColor: theme.palette.grey[50],
@@ -51,6 +72,7 @@ const StyledAccordion = styled(Accordion)(({ theme }) => ({
 
 const StyledAccordionSummary = styled(AccordionSummary)(({ theme }) => ({
   backgroundColor: theme.palette.grey[50],
+  borderBottom: `1px solid ${theme.palette.grey[300]}`,
   minHeight: '56px',
   '&.Mui-expanded': {
     minHeight: '56px',
@@ -64,15 +86,21 @@ const StyledAccordionSummary = styled(AccordionSummary)(({ theme }) => ({
 }))
 
 const RoleChip = styled(Chip)<{ selected?: boolean }>(({ theme, selected }) => ({
-  margin: theme.spacing(0.5),
+  width: '100%',
+  justifyContent: 'center',
   backgroundColor: selected ? theme.palette.primary.main : theme.palette.background.paper,
   color: selected ? theme.palette.primary.contrastText : theme.palette.text.primary,
   border: `1px solid ${selected ? theme.palette.primary.main : theme.palette.grey[300]}`,
   cursor: 'pointer',
   '&:hover': {
-    backgroundColor: selected
-      ? theme.palette.primary.dark
-      : theme.palette.action.hover,
+    backgroundColor: selected ? theme.palette.primary.dark : theme.palette.action.hover,
+  },
+  '& .MuiChip-label': {
+    width: '100%',
+    overflow: 'hidden',
+    textOverflow: 'ellipsis',
+    whiteSpace: 'nowrap',
+    textAlign: 'center',
   },
 }))
 
@@ -88,30 +116,26 @@ interface AccountAccordionItemProps {
   account: AccountWithRoles
   isExpanded: boolean
   onExpandChange: (accountId: number, isExpanded: boolean) => void
-  selectedRoles: Record<number, string[]>
+  selectedAccountRoles: string[]
   onRoleToggle: (accountId: number, roleId: string) => void
   searchTerm: string
+  rolesData?: GetRolesAsyncResponse
 }
 
-const AccountAccordionItem: React.FC<AccountAccordionItemProps> = React.memo(({
-  account,
-  isExpanded,
-  onExpandChange,
-  selectedRoles,
-  onRoleToggle,
-  searchTerm,
-}) => {
+const AccountAccordionItem: React.FC<AccountAccordionItemProps> = memo((props) => {
+  const {
+    account,
+    isExpanded,
+    onExpandChange,
+    selectedAccountRoles,
+    onRoleToggle,
+    searchTerm,
+    rolesData,
+  } = props
+
   const { t } = useTranslation('common')
-  const [hasBeenExpanded, setHasBeenExpanded] = useState(isExpanded)
 
-  // Fetch roles when accordion has been expanded
-  const { roles: rolesData, isLoading, isSuccess } = useGetRolesByAccountIdAsync(
-    account.accountId,
-    undefined,
-    hasBeenExpanded
-  )
-
-  // Memoize role categorization
+  // Memoize role categorization - only recalculate when rolesData changes
   const { systemRoles, customRoles } = React.useMemo(() => {
     const system: Role[] = []
     const custom: Role[] = []
@@ -150,15 +174,12 @@ const AccountAccordionItem: React.FC<AccountAccordionItemProps> = React.memo(({
 
   const hasVisibleRoles = filteredSystemRoles.length > 0 || filteredCustomRoles.length > 0
 
-  // Handle expansion change and track first expansion
+  // Handle expansion change
   const handleExpansionChange = React.useCallback(
     (_event: React.SyntheticEvent, expanded: boolean) => {
-      if (expanded && !hasBeenExpanded) {
-        setHasBeenExpanded(true)
-      }
       onExpandChange(account.accountId, expanded)
     },
-    [hasBeenExpanded, onExpandChange, account.accountId]
+    [onExpandChange, account.accountId]
   )
 
   // Memoize role click handler to prevent RoleChip re-renders and accordion collapse
@@ -170,36 +191,17 @@ const AccountAccordionItem: React.FC<AccountAccordionItemProps> = React.memo(({
     [onRoleToggle, account.accountId]
   )
 
-  // Memoize selected state checks
+  // Check if a specific role is selected - memoized to prevent recalculation
   const isRoleSelected = React.useCallback(
     (roleId: string) => {
-      return selectedRoles[account.accountId]?.includes(roleId) || false
+      return selectedAccountRoles.includes(roleId)
     },
-    [selectedRoles, account.accountId]
+    [selectedAccountRoles]
   )
 
-  // Show loading state, error message, or roles
-  const getAccordionContent = () => {
-    if (isLoading) {
-      return (
-        <Box sx={{ display: 'flex', justifyContent: 'center', p: 3 }}>
-          <CircularProgress size={24} />
-        </Box>
-      )
-    }
-
-    // If fetched but failed, show error message
-    if (hasBeenExpanded && !isLoading && !isSuccess) {
-      return (
-        <Box sx={{ display: 'flex', justifyContent: 'center', p: 3 }}>
-          <Typography variant="body2" color="error">
-            {t('failed-to-load-roles')}
-          </Typography>
-        </Box>
-      )
-    }
-
-    // If no roles available yet (not expanded or loading)
+  // Memoize accordion content to prevent recreation on every render
+  const accordionContent = React.useMemo(() => {
+    // If no roles available
     if (!hasVisibleRoles && !searchTerm) {
       return (
         <Box sx={{ display: 'flex', justifyContent: 'center', p: 3 }}>
@@ -227,11 +229,19 @@ const AccountAccordionItem: React.FC<AccountAccordionItemProps> = React.memo(({
         {filteredSystemRoles.length > 0 && (
           <>
             <SectionTitle variant="subtitle2">{t('system-roles')}</SectionTitle>
-            <Box sx={{ display: 'flex', flexWrap: 'wrap', gap: 1, mb: 2 }}>
+            <Box
+              sx={{
+                display: 'grid',
+                gridTemplateColumns: 'repeat(5, 1fr)',
+                gap: 1,
+                mb: 2,
+              }}
+            >
               {filteredSystemRoles.map((role) => (
                 <RoleChip
                   key={role.id}
                   label={role.name}
+                  title={role.name}
                   selected={isRoleSelected(role.id)}
                   onClick={(e) => handleRoleClick(e, role.id)}
                 />
@@ -242,14 +252,19 @@ const AccountAccordionItem: React.FC<AccountAccordionItemProps> = React.memo(({
 
         {filteredCustomRoles.length > 0 && (
           <>
-            <SectionTitle variant="subtitle2">
-              {t('custom-roles', { accountName: account.accountName.split(' ')[1] })}
-            </SectionTitle>
-            <Box sx={{ display: 'flex', flexWrap: 'wrap', gap: 1 }}>
+            <SectionTitle variant="subtitle2">{t('custom-roles')}</SectionTitle>
+            <Box
+              sx={{
+                display: 'grid',
+                gridTemplateColumns: 'repeat(5, 1fr)',
+                gap: 1,
+              }}
+            >
               {filteredCustomRoles.map((role) => (
                 <RoleChip
                   key={role.id}
                   label={role.name}
+                  title={role.name}
                   selected={isRoleSelected(role.id)}
                   onClick={(e) => handleRoleClick(e, role.id)}
                 />
@@ -259,7 +274,15 @@ const AccountAccordionItem: React.FC<AccountAccordionItemProps> = React.memo(({
         )}
       </>
     )
-  }
+  }, [
+    filteredSystemRoles,
+    filteredCustomRoles,
+    hasVisibleRoles,
+    searchTerm,
+    isRoleSelected,
+    handleRoleClick,
+    t,
+  ])
 
   return (
     <StyledAccordion expanded={isExpanded} onChange={handleExpansionChange}>
@@ -269,40 +292,65 @@ const AccountAccordionItem: React.FC<AccountAccordionItemProps> = React.memo(({
         id={`panel-${account.accountId}-header`}
       >
         <Box sx={{ display: 'flex', justifyContent: 'space-between', width: '100%', pr: 2 }}>
-          <Typography sx={{ fontWeight: 500 }}>{account.accountName}</Typography>
+          <Typography variant="subtitle1" sx={{ fontWeight: 600 }}>
+            {account.accountName}
+          </Typography>
         </Box>
       </StyledAccordionSummary>
-      <AccordionDetails>
-        {getAccordionContent()}
-      </AccordionDetails>
+      <AccordionDetails>{accordionContent}</AccordionDetails>
     </StyledAccordion>
   )
 })
 
 AccountAccordionItem.displayName = 'AccountAccordionItem'
 
-const AccountRoleAssignments: React.FC<AccountRoleAssignmentsProps> = ({
-  accounts,
-  selectedRoles,
-  onChange,
-}) => {
+const AccountRoleAssignments: React.FC<AccountRoleAssignmentsProps> = (props) => {
+  const { accounts, selectedRoles, onChange, accountRoles = {} } = props
   const { t } = useTranslation('common')
-  
-  const [expandedAccounts, setExpandedAccounts] = useState<Record<number, boolean>>({})
+
+  // Initialize expanded state - auto-expand accounts with selected roles, and first accordion
+  // Only calculated once on mount
+  const initialExpandedState = React.useMemo(() => {
+    const expanded: Record<number, boolean> = {}
+
+    // Expand accounts with selected roles (includes existing roles from parent)
+    Object.keys(selectedRoles).forEach((accountIdStr) => {
+      const accountId = Number(accountIdStr)
+      if (selectedRoles[accountId]?.length > 0) {
+        expanded[accountId] = true
+      }
+    })
+
+    // Auto-expand first accordion if no accounts are expanded
+    if (Object.keys(expanded).length === 0 && accounts.length > 0) {
+      expanded[accounts[0].accountId] = true
+    }
+
+    return expanded
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []) // Only run once on mount with initial selectedRoles
+
+  const [expandedAccounts, setExpandedAccounts] =
+    useState<Record<number, boolean>>(initialExpandedState)
   const [searchTerm, setSearchTerm] = useState('')
 
+  // Stable callback - doesn't recreate unless accounts array changes
   const handleExpandAll = React.useCallback(() => {
-    const allExpanded: Record<number, boolean> = {}
-    accounts.forEach((account) => {
-      allExpanded[account.accountId] = true
+    setExpandedAccounts(() => {
+      const allExpanded: Record<number, boolean> = {}
+      accounts.forEach((account) => {
+        allExpanded[account.accountId] = true
+      })
+      return allExpanded
     })
-    setExpandedAccounts(allExpanded)
   }, [accounts])
 
+  // Stable callback - never recreates
   const handleMinimizeAll = React.useCallback(() => {
     setExpandedAccounts({})
   }, [])
 
+  // Stable callback - only recreates when selectedRoles or onChange changes
   const handleRoleToggle = React.useCallback(
     (accountId: number, roleId: string) => {
       const accountRoles = selectedRoles[accountId] || []
@@ -320,6 +368,7 @@ const AccountRoleAssignments: React.FC<AccountRoleAssignmentsProps> = ({
     [selectedRoles, onChange]
   )
 
+  // Stable callback - never recreates (uses functional state update)
   const handleExpandChange = React.useCallback((accountId: number, isExpanded: boolean) => {
     setExpandedAccounts((prev) => ({
       ...prev,
@@ -327,6 +376,7 @@ const AccountRoleAssignments: React.FC<AccountRoleAssignmentsProps> = ({
     }))
   }, [])
 
+  // Stable callback - never recreates (uses functional state update)
   const handleSearchChange = React.useCallback((event: React.ChangeEvent<HTMLInputElement>) => {
     setSearchTerm(event.target.value)
   }, [])
@@ -371,17 +421,23 @@ const AccountRoleAssignments: React.FC<AccountRoleAssignmentsProps> = ({
         size="small"
       />
 
-      {accounts.map((account) => (
-        <AccountAccordionItem
-          key={account.accountId}
-          account={account}
-          isExpanded={expandedAccounts[account.accountId] || false}
-          onExpandChange={handleExpandChange}
-          selectedRoles={selectedRoles}
-          onRoleToggle={handleRoleToggle}
-          searchTerm={searchTerm}
-        />
-      ))}
+      {accounts.map((account) => {
+        const accountId = account.accountId
+        const selectedAccountRoles = selectedRoles[accountId] || []
+
+        return (
+          <AccountAccordionItem
+            key={accountId}
+            account={account}
+            isExpanded={expandedAccounts[accountId] || false}
+            onExpandChange={handleExpandChange}
+            selectedAccountRoles={selectedAccountRoles}
+            onRoleToggle={handleRoleToggle}
+            searchTerm={searchTerm}
+            rolesData={accountRoles[accountId]}
+          />
+        )
+      })}
     </Box>
   )
 }

@@ -61,7 +61,6 @@ export { default as createRoleAsyncMutation } from './b2b/manage-roles/create-ro
 export { default as deleteRoleAsyncMutation } from './b2b/manage-roles/delete-role-async'
 export { default as updateRoleAsyncMutation } from './b2b/manage-roles/update-role-async'
 export { default as applyRoleToFutureChildrensAsyncMutation } from './b2b/manage-roles/apply-role-to-future-childrens-async'
-export { default as addUserRolesAsyncMutation } from './b2b/assign-roles/add-user-roles-async'
 // Address validation
 export { default as validateCustomerAddress } from './address/validate-customer-address'
 

@@ -1,6 +1,6 @@
 // Figma: https://www.figma.com/file/bKJuIwUx6VXmubHZo4rCBq/B2B?type=design&node-id=19-688&mode=design&t=MrZvIdPLzo5jsp19-0
 
-import { ChangeEvent, useState } from 'react'
+import React, { ChangeEvent, useState } from 'react'
 
 import {
   ChevronLeft as ChevronLeftIcon,
@@ -29,18 +29,9 @@ import { UserTable } from '@/components/b2b'
 import { SearchBar } from '@/components/common'
 import { ConfirmationDialog } from '@/components/dialogs'
 import { useAuthContext, useModalContext } from '@/context'
-import {
-  useDebounce,
-  useGetB2BUserQueries,
-  useRemoveCustomerB2bUserMutation,
-} from '@/hooks'
-import { CustomBehaviors, Routes } from '@/lib/constants'
-import {
-  actions,
-  getPerPageItemText,
-  hasB2BPermissions,
-  hasPermission,
-} from '@/lib/helpers'
+import { useDebounce, useGetB2BUserQueries, useRemoveCustomerB2bUserMutation } from '@/hooks'
+import { Routes } from '@/lib/constants'
+import { actions, getPerPageItemText, hasPermission } from '@/lib/helpers'
 
 import { B2BUser } from '@/lib/gql/types'
 
@@ -67,10 +58,47 @@ const PaginationContainer = styled(Box)(({ theme }: { theme: Theme }) => ({
   margin: '20px 0',
 }))
 
+/** Loading spinner container styles - extracted to prevent recreation on each render */
+const LOADING_CONTAINER_STYLES = {
+  width: '100%',
+  display: 'flex',
+  justifyContent: 'center',
+} as const
+
+/** Header container inline styles - extracted to prevent recreation */
+const HEADER_CONTAINER_STYLES = {
+  marginTop: '10px',
+  marginBottom: '20px',
+} as const
+
+/** Button width styles - extracted to prevent recreation */
+const ADD_BUTTON_WIDTH_STYLES = {
+  width: { xs: '100%', md: 118 },
+} as const
+
+/**
+ * Props for the UsersTemplate component
+ */
 interface UsersTemplateProps {
+  /** Map of account IDs to user behavior/permission arrays */
   accountUserBehaviors?: Record<number, number[]>
 }
 
+/**
+ * Pagination state structure
+ */
+interface PaginationState {
+  searchTerm: string
+  pageSize: number
+  startIndex: number
+}
+
+/**
+ * UsersTemplate Component
+ * Enterprise-grade template for managing B2B users
+ * Features: User listing, search, pagination, add/edit/delete operations
+ * Optimized for minimal re-renders and maximum performance
+ */
 const UsersTemplate = ({ accountUserBehaviors }: UsersTemplateProps) => {
   const {
     publicRuntimeConfig: {
@@ -86,12 +114,16 @@ const UsersTemplate = ({ accountUserBehaviors }: UsersTemplateProps) => {
   const router = useRouter()
   const mdScreen = useMediaQuery(theme.breakpoints.up('md'))
 
-  const [paginationState, setPaginationState] = useState({
+  const [paginationState, setPaginationState] = useState<PaginationState>({
     searchTerm: '',
     pageSize: defaultPageSize,
     startIndex: defaultStartIndex,
   })
 
+  /**
+   * Fetch B2B users with pagination and search
+   * Uses debounced search term to prevent excessive API calls
+   */
   const { data, isLoading } = useGetB2BUserQueries({
     accountId: user?.id as number,
     filter: defaultFilter,
@@ -103,51 +135,80 @@ const UsersTemplate = ({ accountUserBehaviors }: UsersTemplateProps) => {
 
   const { removeCustomerB2bUser } = useRemoveCustomerB2bUserMutation()
 
-  const handleDelete = (id: string | undefined | null) => {
-    showModal({
-      Component: ConfirmationDialog,
-      props: {
-        contentText: t('delete-user-confirmation-text'),
-        primaryButtonText: t('yes-remove'),
-        title: t('confirmation'),
-        onConfirm: () => {
-          const accountId = user?.id
-          const queryVars = { accountId, userId: id }
-          try {
-            removeCustomerB2bUser.mutate({ ...queryVars })
-          } catch (e) {
-            console.error(e)
-          }
+  /**
+   * Handle user deletion with confirmation dialog
+   * Shows modal before executing delete operation
+   */
+  const handleDelete = React.useCallback(
+    (id: string | undefined | null) => {
+      showModal({
+        Component: ConfirmationDialog,
+        props: {
+          contentText: t('delete-user-confirmation-text'),
+          primaryButtonText: t('yes-remove'),
+          title: t('confirmation'),
+          onConfirm: () => {
+            const accountId = user?.id
+            const queryVars = { accountId, userId: id }
+            try {
+              removeCustomerB2bUser.mutate({ ...queryVars })
+            } catch (error) {
+              console.error('[UsersTemplate] Error deleting user:', error)
+            }
+          },
         },
-      },
-    })
-  }
+      })
+    },
+    [showModal, t, user?.id, removeCustomerB2bUser]
+  )
 
-  const handleSearch = (searchText: string) => {
-    setPaginationState({
-      ...paginationState,
-      searchTerm: searchText,
-      startIndex: defaultStartIndex,
-    })
-  }
+  /**
+   * Handle search input changes
+   * Resets pagination to first page when search term changes
+   * Uses functional state update to avoid stale closure issues
+   */
+  const handleSearch = React.useCallback(
+    (searchText: string) => {
+      setPaginationState((prev) => ({
+        ...prev,
+        searchTerm: searchText,
+        startIndex: defaultStartIndex,
+      }))
+    },
+    [defaultStartIndex]
+  )
 
-  const handlePageChange = (_event: ChangeEvent<unknown>, page: number) =>
-    setPaginationState({
-      ...paginationState,
-      startIndex: (data?.pageSize ?? 0) * (page - 1),
-    })
+  /**
+   * Handle pagination page changes
+   * Calculates new startIndex based on page number and page size
+   */
+  const handlePageChange = React.useCallback(
+    (_event: ChangeEvent<unknown>, page: number) => {
+      setPaginationState((prev) => ({
+        ...prev,
+        startIndex: (data?.pageSize ?? 0) * (page - 1),
+      }))
+    },
+    [data?.pageSize]
+  )
 
-  const handleAddUserButtonClick = () => {
-    // Navigate to the add user page instead of showing modal
+  /**
+   * Navigate to add user page
+   * Stable callback prevents unnecessary re-renders
+   */
+  const handleAddUser = React.useCallback(() => {
     router.push(Routes.AddUser)
-  }
+  }, [router])
 
-  // Check if user has add user permission (CustomBehaviors.AddUser = 1000 || B2B permission Add User = 2000)
-  const hasAddUserPermission = hasB2BPermissions(CustomBehaviors.AddUser, accountUserBehaviors, user?.id)
+  /**
+   * Check if current user has permission to add new users
+   * Memoized to prevent recalculation on every render
+   */
+  const hasAddUserPermission = React.useMemo(() => hasPermission(actions.CREATE_ACCOUNT), [])
 
   return (
     <Grid>
-      <Grid item style={{ marginTop: '10px', marginBottom: '20px' }}>
+      <Grid item style={HEADER_CONTAINER_STYLES}>
         <Box sx={UsersTemplateStyle.heading}>
           <BackButtonLink aria-label={t('my-account')} href="/my-account">
             <ChevronLeftIcon />
@@ -156,17 +217,17 @@ const UsersTemplate = ({ accountUserBehaviors }: UsersTemplateProps) => {
           <Typography variant={mdScreen ? 'h1' : 'h2'}>{t('users')}</Typography>
         </Box>
         <NoSsr>
-          {(hasPermission(actions.CREATE_ACCOUNT) || hasAddUserPermission) && (
+          {hasAddUserPermission && (
             <Grid container>
               <Grid item xs={12} md={12}>
                 <Button
                   variant="contained"
                   color="inherit"
-                  onClick={handleAddUserButtonClick}
+                  onClick={handleAddUser}
                   disableElevation
                   id="formOpenButton"
                   startIcon={<AddCircleOutlineIcon />}
-                  sx={{ width: { xs: '100%', md: 118 } }}
+                  sx={ADD_BUTTON_WIDTH_STYLES}
                 >
                   {t('add-user')}
                 </Button>
@@ -186,7 +247,7 @@ const UsersTemplate = ({ accountUserBehaviors }: UsersTemplateProps) => {
         </SearchBoxContainer>
 
         {isLoading ? (
-          <Box style={{ width: '100%', display: 'flex', justifyContent: 'center' }}>
+          <Box style={LOADING_CONTAINER_STYLES}>
             <CircularProgress />
           </Box>
         ) : (
@@ -195,6 +256,8 @@ const UsersTemplate = ({ accountUserBehaviors }: UsersTemplateProps) => {
               mdScreen={mdScreen}
               b2bUsers={data?.items as B2BUser[]}
               onDelete={handleDelete}
+              accountUserBehaviors={accountUserBehaviors}
+              userId={user?.id}
             />
             <PaginationContainer>
               <Pagination

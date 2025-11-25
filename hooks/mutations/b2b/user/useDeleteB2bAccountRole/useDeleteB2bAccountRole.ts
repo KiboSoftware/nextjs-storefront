@@ -3,13 +3,13 @@
  */
 import { useMutation, useQueryClient } from '@tanstack/react-query'
 
-import { makeGraphQLClient } from '@/lib/gql/client'
+import { makeGraphQLClientWithoutUserClaims } from '@/lib/gql/client'
+import { deleteB2bAccountRoleMutation } from '@/lib/gql/mutations'
 import { customerB2BUserKeys } from '@/lib/react-query/queryKeys'
 
 // import { deleteB2bAccountRole } from '@/lib/gql/types'
-import { deleteB2bAccountRoleMutation } from '@/lib/gql/mutations'
 
-const client = makeGraphQLClient()
+const client = makeGraphQLClientWithoutUserClaims()
 
 const deleteB2bAccountUserRole = async (deleteB2bAccountRole: any) => {
   const response = await client.request({

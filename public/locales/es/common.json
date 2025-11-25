@@ -26,6 +26,11 @@
   "sort-by": "",
   "total": "",
   "use-current-location": "",
+  "account-role-assignments": "Asignaciones de Cuenta y Roles",
+  "system-roles": "Roles del Sistema",
+  "custom-roles": "Roles Personalizados",
+  "no-roles-available": "No hay roles disponibles",
+  "no-roles-match": "No hay roles que coincidan con \"{{searchTerm}}\"",
   "remove-payPal": "Remove PayPal",
   "loading-paypal": "Loading PayPal...",
   "error-cartTakeover": "Error al recuperar el carrito. Cierra la ventana e inténtalo de nuevo."

@@ -130,3 +130,8 @@ body {
   margin: 0;
   padding: 2rem;
 }
+
+/* Override MUI disabled label color */
+.MuiFormLabel-root.Mui-disabled {
+  color: #2b2b2b !important;
+}
