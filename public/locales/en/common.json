@@ -435,7 +435,7 @@
   "delete-user": "Delete Buyer",
   "yes-remove": "Yes, Remove",
   "add-new-user": "Add a new Buyer",
-  "user-search-placeholder": "Search Buyer by first name, last name, or email address.",
+  "user-search-placeholder": "Search Buyer by first name or last name.",
   "no-record-found": "No record found",
   "invalid-email-error": "Invalid email address",
   "no-email-error": "Please enter a valid email address",

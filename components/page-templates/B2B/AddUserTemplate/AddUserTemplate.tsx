@@ -27,41 +27,31 @@ import { B2BUser, B2BUserCollection } from '@/lib/gql/types'
 const BackButtonLink = styled(Link)(({ theme }: { theme: Theme }) => ({
   typography: 'body2',
   textDecoration: 'none',
-  color: theme.palette.grey[900],
+  color: theme.palette.grey[600],
   display: 'flex',
   alignItems: 'center',
-  padding: '1rem 0rem',
+  gap: theme.spacing(0.5),
   cursor: 'pointer',
+  '&:hover': {
+    color: theme.palette.grey[900],
+  },
 }))
 
 const ContentPaper = styled(Paper)(({ theme }: { theme: Theme }) => ({
   marginTop: theme.spacing(2),
+  marginBottom: theme.spacing(2),
 }))
 
-/** Header container inline styles - extracted to prevent recreation */
-const HEADER_CONTAINER_STYLES = {
-  marginTop: '15px',
+/** Container styles */
+const CONTAINER_STYLES = {
+  marginTop: '10px',
   marginBottom: '20px',
-} as const
-
-/** Title and actions container styles */
-const TITLE_ACTIONS_CONTAINER_STYLES = {
-  display: 'flex',
-  justifyContent: 'space-between',
-  alignItems: 'center',
-  marginTop: 2,
-} as const
-
-/** Action buttons container styles */
-const ACTION_BUTTONS_CONTAINER_STYLES = {
-  display: 'flex',
-  gap: 2,
 } as const
 
 /**
  * Props for the AddUserTemplate component
  */
-interface AddUserTemplateProps {
+export interface AddUserTemplateProps {
   /** Initial account hierarchy data */
   initialData?: B2BAccountHierarchyResult
   /** Map of account IDs to user behavior/permission arrays */
@@ -269,21 +259,41 @@ const AddUserTemplate = ({
 
   return (
     <Grid>
-      <Grid item style={HEADER_CONTAINER_STYLES}>
-        <BackButtonLink aria-label={t('users')} href={Routes.Users}>
-          <ChevronLeftIcon />
-          {mdScreen && <Typography variant="body1">{t('users')}</Typography>}
-        </BackButtonLink>
-        <Box sx={TITLE_ACTIONS_CONTAINER_STYLES}>
-          <Typography variant={mdScreen ? 'h1' : 'h2'}>
-            {isEditMode ? t('edit-user') : t('add-new-user')}
-          </Typography>
-          <Box sx={ACTION_BUTTONS_CONTAINER_STYLES}>
+      <Grid item style={CONTAINER_STYLES}>
+        {/* Mobile: Back button and title together */}
+        {!mdScreen && (
+          <Box sx={{ mb: 2, display: 'flex', gap: 1 }}>
+            <BackButtonLink aria-label={t('users')} href={Routes.Users}>
+              <ChevronLeftIcon fontSize="inherit" />
+            </BackButtonLink>
+            <Typography variant="h2" sx={{ mt: 1 }}>
+              {isEditMode ? t('edit-user') : t('add-new-user')}
+            </Typography>
+          </Box>
+        )}
+
+        {/* Desktop: Back button and title on same line */}
+        {mdScreen && (
+          <Box sx={{ mb: 2 }}>
+            <BackButtonLink aria-label={t('users')} href={Routes.Users}>
+              <ChevronLeftIcon fontSize="inherit" />
+              <Typography variant="body2">{t('users')}</Typography>
+            </BackButtonLink>
+            <Typography variant="h1" sx={{ mt: 2 }}>
+              {isEditMode ? t('edit-user') : t('add-new-user')}
+            </Typography>
+          </Box>
+        )}
+
+        {/* Desktop: Action Buttons at top */}
+        {mdScreen && (
+          <Box sx={{ display: 'flex', gap: 2, justifyContent: 'flex-end', mb: 2 }}>
             <LoadingButton
               variant="outlined"
               color="inherit"
               onClick={handleClose}
               disabled={isSubmitting}
+              sx={{ minWidth: 120 }}
             >
               {t('cancel')}
             </LoadingButton>
@@ -293,28 +303,64 @@ const AddUserTemplate = ({
               onClick={handleFormSubmit}
               loading={isSubmitting}
               disabled={isSubmitting}
+              sx={{ minWidth: 120 }}
             >
               {t('save')}
             </LoadingButton>
           </Box>
-        </Box>
-      </Grid>
+        )}
 
-      {/* Form Content in Paper */}
-      <ContentPaper elevation={0}>
-        <UserForm
-          isUserFormInDialog={false}
-          isEditMode={isEditMode}
-          b2BUser={b2BUser}
-          b2BUsersAcrossAccounts={b2BUsersAcrossAccounts}
-          accountRoles={accountRoles}
-          onSave={handleSaveUser}
-          onClose={handleClose}
-          accounts={accounts}
-          accountUserBehaviors={accountUserBehaviors}
-          showButtons={false}
-        />
-      </ContentPaper>
+        {/* Form Content in Paper */}
+        <ContentPaper elevation={0}>
+          <UserForm
+            isUserFormInDialog={false}
+            isEditMode={isEditMode}
+            b2BUser={b2BUser}
+            b2BUsersAcrossAccounts={b2BUsersAcrossAccounts}
+            accountRoles={accountRoles}
+            onSave={handleSaveUser}
+            onClose={handleClose}
+            accounts={accounts}
+            accountUserBehaviors={accountUserBehaviors}
+            showButtons={false}
+          />
+
+          {/* Mobile: Action Buttons at bottom */}
+          {!mdScreen && (
+            <Box
+              sx={{
+                display: 'flex',
+                gap: 2,
+                flexDirection: 'column-reverse',
+                mt: 3,
+                mb: 2,
+                px: 3,
+                pb: 3,
+              }}
+            >
+              <LoadingButton
+                variant="outlined"
+                color="inherit"
+                onClick={handleClose}
+                disabled={isSubmitting}
+                fullWidth
+              >
+                {t('cancel')}
+              </LoadingButton>
+              <LoadingButton
+                variant="contained"
+                disableElevation
+                onClick={handleFormSubmit}
+                loading={isSubmitting}
+                disabled={isSubmitting}
+                fullWidth
+              >
+                {t('save')}
+              </LoadingButton>
+            </Box>
+          )}
+        </ContentPaper>
+      </Grid>
     </Grid>
   )
 }

@@ -119,6 +119,7 @@ const UsersTemplate = ({ accountUserBehaviors }: UsersTemplateProps) => {
     pageSize: defaultPageSize,
     startIndex: defaultStartIndex,
   })
+  const [currentPage, setCurrentPage] = useState(1)
 
   /**
    * Fetch B2B users with pagination and search
@@ -138,6 +139,7 @@ const UsersTemplate = ({ accountUserBehaviors }: UsersTemplateProps) => {
   /**
    * Handle user deletion with confirmation dialog
    * Shows modal before executing delete operation
+   * Resets to first page after successful deletion
    */
   const handleDelete = React.useCallback(
     (id: string | undefined | null) => {
@@ -151,7 +153,19 @@ const UsersTemplate = ({ accountUserBehaviors }: UsersTemplateProps) => {
             const accountId = user?.id
             const queryVars = { accountId, userId: id }
             try {
-              removeCustomerB2bUser.mutate({ ...queryVars })
+              removeCustomerB2bUser.mutate(
+                { ...queryVars },
+                {
+                  onSuccess: () => {
+                    // Reset to first page after successful deletion
+                    setPaginationState((prev) => ({
+                      ...prev,
+                      startIndex: defaultStartIndex,
+                    }))
+                    setCurrentPage(1)
+                  },
+                }
+              )
             } catch (error) {
               console.error('[UsersTemplate] Error deleting user:', error)
             }
@@ -159,7 +173,7 @@ const UsersTemplate = ({ accountUserBehaviors }: UsersTemplateProps) => {
         },
       })
     },
-    [showModal, t, user?.id, removeCustomerB2bUser]
+    [showModal, t, user?.id, removeCustomerB2bUser, defaultStartIndex]
   )
 
   /**
@@ -174,6 +188,7 @@ const UsersTemplate = ({ accountUserBehaviors }: UsersTemplateProps) => {
         searchTerm: searchText,
         startIndex: defaultStartIndex,
       }))
+      setCurrentPage(1)
     },
     [defaultStartIndex]
   )
@@ -188,6 +203,7 @@ const UsersTemplate = ({ accountUserBehaviors }: UsersTemplateProps) => {
         ...prev,
         startIndex: (data?.pageSize ?? 0) * (page - 1),
       }))
+      setCurrentPage(page)
     },
     [data?.pageSize]
   )
@@ -262,6 +278,7 @@ const UsersTemplate = ({ accountUserBehaviors }: UsersTemplateProps) => {
             <PaginationContainer>
               <Pagination
                 count={data?.pageCount ?? 0}
+                page={currentPage}
                 shape={`rounded`}
                 onChange={handlePageChange}
                 size="small"

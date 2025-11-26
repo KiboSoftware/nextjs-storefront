@@ -5,7 +5,7 @@ import { QueryClient, QueryClientProvider } from '@tanstack/react-query'
 import i18n from 'i18next'
 import { I18nextProvider } from 'react-i18next'
 
-import AddUserTemplate from './AddUserTemplate'
+import AddUserTemplate, { AddUserTemplateProps } from './AddUserTemplate'
 import { AuthContext } from '@/context'
 import type { B2BAccountHierarchyResult } from '@/lib/types'
 
@@ -80,7 +80,7 @@ const meta: Meta<typeof AddUserTemplate> = {
 }
 
 export default meta
-type Story = StoryObj<typeof AddUserTemplate>
+type Story = StoryObj<AddUserTemplateProps>
 
 // Mock data
 const mockSimpleHierarchy: B2BAccountHierarchyResult = {
@@ -268,7 +268,8 @@ export const ViewOnlyPermissions: Story = {
   parameters: {
     docs: {
       description: {
-        story: 'User can only view roles but cannot create or modify them. Role selection will be in read-only mode.',
+        story:
+          'User can only view roles but cannot create or modify them. Role selection will be in read-only mode.',
       },
     },
   },
@@ -374,8 +375,7 @@ export const WithLongCompanyNames: Story = {
         },
         {
           id: 2,
-          companyOrOrganization:
-            'Another Extremely Long Company Name For Testing Purposes Only',
+          companyOrOrganization: 'Another Extremely Long Company Name For Testing Purposes Only',
           parentAccountId: 1,
         },
         {

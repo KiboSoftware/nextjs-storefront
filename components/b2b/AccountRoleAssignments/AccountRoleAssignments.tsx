@@ -15,7 +15,6 @@ import {
   styled,
 } from '@mui/material'
 import { useTranslation } from 'next-i18next'
-import { text } from 'stream/consumers'
 
 import type { GetRolesAsyncResponse } from '@/lib/api/operations/get-roles-across-accounts'
 
@@ -232,7 +231,12 @@ const AccountAccordionItem: React.FC<AccountAccordionItemProps> = memo((props) =
             <Box
               sx={{
                 display: 'grid',
-                gridTemplateColumns: 'repeat(5, 1fr)',
+                gridTemplateColumns: {
+                  xs: 'repeat(2, 1fr)',
+                  sm: 'repeat(3, 1fr)',
+                  md: 'repeat(4, 1fr)',
+                  lg: 'repeat(5, 1fr)',
+                },
                 gap: 1,
                 mb: 2,
               }}
@@ -256,7 +260,12 @@ const AccountAccordionItem: React.FC<AccountAccordionItemProps> = memo((props) =
             <Box
               sx={{
                 display: 'grid',
-                gridTemplateColumns: 'repeat(5, 1fr)',
+                gridTemplateColumns: {
+                  xs: 'repeat(2, 1fr)',
+                  sm: 'repeat(3, 1fr)',
+                  md: 'repeat(4, 1fr)',
+                  lg: 'repeat(5, 1fr)',
+                },
                 gap: 1,
               }}
             >
