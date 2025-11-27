@@ -33,8 +33,6 @@ Common.args = {
   b2BUsersAcrossAccounts: {},
   accountUserBehaviors: {},
   showButtons: true,
-  onClose: () => {},
-  onSave: () => {},
 }
 
 export const WithProps = Template.bind({})
