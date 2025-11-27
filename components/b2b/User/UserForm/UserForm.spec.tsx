@@ -104,6 +104,12 @@ describe('[component] User Form', () => {
         wrapper: createQueryClientWrapper(),
       })
 
+      // Fill in other required fields to enable the button
+      const firstNameField = screen.getByLabelText('first-name')
+      const lastNameField = screen.getByLabelText('last-name-or-sur-name')
+      await user.type(firstNameField, 'John')
+      await user.type(lastNameField, 'Doe')
+
       const submitButton = screen.getByTestId('submit-button')
       await user.click(submitButton)
 

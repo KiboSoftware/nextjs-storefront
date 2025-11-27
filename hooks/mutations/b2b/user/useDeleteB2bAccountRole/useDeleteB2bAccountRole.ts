@@ -1,11 +1,10 @@
 /**
  * @module useDeleteB2bAccountRoleMutation
  */
-import { useMutation, useQueryClient } from '@tanstack/react-query'
+import { useMutation } from '@tanstack/react-query'
 
 import { makeGraphQLClientWithoutUserClaims } from '@/lib/gql/client'
 import { deleteB2bAccountRoleMutation } from '@/lib/gql/mutations'
-import { customerB2BUserKeys } from '@/lib/react-query/queryKeys'
 
 // import { deleteB2bAccountRole } from '@/lib/gql/types'
 
@@ -34,11 +33,9 @@ const deleteB2bAccountUserRole = async (deleteB2bAccountRole: any) => {
  */
 
 export const useDeleteB2bAccountRoleMutation = () => {
-  const queryClient = useQueryClient()
   return {
     deleteB2bAccountUserRole: useMutation({
-      mutationFn: deleteB2bAccountUserRole,
-      onSuccess: () => queryClient.invalidateQueries(customerB2BUserKeys.all),
+      mutationFn: deleteB2bAccountUserRole
     }),
   }
 }

@@ -2,11 +2,10 @@
  * @module useUpdateCustomerB2bUserMutation
  */
 
-import { useMutation, useQueryClient } from '@tanstack/react-query'
+import { useMutation } from '@tanstack/react-query'
 
 import { makeGraphQLClientWithoutUserClaims } from '@/lib/gql/client'
 import { updateCustomerB2bUserMutation } from '@/lib/gql/mutations'
-import { customerB2BUserKeys } from '@/lib/react-query/queryKeys'
 
 import { MutationUpdateCustomerB2bAccountUserArgs } from '@/lib/gql/types'
 
@@ -35,11 +34,9 @@ const updateCustomerB2bUser = async (b2BUserInput: MutationUpdateCustomerB2bAcco
  */
 
 export const useUpdateCustomerB2bUserMutation = () => {
-  const queryClient = useQueryClient()
   return {
     updateCustomerB2bUser: useMutation({
-      mutationFn: updateCustomerB2bUser,
-      onSuccess: () => queryClient.invalidateQueries(customerB2BUserKeys.all),
+      mutationFn: updateCustomerB2bUser
     }),
   }
 }

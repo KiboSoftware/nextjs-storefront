@@ -95,6 +95,7 @@ const AddUserTemplate = ({
   const mdScreen = useMediaQuery(theme.breakpoints.up('md'))
   const { user } = useAuthContext()
   const [isSubmitting, setIsSubmitting] = React.useState(false)
+  const [isSaveEnabled, setIsSaveEnabled] = React.useState(false)
 
   const { createCustomerB2bUser } = useCreateCustomerB2bUserMutation()
   const { updateCustomerB2bUser } = useUpdateCustomerB2bUserMutation()
@@ -302,7 +303,7 @@ const AddUserTemplate = ({
               disableElevation
               onClick={handleFormSubmit}
               loading={isSubmitting}
-              disabled={isSubmitting}
+              disabled={isSubmitting || !isSaveEnabled}
               sx={{ minWidth: 120 }}
             >
               {t('save')}
@@ -323,6 +324,7 @@ const AddUserTemplate = ({
             accounts={accounts}
             accountUserBehaviors={accountUserBehaviors}
             showButtons={false}
+            onValidationChange={setIsSaveEnabled}
           />
 
           {/* Mobile: Action Buttons at bottom */}
@@ -352,7 +354,7 @@ const AddUserTemplate = ({
                 disableElevation
                 onClick={handleFormSubmit}
                 loading={isSubmitting}
-                disabled={isSubmitting}
+                disabled={isSubmitting || !isSaveEnabled}
                 fullWidth
               >
                 {t('save')}

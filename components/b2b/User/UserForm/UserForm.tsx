@@ -43,6 +43,8 @@ interface UserFormProps {
   onSave: (formValues: B2BUserInput & { roleAssignments?: Record<number, string[]> }) => void
   /** Optional callback when role assignments change */
   onRoleAssignmentsChange?: (roleAssignments: Record<number, string[]>) => void
+  /** Optional callback when validation state changes */
+  onValidationChange?: (isValid: boolean) => void
 }
 
 /**
@@ -101,6 +103,7 @@ const UserForm = (props: UserFormProps) => {
     onClose,
     onSave,
     onRoleAssignmentsChange,
+    onValidationChange,
   } = props
 
   const classes = userFormStyles()
@@ -192,6 +195,12 @@ const UserForm = (props: UserFormProps) => {
     useState<Record<number, string[]>>(initialRoleAssignments)
 
   /**
+   * Track if form has been modified
+   * Used to enable/disable save button
+   */
+  const [isFormModified, setIsFormModified] = useState(false)
+
+  /**
    * Memoized callback to update role assignments
    * Notifies parent component of changes via optional callback
    * Stable reference prevents child component re-renders
@@ -199,6 +208,7 @@ const UserForm = (props: UserFormProps) => {
   const handleRoleAssignmentsChange = React.useCallback(
     (newRoleAssignments: Record<number, string[]>) => {
       setRoleAssignments(newRoleAssignments)
+      setIsFormModified(true) // Mark form as modified when roles change
       onRoleAssignmentsChange?.(newRoleAssignments)
     },
     [onRoleAssignmentsChange]
@@ -248,7 +258,7 @@ const UserForm = (props: UserFormProps) => {
   const {
     getValues,
     handleSubmit,
-    formState: { errors },
+    formState: { errors, dirtyFields },
     control,
   } = useForm({
     defaultValues:
@@ -270,6 +280,64 @@ const UserForm = (props: UserFormProps) => {
       originalRolesByAccount.current = { ...initialRoleAssignments }
     }
   }, [isEditMode, initialRoleAssignments])
+
+  /**
+   * Validate that each account has at least one role assigned
+   * Memoized to prevent recalculation on every render
+   */
+  const hasRoleValidationError = React.useMemo(() => {
+    // Check if each available account (that user has permission to manage) has at least one role
+    if (accountsWithRoles.length === 0) return false
+
+    // Check each account that should have roles assigned
+    for (const account of accountsWithRoles) {
+      const assignedRoles = roleAssignments[account.accountId] || []
+      if (assignedRoles.length === 0) {
+        return true // Validation error: account has no roles
+      }
+    }
+
+    return false
+  }, [accountsWithRoles, roleAssignments])
+
+  /**
+   * Check if form fields have been modified
+   * Memoized to prevent recalculation on every render
+   */
+  const hasFormFieldsChanged = React.useMemo(() => {
+    return Object.keys(dirtyFields).length > 0
+  }, [dirtyFields])
+
+  /**
+   * Determine if save button should be disabled
+   * Disabled when:
+   * - Form is submitting
+   * - Form has validation errors
+   * - Role validation fails (any account without roles)
+   * - In edit mode and no changes have been made (neither fields nor roles)
+   */
+  const isSaveDisabled = React.useMemo(() => {
+    if (isSubmitting) return true
+    if (Object.keys(errors).length > 0) return true
+    if (hasRoleValidationError) return true
+
+    // In edit mode, require at least one change (form fields or role assignments)
+    if (isEditMode) {
+      return !hasFormFieldsChanged && !isFormModified
+    }
+
+    // In create mode, button is disabled by default until form is modified
+    return !isFormModified && !hasFormFieldsChanged
+  }, [isSubmitting, errors, hasRoleValidationError, isEditMode, hasFormFieldsChanged, isFormModified])
+
+  /**
+   * Notify parent component whenever validation state changes
+   */
+  React.useEffect(() => {
+    if (onValidationChange) {
+      onValidationChange(!isSaveDisabled)
+    }
+  }, [isSaveDisabled, onValidationChange])
 
   /**
    * Form submission handler
@@ -427,7 +495,10 @@ const UserForm = (props: UserFormProps) => {
                 value={field.value || ''}
                 helperText={errors?.firstName?.message}
                 label={t('first-name')}
-                onChange={(_name, value) => field.onChange(value)}
+                onChange={(_name, value) => {
+                  field.onChange(value)
+                  setIsFormModified(true)
+                }}
               />
             )}
           />
@@ -443,7 +514,10 @@ const UserForm = (props: UserFormProps) => {
                 value={field.value || ''}
                 helperText={errors?.lastName?.message}
                 label={t('last-name-or-sur-name')}
-                onChange={(_name, value) => field.onChange(value)}
+                onChange={(_name, value) => {
+                  field.onChange(value)
+                  setIsFormModified(true)
+                }}
               />
             )}
           />
@@ -479,7 +553,7 @@ const UserForm = (props: UserFormProps) => {
                 data-testid="submit-button"
                 type="submit"
                 loading={isSubmitting}
-                disabled={isSubmitting}
+                disabled={isSaveDisabled}
               >
                 {t('save')}
               </LoadingButton>
