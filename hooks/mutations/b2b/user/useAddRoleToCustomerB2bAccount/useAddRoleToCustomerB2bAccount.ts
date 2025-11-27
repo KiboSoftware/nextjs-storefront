@@ -1,11 +1,10 @@
 /**
  * @module useAddRoleToCustomerB2bAccountMutation
  */
-import { useMutation, useQueryClient } from '@tanstack/react-query'
+import { useMutation } from '@tanstack/react-query'
 
 import { makeGraphQLClientWithoutUserClaims } from '@/lib/gql/client'
 import { addRoleToCustomerB2bAccountMutation } from '@/lib/gql/mutations'
-import { customerB2BUserKeys } from '@/lib/react-query/queryKeys'
 
 const client = makeGraphQLClientWithoutUserClaims()
 
@@ -32,11 +31,9 @@ const addRoleToCustomerB2bAccount = async (addRoleToCustomerB2bAccount: any) => 
  */
 
 export const useAddRoleToCustomerB2bAccountMutation = () => {
-  const queryClient = useQueryClient()
   return {
     addRoleToCustomerB2bAccount: useMutation({
-      mutationFn: addRoleToCustomerB2bAccount,
-      onSuccess: () => queryClient.invalidateQueries(customerB2BUserKeys.all),
+      mutationFn: addRoleToCustomerB2bAccount
     }),
   }
 }

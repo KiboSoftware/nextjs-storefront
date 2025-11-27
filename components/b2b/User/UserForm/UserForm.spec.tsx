@@ -1,6 +1,6 @@
 import '@testing-library/jest-dom'
 import { composeStories } from '@storybook/testing-react'
-import { fireEvent, render, screen, waitFor, act } from '@testing-library/react'
+import { render, screen, waitFor, act } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
 
 import * as stories from './UserForm.stories'
@@ -121,8 +121,9 @@ describe('[component] User Form', () => {
       })
 
       const emailAddressField = screen.getByLabelText('email-address')
+      const submitButton = screen.getByTestId('submit-button')
       await user.type(emailAddressField, 'invalidemail')
-      await user.tab()
+      await user.click(submitButton)
 
       await waitFor(() => {
         const errorMessage = screen.getByText('invalid-email-error')
@@ -137,8 +138,9 @@ describe('[component] User Form', () => {
       })
 
       const emailAddressField = screen.getByLabelText('email-address')
+      const submitButton = screen.getByTestId('submit-button')
       await user.type(emailAddressField, 'test@')
-      await user.tab()
+      await user.click(submitButton)
 
       await waitFor(() => {
         const errorMessage = screen.getByText('invalid-email-error')
@@ -163,7 +165,6 @@ describe('[component] User Form', () => {
     })
 
     it('should accept complex valid email formats', async () => {
-      const user = userEvent.setup()
       const validEmails = [
         'test.user+tag@example.co.uk',
         'user_name@subdomain.example.com',
@@ -171,12 +172,12 @@ describe('[component] User Form', () => {
       ]
 
       for (const email of validEmails) {
-        render(<Common {...Common.args} onSave={onSave} onClose={onClose} />, {
+        const user = userEvent.setup()
+        const { unmount } = render(<Common {...Common.args} onSave={onSave} onClose={onClose} />, {
           wrapper: createQueryClientWrapper(),
         })
 
         const emailAddressField = screen.getByLabelText('email-address')
-        await user.clear(emailAddressField)
         await user.type(emailAddressField, email)
         await user.tab()
 
@@ -184,6 +185,8 @@ describe('[component] User Form', () => {
           const errorMessages = screen.queryByText('invalid-email-error')
           expect(errorMessages).not.toBeInTheDocument()
         })
+
+        unmount()
       }
     })
   })
@@ -249,9 +252,9 @@ describe('[component] User Form', () => {
 
       await waitFor(() => {
         expect(emailAddressField.value).toBe('John.john@gmail.com')
-        expect(firstNameField.value).toBe('John')
-        expect(lastNameField.value).toBe('john')
       })
+      expect(firstNameField.value).toBe('John')
+      expect(lastNameField.value).toBe('john')
     })
 
     it('should call onSave when form is submitted with valid data', async () => {

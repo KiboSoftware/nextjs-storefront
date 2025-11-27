@@ -10,6 +10,24 @@ import * as stories from './UsersTemplate.stories' // import all stories from th
 import { createQueryClientWrapper, renderWithQueryClient } from '@/__test__/utils'
 import { ModalContextProvider } from '@/context'
 
+// Mock next/router
+const mockPush = jest.fn()
+const mockRouter = {
+  push: mockPush,
+  pathname: '/',
+  query: {},
+  asPath: '/',
+  route: '/',
+  basePath: '',
+  isLocaleDomain: false,
+  isReady: true,
+  isPreview: false,
+}
+
+jest.mock('next/router', () => ({
+  useRouter: () => mockRouter,
+}))
+
 const { Common } = composeStories(stories)
 
 // Mock
@@ -66,6 +84,10 @@ const UserTableMock = () => <div data-testid="user-table-mock"></div>
 jest.mock('../../../b2b/User/UserTable/UserTable', () => () => UserTableMock())
 
 describe('[component] - UsersTemplate', () => {
+  beforeEach(() => {
+    jest.clearAllMocks()
+  })
+
   it('should render component', async () => {
     jest.mock('@/hooks', () => ({
       useGetB2BUserQueries: jest.fn().mockReturnValue({
@@ -95,7 +117,7 @@ describe('[component] - UsersTemplate', () => {
     expect(circularProgressElement).toBeInTheDocument()
   })
 
-  it('should open user form when add user button clicked in desktop view', async () => {
+  it('should navigate to add user page when add user button clicked in desktop view', async () => {
     renderWithQueryClient(
       <ModalContextProvider>
         <Common />
@@ -105,8 +127,7 @@ describe('[component] - UsersTemplate', () => {
     const addUserButton = screen.getByText('add-user')
     fireEvent.click(addUserButton)
 
-    const userForm = screen.getByTestId('user-form-mock')
-    expect(userForm).toBeVisible()
+    expect(mockPush).toHaveBeenCalledWith('/my-account/b2b/users/add-user')
   })
 
   it('should open user form in dialog when add user button clicked in mobile view', async () => {

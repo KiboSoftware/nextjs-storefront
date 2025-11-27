@@ -6,8 +6,12 @@ export const buildCreateCustomerB2bUserParams = (
 ): MutationCreateCustomerB2bAccountUserArgs => {
   const {
     user,
-    values: { firstName, lastName, emailAddress },
+    values: { firstName, lastName, emailAddress, userName, localeCode, role },
+    roles,
   } = params
+
+  const selectedRole = roles?.find((r) => r.roleName === role)
+  const roleArray = selectedRole ? [{ roleId: selectedRole.roleId }] : undefined
 
   const createCustomerB2bUserParam = {
     accountId: user?.id as number,
@@ -16,8 +20,9 @@ export const buildCreateCustomerB2bUserParams = (
         firstName,
         lastName,
         emailAddress,
-        userName: emailAddress,
-        localeCode: 'en-US'
+        userName: userName || emailAddress,
+        localeCode: localeCode || 'en-US',
+        ...(roleArray && { roles: roleArray }),
       },
     },
   }

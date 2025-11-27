@@ -70,6 +70,8 @@ export const useGetB2BUserQueries = ({
     initialData: initialB2BUsers,
     enabled: !!(accountId && isB2BUser),
     placeholderData: (previousData) => previousData ?? undefined,
+    refetchOnMount: 'always',
+    staleTime: 0,
   })
 
   return {
