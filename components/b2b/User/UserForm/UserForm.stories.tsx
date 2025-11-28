@@ -28,6 +28,11 @@ export const Common = Template.bind({})
 Common.args = {
   isEditMode: false,
   b2BUser: undefined,
+  accounts: [],
+  accountRoles: {},
+  b2BUsersAcrossAccounts: {},
+  accountUserBehaviors: {},
+  showButtons: true,
 }
 
 export const WithProps = Template.bind({})
@@ -35,4 +40,8 @@ WithProps.args = {
   ...Common.args,
   isEditMode: true,
   b2BUser: customerB2BUsers[0],
+  accounts: [],
+  accountRoles: {},
+  b2BUsersAcrossAccounts: {},
+  accountUserBehaviors: {},
 }

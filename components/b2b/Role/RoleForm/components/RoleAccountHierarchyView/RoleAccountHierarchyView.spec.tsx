@@ -10,7 +10,7 @@ import { B2BAccount } from '@/lib/gql/types'
 // Mock next-i18next
 jest.mock('next-i18next', () => ({
   useTranslation: () => ({
-    t: (key: string) => {
+    t: (key: string, params?: Record<string, unknown>) => {
       const translations: Record<string, string> = {
         parent: 'Parent',
         child: 'child',
@@ -19,6 +19,7 @@ jest.mock('next-i18next', () => ({
         accounts: 'accounts',
         'account-hierarchy-scope': 'Account Hierarchy Scope',
         'no-accounts-available': 'No accounts available',
+        'role-applied-to-single': `Role will be applied to ${params?.totalAccounts} ${params?.accountText}`,
       }
       return translations[key] || key
     },
@@ -83,7 +84,7 @@ describe('[Component] RoleAccountHierarchyView', () => {
       setup()
 
       expect(screen.getByText('Account Hierarchy Scope')).toBeInTheDocument()
-      expect(screen.getByText(/Role is applied to 2 accounts/i)).toBeInTheDocument()
+      expect(screen.getByText(/Role will be applied to 2 accounts/i)).toBeInTheDocument()
     })
 
     it('should display parent account with Parent badge', () => {
@@ -102,13 +103,13 @@ describe('[Component] RoleAccountHierarchyView', () => {
     it('should display correct selected account count in singular form', () => {
       setup({ selectedAccountIds: [1000] })
 
-      expect(screen.getByText(/Role is applied to 1 account/i)).toBeInTheDocument()
+      expect(screen.getByText(/Role will be applied to 1 account/i)).toBeInTheDocument()
     })
 
     it('should display correct selected account count in plural form', () => {
       setup({ selectedAccountIds: [1000, 1001, 1002] })
 
-      expect(screen.getByText(/Role is applied to 3 accounts/i)).toBeInTheDocument()
+      expect(screen.getByText(/Role will be applied to 3 accounts/i)).toBeInTheDocument()
     })
   })
 
@@ -331,7 +332,7 @@ describe('[Component] RoleAccountHierarchyView', () => {
         selectedAccountIds: [1000, 1001, 1002, 1003, 1004],
       })
 
-      expect(screen.getByText(/Role is applied to 5 accounts/i)).toBeInTheDocument()
+      expect(screen.getByText(/Role will be applied to 5 accounts/i)).toBeInTheDocument()
 
       const checkboxes = screen.getAllByRole('checkbox')
       checkboxes.forEach((checkbox) => {
@@ -342,7 +343,7 @@ describe('[Component] RoleAccountHierarchyView', () => {
     it('should handle no accounts selected', () => {
       setup({ selectedAccountIds: [] })
 
-      expect(screen.getByText(/Role is applied to 0 accounts/i)).toBeInTheDocument()
+      expect(screen.getByText(/Role will be applied to 0 accounts/i)).toBeInTheDocument()
 
       const checkboxes = screen.getAllByRole('checkbox')
       checkboxes.forEach((checkbox) => {
@@ -396,7 +397,7 @@ describe('[Component] RoleAccountHierarchyView', () => {
       )
 
       // Initially, only parent is selected
-      expect(screen.getByText(/Role is applied to 1 account/i)).toBeInTheDocument()
+      expect(screen.getByText(/Role will be applied to 1 account/i)).toBeInTheDocument()
 
       // Update to select grandchild
       rerender(
@@ -408,7 +409,7 @@ describe('[Component] RoleAccountHierarchyView', () => {
       )
 
       // Should update count and auto-expand to show grandchild
-      expect(screen.getByText(/Role is applied to 1 account/i)).toBeInTheDocument()
+      expect(screen.getByText(/Role will be applied to 1 account/i)).toBeInTheDocument()
       expect(screen.getByText(/Grandchild Company 1/i)).toBeInTheDocument()
     })
 
@@ -531,7 +532,7 @@ describe('[Component] RoleAccountHierarchyView', () => {
     it('should handle empty selectedAccountIds array', () => {
       setup({ selectedAccountIds: [] })
 
-      expect(screen.getByText(/Role is applied to 0 accounts/i)).toBeInTheDocument()
+      expect(screen.getByText(/Role will be applied to 0 accounts/i)).toBeInTheDocument()
 
       const checkboxes = screen.getAllByRole('checkbox')
       checkboxes.forEach((checkbox) => {

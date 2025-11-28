@@ -20,3 +20,5 @@ export {
   getMultipleB2BAccountUserBehaviors,
 } from './get-b2b-account-user-behaviors'
 export { default as getRolesByAccountId } from './get-roles-by-account-id'
+export { default as getUsersByEmailAcrossAccounts } from './get-users-by-email-across-accounts'
+export { default as getRolesAcrossAccounts } from './get-roles-across-accounts'

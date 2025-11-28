@@ -74,6 +74,7 @@ export const useGetAccountsByUser = (emailAddress: string): AccountsByUserRespon
     queryKey: accountsByUserKeys.accountsByUser(emailAddress),
     queryFn: () => accountsByUser(emailAddress),
     enabled: !!emailAddress,
+    staleTime: 5 * 60 * 1000, // Cache for 5 minutes
   })
 
   const customerAccountData = useQueries({
@@ -82,6 +83,7 @@ export const useGetAccountsByUser = (emailAddress: string): AccountsByUserRespon
         queryKey: accountsByUserKeys.customerAccount(id.toString()),
         queryFn: () => customerAccount(id),
         enabled: !!emailAddress,
+        staleTime: 5 * 60 * 1000, // Cache for 5 minutes
       }
     }),
   })

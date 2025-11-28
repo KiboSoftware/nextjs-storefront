@@ -46,12 +46,13 @@ const getRolesByAccountIdAsync = async (accountId: number): Promise<GetRolesAsyn
  */
 export const useGetRolesByAccountIdAsync = (
   accountId: number,
-  initialData?: GetRolesAsyncResponse
+  initialData?: GetRolesAsyncResponse,
+  enabled = true
 ) => {
   const { isLoading, isSuccess, isError, data, error } = useQuery({
     queryKey: rolesKeys.rolesByAccount(accountId),
     queryFn: () => getRolesByAccountIdAsync(accountId),
-    enabled: !!accountId,
+    enabled: !!accountId && enabled,
     placeholderData: (previousData) => previousData ?? undefined,
     initialData,
     retry: 0,

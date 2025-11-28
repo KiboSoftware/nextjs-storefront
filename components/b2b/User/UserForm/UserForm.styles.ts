@@ -10,7 +10,6 @@ const userFormStyles = makeStyles((theme: Theme) => ({
     },
   },
   textBoxGridStyle: {
-    paddingTop: '64px',
     display: 'flex',
     alignItems: 'center',
     paddingLeft: '0 !important',

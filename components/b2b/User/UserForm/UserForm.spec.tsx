@@ -1,77 +1,463 @@
 import '@testing-library/jest-dom'
 import { composeStories } from '@storybook/testing-react'
-import { fireEvent, render, screen, waitFor } from '@testing-library/react'
+import { render, screen, waitFor, act } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
 
-import * as stories from './UserForm.stories' // import all stories from the stories file
+import * as stories from './UserForm.stories'
+import { createQueryClientWrapper } from '@/__test__/utils'
 
 const { Common, WithProps } = composeStories(stories)
 
-const user = userEvent.setup()
-
 const onClose = jest.fn()
 const onSave = jest.fn()
+const onRoleAssignmentsChange = jest.fn()
+
+// Mock hooks
+jest.mock('@/hooks', () => ({
+  useAddRoleToCustomerB2bAccountMutation: jest.fn(() => ({
+    addRoleToCustomerB2bAccount: {
+      mutateAsync: jest.fn().mockResolvedValue(true),
+    },
+  })),
+  useDeleteB2bAccountRoleMutation: jest.fn(() => ({
+    deleteB2bAccountUserRole: {
+      mutateAsync: jest.fn().mockResolvedValue(true),
+    },
+  })),
+}))
 
 describe('[component] User Form', () => {
-  it('should render user form', async () => {
-    render(<Common {...Common.args} />)
-
-    const emaiAddressField = screen.getByLabelText('email-address')
-    const firstNameField = screen.getByLabelText('first-name')
-    const lastNameField = screen.getByLabelText('last-name-or-sur-name')
-    const submitButton = await screen.findByTestId('submit-button')
-    const resetButton = await screen.findByTestId('reset-button')
-
-    expect(emaiAddressField).toBeInTheDocument()
-    expect(firstNameField).toBeInTheDocument()
-    expect(lastNameField).toBeInTheDocument()
-    expect(submitButton).toBeInTheDocument()
-    expect(resetButton).toBeInTheDocument()
+  beforeEach(() => {
+    jest.clearAllMocks()
   })
 
-  it('should show values entered by user', async () => {
-    render(<Common {...Common.args} onSave={onSave} onClose={onClose} />)
+  describe('Form Rendering and Display', () => {
+    it('should render user form with all required fields', async () => {
+      render(<Common {...Common.args} />, { wrapper: createQueryClientWrapper() })
 
-    const emaiAddressField: HTMLInputElement = screen.getByLabelText('email-address')
-    const firstNameField: HTMLInputElement = screen.getByLabelText('first-name')
-    const lastNameField: HTMLInputElement = screen.getByLabelText('last-name-or-sur-name')
-    const submitButton = await screen.findByTestId('submit-button')
+      const emailAddressField = screen.getByLabelText('email-address')
+      const firstNameField = screen.getByLabelText('first-name')
+      const lastNameField = screen.getByLabelText('last-name-or-sur-name')
+      const submitButton = screen.getByTestId('submit-button')
+      const cancelButton = screen.getByTestId('cancel-button')
 
-    user.type(emaiAddressField, 'aman.shukla@gmail.com')
-    await waitFor(() => expect(emaiAddressField.value).toBe('aman.shukla@gmail.com'))
-    user.type(firstNameField, 'Aman')
-    await waitFor(() => expect(firstNameField.value).toBe('Aman'))
-    user.type(lastNameField, 'Shukla')
-    await waitFor(() => expect(lastNameField.value).toBe('Shukla'))
+      expect(emailAddressField).toBeInTheDocument()
+      expect(firstNameField).toBeInTheDocument()
+      expect(lastNameField).toBeInTheDocument()
+      expect(submitButton).toBeInTheDocument()
+      expect(cancelButton).toBeInTheDocument()
+    })
 
-    user.click(submitButton)
-    await waitFor(() => expect(onSave).toHaveBeenCalledTimes(1))
+    it('should render AccountRoleAssignments section', () => {
+      render(<Common {...Common.args} />, { wrapper: createQueryClientWrapper() })
+
+      const roleAssignmentsHeading = screen.getByText('account-role-assignments')
+      expect(roleAssignmentsHeading).toBeInTheDocument()
+    })
+
+    it('should show form in create mode with empty fields', () => {
+      render(<Common {...Common.args} />, { wrapper: createQueryClientWrapper() })
+
+      const emailAddressField: HTMLInputElement = screen.getByLabelText('email-address')
+      const firstNameField: HTMLInputElement = screen.getByLabelText('first-name')
+      const lastNameField: HTMLInputElement = screen.getByLabelText('last-name-or-sur-name')
+
+      expect(emailAddressField.value).toBe('')
+      expect(firstNameField.value).toBe('')
+      expect(lastNameField.value).toBe('')
+    })
   })
 
-  it('should show form in edit mode', async () => {
-    render(<Common {...WithProps.args} />)
+  describe('Edit Mode Functionality', () => {
+    it('should show form in edit mode with pre-populated values', async () => {
+      render(<WithProps {...WithProps.args} />, { wrapper: createQueryClientWrapper() })
 
-    const b2BUser = WithProps.args?.b2BUser
+      const b2BUser = WithProps.args?.b2BUser
 
-    const emaiAddressField: HTMLInputElement = screen.getByLabelText('email-address')
-    const firstNameField: HTMLInputElement = screen.getByLabelText('first-name')
-    const lastNameField: HTMLInputElement = screen.getByLabelText('last-name-or-sur-name')
+      const emailAddressField: HTMLInputElement = screen.getByLabelText('email-address')
+      const firstNameField: HTMLInputElement = screen.getByLabelText('first-name')
+      const lastNameField: HTMLInputElement = screen.getByLabelText('last-name-or-sur-name')
 
-    await waitFor(() => expect(emaiAddressField.value).toBe(b2BUser?.emailAddress))
-    await waitFor(() => expect(firstNameField.value).toBe(b2BUser?.firstName))
-    await waitFor(() => expect(lastNameField.value).toBe(b2BUser?.lastName))
+      await waitFor(() => {
+        expect(emailAddressField.value).toBe(b2BUser?.emailAddress)
+      })
+      await waitFor(() => {
+        expect(firstNameField.value).toBe(b2BUser?.firstName)
+      })
+      await waitFor(() => {
+        expect(lastNameField.value).toBe(b2BUser?.lastName)
+      })
+    })
+
+    it('should disable email field in edit mode', () => {
+      render(<WithProps {...WithProps.args} />, { wrapper: createQueryClientWrapper() })
+
+      const emailAddressField: HTMLInputElement = screen.getByLabelText('email-address')
+      expect(emailAddressField).toBeDisabled()
+    })
   })
 
-  it('should reset the form and call onClose', async () => {
-    render(<Common {...WithProps.args} onSave={onSave} onClose={onClose} />)
+  describe('Form Validation - Email Field', () => {
+    it('should show error when email field is empty and form is submitted', async () => {
+      const user = userEvent.setup()
+      render(<Common {...Common.args} onSave={onSave} onClose={onClose} />, {
+        wrapper: createQueryClientWrapper(),
+      })
 
-    // Access the cancel button element
-    const cancelButton = screen.getByTestId('reset-button')
+      // Fill in other required fields to enable the button
+      const firstNameField = screen.getByLabelText('first-name')
+      const lastNameField = screen.getByLabelText('last-name-or-sur-name')
+      await user.type(firstNameField, 'John')
+      await user.type(lastNameField, 'Doe')
 
-    // Simulate a click on the cancel button
-    fireEvent.click(cancelButton)
+      const submitButton = screen.getByTestId('submit-button')
+      await user.click(submitButton)
 
-    // Assert that the onClose function has been called
-    expect(onClose).toHaveBeenCalled()
+      await waitFor(() => {
+        const errorMessage = screen.getByText('no-email-error')
+        expect(errorMessage).toBeInTheDocument()
+      })
+      expect(onSave).not.toHaveBeenCalled()
+    })
+
+    it('should show error for invalid email format - missing @', async () => {
+      const user = userEvent.setup()
+      render(<Common {...Common.args} onSave={onSave} onClose={onClose} />, {
+        wrapper: createQueryClientWrapper(),
+      })
+
+      const emailAddressField = screen.getByLabelText('email-address')
+      const submitButton = screen.getByTestId('submit-button')
+      await user.type(emailAddressField, 'invalidemail')
+      await user.click(submitButton)
+
+      await waitFor(() => {
+        const errorMessage = screen.getByText('invalid-email-error')
+        expect(errorMessage).toBeInTheDocument()
+      })
+    })
+
+    it('should show error for invalid email format - missing domain', async () => {
+      const user = userEvent.setup()
+      render(<Common {...Common.args} onSave={onSave} onClose={onClose} />, {
+        wrapper: createQueryClientWrapper(),
+      })
+
+      const emailAddressField = screen.getByLabelText('email-address')
+      const submitButton = screen.getByTestId('submit-button')
+      await user.type(emailAddressField, 'test@')
+      await user.click(submitButton)
+
+      await waitFor(() => {
+        const errorMessage = screen.getByText('invalid-email-error')
+        expect(errorMessage).toBeInTheDocument()
+      })
+    })
+
+    it('should accept valid email format', async () => {
+      const user = userEvent.setup()
+      render(<Common {...Common.args} onSave={onSave} onClose={onClose} />, {
+        wrapper: createQueryClientWrapper(),
+      })
+
+      const emailAddressField = screen.getByLabelText('email-address')
+      await user.type(emailAddressField, 'test@example.com')
+      await user.tab()
+
+      await waitFor(() => {
+        const errorMessages = screen.queryByText('invalid-email-error')
+        expect(errorMessages).not.toBeInTheDocument()
+      })
+    })
+
+    it('should accept complex valid email formats', async () => {
+      const validEmails = [
+        'test.user+tag@example.co.uk',
+        'user_name@subdomain.example.com',
+        'first.last@example.org',
+      ]
+
+      for (const email of validEmails) {
+        const user = userEvent.setup()
+        const { unmount } = render(<Common {...Common.args} onSave={onSave} onClose={onClose} />, {
+          wrapper: createQueryClientWrapper(),
+        })
+
+        const emailAddressField = screen.getByLabelText('email-address')
+        await user.type(emailAddressField, email)
+        await user.tab()
+
+        await waitFor(() => {
+          const errorMessages = screen.queryByText('invalid-email-error')
+          expect(errorMessages).not.toBeInTheDocument()
+        })
+
+        unmount()
+      }
+    })
+  })
+
+  describe('Form Validation - Name Fields', () => {
+    it('should show error when first name field is empty', async () => {
+      const user = userEvent.setup()
+      render(<Common {...Common.args} onSave={onSave} onClose={onClose} />, {
+        wrapper: createQueryClientWrapper(),
+      })
+
+      const emailAddressField = screen.getByLabelText('email-address')
+      const lastNameField = screen.getByLabelText('last-name-or-sur-name')
+      const submitButton = screen.getByTestId('submit-button')
+
+      await user.type(emailAddressField, 'test@example.com')
+      await user.type(lastNameField, 'Doe')
+      await user.click(submitButton)
+
+      await waitFor(() => {
+        const errorMessage = screen.getByText('firstname-error')
+        expect(errorMessage).toBeInTheDocument()
+      })
+      expect(onSave).not.toHaveBeenCalled()
+    })
+
+    it('should show error when last name field is empty', async () => {
+      const user = userEvent.setup()
+      render(<Common {...Common.args} onSave={onSave} onClose={onClose} />, {
+        wrapper: createQueryClientWrapper(),
+      })
+
+      const emailAddressField = screen.getByLabelText('email-address')
+      const firstNameField = screen.getByLabelText('first-name')
+      const submitButton = screen.getByTestId('submit-button')
+
+      await user.type(emailAddressField, 'test@example.com')
+      await user.type(firstNameField, 'John')
+      await user.click(submitButton)
+
+      await waitFor(() => {
+        const errorMessage = screen.getByText('lastname-error')
+        expect(errorMessage).toBeInTheDocument()
+      })
+      expect(onSave).not.toHaveBeenCalled()
+    })
+  })
+
+  describe('Form Submission - User Input', () => {
+    it('should capture and display user entered values', async () => {
+      const user = userEvent.setup()
+      render(<Common {...Common.args} onSave={onSave} onClose={onClose} />, {
+        wrapper: createQueryClientWrapper(),
+      })
+
+      const emailAddressField: HTMLInputElement = screen.getByLabelText('email-address')
+      const firstNameField: HTMLInputElement = screen.getByLabelText('first-name')
+      const lastNameField: HTMLInputElement = screen.getByLabelText('last-name-or-sur-name')
+
+      await user.type(emailAddressField, 'John.john@gmail.com')
+      await user.type(firstNameField, 'John')
+      await user.type(lastNameField, 'john')
+
+      await waitFor(() => {
+        expect(emailAddressField.value).toBe('John.john@gmail.com')
+      })
+      expect(firstNameField.value).toBe('John')
+      expect(lastNameField.value).toBe('john')
+    })
+
+    it('should call onSave when form is submitted with valid data', async () => {
+      const user = userEvent.setup()
+      render(<Common {...Common.args} onSave={onSave} onClose={onClose} />, {
+        wrapper: createQueryClientWrapper(),
+      })
+
+      const emailAddressField = screen.getByLabelText('email-address')
+      const firstNameField = screen.getByLabelText('first-name')
+      const lastNameField = screen.getByLabelText('last-name-or-sur-name')
+      const submitButton = screen.getByTestId('submit-button')
+
+      await user.type(emailAddressField, 'john.doe@example.com')
+      await user.type(firstNameField, 'John')
+      await user.type(lastNameField, 'Doe')
+
+      await act(async () => {
+        await user.click(submitButton)
+      })
+
+      await waitFor(() => {
+        expect(onSave).toHaveBeenCalledWith(
+          expect.objectContaining({
+            emailAddress: 'john.doe@example.com',
+            firstName: 'John',
+            lastName: 'Doe',
+            roleAssignments: expect.any(Object),
+            userIdsByAccount: expect.any(Object),
+            changesPerAccount: expect.any(Object),
+          })
+        )
+      })
+    })
+  })
+
+  describe('Form Actions - Cancel and Close', () => {
+    it('should call onClose when cancel button is clicked', async () => {
+      const user = userEvent.setup()
+      render(<Common {...Common.args} onSave={onSave} onClose={onClose} />, {
+        wrapper: createQueryClientWrapper(),
+      })
+
+      const cancelButton = screen.getByTestId('cancel-button')
+      await user.click(cancelButton)
+
+      expect(onClose).toHaveBeenCalled()
+    })
+
+    it('should not submit form when cancel button is clicked', async () => {
+      const user = userEvent.setup()
+      render(<Common {...Common.args} onSave={onSave} onClose={onClose} />, {
+        wrapper: createQueryClientWrapper(),
+      })
+
+      const emailAddressField = screen.getByLabelText('email-address')
+      await user.type(emailAddressField, 'test@example.com')
+
+      const cancelButton = screen.getByTestId('cancel-button')
+      await user.click(cancelButton)
+
+      expect(onSave).not.toHaveBeenCalled()
+      expect(onClose).toHaveBeenCalled()
+    })
+  })
+
+  describe('Role Assignment Integration', () => {
+    it('should pass role assignments to onSave callback', async () => {
+      const user = userEvent.setup()
+
+      render(
+        <Common
+          {...Common.args}
+          onSave={onSave}
+          onClose={onClose}
+          onRoleAssignmentsChange={onRoleAssignmentsChange}
+        />,
+        {
+          wrapper: createQueryClientWrapper(),
+        }
+      )
+
+      const emailAddressField = screen.getByLabelText('email-address')
+      const firstNameField = screen.getByLabelText('first-name')
+      const lastNameField = screen.getByLabelText('last-name-or-sur-name')
+      const submitButton = screen.getByTestId('submit-button')
+
+      await user.type(emailAddressField, 'test@example.com')
+      await user.type(firstNameField, 'Test')
+      await user.type(lastNameField, 'User')
+
+      await act(async () => {
+        await user.click(submitButton)
+      })
+
+      await waitFor(() => {
+        expect(onSave).toHaveBeenCalledWith(
+          expect.objectContaining({
+            roleAssignments: expect.any(Object),
+          })
+        )
+      })
+    })
+
+    it('should handle role assignment changes through callback', async () => {
+      render(
+        <Common
+          {...Common.args}
+          onSave={onSave}
+          onClose={onClose}
+          onRoleAssignmentsChange={onRoleAssignmentsChange}
+        />,
+        {
+          wrapper: createQueryClientWrapper(),
+        }
+      )
+
+      // The AccountRoleAssignments component should be rendered
+      const roleAssignmentsSection = screen.getByText('account-role-assignments')
+      expect(roleAssignmentsSection).toBeInTheDocument()
+    })
+  })
+
+  describe('Loading and Disabled States', () => {
+    it('should disable submit button while submitting', async () => {
+      const user = userEvent.setup()
+      const slowOnSave = jest.fn(() => new Promise((resolve) => setTimeout(resolve, 100)))
+
+      render(<Common {...Common.args} onSave={slowOnSave} onClose={onClose} />, {
+        wrapper: createQueryClientWrapper(),
+      })
+
+      const emailAddressField = screen.getByLabelText('email-address')
+      const firstNameField = screen.getByLabelText('first-name')
+      const lastNameField = screen.getByLabelText('last-name-or-sur-name')
+      const submitButton = screen.getByTestId('submit-button')
+
+      await user.type(emailAddressField, 'test@example.com')
+      await user.type(firstNameField, 'Test')
+      await user.type(lastNameField, 'User')
+
+      // Click submit button
+      await act(async () => {
+        await user.click(submitButton)
+      })
+
+      // Check if button is disabled during submission
+      await waitFor(
+        () => {
+          expect(submitButton).toBeDisabled()
+        },
+        { timeout: 50 }
+      )
+    })
+  })
+
+  describe('Accessibility and Form Semantics', () => {
+    it('should have proper form element structure', () => {
+      render(<Common {...Common.args} />, { wrapper: createQueryClientWrapper() })
+
+      const form = screen.getByTestId('user-form')
+      expect(form).toBeInTheDocument()
+      expect(form.tagName).toBe('FORM')
+    })
+
+    it('should have proper labels for form fields', () => {
+      render(<Common {...Common.args} />, { wrapper: createQueryClientWrapper() })
+
+      expect(screen.getByLabelText('email-address')).toBeInTheDocument()
+      expect(screen.getByLabelText('first-name')).toBeInTheDocument()
+      expect(screen.getByLabelText('last-name-or-sur-name')).toBeInTheDocument()
+    })
+  })
+
+  describe('Button Visibility Control', () => {
+    it('should hide buttons when showButtons is false', () => {
+      render(<Common {...Common.args} showButtons={false} />, {
+        wrapper: createQueryClientWrapper(),
+      })
+
+      const submitButton = screen.queryByTestId('submit-button')
+      const cancelButton = screen.queryByTestId('cancel-button')
+
+      expect(submitButton).not.toBeInTheDocument()
+      expect(cancelButton).not.toBeInTheDocument()
+    })
+
+    it('should show buttons by default or when showButtons is true', () => {
+      render(<Common {...Common.args} showButtons={true} />, {
+        wrapper: createQueryClientWrapper(),
+      })
+
+      const submitButton = screen.getByTestId('submit-button')
+      const cancelButton = screen.getByTestId('cancel-button')
+
+      expect(submitButton).toBeInTheDocument()
+      expect(cancelButton).toBeInTheDocument()
+    })
   })
 })

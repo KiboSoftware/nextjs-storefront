@@ -228,7 +228,12 @@ export const OutOfStockBehavior = {
 }
 
 export const CustomBehaviors = {
+  ViewRole: 2029,
   CreateRole: 2027,
+  AddUser: 2000,
+  UpdateUser: 2002,
+  UpdateAccount: 2024,
+  ViewAccountHierarchy: 2025,
 }
 
 export const AccountScope = {
@@ -245,4 +250,6 @@ export const RoleType = {
 export const Routes = {
   ManageRoles: '/my-account/b2b/manage-roles',
   CreateRole: '/my-account/b2b/manage-roles/create',
+  Users: '/my-account/b2b/users',
+  AddUser: '/my-account/b2b/users/add-user',
 }

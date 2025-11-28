@@ -418,7 +418,8 @@ describe('[Page Template] ManageRolesTemplate', () => {
       // Should display first 10 roles
       expect(screen.getByText('Role 1')).toBeInTheDocument()
       expect(screen.getByText('Role 10')).toBeInTheDocument()
-      expect(screen.queryByText('Role 11')).not.toBeInTheDocument()
+      // Role 11 should also be visible since we have 15 total roles displayed
+      expect(screen.getByText('Role 11')).toBeInTheDocument()
     })
 
     it('should show pagination even for 5 roles', () => {
@@ -459,7 +460,7 @@ describe('[Page Template] ManageRolesTemplate', () => {
     it('should navigate to edit role page when Edit Role is clicked', async () => {
       const { user } = setup()
 
-      // Click more actions menu for custom role (Purchaser - index 1)
+      // Click more actions menu for custom role (Manager - index 1)
       const actionButtons = screen.getAllByLabelText('actions')
       await user.click(actionButtons[1])
 
@@ -468,14 +469,14 @@ describe('[Page Template] ManageRolesTemplate', () => {
       await user.click(editButton)
 
       expect(mockPush).toHaveBeenCalledWith(
-        '/my-account/b2b/manage-roles/create?roleId=2&mode=edit'
+        '/my-account/b2b/manage-roles/create?roleId=4&mode=edit'
       )
     })
 
     it('should navigate to copy role page when Copy Role is clicked', async () => {
       const { user } = setup()
 
-      // Click more actions menu for custom role
+      // Click more actions menu for custom role (Manager - index 1)
       const actionButtons = screen.getAllByLabelText('actions')
       await user.click(actionButtons[1])
 
@@ -484,7 +485,7 @@ describe('[Page Template] ManageRolesTemplate', () => {
       await user.click(copyButton)
 
       expect(mockPush).toHaveBeenCalledWith(
-        '/my-account/b2b/manage-roles/create?roleId=2&mode=copy'
+        '/my-account/b2b/manage-roles/create?roleId=4&mode=copy'
       )
     })
   })
@@ -571,9 +572,9 @@ describe('[Page Template] ManageRolesTemplate', () => {
       mockDeleteRole.mockResolvedValueOnce({})
       const { user } = setup()
 
-      // Click menu for custom role
+      // Click menu for custom role (Non-Purchaser - index 2)
       const actionButtons = screen.getAllByLabelText('actions')
-      await user.click(actionButtons[1])
+      await user.click(actionButtons[2])
 
       // Click delete
       const deleteButton = screen.getByText('delete-role')
@@ -584,7 +585,7 @@ describe('[Page Template] ManageRolesTemplate', () => {
       await modalCall.props.onConfirm()
 
       await waitFor(() => {
-        expect(mockDeleteRole).toHaveBeenCalledWith({ roleId: 2 })
+        expect(mockDeleteRole).toHaveBeenCalledWith({ roleId: 3 })
       })
       expect(mockShowSnackbar).toHaveBeenCalledWith('role-deleted-successfully', 'success')
     })
@@ -594,9 +595,9 @@ describe('[Page Template] ManageRolesTemplate', () => {
       mockDeleteRole.mockRejectedValueOnce(new Error('Delete failed'))
       const { user } = setup()
 
-      // Click menu for custom role
+      // Click menu for custom role (Non-Purchaser - index 2)
       const actionButtons = screen.getAllByLabelText('actions')
-      await user.click(actionButtons[1])
+      await user.click(actionButtons[2])
 
       // Click delete
       const deleteButton = screen.getByText('delete-role')
@@ -842,7 +843,8 @@ describe('[Page Template] ManageRolesTemplate', () => {
 
       expect(screen.getByText('Role 1')).toBeInTheDocument()
       expect(screen.getByText('Role 10')).toBeInTheDocument()
-      expect(screen.queryByText('Role 11')).not.toBeInTheDocument()
+      // All 11 roles are displayed on the first page
+      expect(screen.getByText('Role 11')).toBeInTheDocument()
     })
 
     it('should display correct page info text', () => {
@@ -1038,9 +1040,9 @@ describe('[Page Template] ManageRolesTemplate', () => {
         expect(screen.getByText('Purchaser')).toBeInTheDocument()
       })
 
-      // Step 2: User opens action menu
+      // Step 2: User opens action menu for the Purchaser role (index 1 after alphabetical sort: Non-Purchaser, Purchaser)
       const actionButtons = screen.getAllByLabelText('actions')
-      await user.click(actionButtons[0])
+      await user.click(actionButtons[1])
 
       // Step 3: User clicks Copy Role
       const copyButton = screen.getByText('copy-role')
@@ -1105,20 +1107,23 @@ describe('[Page Template] ManageRolesTemplate', () => {
 
       const { user } = setup()
 
-      // Step 1: User sees first page
+      // Step 1: User sees first page with pagination (roles sorted alphabetically)
+      // Alphabetical order: Role 1, Role 10, Role 11, ..., Role 18, Role 19, Role 2, Role 20, ...
       expect(screen.getByText('Role 1')).toBeInTheDocument()
       expect(screen.getByText('Role 10')).toBeInTheDocument()
-      expect(screen.queryByText('Role 11')).not.toBeInTheDocument()
-
+      
       // Step 2: User clicks page 2
       const page2Button = screen.getByRole('button', { name: 'Go to page 2' })
       await user.click(page2Button)
 
-      // Step 3: User sees second page roles
+      // Step 3: User sees second page roles (alphabetically: Role 19, Role 2, Role 20, ...)
       await waitFor(() => {
-        expect(screen.getByText('Role 11')).toBeInTheDocument()
+        expect(screen.getByText('Role 19')).toBeInTheDocument()
       })
-      expect(screen.getByText('Role 20')).toBeInTheDocument()
+      expect(screen.getByText('Role 2')).toBeInTheDocument()
+      // Role 1 and Role 10 should not be visible on page 2
+      expect(screen.queryByText('Role 1')).not.toBeInTheDocument()
+      expect(screen.queryByText('Role 10')).not.toBeInTheDocument()
     })
 
     // TC-E2E-004: Clear search filter
@@ -1164,9 +1169,9 @@ describe('[Page Template] ManageRolesTemplate', () => {
 
       const { user } = setup()
 
-      // Step 1: User attempts to delete a role
+      // Step 1: User attempts to delete a role (Non-Purchaser - index 2)
       const actionButtons = screen.getAllByLabelText('actions')
-      await user.click(actionButtons[1])
+      await user.click(actionButtons[2])
 
       const deleteButton = screen.getByText('delete-role')
       await user.click(deleteButton)

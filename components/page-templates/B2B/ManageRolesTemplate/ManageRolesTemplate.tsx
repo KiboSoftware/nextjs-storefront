@@ -8,6 +8,8 @@ import {
   Delete as DeleteIcon,
   MoreVert as MoreVertIcon,
   ContentCopy as ContentCopyIcon,
+  ArrowUpward as ArrowUpwardIcon,
+  ArrowDownward as ArrowDownwardIcon,
 } from '@mui/icons-material'
 import {
   Box,
@@ -41,11 +43,7 @@ import {
 import { SearchBar } from '@/components/common'
 import { ConfirmationDialog } from '@/components/dialogs'
 import { useModalContext, useSnackbarContext } from '@/context'
-import {
-  useGetRolesByAccountIdAsync,
-  useDeleteRoleAsync,
-  useGetUsersByRoleAsync,
-} from '@/hooks'
+import { useGetRolesByAccountIdAsync, useDeleteRoleAsync, useGetUsersByRoleAsync } from '@/hooks'
 import type { GetRolesAsyncResponse } from '@/lib/api/operations/get-roles-by-account-id'
 import type { B2BRole } from '@/lib/api/operations/get-roles-by-account-id'
 import { AccountScope, RoleType, Routes } from '@/lib/constants'
@@ -148,10 +146,7 @@ const RoleUserCountAggregatorComponent = ({
 RoleUserCountAggregatorComponent.displayName = 'RoleUserCountAggregator'
 const RoleUserCountAggregator = React.memo(RoleUserCountAggregatorComponent)
 
-const ManageRolesTemplate = ({
-  customerAccount,
-  initialData,
-}: ManageRolesTemplateProps) => {
+const ManageRolesTemplate = ({ customerAccount, initialData }: ManageRolesTemplateProps) => {
   const { t } = useTranslation('common')
   const theme = useTheme()
   const router = useRouter()
@@ -165,6 +160,7 @@ const ManageRolesTemplate = ({
   const [selectedRoleId, setSelectedRoleId] = useState<string | null>(null)
   const [currentPage, setCurrentPage] = useState(1)
   const [userCounts, setUserCounts] = useState<Record<number, number>>({})
+  const [sortOrder, setSortOrder] = useState<'asc' | 'desc'>('asc')
 
   const pageSize = 10
 
@@ -177,7 +173,7 @@ const ManageRolesTemplate = ({
 
   const roles = useMemo(() => {
     if (!rolesData?.items) return []
-    
+
     return rolesData.items.map((item) => ({
       id: item.id?.toString() || '',
       name: item.name || '',
@@ -200,9 +196,12 @@ const ManageRolesTemplate = ({
   }, [])
 
   // Get user count for a role (from cached counts or default to 0) - memoized
-  const getUserCount = useCallback((roleId: string): number => {
-    return userCounts[parseInt(roleId)] ?? 0
-  }, [userCounts])
+  const getUserCount = useCallback(
+    (roleId: string): number => {
+      return userCounts[parseInt(roleId)] ?? 0
+    },
+    [userCounts]
+  )
 
   const handleMenuOpen = useCallback((event: React.MouseEvent<HTMLElement>, roleId: string) => {
     setAnchorEl(event.currentTarget)
@@ -221,6 +220,11 @@ const ManageRolesTemplate = ({
     setCurrentPage(1) // Reset to first page on search
   }, [])
 
+  const handleSort = useCallback(() => {
+    setSortOrder((prev) => (prev === 'asc' ? 'desc' : 'asc'))
+    setCurrentPage(1) // Reset to first page on sort
+  }, [])
+
   const handlePageChange = useCallback((_event: ChangeEvent<unknown>, page: number) => {
     setCurrentPage(page)
   }, [])
@@ -229,54 +233,79 @@ const ManageRolesTemplate = ({
     router.push(Routes.CreateRole)
   }, [router])
 
-  const handleViewRole = useCallback((roleId: string) => {
-    handleMenuClose()
-    // Navigate to create role page in readonly mode
-    router.push(`${Routes.CreateRole}?roleId=${roleId}&mode=view`)
-  }, [router, handleMenuClose])
-
-  const handleEditRole = useCallback((roleId: string) => {
-    handleMenuClose()
-    // TODO: Implement edit role
-    router.push(`${Routes.CreateRole}?roleId=${roleId}&mode=edit`)
-  }, [router, handleMenuClose])
-
-  const handleCopyRole = useCallback((roleId: string) => {
-    handleMenuClose()
-    // Navigate to create role page with copy mode
-    router.push(`${Routes.CreateRole}?roleId=${roleId}&mode=copy`)
-  }, [router, handleMenuClose])
-
-  const handleDeleteRole = useCallback((roleId: string) => {
-    handleMenuClose()
-    // Show confirmation dialog before deleting
-    showModal({
-      Component: ConfirmationDialog,
-      props: {
-        contentText: t('delete-role-confirmation-message'),
-        primaryButtonText: t('delete'),
-        onConfirm: async () => {
-          try {
-            // Call API to delete role
-            await deleteRole.mutateAsync({
-              roleId: parseInt(roleId),
-            })
-
-            // Show success message
-            showSnackbar(t('role-deleted-successfully'), 'success')
-          } catch (error) {
-            console.error('Error deleting role:', error)
-            showSnackbar(t('error-deleting-role'), 'error')
-          }
-        },
-      },
-    })
-  }, [handleMenuClose, showModal, t, deleteRole, showSnackbar])
-
-  const filteredRoles = useMemo(
-    () => roles.filter((role: Role) => role.name.toLowerCase().includes(searchQuery.toLowerCase())),
-    [roles, searchQuery]
+  const handleViewRole = useCallback(
+    (roleId: string) => {
+      handleMenuClose()
+      // Navigate to create role page in readonly mode
+      router.push(`${Routes.CreateRole}?roleId=${roleId}&mode=view`)
+    },
+    [router, handleMenuClose]
   )
+
+  const handleEditRole = useCallback(
+    (roleId: string) => {
+      handleMenuClose()
+      // TODO: Implement edit role
+      router.push(`${Routes.CreateRole}?roleId=${roleId}&mode=edit`)
+    },
+    [router, handleMenuClose]
+  )
+
+  const handleCopyRole = useCallback(
+    (roleId: string) => {
+      handleMenuClose()
+      // Navigate to create role page with copy mode
+      router.push(`${Routes.CreateRole}?roleId=${roleId}&mode=copy`)
+    },
+    [router, handleMenuClose]
+  )
+
+  const handleDeleteRole = useCallback(
+    (roleId: string) => {
+      handleMenuClose()
+      // Show confirmation dialog before deleting
+      showModal({
+        Component: ConfirmationDialog,
+        props: {
+          contentText: t('delete-role-confirmation-message'),
+          primaryButtonText: t('delete'),
+          onConfirm: async () => {
+            try {
+              // Call API to delete role
+              await deleteRole.mutateAsync({
+                roleId: parseInt(roleId),
+              })
+
+              // Show success message
+              showSnackbar(t('role-deleted-successfully'), 'success')
+            } catch (error) {
+              console.error('Error deleting role:', error)
+              showSnackbar(t('error-deleting-role'), 'error')
+            }
+          },
+        },
+      })
+    },
+    [handleMenuClose, showModal, t, deleteRole, showSnackbar]
+  )
+
+  const filteredRoles = useMemo(() => {
+    const filtered = roles.filter((role: Role) =>
+      role.name.toLowerCase().includes(searchQuery.toLowerCase())
+    )
+
+    // Sort by name
+    return filtered.sort((a, b) => {
+      const nameA = a.name.toLowerCase()
+      const nameB = b.name.toLowerCase()
+
+      if (sortOrder === 'asc') {
+        return nameA.localeCompare(nameB)
+      } else {
+        return nameB.localeCompare(nameA)
+      }
+    })
+  }, [roles, searchQuery, sortOrder])
 
   // Pagination logic - memoized
   const paginationData = useMemo(() => {
@@ -285,7 +314,7 @@ const ManageRolesTemplate = ({
     const startIndex = (currentPage - 1) * pageSize
     const endIndex = startIndex + pageSize
     const paginatedRoles = filteredRoles.slice(startIndex, endIndex)
-    
+
     return { totalCount, pageCount, startIndex, endIndex, paginatedRoles }
   }, [filteredRoles, currentPage, pageSize])
 
@@ -361,7 +390,26 @@ const ManageRolesTemplate = ({
           ) : null}
           <TableHead>
             <TableRow style={{ backgroundColor: theme.palette.grey[100] }}>
-              <TableCell>{t('role-name')}</TableCell>
+              <TableCell>
+                <Box
+                  sx={{
+                    display: 'flex',
+                    alignItems: 'center',
+                    cursor: 'pointer',
+                    userSelect: 'none',
+                  }}
+                  onClick={handleSort}
+                >
+                  {t('role-name')}
+                  <IconButton size="small" sx={{ ml: 0.5 }}>
+                    {sortOrder === 'asc' ? (
+                      <ArrowUpwardIcon fontSize="small" />
+                    ) : (
+                      <ArrowDownwardIcon fontSize="small" />
+                    )}
+                  </IconButton>
+                </Box>
+              </TableCell>
               <TableCell>{t('role-type')}</TableCell>
               <TableCell>{t('assigned-users')}</TableCell>
               <TableCell></TableCell>

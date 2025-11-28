@@ -2,6 +2,7 @@ export { default as B2BProductSearch } from '@/components/b2b/B2BProductSearch/B
 export { default as UserTable } from './User/UserTable/UserTable'
 export { default as UserForm } from './User/UserForm/UserForm'
 export { default as ViewUserDetail } from './User/ViewUserDetail/ViewUserDetail'
+export { default as AccountRoleAssignments } from './AccountRoleAssignments/AccountRoleAssignments'
 export { default as AccountHierarchyForm } from './AccountHierarchy/AccountHierarchyForm/AccountHierarchyForm'
 export { default as AccountHierarchyChangeParent } from './AccountHierarchy/AccountHierarchyChangeParent/AccountHierarchyChangeParent'
 export { default as AccountHierarchyTree } from './AccountHierarchy/AccountHierarchyTree/AccountHierarchyTree'

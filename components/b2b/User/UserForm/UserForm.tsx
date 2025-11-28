@@ -1,246 +1,550 @@
-import React, { useEffect, useState } from 'react'
+import React, { useState } from 'react'
 
 import { yupResolver } from '@hookform/resolvers/yup'
-import CheckIcon from '@mui/icons-material/Check'
-import ClearIcon from '@mui/icons-material/Clear'
 import { LoadingButton } from '@mui/lab'
-import { Box, Grid, Stack, useMediaQuery, useTheme } from '@mui/material'
-import getConfig from 'next/config'
+import { Box, Grid } from '@mui/material'
 import { useTranslation } from 'next-i18next'
 import { useForm, Controller } from 'react-hook-form'
 import * as yup from 'yup'
 
 import userFormStyles from './UserForm.styles'
-import { KiboRadio, KiboSwitch, KiboTextBox } from '@/components/common'
+import { AccountRoleAssignments } from '@/components/b2b'
+import { KiboTextBox } from '@/components/common'
+import { useAddRoleToCustomerB2bAccountMutation, useDeleteB2bAccountRoleMutation } from '@/hooks'
+import type { GetRolesAsyncResponse } from '@/lib/api/operations/get-roles-across-accounts'
+import { CustomBehaviors } from '@/lib/constants'
 
-import { B2BUser, B2BUserInput } from '@/lib/gql/types'
+import { B2BUserInput, B2BAccount, B2BUser, B2BUserCollection } from '@/lib/gql/types'
 
+/**
+ * Props for the UserForm component
+ * Handles both creation and editing of B2B users with role assignments
+ */
 interface UserFormProps {
-  isEditMode: boolean
+  /** Flag indicating if form is displayed within a dialog */
   isUserFormInDialog?: boolean
-  b2BUser?: B2BUser | any
+  /** Flag indicating if form is in edit mode (vs create mode) */
+  isEditMode?: boolean
+  /** Existing user data for edit mode */
+  b2BUser?: B2BUser | null
+  /** Map of account IDs to user collections across accounts */
+  b2BUsersAcrossAccounts?: Record<number, B2BUserCollection>
+  /** Map of account IDs to available roles for that account */
+  accountRoles?: Record<number, GetRolesAsyncResponse>
+  /** List of B2B accounts accessible to the current user */
+  accounts?: B2BAccount[]
+  /** Map of account IDs to user behavior/permission arrays */
+  accountUserBehaviors?: Record<number, number[]>
+  /** Whether to show action buttons (save/cancel) */
+  showButtons?: boolean
+  /** Callback when form is closed/cancelled */
   onClose: () => void
-  onSave: (formValues: B2BUserInput, b2BUser?: B2BUser) => void
+  /** Callback when form is submitted with form values and role assignments */
+  onSave: (formValues: B2BUserInput & { roleAssignments?: Record<number, string[]> }) => void
+  /** Optional callback when role assignments change */
+  onRoleAssignmentsChange?: (roleAssignments: Record<number, string[]>) => void
+  /** Optional callback when validation state changes */
+  onValidationChange?: (isValid: boolean) => void
 }
 
+/**
+ * Type definition for role change operations per account
+ */
+interface RoleChangesPerAccount {
+  rolesToAdd: string[]
+  rolesToRemove: string[]
+}
+
+/** Inline styles extracted as constants to prevent object recreation */
+const FORM_CONTAINER_STYLES = { display: 'flex', width: '100%' } as const
+const GRID_CONTAINER_STYLES = { marginTop: '5px', marginLeft: 0, width: '100%' } as const
+const ACTION_BUTTON_STYLES = {
+  display: 'flex',
+  justifyContent: 'flex-end',
+  gap: 2,
+  mt: 3,
+  mb: 2,
+} as const
+
+/**
+ * Custom hook to create form validation schema
+ * Memoized to prevent recreation unless translations change
+ */
 export const useFormSchema = () => {
   const { t } = useTranslation('common')
-  return yup.object({
-    emailAddress: yup
-      .string()
-      .required(t('no-email-error'))
-      .matches(/^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}$/i, t('invalid-email-error')),
-    firstName: yup.string().required(t('firstname-error')),
-    lastName: yup.string().required(t('lastname-error')),
-  })
+  return React.useMemo(
+    () =>
+      yup.object({
+        emailAddress: yup
+          .string()
+          .required(t('no-email-error'))
+          .matches(/^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}$/i, t('invalid-email-error')),
+        firstName: yup.string().required(t('firstname-error')),
+        lastName: yup.string().required(t('lastname-error')),
+      }),
+    [t]
+  )
 }
 
+/**
+ * UserForm Component
+ * Enterprise-grade form for creating and editing B2B users with role assignments
+ * Optimized for minimal re-renders and maximum performance
+ */
 const UserForm = (props: UserFormProps) => {
-  const { isEditMode, isUserFormInDialog, b2BUser, onClose, onSave } = props
-
-  const { publicRuntimeConfig } = getConfig()
+  const {
+    accounts = [],
+    accountUserBehaviors,
+    isEditMode = false,
+    b2BUser = null,
+    b2BUsersAcrossAccounts = {},
+    accountRoles = {},
+    showButtons = true,
+    onClose,
+    onSave,
+    onRoleAssignmentsChange,
+    onValidationChange,
+  } = props
 
   const classes = userFormStyles()
   const { t } = useTranslation('common')
-  const theme = useTheme()
-  const mdScreen = useMediaQuery(theme.breakpoints.up('md'))
   const userSchema = useFormSchema()
-  const userFormRadioOptions = publicRuntimeConfig.userFormRadioOptions
 
-  const [isLoading, setLoading] = useState(false)
+  const { addRoleToCustomerB2bAccount } = useAddRoleToCustomerB2bAccountMutation()
+  const { deleteB2bAccountUserRole } = useDeleteB2bAccountRoleMutation()
 
-  const isDesktopView = !isEditMode && mdScreen
-  const isDesktopEditView = isEditMode && mdScreen
+  const [isSubmitting, setIsSubmitting] = useState(false)
+
+  /**
+   * Ref to track original role assignments from API
+   * Used to calculate delta (additions/removals) on submit
+   * Using ref to avoid triggering re-renders
+   */
+  const originalRolesByAccount = React.useRef<Record<number, string[]>>({})
+
+  /**
+   * Extract and map user IDs from b2BUsersAcrossAccounts for each account
+   * Memoized to prevent recalculation unless data changes
+   * @returns Map of accountId -> userId
+   */
+  const userIdsByAccount = React.useMemo(() => {
+    const userIdMap: Record<number, string> = {}
+
+    Object.entries(b2BUsersAcrossAccounts).forEach(([accountIdStr, userCollection]) => {
+      const accountId = Number(accountIdStr)
+      const firstUser = userCollection.items?.[0]
+      if (firstUser?.userId) {
+        userIdMap[accountId] = firstUser.userId
+      }
+    })
+
+    return userIdMap
+  }, [b2BUsersAcrossAccounts])
+
+  /**
+   * Initialize role assignments from existing user data in edit mode
+   * Extracts roles from both b2BUser.roles and b2BUsersAcrossAccounts
+   * Memoized to prevent recalculation unless dependencies change
+   * @returns Map of accountId -> array of roleIds
+   */
+  const initialRoleAssignments = React.useMemo(() => {
+    if (isEditMode) {
+      const assignments: Record<number, string[]> = {}
+
+      // Extract roles from primary b2BUser object
+      if (b2BUser?.roles) {
+        b2BUser.roles.forEach((role) => {
+          if (role?.assignedInScope?.id && role?.roleId) {
+            const accountId = role.assignedInScope.id
+            if (!assignments[accountId]) {
+              assignments[accountId] = []
+            }
+            assignments[accountId].push(role.roleId.toString())
+          }
+        })
+      }
+
+      // Also extract from b2BUsersAcrossAccounts if available
+      if (b2BUsersAcrossAccounts && Object.keys(b2BUsersAcrossAccounts).length > 0) {
+        Object.entries(b2BUsersAcrossAccounts).forEach(([accountIdStr, userCollection]) => {
+          const accountId = Number(accountIdStr)
+          userCollection.items?.forEach((user) => {
+            if (user?.roles) {
+              user.roles.forEach((role) => {
+                if (role?.roleId) {
+                  const roleIdStr = role.roleId.toString()
+                  if (!assignments[accountId]) {
+                    assignments[accountId] = []
+                  }
+                  if (!assignments[accountId].includes(roleIdStr)) {
+                    assignments[accountId].push(roleIdStr)
+                  }
+                }
+              })
+            }
+          })
+        })
+      }
+
+      return assignments
+    }
+    return {}
+  }, [isEditMode, b2BUser, b2BUsersAcrossAccounts])
+
+  const [roleAssignments, setRoleAssignments] =
+    useState<Record<number, string[]>>(initialRoleAssignments)
+
+  /**
+   * Track if form has been modified
+   * Used to enable/disable save button
+   */
+  const [isFormModified, setIsFormModified] = useState(false)
+
+  /**
+   * Memoized callback to update role assignments
+   * Notifies parent component of changes via optional callback
+   * Stable reference prevents child component re-renders
+   */
+  const handleRoleAssignmentsChange = React.useCallback(
+    (newRoleAssignments: Record<number, string[]>) => {
+      setRoleAssignments(newRoleAssignments)
+      setIsFormModified(true) // Mark form as modified when roles change
+      onRoleAssignmentsChange?.(newRoleAssignments)
+    },
+    [onRoleAssignmentsChange]
+  )
+
+  /**
+   * Check if user has ViewRole permission for a specific account
+   * Memoized callback for stable reference across renders
+   * @param accountId - The account ID to check permissions for
+   * @returns true if user has ViewRole permission
+   */
+  const hasViewRolePermission = React.useCallback(
+    (accountId: number): boolean => {
+      const behaviors = accountUserBehaviors?.[accountId]
+      return behaviors ? behaviors.includes(CustomBehaviors.ViewRole) : false
+    },
+    [accountUserBehaviors]
+  )
+
+  /**
+   * Transform and filter accounts based on ViewRole permission
+   * Only includes accounts where user has permission to view/manage roles
+   * Memoized to prevent recalculation unless dependencies change
+   */
+  const accountsWithRoles = React.useMemo(
+    () =>
+      accounts
+        .map((account) => {
+          const accountId = account.id || 0
+          const hasPermission = hasViewRolePermission(accountId)
+
+          // Skip accounts without permission
+          if (!hasPermission) return null
+
+          return {
+            accountId,
+            accountName: account.companyOrOrganization || '',
+          }
+        })
+        .filter(Boolean) as Array<{
+        accountId: number
+        accountName: string
+      }>,
+    [accounts, hasViewRolePermission]
+  )
+
   const {
     getValues,
     handleSubmit,
-    formState: { errors },
+    formState: { errors, dirtyFields },
     control,
-    reset,
   } = useForm({
-    defaultValues: { role: 'Admin', emailAddress: '', firstName: '', lastName: '', isActive: true },
+    defaultValues:
+      isEditMode && b2BUser
+        ? {
+            role: 'Admin',
+            emailAddress: b2BUser.emailAddress || '',
+            firstName: b2BUser.firstName || '',
+            lastName: b2BUser.lastName || '',
+            isActive: b2BUser.isActive ?? true,
+          }
+        : { role: 'Admin', emailAddress: '', firstName: '', lastName: '', isActive: true },
     resolver: yupResolver(userSchema),
   })
-  const onSubmit = async () => {
-    if (isLoading) return
-    setLoading(true)
-    const formValues = getValues()
-    if (isEditMode) {
-      await onSave(formValues, b2BUser)
-    } else {
-      await onSave(formValues)
+
+  // Initialize originalRolesByAccount ref once on mount
+  React.useEffect(() => {
+    if (isEditMode && Object.keys(initialRoleAssignments).length > 0) {
+      originalRolesByAccount.current = { ...initialRoleAssignments }
     }
-    setLoading(false)
-    cancelAction()
-  }
+  }, [isEditMode, initialRoleAssignments])
 
-  useEffect(() => {
-    if (!b2BUser) return
-    const { firstName, lastName, emailAddress, isActive, roles } = b2BUser
-    reset({
-      emailAddress,
-      firstName,
-      lastName,
-      isActive,
-      role: roles?.length ? roles[0]?.roleName : '',
-    })
-  }, [b2BUser])
+  /**
+   * Validate that each account has at least one role assigned
+   * Memoized to prevent recalculation on every render
+   */
+  const hasRoleValidationError = React.useMemo(() => {
+    // Check if each available account (that user has permission to manage) has at least one role
+    if (accountsWithRoles.length === 0) return false
 
-  const cancelAction = () => {
+    // Check each account that should have roles assigned
+    for (const account of accountsWithRoles) {
+      const assignedRoles = roleAssignments[account.accountId] || []
+      if (assignedRoles.length === 0) {
+        return true // Validation error: account has no roles
+      }
+    }
+
+    return false
+  }, [accountsWithRoles, roleAssignments])
+
+  /**
+   * Check if form fields have been modified
+   * Memoized to prevent recalculation on every render
+   */
+  const hasFormFieldsChanged = React.useMemo(() => {
+    return Object.keys(dirtyFields).length > 0
+  }, [dirtyFields])
+
+  /**
+   * Determine if save button should be disabled
+   * Disabled when:
+   * - Form is submitting
+   * - Form has validation errors
+   * - Role validation fails (any account without roles)
+   * - In edit mode and no changes have been made (neither fields nor roles)
+   */
+  const isSaveDisabled = React.useMemo(() => {
+    if (isSubmitting) return true
+    if (Object.keys(errors).length > 0) return true
+    if (hasRoleValidationError) return true
+
+    // In edit mode, require at least one change (form fields or role assignments)
+    if (isEditMode) {
+      return !hasFormFieldsChanged && !isFormModified
+    }
+
+    // In create mode, button is disabled by default until form is modified
+    return !isFormModified && !hasFormFieldsChanged
+  }, [isSubmitting, errors, hasRoleValidationError, isEditMode, hasFormFieldsChanged, isFormModified])
+
+  /**
+   * Notify parent component whenever validation state changes
+   */
+  React.useEffect(() => {
+    if (onValidationChange) {
+      onValidationChange(!isSaveDisabled)
+    }
+  }, [isSaveDisabled, onValidationChange])
+
+  /**
+   * Form submission handler
+   * Processes role changes and submits form data
+   * Memoized to prevent recreation unless dependencies change
+   */
+  const onSubmit = React.useCallback(async () => {
+    if (isSubmitting) return
+    setIsSubmitting(true)
+
+    try {
+      const changesPerAccount: Record<number, RoleChangesPerAccount> = {}
+
+      // In edit mode, process role changes before saving
+      if (isEditMode) {
+        const roleOperations: Promise<unknown>[] = []
+
+        // Compare current roleAssignments with original roles
+        const allAccountIds = new Set([
+          ...Object.keys(roleAssignments).map(Number),
+          ...Object.keys(originalRolesByAccount.current).map(Number),
+        ])
+
+        allAccountIds.forEach((accountId) => {
+          const newRoles = roleAssignments[accountId] || []
+          const originalRoles = originalRolesByAccount.current[accountId] || []
+
+          // Find roles to add (in new but not in original)
+          const rolesToAdd = newRoles.filter((roleId) => !originalRoles.includes(roleId))
+
+          // Find roles to remove (in original but not in new)
+          const rolesToRemove = originalRoles.filter((roleId) => !newRoles.includes(roleId))
+
+          if (rolesToAdd.length > 0 || rolesToRemove.length > 0) {
+            changesPerAccount[accountId] = { rolesToAdd, rolesToRemove }
+          }
+        })
+
+        // Execute role changes
+        Object.entries(changesPerAccount).forEach(
+          ([accountIdStr, { rolesToAdd, rolesToRemove }]) => {
+            const accountId = Number(accountIdStr)
+            const userId = userIdsByAccount[accountId] || b2BUser?.userId
+
+            if (!userId) return
+
+            // Add new roles
+            rolesToAdd.forEach((roleId) => {
+              roleOperations.push(
+                addRoleToCustomerB2bAccount.mutateAsync({
+                  accountId,
+                  userId: userId as string,
+                  roleId: parseInt(roleId),
+                })
+              )
+            })
+
+            // Remove old roles
+            rolesToRemove.forEach((roleId) => {
+              roleOperations.push(
+                deleteB2bAccountUserRole.mutateAsync({
+                  accountId,
+                  userId: userId as string,
+                  roleId: parseInt(roleId),
+                })
+              )
+            })
+          }
+        )
+
+        // Wait for all role operations to complete
+        if (roleOperations.length > 0) {
+          await Promise.all(roleOperations).catch((error) => {
+            console.error('[UserForm] Role operations failed:', error)
+            throw error // Re-throw to be caught by outer catch block
+          })
+        }
+      }
+
+      const formValues = getValues()
+      const extendedFormValues = {
+        ...formValues,
+        roleAssignments,
+        userIdsByAccount,
+        changesPerAccount,
+      }
+      await onSave(extendedFormValues)
+      setIsSubmitting(false)
+      onClose()
+    } catch (error) {
+      console.error('[UserForm] Error saving user:', error)
+      setIsSubmitting(false)
+      // Note: Error notification should be handled by parent component
+    }
+  }, [
+    isSubmitting,
+    isEditMode,
+    getValues,
+    roleAssignments,
+    onSave,
+    onClose,
+    b2BUser?.userId,
+    userIdsByAccount,
+    addRoleToCustomerB2bAccount,
+    deleteB2bAccountUserRole,
+  ])
+
+  /**
+   * Memoized cancel action handler
+   * Stable reference prevents unnecessary re-renders of child components
+   */
+  const handleCancel = React.useCallback(() => {
     onClose()
-    reset()
-  }
+  }, [onClose])
 
   return (
-    <>
-      {/* Add User Details Section */}
-      <form
-        onSubmit={handleSubmit(onSubmit)}
-        id="addUserForm"
-        data-testid="user-form"
-        style={{ display: 'flex' }}
-      >
-        <Grid
-          container
-          spacing={8}
-          style={{
-            marginTop: '5px',
-            marginLeft: 0,
-            display: 'flex',
-            justifyContent: 'space-between',
-          }}
-        >
-          <Grid
-            item
-            xs={12}
-            md={isUserFormInDialog ? 12 : isDesktopEditView ? 3 : 3.5}
-            className={classes.textBoxGridStyle}
-          >
-            <Controller
-              name="emailAddress"
-              control={control}
-              rules={{
-                pattern: {
-                  value: /^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}$/i,
-                  message: t('invalid-email-error'),
-                },
-              }}
-              render={({ field }) => (
-                <KiboTextBox
-                  fullWidth
-                  error={!!errors?.emailAddress}
-                  value={field.value || ''}
-                  helperText={errors?.emailAddress?.message}
-                  label={t('email-address')}
-                  onChange={(_name, value) => field.onChange(value)}
-                />
-              )}
-            />
-          </Grid>
-          <Grid
-            item
-            xs={12}
-            md={isUserFormInDialog ? 12 : isDesktopEditView ? 1.5 : 2}
-            className={classes.textBoxGridStyle}
-          >
-            <Controller
-              name="firstName"
-              control={control}
-              render={({ field }) => (
-                <KiboTextBox
-                  fullWidth
-                  error={!!errors?.firstName}
-                  value={field.value || ''}
-                  helperText={errors?.firstName?.message}
-                  label={t('first-name')}
-                  onChange={(_name, value) => field.onChange(value)}
-                />
-              )}
-            />
-          </Grid>
-          <Grid
-            item
-            xs={12}
-            md={isUserFormInDialog ? 12 : isDesktopEditView ? 1.5 : 2}
-            className={classes.textBoxGridStyle}
-          >
-            <Controller
-              name="lastName"
-              control={control}
-              render={({ field }) => (
-                <KiboTextBox
-                  fullWidth
-                  error={!!errors?.lastName}
-                  value={field.value || ''}
-                  helperText={errors?.lastName?.message}
-                  label={t('last-name-or-sur-name')}
-                  onChange={(_name, value) => field.onChange(value)}
-                />
-              )}
-            />
-          </Grid>
-          <Grid item xs={12} md={isUserFormInDialog ? 12 : 2} className={classes.textBoxGridStyle}>
-            <Controller
-              name="role"
-              control={control}
-              defaultValue={getValues('role')}
-              render={({ field }) => (
-                <KiboRadio
-                  {...field}
-                  align="center"
-                  onChange={(value) => field.onChange(value)}
-                  title={t('role')}
-                  radioOptions={userFormRadioOptions}
-                  selected={getValues('role')}
-                />
-              )}
-            />
-          </Grid>
-          {isEditMode && (
-            <Grid
-              item
-              xs={12}
-              md={isUserFormInDialog ? 12 : isDesktopEditView ? 1.7 : 1}
-              className={classes.kiboSwitchGridStyle}
-            >
-              <Controller
-                name="isActive"
-                control={control}
-                render={({ field }) => (
-                  <KiboSwitch
-                    checked={field.value}
-                    onLabel={t('active')}
-                    offLabel={t('in-active')}
-                    title={t('status')}
-                    onChange={(value) => field.onChange(value)}
-                  />
-                )}
+    <form
+      onSubmit={handleSubmit(onSubmit)}
+      id="addUserForm"
+      data-testid="user-form"
+      style={FORM_CONTAINER_STYLES}
+    >
+      <Grid container spacing={8} style={GRID_CONTAINER_STYLES}>
+        <Grid item xs={12} md={12} className={classes.textBoxGridStyle}>
+          <Controller
+            name="emailAddress"
+            control={control}
+            rules={{
+              pattern: {
+                value: /^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}$/i,
+                message: t('invalid-email-error'),
+              },
+            }}
+            render={({ field }) => (
+              <KiboTextBox
+                fullWidth
+                error={!!errors?.emailAddress}
+                value={field.value || ''}
+                helperText={errors?.emailAddress?.message}
+                label={t('email-address')}
+                onChange={(_name, value) => field.onChange(value)}
+                disabled={isEditMode}
               />
-            </Grid>
-          )}
-          <Grid
-            item
-            xs={12}
-            md={isUserFormInDialog ? 12 : isDesktopEditView ? 1.1 : 1.4}
-            sx={{ paddingLeft: '0 !important', paddingTop: { xs: '15px !important' } }}
-          >
-            <Stack
-              gap={1}
-              sx={{
-                width: { xs: '100%' },
-                flexDirection: { xs: 'column', md: 'row' },
-                justifyContent: 'end',
-              }}
-            >
+            )}
+          />
+        </Grid>
+        <Grid item xs={12} md={12} className={classes.textBoxGridStyle}>
+          <Controller
+            name="firstName"
+            control={control}
+            render={({ field }) => (
+              <KiboTextBox
+                fullWidth
+                error={!!errors?.firstName}
+                value={field.value || ''}
+                helperText={errors?.firstName?.message}
+                label={t('first-name')}
+                onChange={(_name, value) => {
+                  field.onChange(value)
+                  setIsFormModified(true)
+                }}
+              />
+            )}
+          />
+        </Grid>
+        <Grid item xs={12} md={12} className={classes.textBoxGridStyle}>
+          <Controller
+            name="lastName"
+            control={control}
+            render={({ field }) => (
+              <KiboTextBox
+                fullWidth
+                error={!!errors?.lastName}
+                value={field.value || ''}
+                helperText={errors?.lastName?.message}
+                label={t('last-name-or-sur-name')}
+                onChange={(_name, value) => {
+                  field.onChange(value)
+                  setIsFormModified(true)
+                }}
+              />
+            )}
+          />
+        </Grid>
+
+        {/* Account Role Assignments Section - Full Width */}
+        <Grid item xs={12} md={12} className={classes.textBoxGridStyle}>
+          <AccountRoleAssignments
+            accounts={accountsWithRoles}
+            selectedRoles={roleAssignments}
+            onChange={handleRoleAssignmentsChange}
+            accountRoles={accountRoles}
+          />
+        </Grid>
+
+        {/* Action Buttons */}
+        {showButtons && (
+          <Grid item xs={12}>
+            <Box sx={ACTION_BUTTON_STYLES}>
               <LoadingButton
                 variant="outlined"
                 color="inherit"
-                data-testid="reset-button"
-                type="reset"
-                onClick={cancelAction}
-                sx={{ marginTop: { xs: 1.5, md: 0 } }}
+                data-testid="cancel-button"
+                type="button"
+                onClick={handleCancel}
               >
-                {isDesktopEditView && !isUserFormInDialog ? <ClearIcon /> : t('cancel')}
+                {t('cancel')}
               </LoadingButton>
 
               <LoadingButton
@@ -248,18 +552,16 @@ const UserForm = (props: UserFormProps) => {
                 disableElevation
                 data-testid="submit-button"
                 type="submit"
-                loading={isLoading}
-                disabled={isLoading}
+                loading={isSubmitting}
+                disabled={isSaveDisabled}
               >
-                {(isDesktopEditView && !isUserFormInDialog && <CheckIcon />) ||
-                  (isDesktopView && t('add-user')) ||
-                  t('save')}
+                {t('save')}
               </LoadingButton>
-            </Stack>
+            </Box>
           </Grid>
-        </Grid>
-      </form>
-    </>
+        )}
+      </Grid>
+    </form>
   )
 }
 
