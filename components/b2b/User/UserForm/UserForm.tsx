@@ -55,17 +55,6 @@ interface RoleChangesPerAccount {
   rolesToRemove: string[]
 }
 
-/** Inline styles extracted as constants to prevent object recreation */
-const FORM_CONTAINER_STYLES = { display: 'flex', width: '100%' } as const
-const GRID_CONTAINER_STYLES = { marginTop: '5px', marginLeft: 0, width: '100%' } as const
-const ACTION_BUTTON_STYLES = {
-  display: 'flex',
-  justifyContent: 'flex-end',
-  gap: 2,
-  mt: 3,
-  mb: 2,
-} as const
-
 /**
  * Custom hook to create form validation schema
  * Memoized to prevent recreation unless translations change
@@ -458,9 +447,9 @@ const UserForm = (props: UserFormProps) => {
       onSubmit={handleSubmit(onSubmit)}
       id="addUserForm"
       data-testid="user-form"
-      style={FORM_CONTAINER_STYLES}
+       className={classes.formContainerStyle}
     >
-      <Grid container spacing={8} style={GRID_CONTAINER_STYLES}>
+      <Grid container spacing={8} className={classes.gridContainerStyle}>
         <Grid item xs={12} md={12} className={classes.textBoxGridStyle}>
           <Controller
             name="emailAddress"
@@ -536,7 +525,7 @@ const UserForm = (props: UserFormProps) => {
         {/* Action Buttons */}
         {showButtons && (
           <Grid item xs={12}>
-            <Box sx={ACTION_BUTTON_STYLES}>
+            <Box className={classes.actionButtonStyle}>
               <LoadingButton
                 variant="outlined"
                 color="inherit"
