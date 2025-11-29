@@ -8,7 +8,7 @@ import { useTranslation } from 'next-i18next'
 
 import { CartItemActionsMobile } from '@/components/cart'
 import { AllAccountActions } from '@/lib/constants'
-import { actions, hasPermission } from '@/lib/helpers'
+import { actions, b2bUserActions, hasPermission } from '@/lib/helpers'
 
 interface AccountHierarchyActionsProps {
   mdScreen?: boolean
@@ -39,16 +39,25 @@ const AccountHierarchyActions = (props: AccountHierarchyActionsProps) => {
   }
   const actionsList = () => {
     const permissionArray = []
-    if (hasPermission(actions.VIEW_USERS)) {
+    if (hasPermission(actions.VIEW_USERS) || hasPermission(b2bUserActions.VIEW_BUYER)) {
       permissionArray.push(AllAccountActions.VIEW_BUYER_ACCOUNT)
     }
-    if (hasPermission(actions.VIEW_CHILD_ACCOUNT_QUOTES)) {
+    if (
+      hasPermission(actions.VIEW_CHILD_ACCOUNT_QUOTES) ||
+      hasPermission(b2bUserActions.VIEW_QUOTE)
+    ) {
       permissionArray.push(AllAccountActions.VIEW_QUOTES)
     }
-    if (hasPermission(actions.CREATE_ACCOUNT)) {
+    if (
+      hasPermission(actions.CREATE_ACCOUNT) ||
+      hasPermission(b2bUserActions.UPDATE_ACCOUNT_INFO_HIERARCHY_AND_ATTRIBUTES)
+    ) {
       permissionArray.push(AllAccountActions.ADD_ACCOUNT)
     }
-    if (hasPermission(actions.EDIT_ACCOUNT)) {
+    if (
+      hasPermission(actions.EDIT_ACCOUNT) ||
+      hasPermission(b2bUserActions.UPDATE_ACCOUNT_INFO_HIERARCHY_AND_ATTRIBUTES)
+    ) {
       permissionArray.push(AllAccountActions.EDIT_ACCOUNT)
     }
     if (hasPermission(actions.VIEW_ACCOUNT)) {
@@ -66,7 +75,7 @@ const AccountHierarchyActions = (props: AccountHierarchyActionsProps) => {
       onClick={(e) => e.stopPropagation()}
     >
       <NoSsr>
-        {hasPermission(actions.VIEW_USERS) && (
+        {(hasPermission(actions.VIEW_USERS) || hasPermission(b2bUserActions.VIEW_BUYER)) && (
           <Typography
             variant="caption"
             sx={{ textDecoration: 'underline', cursor: 'pointer' }}
@@ -77,7 +86,8 @@ const AccountHierarchyActions = (props: AccountHierarchyActionsProps) => {
         )}
       </NoSsr>
       <NoSsr>
-        {hasPermission(actions.VIEW_CHILD_ACCOUNT_QUOTES) && (
+        {(hasPermission(actions.VIEW_CHILD_ACCOUNT_QUOTES) ||
+          hasPermission(b2bUserActions.VIEW_QUOTE)) && (
           <Typography
             variant="caption"
             sx={{ textDecoration: 'underline', cursor: 'pointer' }}
@@ -102,7 +112,8 @@ const AccountHierarchyActions = (props: AccountHierarchyActionsProps) => {
           )}
         </NoSsr>
         <NoSsr>
-          {hasPermission(actions.CREATE_ACCOUNT) && (
+          {(hasPermission(actions.CREATE_ACCOUNT) ||
+            hasPermission(b2bUserActions.UPDATE_ACCOUNT_INFO_HIERARCHY_AND_ATTRIBUTES)) && (
             <IconButton
               size="small"
               sx={{ p: 0.5 }}
@@ -113,7 +124,8 @@ const AccountHierarchyActions = (props: AccountHierarchyActionsProps) => {
               <AddCircleIcon />
             </IconButton>
           )}
-          {hasPermission(actions.EDIT_ACCOUNT) && (
+          {(hasPermission(actions.EDIT_ACCOUNT) ||
+            hasPermission(b2bUserActions.UPDATE_ACCOUNT_INFO_HIERARCHY_AND_ATTRIBUTES)) && (
             <IconButton
               size="small"
               sx={{ p: 0.5 }}

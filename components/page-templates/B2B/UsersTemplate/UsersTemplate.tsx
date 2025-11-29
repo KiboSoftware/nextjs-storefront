@@ -31,7 +31,7 @@ import { ConfirmationDialog } from '@/components/dialogs'
 import { useAuthContext, useModalContext } from '@/context'
 import { useDebounce, useGetB2BUserQueries, useRemoveCustomerB2bUserMutation } from '@/hooks'
 import { Routes } from '@/lib/constants'
-import { actions, getPerPageItemText, hasPermission } from '@/lib/helpers'
+import { actions, b2bUserActions, getPerPageItemText, hasPermission } from '@/lib/helpers'
 
 import { B2BUser } from '@/lib/gql/types'
 
@@ -233,7 +233,7 @@ const UsersTemplate = ({ accountUserBehaviors }: UsersTemplateProps) => {
           <Typography variant={mdScreen ? 'h1' : 'h2'}>{t('users')}</Typography>
         </Box>
         <NoSsr>
-          {hasAddUserPermission && (
+          {(hasPermission(actions.CREATE_USERS) || hasPermission(b2bUserActions.ADD_BUYER)) && (
             <Grid container>
               <Grid item xs={12} md={12}>
                 <Button

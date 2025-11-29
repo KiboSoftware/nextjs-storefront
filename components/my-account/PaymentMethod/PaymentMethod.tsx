@@ -13,7 +13,7 @@ import { useModalContext } from '@/context'
 import { useDeleteCustomerCard, useDeleteCustomerAddress } from '@/hooks'
 import { DisplayMode, AddressType } from '@/lib/constants'
 import { addressGetters, cardGetters, userGetters } from '@/lib/getters'
-import { actions, hasPermission, tokenizeCreditCardPayment } from '@/lib/helpers'
+import { actions, b2bUserActions, hasPermission, tokenizeCreditCardPayment } from '@/lib/helpers'
 import type {
   Address,
   CardForm,
@@ -331,13 +331,15 @@ const PaymentMethod = (props: PaymentMethodProps) => {
       {!isAddingNewPayment && (
         <Stack gap={2}>
           <NoSsr>
-            {!hasPermission(actions.VIEW_PAYMENTS) && (
-              <Typography variant="body1">{t('not-authorized-payment-information')}</Typography>
-            )}
-            {hasPermission(actions.VIEW_PAYMENTS) && !displaySavedCardsAndContacts?.length && (
-              <Typography variant="body1">{t('no-saved-payments-yet')}</Typography>
-            )}
-            {hasPermission(actions.VIEW_PAYMENTS) &&
+            {!hasPermission(actions.VIEW_PAYMENTS) &&
+              !hasPermission(b2bUserActions.VIEW_PAYMENT) && (
+                <Typography variant="body1">{t('not-authorized-payment-information')}</Typography>
+              )}
+            {(hasPermission(actions.VIEW_PAYMENTS) || hasPermission(b2bUserActions.VIEW_PAYMENT)) &&
+              !displaySavedCardsAndContacts?.length && (
+                <Typography variant="body1">{t('no-saved-payments-yet')}</Typography>
+              )}
+            {(hasPermission(actions.VIEW_PAYMENTS) || hasPermission(b2bUserActions.VIEW_PAYMENT)) &&
               displaySavedCardsAndContacts?.map((each: PaymentAndBilling) => (
                 <Stack key={each?.cardInfo?.id as string} data-testid="saved-cards-and-contacts">
                   {each.cardInfo?.isDefaultPayMethod && (
@@ -357,7 +359,8 @@ const PaymentMethod = (props: PaymentMethodProps) => {
                       )}
                     />
                     <Stack gap={1}>
-                      {hasPermission(actions.EDIT_PAYMENTS) && (
+                      {(hasPermission(actions.EDIT_PAYMENTS) ||
+                        hasPermission(b2bUserActions.CREATE_OR_UPDATE_PAYMENT)) && (
                         <Typography
                           variant="body2"
                           sx={{ cursor: 'pointer' }}
@@ -367,7 +370,8 @@ const PaymentMethod = (props: PaymentMethodProps) => {
                           {t('edit')}
                         </Typography>
                       )}
-                      {hasPermission(actions.DELETE_PAYMENTS) && (
+                      {(hasPermission(actions.DELETE_PAYMENTS) ||
+                        hasPermission(b2bUserActions.DELETE_PAYMENT)) && (
                         <Typography
                           variant="body2"
                           sx={{ cursor: 'pointer' }}
@@ -380,7 +384,8 @@ const PaymentMethod = (props: PaymentMethodProps) => {
                   </Box>
                 </Stack>
               ))}
-            {hasPermission(actions.CREATE_PAYMENTS) && (
+            {(hasPermission(actions.CREATE_PAYMENTS) ||
+              hasPermission(b2bUserActions.CREATE_OR_UPDATE_PAYMENT)) && (
               <Button
                 variant="contained"
                 color="inherit"
@@ -484,16 +489,18 @@ const PaymentMethod = (props: PaymentMethodProps) => {
             )}
 
             <NoSsr>
-              {hasPermission(actions.CREATE_CONTACTS) && !showBillingFormAddress && (
-                <Button
-                  variant="contained"
-                  color="secondary"
-                  onClick={handleAddNewBillingAddress}
-                  sx={{ maxWidth: '26rem' }}
-                >
-                  {t('add-new-address')}
-                </Button>
-              )}
+              {(hasPermission(actions.CREATE_CONTACTS) ||
+                hasPermission(b2bUserActions.CREATE_OR_UPDATE_CONTACT)) &&
+                !showBillingFormAddress && (
+                  <Button
+                    variant="contained"
+                    color="secondary"
+                    onClick={handleAddNewBillingAddress}
+                    sx={{ maxWidth: '26rem' }}
+                  >
+                    {t('add-new-address')}
+                  </Button>
+                )}
             </NoSsr>
           </Stack>
 

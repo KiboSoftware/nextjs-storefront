@@ -79,7 +79,7 @@ import {
 } from '@/lib/constants'
 import { orderGetters, productGetters, quoteGetters, userGetters } from '@/lib/getters'
 import { buildAddressParams, hasPermission } from '@/lib/helpers'
-import { actions } from '@/lib/helpers/permissions'
+import { actions, b2bUserActions } from '@/lib/helpers/permissions'
 import { Address } from '@/lib/types'
 
 import {
@@ -986,46 +986,49 @@ const QuoteDetailsTemplate = (props: QuoteDetailsTemplateProps) => {
                               />
                             </>
                           )}
-                          {showPreviouslySavedAddress && (
-                            <>
-                              <Typography variant="subtitle2" fontWeight={'bold'}>
-                                {t('previously-saved-shipping-addresses')}
-                              </Typography>
-                              <KiboRadio
-                                radioOptions={previouslySavedShippingAddress?.map(
-                                  (address, index) => {
-                                    return {
-                                      value: String(address.id),
-                                      name: String(address.id),
-                                      label: (
-                                        <AddressCard
-                                          firstName={address?.firstName as string}
-                                          middleNameOrInitial={
-                                            address?.middleNameOrInitial as string
-                                          }
-                                          lastNameOrSurname={address?.lastNameOrSurname as string}
-                                          address1={address?.address?.address1 as string}
-                                          address2={address?.address?.address2 as string}
-                                          cityOrTown={address?.address?.cityOrTown as string}
-                                          stateOrProvince={
-                                            address?.address?.stateOrProvince as string
-                                          }
-                                          postalOrZipCode={
-                                            address?.address?.postalOrZipCode as string
-                                          }
-                                        />
-                                      ),
+                          {(hasPermission(actions.VIEW_CONTACTS) ||
+                            hasPermission(b2bUserActions.VIEW_CONTACT)) &&
+                            showPreviouslySavedAddress && (
+                              <>
+                                <Typography variant="subtitle2" fontWeight={'bold'}>
+                                  {t('previously-saved-shipping-addresses')}
+                                </Typography>
+                                <KiboRadio
+                                  radioOptions={previouslySavedShippingAddress?.map(
+                                    (address, index) => {
+                                      return {
+                                        value: String(address.id),
+                                        name: String(address.id),
+                                        label: (
+                                          <AddressCard
+                                            firstName={address?.firstName as string}
+                                            middleNameOrInitial={
+                                              address?.middleNameOrInitial as string
+                                            }
+                                            lastNameOrSurname={address?.lastNameOrSurname as string}
+                                            address1={address?.address?.address1 as string}
+                                            address2={address?.address?.address2 as string}
+                                            cityOrTown={address?.address?.cityOrTown as string}
+                                            stateOrProvince={
+                                              address?.address?.stateOrProvince as string
+                                            }
+                                            postalOrZipCode={
+                                              address?.address?.postalOrZipCode as string
+                                            }
+                                          />
+                                        ),
+                                      }
                                     }
-                                  }
-                                )}
-                                selected={selectedShippingAddressId?.toString()}
-                                align="flex-start"
-                                onChange={handleAddressSelect}
-                              />
-                            </>
-                          )}
+                                  )}
+                                  selected={selectedShippingAddressId?.toString()}
+                                  align="flex-start"
+                                  onChange={handleAddressSelect}
+                                />
+                              </>
+                            )}
                           <NoSsr>
-                            {hasPermission(actions.CREATE_CONTACTS) && (
+                            {(hasPermission(actions.MANAGE_QUOTES) ||
+                              hasPermission(b2bUserActions.CREATE_QUOTE)) && (
                               <Button
                                 variant="contained"
                                 color="inherit"
@@ -1060,22 +1063,24 @@ const QuoteDetailsTemplate = (props: QuoteDetailsTemplateProps) => {
                           onSaveAddress={handleSaveAddressToQuote}
                           onFormStatusChange={handleFormStatusChange}
                         />
-                        {isAuthenticated && (
-                          <FormControlLabel
-                            label={t('save-address-to-account')}
-                            control={
-                              <Checkbox
-                                sx={{ marginLeft: '0.5rem' }}
-                                inputProps={{
-                                  'aria-label': t('save-address-to-account'),
-                                }}
-                                onChange={() =>
-                                  setIsAddressSavedToAccount(!isAddressSavedToAccount)
-                                }
-                              />
-                            }
-                          />
-                        )}
+                        {isAuthenticated &&
+                          (hasPermission(actions.CREATE_CONTACTS) ||
+                            hasPermission(b2bUserActions.CREATE_OR_UPDATE_CONTACT)) && (
+                            <FormControlLabel
+                              label={t('save-address-to-account')}
+                              control={
+                                <Checkbox
+                                  sx={{ marginLeft: '0.5rem' }}
+                                  inputProps={{
+                                    'aria-label': t('save-address-to-account'),
+                                  }}
+                                  onChange={() =>
+                                    setIsAddressSavedToAccount(!isAddressSavedToAccount)
+                                  }
+                                />
+                              }
+                            />
+                          )}
                         <Box m={1} maxWidth={'872px'} data-testid="address-form">
                           <Grid container>
                             <Grid item xs={6} gap={2} display={'flex'} flexDirection={'column'}>

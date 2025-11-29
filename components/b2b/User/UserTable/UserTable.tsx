@@ -19,7 +19,8 @@ import { useRouter } from 'next/router'
 import { useTranslation } from 'next-i18next'
 
 import { userGetters } from '@/lib/getters'
-import { actions, hasPermission } from '@/lib/helpers'
+import { actions, b2bUserActions, hasPermission } from '@/lib/helpers'
+import { B2BUserInput } from '@/lib/types'
 
 import { B2BUser } from '@/lib/gql/types'
 
@@ -135,7 +136,11 @@ const UserTable: React.FC<UserTableProps> = React.memo((props) => {
           )}
           <TableCell>{t('role')}</TableCell>
           {mdScreen && <TableCell>{t('status')}</TableCell>}
-          <NoSsr>{hasEditPermission && <TableCell></TableCell>}</NoSsr>
+          <NoSsr>
+            {(hasPermission(actions.EDIT_USERS) || hasPermission(b2bUserActions.UPDATE_BUYER)) && (
+              <TableCell></TableCell>
+            )}
+          </NoSsr>
         </TableRow>
       </TableHead>
       <TableBody>
@@ -166,28 +171,30 @@ const UserTable: React.FC<UserTableProps> = React.memo((props) => {
               </TableCell>
             )}
             <NoSsr>
-              {hasEditPermission && (
+              (
                 <TableCell sx={FLEX_CELL_STYLES}>
                   {showActionButtons && (
                     <Box sx={ACTION_BUTTONS_CONTAINER_STYLES}>
-                      <IconButton
+                      {(hasPermission(actions.EDIT_USERS) ||
+                        hasPermission(b2bUserActions.UPDATE_BUYER)) && <IconButton
                         aria-label="edit-user"
                         name="edit-user"
                         onClick={() => handleEditUser(b2bUser)}
                       >
                         <EditIcon />
-                      </IconButton>
-                      <IconButton
+                      </IconButton>}
+                      {(hasPermission(actions.DELETE_USERS) ||
+                        hasPermission(b2bUserActions.DELETE_BUYER)) && <IconButton
                         aria-label="delete-user"
                         name="delete-user"
                         onClick={() => onDelete?.(b2bUser?.userId as string)}
                       >
                         <DeleteIcon />
-                      </IconButton>
+                      </IconButton>}
                     </Box>
                   )}
                 </TableCell>
-              )}
+              )
             </NoSsr>
           </TableRow>
         ))}

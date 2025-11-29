@@ -8,6 +8,7 @@ import { QuotesTable } from '@/components/b2b'
 import MobileB2BLayout from '@/components/layout/MobileB2BLayout/MobileB2BLayout'
 import { useAuthContext } from '@/context'
 import { useCreateQuote } from '@/hooks'
+import { actions, b2bUserActions, hasPermission } from '@/lib/helpers'
 import { QuoteFilters, QuoteSortingOptions } from '@/lib/types'
 
 import { QueryQuotesArgs, QuoteCollection } from '@/lib/gql/types'
@@ -64,6 +65,9 @@ const QuotesTemplate = (props: QuotesTemplateProps) => {
             variant="contained"
             color="inherit"
             onClick={handleCreateNewTemplate}
+            disabled={
+              !hasPermission(actions.MANAGE_QUOTES) && !hasPermission(b2bUserActions.CREATE_QUOTE)
+            }
             {...(!mdScreen && { fullWidth: true })}
           >
             {t('create-a-quote')}

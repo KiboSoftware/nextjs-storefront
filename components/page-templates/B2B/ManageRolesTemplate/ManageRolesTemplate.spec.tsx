@@ -35,6 +35,10 @@ jest.mock('next-i18next', () => ({
   }),
 }))
 
+jest.mock('@/lib/helpers/hasPermission', () => ({
+  hasPermission: jest.fn(() => true),
+}))
+
 // Mock styled components
 jest.mock('./ManageRolesTemplate.styles', () => ({
   BackButtonLink: ({ children, ...props }: React.PropsWithChildren<Record<string, unknown>>) => (

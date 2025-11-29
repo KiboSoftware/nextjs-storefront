@@ -11,6 +11,7 @@ import { useTranslation } from 'next-i18next'
 import { styles } from './ListsTemplate.styles'
 import { CreateList, ViewLists } from '@/components/b2b'
 import { useAddItemsToCurrentCart } from '@/hooks/mutations/cart/useAddItemsToCurrentCart/useAddItemsToCurrentCart'
+import { actions, b2bUserActions, hasPermission } from '@/lib/helpers'
 
 import { CrWishlistItem } from '@/lib/gql/types'
 
@@ -110,6 +111,10 @@ const ListsTemplate = () => {
               variant="contained"
               color="inherit"
               startIcon={<AddCircleOutlineIcon />}
+              disabled={
+                !hasPermission(actions.MANAGE_LISTS) &&
+                !hasPermission(b2bUserActions.CREATE_OR_UPDATE_LIST)
+              }
               data-testid="create-new-list-btn"
             >
               {t('create-new-list')}

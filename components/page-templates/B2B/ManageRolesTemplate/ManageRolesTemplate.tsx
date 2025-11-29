@@ -47,6 +47,7 @@ import { useGetRolesByAccountIdAsync, useDeleteRoleAsync, useGetUsersByRoleAsync
 import type { GetRolesAsyncResponse } from '@/lib/api/operations/get-roles-by-account-id'
 import type { B2BRole } from '@/lib/api/operations/get-roles-by-account-id'
 import { AccountScope, RoleType, Routes } from '@/lib/constants'
+import { b2bUserActions, hasPermission } from '@/lib/helpers'
 
 import type { CustomerAccount } from '@/lib/gql/types'
 
@@ -352,20 +353,22 @@ const ManageRolesTemplate = ({ customerAccount, initialData }: ManageRolesTempla
         </Box>
 
         {/* Add New Role Button */}
-        <Grid container>
-          <Grid item xs={12} md={12}>
-            <Button
-              variant="contained"
-              color="inherit"
-              onClick={handleAddNewRole}
-              disableElevation
-              startIcon={<AddCircleOutlineIcon />}
-              sx={{ width: { xs: '100%', md: 'auto' }, mb: 2 }}
-            >
-              {t('add-new-role')}
-            </Button>
+        {hasPermission(b2bUserActions.CREATE_ROLE) && (
+          <Grid container>
+            <Grid item xs={12} md={12}>
+              <Button
+                variant="contained"
+                color="inherit"
+                onClick={handleAddNewRole}
+                disableElevation
+                startIcon={<AddCircleOutlineIcon />}
+                sx={{ width: { xs: '100%', md: 'auto' }, mb: 2 }}
+              >
+                {t('add-new-role')}
+              </Button>
+            </Grid>
           </Grid>
-        </Grid>
+        )}
       </Grid>
 
       <Grid item>
@@ -485,60 +488,66 @@ const ManageRolesTemplate = ({ customerAccount, initialData }: ManageRolesTempla
             horizontal: 'right',
           }}
         >
-          <MenuItem onClick={() => selectedRoleId && handleViewRole(selectedRoleId)}>
-            <ListItemIcon>
-              <VisibilityIcon fontSize="small" />
-            </ListItemIcon>
-            <ListItemText>{t('view-details')}</ListItemText>
-          </MenuItem>
-
-          {selectedRole?.roleType === RoleType.Custom && (
-            <MenuItem onClick={() => selectedRoleId && handleEditRole(selectedRoleId)}>
+          {hasPermission(b2bUserActions.VIEW_ROLE) && (
+            <MenuItem onClick={() => selectedRoleId && handleViewRole(selectedRoleId)}>
               <ListItemIcon>
-                <EditIcon fontSize="small" />
+                <VisibilityIcon fontSize="small" />
               </ListItemIcon>
-              <ListItemText>{t('edit-role')}</ListItemText>
+              <ListItemText>{t('view-details')}</ListItemText>
             </MenuItem>
           )}
 
-          {selectedRole?.roleType === RoleType.Custom && (
-            <MenuItem onClick={() => selectedRoleId && handleCopyRole(selectedRoleId)}>
-              <ListItemIcon>
-                <ContentCopyIcon fontSize="small" />
-              </ListItemIcon>
-              <ListItemText>{t('copy-role')}</ListItemText>
-            </MenuItem>
-          )}
+          {selectedRole?.roleType === RoleType.Custom &&
+            hasPermission(b2bUserActions.UPDATE_ROLE) && (
+              <MenuItem onClick={() => selectedRoleId && handleEditRole(selectedRoleId)}>
+                <ListItemIcon>
+                  <EditIcon fontSize="small" />
+                </ListItemIcon>
+                <ListItemText>{t('edit-role')}</ListItemText>
+              </MenuItem>
+            )}
 
-          {selectedRole?.roleType === RoleType.Custom && (
-            <Tooltip
-              title={
-                getUserCount(selectedRoleId || '') > 0 ? t('cannot-delete-role-with-users') : ''
-              }
-              placement="left"
-            >
-              <span>
-                <MenuItem
-                  onClick={() => selectedRoleId && handleDeleteRole(selectedRoleId)}
-                  disabled={getUserCount(selectedRoleId || '') > 0}
-                  sx={{
-                    color: getUserCount(selectedRoleId || '') > 0 ? 'text.disabled' : 'error.main',
-                  }}
-                >
-                  <ListItemIcon>
-                    <DeleteIcon
-                      fontSize="small"
-                      sx={{
-                        color:
-                          getUserCount(selectedRoleId || '') > 0 ? 'text.disabled' : 'error.main',
-                      }}
-                    />
-                  </ListItemIcon>
-                  <ListItemText>{t('delete-role')}</ListItemText>
-                </MenuItem>
-              </span>
-            </Tooltip>
-          )}
+          {selectedRole?.roleType === RoleType.Custom &&
+            hasPermission(b2bUserActions.CREATE_ROLE) && (
+              <MenuItem onClick={() => selectedRoleId && handleCopyRole(selectedRoleId)}>
+                <ListItemIcon>
+                  <ContentCopyIcon fontSize="small" />
+                </ListItemIcon>
+                <ListItemText>{t('copy-role')}</ListItemText>
+              </MenuItem>
+            )}
+
+          {selectedRole?.roleType === RoleType.Custom &&
+            hasPermission(b2bUserActions.DELETE_ROLE) && (
+              <Tooltip
+                title={
+                  getUserCount(selectedRoleId || '') > 0 ? t('cannot-delete-role-with-users') : ''
+                }
+                placement="left"
+              >
+                <span>
+                  <MenuItem
+                    onClick={() => selectedRoleId && handleDeleteRole(selectedRoleId)}
+                    disabled={getUserCount(selectedRoleId || '') > 0}
+                    sx={{
+                      color:
+                        getUserCount(selectedRoleId || '') > 0 ? 'text.disabled' : 'error.main',
+                    }}
+                  >
+                    <ListItemIcon>
+                      <DeleteIcon
+                        fontSize="small"
+                        sx={{
+                          color:
+                            getUserCount(selectedRoleId || '') > 0 ? 'text.disabled' : 'error.main',
+                        }}
+                      />
+                    </ListItemIcon>
+                    <ListItemText>{t('delete-role')}</ListItemText>
+                  </MenuItem>
+                </span>
+              </Tooltip>
+            )}
         </Menu>
       </Grid>
     </Grid>

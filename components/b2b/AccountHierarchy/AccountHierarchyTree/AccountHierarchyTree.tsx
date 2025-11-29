@@ -11,7 +11,7 @@ import { useTranslation } from 'next-i18next'
 
 import { AccountHierarchyStyles } from './AccountHierarchyTree.styles'
 import { AccountHierarchyTreeLabel } from '@/components/b2b'
-import { actions, hasPermission } from '@/lib/helpers'
+import { actions, b2bUserActions, hasPermission } from '@/lib/helpers'
 import { AddChildAccountProps, B2BAccountHierarchyResult, HierarchyTree } from '@/lib/types'
 
 import { B2BAccount, B2BUser, CustomerAccount } from '@/lib/gql/types'
@@ -104,7 +104,10 @@ export default function AccountHierarchyTree(props: AccountHierarchyTreeProps) {
       <NoSsr>
         <SortableTree
           items={(hierarchy as TreeItems<HierarchyTree>) || []}
-          disableSorting={!hasPermission(actions.EDIT_ACCOUNT)}
+          disableSorting={
+            !hasPermission(actions.EDIT_ACCOUNT) &&
+            !hasPermission(b2bUserActions.UPDATE_ACCOUNT_INFO_HIERARCHY_AND_ATTRIBUTES)
+          }
           canRootHaveChildren={false}
           onItemsChanged={(items, reason) => {
             if (reason.type === 'dropped') {

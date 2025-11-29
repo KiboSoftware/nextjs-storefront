@@ -27,6 +27,7 @@ import {
 } from '@/hooks'
 import {
   actions,
+  b2bUserActions,
   buildAccountHierarchy,
   buildCreateCustomerB2bAccountParams,
   buildUpdateCustomerB2bAccountParams,
@@ -331,7 +332,10 @@ const AccountHierarchyTemplate = (props: AccountHierarchyTemplateProps) => {
                   disableElevation
                   id="formOpenButton"
                   startIcon={<AddCircleOutline />}
-                  disabled={!hasPermission(actions.CREATE_ACCOUNT)}
+                  disabled={
+                    !hasPermission(actions.CREATE_ACCOUNT) &&
+                    !hasPermission(b2bUserActions.UPDATE_ACCOUNT_INFO_HIERARCHY_AND_ATTRIBUTES)
+                  }
                   {...(!mdScreen && { fullWidth: true })}
                 >
                   {t('add-child-account')}

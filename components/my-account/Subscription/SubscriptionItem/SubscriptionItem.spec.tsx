@@ -60,6 +60,10 @@ interface EditBillingAddressProps {
 }
 
 // Mock
+jest.mock('@/lib/helpers/hasPermission', () => ({
+  hasPermission: jest.fn(() => true),
+}))
+
 jest.mock('@/components/dialogs', () => ({
   __esModule: true,
   ConfirmationDialog: (props: ConfirmationDialogProps) => {
