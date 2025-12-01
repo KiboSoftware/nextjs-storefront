@@ -7,7 +7,7 @@ import { CreateRoleTemplateStyles } from './CreateRoleTemplate.styles'
 import { RoleForm } from '@/components/b2b/index'
 import { RoleFormData } from '@/components/b2b/Role/RoleForm/components'
 import { useGetRoleByRoleIdAsync } from '@/hooks'
-import { AccountScope, ActionName } from '@/lib/constants'
+import { AccountScope, ActionName, SystemRoleBehaviors } from '@/lib/constants'
 import { B2BAccountHierarchyResult } from '@/lib/types'
 
 import { CustomerAccount } from '@/lib/gql/types'
@@ -44,6 +44,9 @@ const CreateRoleTemplate: React.FC<CreateRoleTemplateProps> = ({
   const isReadOnly = mode === ActionName.VIEW
   const isCopyMode = mode === ActionName.COPY
   const isEditMode = mode === ActionName.EDIT
+  
+  // Memoize behaviors to prevent unnecessary recalculations
+  const behaviorItems = useMemo(() => behaviors?.items, [behaviors?.items])
 
   // Fetch role data if roleId is present (for view, edit, or copy mode)
   const { role: roleData, isLoading: isLoadingRole } = useGetRoleByRoleIdAsync(
@@ -72,29 +75,39 @@ const CreateRoleTemplate: React.FC<CreateRoleTemplateProps> = ({
     }
 
     // Convert behaviors array to selectedPermissions format if behaviors exist
-    if (roleData.behaviors && Array.isArray(roleData.behaviors) && behaviors?.items) {
+    if (roleData.behaviors && Array.isArray(roleData.behaviors) && behaviorItems) {
       const permissionsMap: Record<number, number[]> = {}
       
-      roleData.behaviors.forEach((behavior: string | number) => {
-        const behaviorId = typeof behavior === 'string' ? parseInt(behavior) : behavior
-        if (isNaN(behaviorId)) return
+      // Check if this is a system role and get the role name
+      const isSystemRole = roleData.isSystemRole
+      const roleName = roleData.name?.toLowerCase()
+      
+      // If it's a system role, use the predefined mappings
+      if (isSystemRole && roleName && SystemRoleBehaviors[roleName]) {
+        Object.assign(permissionsMap, SystemRoleBehaviors[roleName])
+      } else {
+        // For custom roles, use the existing logic
+        roleData.behaviors.forEach((behavior: string | number) => {
+          const behaviorId = typeof behavior === 'string' ? parseInt(behavior) : behavior
+          if (isNaN(behaviorId)) return
 
-        // Find the behavior in the behaviors list to get its categoryId
-        const behaviorObj = behaviors.items?.find((b) => b.id === behaviorId)
-        if (behaviorObj?.categoryId) {
-          const categoryId = behaviorObj.categoryId
-          if (!permissionsMap[categoryId]) {
-            permissionsMap[categoryId] = []
+          // Find the behavior in the behaviors list to get its categoryId
+          const behaviorObj = behaviorItems?.find((b) => b.id === behaviorId)
+          if (behaviorObj?.categoryId) {
+            const categoryId = behaviorObj.categoryId
+            if (!permissionsMap[categoryId]) {
+              permissionsMap[categoryId] = []
+            }
+            permissionsMap[categoryId].push(behaviorId)
           }
-          permissionsMap[categoryId].push(behaviorId)
-        }
-      })
+        })
+      }
       
       preparedData.selectedPermissions = permissionsMap
     }
 
     return preparedData
-  }, [roleData, isLoadingRole, isReadOnly, isEditMode, isCopyMode, user?.id, roleId, behaviors])
+  }, [roleData, isLoadingRole, isReadOnly, isEditMode, isCopyMode, user?.id, roleId, behaviorItems])
 
   // Memoize callbacks to prevent creating new function references
   const handleBackClick = useCallback(() => {
@@ -111,7 +124,7 @@ const CreateRoleTemplate: React.FC<CreateRoleTemplateProps> = ({
 
   return (
     <Grid>
-      <Grid item style={{ marginTop: '10px', marginBottom: '20px' }}>
+      <Grid item sx={{ mt: 1.25, mb: 2.5 }}>
         <Box sx={CreateRoleTemplateStyles.container}>
           {/* Desktop Back Button */}
 
@@ -130,6 +143,7 @@ const CreateRoleTemplate: React.FC<CreateRoleTemplateProps> = ({
             isLoading={isLoadingRole && !!roleId}
             roleAccountIds={roleData?.accountIds || []}
             roleId={roleId ? parseInt(roleId as string) : undefined}
+            isSystemRole={roleData?.isSystemRole || false}
           />
         </Box>
       </Grid>

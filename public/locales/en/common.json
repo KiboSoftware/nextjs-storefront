@@ -165,6 +165,7 @@
   "role-information-description": "Basic details about the role",
   "account-hierarchy-scope": "Account Hierarchy Scope",
   "account-hierarchy-scope-description": "Define which accounts this role applies to",
+  "system-role-applies-to-all-accounts": "System role applies to all the accounts.",
   "apply-to-all-child-accounts": "Apply to all child accounts",
   "apply-to-all-child-accounts-description": "Role will be available across all accounts in the hierarchy",
   "apply-to-all-child-accounts-tooltip": "Creates this role for the parent account and all eligible child accounts where you have permission to create roles.",
