@@ -171,30 +171,32 @@ const UserTable: React.FC<UserTableProps> = React.memo((props) => {
               </TableCell>
             )}
             <NoSsr>
-              (
-                <TableCell sx={FLEX_CELL_STYLES}>
-                  {showActionButtons && (
-                    <Box sx={ACTION_BUTTONS_CONTAINER_STYLES}>
-                      {(hasPermission(actions.EDIT_USERS) ||
-                        hasPermission(b2bUserActions.UPDATE_BUYER)) && <IconButton
+              <TableCell sx={FLEX_CELL_STYLES}>
+                {showActionButtons && (
+                  <Box sx={ACTION_BUTTONS_CONTAINER_STYLES}>
+                    {(hasPermission(actions.EDIT_USERS) ||
+                      hasPermission(b2bUserActions.UPDATE_BUYER)) && (
+                      <IconButton
                         aria-label="edit-user"
                         name="edit-user"
                         onClick={() => handleEditUser(b2bUser)}
                       >
                         <EditIcon />
-                      </IconButton>}
-                      {(hasPermission(actions.DELETE_USERS) ||
-                        hasPermission(b2bUserActions.DELETE_BUYER)) && <IconButton
+                      </IconButton>
+                    )}
+                    {(hasPermission(actions.DELETE_USERS) ||
+                      hasPermission(b2bUserActions.DELETE_BUYER)) && (
+                      <IconButton
                         aria-label="delete-user"
                         name="delete-user"
                         onClick={() => onDelete?.(b2bUser?.userId as string)}
                       >
                         <DeleteIcon />
-                      </IconButton>}
-                    </Box>
-                  )}
-                </TableCell>
-              )
+                      </IconButton>
+                    )}
+                  </Box>
+                )}
+              </TableCell>
             </NoSsr>
           </TableRow>
         ))}

@@ -73,7 +73,7 @@ const HEADER_CONTAINER_STYLES = {
 
 /** Button width styles - extracted to prevent recreation */
 const ADD_BUTTON_WIDTH_STYLES = {
-  width: { xs: '100%', md: 118 },
+  width: { xs: '100%', md: 130 },
 } as const
 
 /**
