@@ -208,10 +208,22 @@ const RoleForm: React.FC<RoleFormProps> = ({
     ? getChildAccountsForParent(Number(parentAccount)).length > 0
     : false
 
-  // Initialize selectedPermissions from initialData (only once)
-  const [selectedPermissions, setSelectedPermissions] = useState<Record<number, number[]>>(
+  // Initialize selectedPermissions from initialData
+  const [selectedPermissions, setSelectedPermissions] = useState<Record<number, number[]>>(() =>
     initialData?.selectedPermissions || {}
   )
+
+  // Track if initialData has been applied to prevent unnecessary resets
+  const isInitialDataApplied = React.useRef(false)
+
+  // Update form when initialData changes (for view/edit/copy modes)
+  useEffect(() => {
+    if (initialData && !isInitialDataApplied.current) {
+      reset(initialData)
+      setSelectedPermissions(initialData.selectedPermissions || {})
+      isInitialDataApplied.current = true
+    }
+  }, [initialData, reset])
 
   // Update parent account when user data loads - set to logged in user's account (only for create mode)
   useEffect(() => {

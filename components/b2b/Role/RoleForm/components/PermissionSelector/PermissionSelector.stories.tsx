@@ -289,3 +289,104 @@ DisabledWithError.args = {
   permissionError: 'At least one permission must be selected for each role.',
   isReadOnly: true,
 }
+
+export const SystemRoleView: ComponentStory<typeof PermissionSelector> = (args) => {
+  const [selectedPermissions] = useState<Record<number, number[]>>({
+    1: [101, 102, 103, 104, 105], // All Order Management permissions
+    2: [201, 202, 203, 204, 205], // All Product Management permissions
+    3: [301, 302, 303, 304], // All Customer Management permissions
+    4: [401, 402, 403], // All Payment Processing permissions
+    5: [501, 502, 503], // All Inventory Management permissions
+    6: [601, 602, 603], // All User Administration permissions
+  })
+
+  const getAllSelectedBehaviors = () => {
+    const allSelected: Array<{ category: number; behavior: number }> = []
+    Object.entries(selectedPermissions).forEach(([categoryId, behaviorIds]) => {
+      behaviorIds.forEach((behaviorId) => {
+        allSelected.push({ category: Number(categoryId), behavior: behaviorId })
+      })
+    })
+    return allSelected
+  }
+
+  const handleBehaviorToggle = () => {
+    // No-op for system role
+  }
+  const handleBehaviorNameCheckboxChange = () => {
+    // No-op for system role
+  }
+  const handleRemoveBehavior = () => {
+    // No-op for system role
+  }
+
+  return (
+    <Box sx={{ maxWidth: 1200, margin: '0 auto', padding: 2 }}>
+      <PermissionSelector
+        {...args}
+        selectedPermissions={selectedPermissions}
+        onBehaviorToggle={handleBehaviorToggle}
+        onBehaviorNameCheckboxChange={handleBehaviorNameCheckboxChange}
+        getAllSelectedBehaviors={getAllSelectedBehaviors}
+        handleRemoveBehavior={handleRemoveBehavior}
+      />
+    </Box>
+  )
+}
+
+SystemRoleView.args = {
+  behaviorCategories: mockBehaviorCategories,
+  behaviors: mockBehaviors,
+  permissionError: '',
+  isReadOnly: true,
+  isSystemRole: true,
+}
+
+export const SystemRolePurchaser: ComponentStory<typeof PermissionSelector> = (args) => {
+  const [selectedPermissions] = useState<Record<number, number[]>>({
+    1: [101, 103], // Order Management: View, Edit
+    2: [201], // Product Management: View
+    4: [403], // Payment Processing: View History
+  })
+
+  const getAllSelectedBehaviors = () => {
+    const allSelected: Array<{ category: number; behavior: number }> = []
+    Object.entries(selectedPermissions).forEach(([categoryId, behaviorIds]) => {
+      behaviorIds.forEach((behaviorId) => {
+        allSelected.push({ category: Number(categoryId), behavior: behaviorId })
+      })
+    })
+    return allSelected
+  }
+
+  const handleBehaviorToggle = () => {
+    // No-op for system role
+  }
+  const handleBehaviorNameCheckboxChange = () => {
+    // No-op for system role
+  }
+  const handleRemoveBehavior = () => {
+    // No-op for system role
+  }
+
+  return (
+    <Box sx={{ maxWidth: 1200, margin: '0 auto', padding: 2 }}>
+      <PermissionSelector
+        {...args}
+        selectedPermissions={selectedPermissions}
+        onBehaviorToggle={handleBehaviorToggle}
+        onBehaviorNameCheckboxChange={handleBehaviorNameCheckboxChange}
+        getAllSelectedBehaviors={getAllSelectedBehaviors}
+        handleRemoveBehavior={handleRemoveBehavior}
+      />
+    </Box>
+  )
+}
+
+SystemRolePurchaser.args = {
+  behaviorCategories: mockBehaviorCategories,
+  behaviors: mockBehaviors,
+  permissionError: '',
+  isReadOnly: true,
+  isSystemRole: true,
+}
