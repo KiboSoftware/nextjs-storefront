@@ -1318,7 +1318,7 @@ describe('System Role Functionality', () => {
       })
 
       // Verify behaviors are displayed
-      expect(screen.getByText('Add User').length).toBeGreaterThan(0)
+      expect(screen.getAllByText('Add User').length).toBeGreaterThan(0)
     })
 
     it('Scenario: Viewing Purchaser system role with limited permissions', () => {
