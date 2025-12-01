@@ -39,8 +39,8 @@ jest.mock('@mui/material', () => ({
   useMediaQuery: jest.fn(),
 }))
 
-jest.mock('@/lib/helpers/hasPermission', () => ({
-  hasPermission: jest.fn(() => true),
+jest.mock('@/lib/helpers/hasAnyPermission', () => ({
+  hasAnyPermission: jest.fn(() => true),
 }))
 
 const KeyValueDisplayMock = () => <div data-testid="key-value-display-component" />

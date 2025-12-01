@@ -78,7 +78,7 @@ import {
   StatusColorCode,
 } from '@/lib/constants'
 import { orderGetters, productGetters, quoteGetters, userGetters } from '@/lib/getters'
-import { buildAddressParams, hasPermission } from '@/lib/helpers'
+import { buildAddressParams, hasAnyPermission } from '@/lib/helpers'
 import { actions, b2bUserActions } from '@/lib/helpers/permissions'
 import { Address } from '@/lib/types'
 
@@ -986,8 +986,7 @@ const QuoteDetailsTemplate = (props: QuoteDetailsTemplateProps) => {
                               />
                             </>
                           )}
-                          {(hasPermission(actions.VIEW_CONTACTS) ||
-                            hasPermission(b2bUserActions.VIEW_CONTACT)) &&
+                          {hasAnyPermission(actions.VIEW_CONTACTS, b2bUserActions.VIEW_CONTACT) &&
                             showPreviouslySavedAddress && (
                               <>
                                 <Typography variant="subtitle2" fontWeight={'bold'}>
@@ -1027,8 +1026,10 @@ const QuoteDetailsTemplate = (props: QuoteDetailsTemplateProps) => {
                               </>
                             )}
                           <NoSsr>
-                            {(hasPermission(actions.MANAGE_QUOTES) ||
-                              hasPermission(b2bUserActions.CREATE_QUOTE)) && (
+                            {hasAnyPermission(
+                              actions.MANAGE_QUOTES,
+                              b2bUserActions.CREATE_QUOTE
+                            ) && (
                               <Button
                                 variant="contained"
                                 color="inherit"
@@ -1064,8 +1065,10 @@ const QuoteDetailsTemplate = (props: QuoteDetailsTemplateProps) => {
                           onFormStatusChange={handleFormStatusChange}
                         />
                         {isAuthenticated &&
-                          (hasPermission(actions.CREATE_CONTACTS) ||
-                            hasPermission(b2bUserActions.CREATE_OR_UPDATE_CONTACT)) && (
+                          hasAnyPermission(
+                            actions.CREATE_CONTACTS,
+                            b2bUserActions.CREATE_OR_UPDATE_CONTACT
+                          ) && (
                             <FormControlLabel
                               label={t('save-address-to-account')}
                               control={

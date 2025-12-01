@@ -35,7 +35,7 @@ import {
   actions,
   b2bUserActions,
   buildAddressParams,
-  hasPermission,
+  hasAnyPermission,
   validateGoogleReCaptcha,
 } from '@/lib/helpers'
 import type { Address, ContactForm, DeleteAddressParams } from '@/lib/types'
@@ -111,8 +111,7 @@ const AccountAddress = (props: AccountAddressProps) => {
         <AddressCard {...buildAddressProps(customerContact)} />
         <Stack>
           <NoSsr>
-            {(hasPermission(actions.EDIT_CONTACTS) ||
-              hasPermission(b2bUserActions.CREATE_OR_UPDATE_CONTACT)) && (
+            {hasAnyPermission(actions.EDIT_CONTACTS, b2bUserActions.CREATE_OR_UPDATE_CONTACT) && (
               <Typography
                 variant="body2"
                 sx={{ cursor: 'pointer' }}
@@ -122,8 +121,7 @@ const AccountAddress = (props: AccountAddressProps) => {
                 {t('edit')}
               </Typography>
             )}
-            {(hasPermission(actions.DELETE_CONTACTS) ||
-              hasPermission(b2bUserActions.DELETE_CONTACT)) &&
+            {hasAnyPermission(actions.DELETE_CONTACTS, b2bUserActions.DELETE_CONTACT) &&
               !isPrimaryAddress && (
                 <Delete
                   sx={{ marginTop: '1.375rem' }}
@@ -350,7 +348,7 @@ const AddressBook = (props: AddressBookProps) => {
     <Box data-testid={'address-book-component'}>
       <Box pb={2}>
         <NoSsr>
-          {(hasPermission(actions.VIEW_CONTACTS) || hasPermission(b2bUserActions.VIEW_CONTACT)) &&
+          {hasAnyPermission(actions.VIEW_CONTACTS, b2bUserActions.VIEW_CONTACT) &&
             !isAddressModified &&
             !displayShippingAddresses?.length &&
             !displayBillingAddresses?.length && (
@@ -359,12 +357,12 @@ const AddressBook = (props: AddressBookProps) => {
         </NoSsr>
       </Box>
       <NoSsr>
-        {!hasPermission(actions.VIEW_CONTACTS) && !hasPermission(b2bUserActions.VIEW_CONTACT) && (
+        {!hasAnyPermission(actions.VIEW_CONTACTS, b2bUserActions.VIEW_CONTACT) && (
           <Typography variant="body1">{t('not-authorized-shipping-information')}</Typography>
         )}
       </NoSsr>
       <NoSsr>
-        {(hasPermission(actions.VIEW_CONTACTS) || hasPermission(b2bUserActions.VIEW_CONTACT)) &&
+        {hasAnyPermission(actions.VIEW_CONTACTS, b2bUserActions.VIEW_CONTACT) &&
           !isAddressModified && (
             <Box>
               <TransitionGroup>
@@ -433,8 +431,7 @@ const AddressBook = (props: AddressBookProps) => {
           )}
       </NoSsr>
       <NoSsr>
-        {(hasPermission(actions.CREATE_CONTACTS) ||
-          hasPermission(b2bUserActions.CREATE_OR_UPDATE_CONTACT)) &&
+        {hasAnyPermission(actions.CREATE_CONTACTS, b2bUserActions.CREATE_OR_UPDATE_CONTACT) &&
           !isAddressModified && (
             <Button
               variant="contained"

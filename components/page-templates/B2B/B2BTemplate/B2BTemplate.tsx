@@ -26,7 +26,7 @@ import { MyAccountTemplateStyle } from '../../MyAccountTemplate/MyAccountTemplat
 import { MyProfile, PaymentMethod, AddressBook } from '@/components/my-account'
 import { useAuthContext, useSnackbarContext } from '@/context'
 import { useCardContactActions } from '@/hooks'
-import { actions, b2bUserActions, hasPermission, validateGoogleReCaptcha } from '@/lib/helpers'
+import { actions, b2bUserActions, hasAnyPermission, validateGoogleReCaptcha } from '@/lib/helpers'
 import type { BillingAddress, CardType } from '@/lib/types'
 
 import type { CustomerAccount } from '@/lib/gql/types'
@@ -103,9 +103,6 @@ const B2BTemplate = () => {
         showSnackbar(captcha.message, 'error')
       }
     })
-  }
-  const hasAnyPermission = (...permissions: string[]): boolean => {
-    return permissions.some((permission) => hasPermission(permission))
   }
 
   const shopperAccountActionList = [
@@ -236,19 +233,19 @@ const B2BTemplate = () => {
           <Typography variant={mdScreen ? 'h1' : 'h2'}>{t('orders')}</Typography>
         </Box>
 
-        {hasPermission(b2bUserActions.MANAGE_CART) && (
+        {hasAnyPermission(b2bUserActions.MANAGE_CART) && (
           <B2BTemplateListItem heading="quick-order" onClick={handleGoToQuickOrder} />
         )}
-        {(hasPermission(actions.CREATE_CHECKOUT) || hasPermission(b2bUserActions.VIEW_ORDER)) && (
+        {hasAnyPermission(actions.CREATE_CHECKOUT, b2bUserActions.VIEW_ORDER) && (
           <B2BTemplateListItem heading="order-history" onClick={handleGoToOrderHistory} />
         )}
-        {(hasPermission(actions.CREATE_RETURNS) || hasPermission(b2bUserActions.VIEW_RETURN)) && (
+        {hasAnyPermission(actions.CREATE_RETURNS, b2bUserActions.VIEW_RETURN) && (
           <B2BTemplateListItem heading="returns" />
         )}
-        {(hasPermission(actions.MANAGE_QUOTES) || hasPermission(b2bUserActions.VIEW_QUOTE)) && (
+        {hasAnyPermission(actions.MANAGE_QUOTES, b2bUserActions.VIEW_QUOTE) && (
           <B2BTemplateListItem heading="quotes" onClick={handleGoToQuotes} />
         )}
-        {(hasPermission(actions.MANAGE_LISTS) || hasPermission(b2bUserActions.VIEW_LIST)) && (
+        {hasAnyPermission(actions.MANAGE_LISTS, b2bUserActions.VIEW_LIST) && (
           <B2BTemplateListItem heading="lists" onClick={handleGoToLists} />
         )}
 

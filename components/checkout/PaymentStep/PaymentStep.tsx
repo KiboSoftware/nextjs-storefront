@@ -33,7 +33,7 @@ import {
   b2bUserActions,
   buildCardPaymentActionForCheckoutParams,
   buildPurchaseOrderPaymentActionForCheckoutParams,
-  hasPermission,
+  hasAnyPermission,
   tokenizeCreditCardPayment,
   validateGoogleReCaptcha,
 } from '@/lib/helpers'
@@ -166,7 +166,7 @@ const PaymentStep = (props: PaymentStepProps) => {
   const newPaymentTypes = paymentTypes
     .map((paymentType: any) =>
       paymentType.id === 'CreditCard' ||
-      ((hasPermission(actions.VIEW_PO) || hasPermission(b2bUserActions.VIEW_PURCHASE_ORDER)) &&
+      (hasAnyPermission(actions.VIEW_PO, b2bUserActions.VIEW_PURCHASE_ORDER) &&
         paymentType.id === 'PurchaseOrder' &&
         user?.id &&
         customerPurchaseOrderAccount?.isEnabled)
@@ -814,8 +814,7 @@ const PaymentStep = (props: PaymentStepProps) => {
                 {paymentType.id === selectedPaymentTypeRadio ? (
                   <Box sx={{ maxWidth: '100%', mb: 1, pl: 4 }}>
                     {shouldShowPreviouslySavedCards &&
-                    (hasPermission(actions.VIEW_PAYMENTS) ||
-                      hasPermission(b2bUserActions.VIEW_PAYMENT)) ? (
+                    hasAnyPermission(actions.VIEW_PAYMENTS, b2bUserActions.VIEW_PAYMENT) ? (
                       <Stack gap={2} width="100%" data-testid="saved-payment-methods">
                         {cardOptions?.length ? (
                           <>
@@ -912,8 +911,7 @@ const PaymentStep = (props: PaymentStepProps) => {
                       </Stack>
                     ) : null}
                     {shouldShowPreviouslySavedPaymentsForPurchaseOrder &&
-                    (hasPermission(actions.VIEW_PO) ||
-                      hasPermission(b2bUserActions.VIEW_PURCHASE_ORDER)) ? (
+                    hasAnyPermission(actions.VIEW_PO, b2bUserActions.VIEW_PURCHASE_ORDER) ? (
                       <Stack gap={2} width="100%" data-testid="saved-payment-methods">
                         {savedPaymentBillingDetailsForPurchaseOrder ? (
                           <Box pl={2}>
@@ -965,8 +963,10 @@ const PaymentStep = (props: PaymentStepProps) => {
                         />
 
                         {isAuthenticated &&
-                        (hasPermission(actions.CREATE_PAYMENTS) ||
-                          hasPermission(b2bUserActions.CREATE_OR_UPDATE_PAYMENT)) ? (
+                        hasAnyPermission(
+                          actions.CREATE_PAYMENTS,
+                          b2bUserActions.CREATE_OR_UPDATE_PAYMENT
+                        ) ? (
                           <FormControlLabel
                             sx={{
                               width: '100%',
@@ -1038,8 +1038,10 @@ const PaymentStep = (props: PaymentStepProps) => {
                       </>
                     ) : null}
                     {!(shouldShowPurchaseOrderForm || shouldShowCardForm) &&
-                    (hasPermission(actions.CREATE_CHECKOUT) ||
-                      hasPermission(b2bUserActions.CREATE_OR_UPDATE_ORDER)) ? (
+                    hasAnyPermission(
+                      actions.CREATE_CHECKOUT,
+                      b2bUserActions.CREATE_OR_UPDATE_ORDER
+                    ) ? (
                       <Box pt={2}>
                         <Button
                           variant="contained"

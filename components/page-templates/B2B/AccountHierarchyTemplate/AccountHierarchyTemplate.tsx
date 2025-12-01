@@ -33,7 +33,7 @@ import {
   buildUpdateCustomerB2bAccountParams,
   buildUpdateCustomerB2bUserParams,
   filterAccountsByDisableSorting,
-  hasPermission,
+  hasAnyPermission,
   parseFilterParamToObject,
 } from '@/lib/helpers'
 import {
@@ -333,8 +333,10 @@ const AccountHierarchyTemplate = (props: AccountHierarchyTemplateProps) => {
                   id="formOpenButton"
                   startIcon={<AddCircleOutline />}
                   disabled={
-                    !hasPermission(actions.CREATE_ACCOUNT) &&
-                    !hasPermission(b2bUserActions.UPDATE_ACCOUNT_INFO_HIERARCHY_AND_ATTRIBUTES)
+                    !hasAnyPermission(
+                      actions.CREATE_ACCOUNT,
+                      b2bUserActions.UPDATE_ACCOUNT_INFO_HIERARCHY_AND_ATTRIBUTES
+                    )
                   }
                   {...(!mdScreen && { fullWidth: true })}
                 >

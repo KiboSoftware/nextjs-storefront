@@ -10,8 +10,8 @@ import mockRouter from 'next-router-mock'
 import * as stories from './MyAccountTemplate.stories' // import all stories from the stories file
 const { Common } = composeStories(stories)
 
-jest.mock('@/lib/helpers/hasPermission', () => ({
-  hasPermission: jest.fn(() => true),
+jest.mock('@/lib/helpers/hasAnyPermission', () => ({
+  hasAnyPermission: jest.fn(() => true),
 }))
 
 const FullWidthDividerMock = () => <div data-testid="full-width-divider-component" />

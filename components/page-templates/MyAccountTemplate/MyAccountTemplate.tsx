@@ -25,7 +25,7 @@ import { MyAccountTemplateStyle } from './MyAccountTemplate.styles'
 import { MyProfile, PaymentMethod, AddressBook } from '@/components/my-account'
 import { useAuthContext, useSnackbarContext } from '@/context'
 import { useCardContactActions } from '@/hooks'
-import { actions, b2bUserActions, hasPermission, validateGoogleReCaptcha } from '@/lib/helpers'
+import { actions, b2bUserActions, hasAnyPermission, validateGoogleReCaptcha } from '@/lib/helpers'
 import type { BillingAddress, CardType } from '@/lib/types'
 
 import type { CustomerAccount } from '@/lib/gql/types'
@@ -159,7 +159,7 @@ const MyAccountTemplate = () => {
         {/* code for subscription below */}
         <Divider sx={{ borderColor: 'grey.500' }} />
         {isSubscriptionEnabled &&
-          (hasPermission(actions.CREATE_CHECKOUT) || hasPermission(b2bUserActions.VIEW_ORDER)) && (
+          hasAnyPermission(actions.CREATE_CHECKOUT, b2bUserActions.VIEW_ORDER) && (
             <Box
               sx={{
                 ...MyAccountTemplateStyle.myAccountChildren,

@@ -4,7 +4,7 @@ import { useTranslation } from 'next-i18next'
 
 import { QuoteStatus } from '@/lib/constants'
 import { quoteGetters } from '@/lib/getters'
-import { hasPermission, actions, b2bUserActions } from '@/lib/helpers'
+import { hasAnyPermission, actions, b2bUserActions } from '@/lib/helpers'
 
 interface BuyerQuoteActionsProps {
   hasDraft: boolean
@@ -47,8 +47,7 @@ export default function BuyerQuoteActions({
         >
           <Box display={'flex'} gap={2} whiteSpace={'nowrap'}>
             {(mode === 'create' || mode === 'edit') &&
-              (hasPermission(actions.MANAGE_QUOTES) ||
-                hasPermission(b2bUserActions.UPDATE_QUOTE)) && (
+              hasAnyPermission(actions.MANAGE_QUOTES, b2bUserActions.UPDATE_QUOTE) && (
                 <LoadingButton
                   variant="contained"
                   color="secondary"
@@ -59,19 +58,17 @@ export default function BuyerQuoteActions({
                   {t('clear-changes')}
                 </LoadingButton>
               )}
-            {!mode &&
-              (hasPermission(actions.MANAGE_QUOTES) ||
-                hasPermission(b2bUserActions.UPDATE_QUOTE)) && (
-                <LoadingButton
-                  variant="contained"
-                  color="secondary"
-                  sx={{ width: { xs: '50%', md: '100%' } }}
-                  disabled={quoteGetters.isEditQuoteButtonDisabled(status)}
-                  onClick={handleEditQuote}
-                >
-                  {t('edit-quote')}
-                </LoadingButton>
-              )}
+            {!mode && hasAnyPermission(actions.MANAGE_QUOTES, b2bUserActions.UPDATE_QUOTE) && (
+              <LoadingButton
+                variant="contained"
+                color="secondary"
+                sx={{ width: { xs: '50%', md: '100%' } }}
+                disabled={quoteGetters.isEditQuoteButtonDisabled(status)}
+                onClick={handleEditQuote}
+              >
+                {t('edit-quote')}
+              </LoadingButton>
+            )}
             <LoadingButton
               sx={{ width: { xs: '50%', md: '100%' } }}
               variant="contained"
@@ -82,8 +79,7 @@ export default function BuyerQuoteActions({
             </LoadingButton>
           </Box>
           {(mode === 'create' || mode === 'edit') &&
-            (hasPermission(actions.MANAGE_QUOTES) ||
-              hasPermission(b2bUserActions.UPDATE_QUOTE)) && (
+            hasAnyPermission(actions.MANAGE_QUOTES, b2bUserActions.UPDATE_QUOTE) && (
               <Box>
                 <LoadingButton
                   variant="contained"
@@ -101,8 +97,7 @@ export default function BuyerQuoteActions({
               </Box>
             )}
           <NoSsr>
-            {(hasPermission(actions.CREATE_CHECKOUT) ||
-              hasPermission(b2bUserActions.CREATE_OR_UPDATE_ORDER)) &&
+            {hasAnyPermission(actions.CREATE_CHECKOUT, b2bUserActions.CREATE_OR_UPDATE_ORDER) &&
               QuoteStatus[status] === QuoteStatus.ReadyForCheckout && (
                 <Box>
                   <LoadingButton

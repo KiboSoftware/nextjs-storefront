@@ -31,7 +31,7 @@ import { ConfirmationDialog } from '@/components/dialogs'
 import { useAuthContext, useModalContext } from '@/context'
 import { useDebounce, useGetB2BUserQueries, useRemoveCustomerB2bUserMutation } from '@/hooks'
 import { Routes } from '@/lib/constants'
-import { actions, b2bUserActions, getPerPageItemText, hasPermission } from '@/lib/helpers'
+import { actions, b2bUserActions, getPerPageItemText, hasAnyPermission } from '@/lib/helpers'
 
 import { B2BUser } from '@/lib/gql/types'
 
@@ -220,7 +220,7 @@ const UsersTemplate = ({ accountUserBehaviors }: UsersTemplateProps) => {
    * Check if current user has permission to add new users
    * Memoized to prevent recalculation on every render
    */
-  const hasAddUserPermission = React.useMemo(() => hasPermission(actions.CREATE_ACCOUNT), [])
+  const hasAddUserPermission = React.useMemo(() => hasAnyPermission(actions.CREATE_ACCOUNT), [])
 
   return (
     <Grid>
@@ -233,7 +233,7 @@ const UsersTemplate = ({ accountUserBehaviors }: UsersTemplateProps) => {
           <Typography variant={mdScreen ? 'h1' : 'h2'}>{t('users')}</Typography>
         </Box>
         <NoSsr>
-          {(hasPermission(actions.CREATE_USERS) || hasPermission(b2bUserActions.ADD_BUYER)) && (
+          {hasAnyPermission(actions.CREATE_USERS, b2bUserActions.ADD_BUYER) && (
             <Grid container>
               <Grid item xs={12} md={12}>
                 <Button

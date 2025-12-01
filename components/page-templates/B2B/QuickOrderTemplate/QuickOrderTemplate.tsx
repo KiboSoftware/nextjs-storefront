@@ -25,7 +25,7 @@ import {
 } from '@/hooks'
 import { FulfillmentOptions as FulfillmentOptionsConstant } from '@/lib/constants'
 import { cartGetters, orderGetters, productGetters } from '@/lib/getters'
-import { actions, b2bUserActions, hasPermission } from '@/lib/helpers'
+import { actions, b2bUserActions, hasAnyPermission } from '@/lib/helpers'
 
 import { CrCart, CrCartItem, Location } from '@/lib/gql/types'
 
@@ -178,8 +178,7 @@ const QuickOrderTemplate = (props: QuickOrderTemplateProps) => {
           <Stack display={'flex'} justifyContent={'flex-end'}>
             {mdScreen ? (
               <Stack direction="row" gap={2}>
-                {(hasPermission(actions.MANAGE_QUOTES) ||
-                  hasPermission(b2bUserActions.CREATE_QUOTE)) && (
+                {hasAnyPermission(actions.MANAGE_QUOTES, b2bUserActions.CREATE_QUOTE) && (
                   <Stack direction="column" gap={2}>
                     <LoadingButton
                       variant="contained"
@@ -191,8 +190,10 @@ const QuickOrderTemplate = (props: QuickOrderTemplateProps) => {
                     </LoadingButton>
                   </Stack>
                 )}
-                {(hasPermission(actions.CREATE_CHECKOUT) ||
-                  hasPermission(b2bUserActions.CREATE_OR_UPDATE_ORDER)) && (
+                {hasAnyPermission(
+                  actions.CREATE_CHECKOUT,
+                  b2bUserActions.CREATE_OR_UPDATE_ORDER
+                ) && (
                   <Stack direction="column" gap={2}>
                     <LoadingButton
                       variant="contained"
@@ -271,14 +272,12 @@ const QuickOrderTemplate = (props: QuickOrderTemplateProps) => {
 
           {!mdScreen && cartItems.length ? (
             <Stack spacing={2}>
-              {(hasPermission(actions.CREATE_CHECKOUT) ||
-                hasPermission(b2bUserActions.CREATE_OR_UPDATE_ORDER)) && (
+              {hasAnyPermission(actions.CREATE_CHECKOUT, b2bUserActions.CREATE_OR_UPDATE_ORDER) && (
                 <LoadingButton variant="contained" color="primary" onClick={handleGotoCheckout}>
                   {t('checkout')}
                 </LoadingButton>
               )}
-              {(hasPermission(actions.MANAGE_QUOTES) ||
-                hasPermission(b2bUserActions.CREATE_QUOTE)) && (
+              {hasAnyPermission(actions.MANAGE_QUOTES, b2bUserActions.CREATE_QUOTE) && (
                 <LoadingButton variant="contained" color="secondary">
                   {t('initiate-quote')}
                 </LoadingButton>

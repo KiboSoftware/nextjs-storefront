@@ -47,7 +47,7 @@ import { useGetRolesByAccountIdAsync, useDeleteRoleAsync, useGetUsersByRoleAsync
 import type { GetRolesAsyncResponse } from '@/lib/api/operations/get-roles-by-account-id'
 import type { B2BRole } from '@/lib/api/operations/get-roles-by-account-id'
 import { AccountScope, RoleType, Routes } from '@/lib/constants'
-import { b2bUserActions, hasPermission } from '@/lib/helpers'
+import { b2bUserActions, hasAnyPermission } from '@/lib/helpers'
 
 import type { CustomerAccount } from '@/lib/gql/types'
 
@@ -353,7 +353,7 @@ const ManageRolesTemplate = ({ customerAccount, initialData }: ManageRolesTempla
         </Box>
 
         {/* Add New Role Button */}
-        {hasPermission(b2bUserActions.CREATE_ROLE) && (
+        {hasAnyPermission(b2bUserActions.CREATE_ROLE) && (
           <Grid container>
             <Grid item xs={12} md={12}>
               <Button
@@ -488,7 +488,7 @@ const ManageRolesTemplate = ({ customerAccount, initialData }: ManageRolesTempla
             horizontal: 'right',
           }}
         >
-          {hasPermission(b2bUserActions.VIEW_ROLE) && (
+          {hasAnyPermission(b2bUserActions.VIEW_ROLE) && (
             <MenuItem onClick={() => selectedRoleId && handleViewRole(selectedRoleId)}>
               <ListItemIcon>
                 <VisibilityIcon fontSize="small" />
@@ -498,7 +498,7 @@ const ManageRolesTemplate = ({ customerAccount, initialData }: ManageRolesTempla
           )}
 
           {selectedRole?.roleType === RoleType.Custom &&
-            hasPermission(b2bUserActions.UPDATE_ROLE) && (
+            hasAnyPermission(b2bUserActions.UPDATE_ROLE) && (
               <MenuItem onClick={() => selectedRoleId && handleEditRole(selectedRoleId)}>
                 <ListItemIcon>
                   <EditIcon fontSize="small" />
@@ -508,7 +508,7 @@ const ManageRolesTemplate = ({ customerAccount, initialData }: ManageRolesTempla
             )}
 
           {selectedRole?.roleType === RoleType.Custom &&
-            hasPermission(b2bUserActions.CREATE_ROLE) && (
+            hasAnyPermission(b2bUserActions.CREATE_ROLE) && (
               <MenuItem onClick={() => selectedRoleId && handleCopyRole(selectedRoleId)}>
                 <ListItemIcon>
                   <ContentCopyIcon fontSize="small" />
@@ -518,7 +518,7 @@ const ManageRolesTemplate = ({ customerAccount, initialData }: ManageRolesTempla
             )}
 
           {selectedRole?.roleType === RoleType.Custom &&
-            hasPermission(b2bUserActions.DELETE_ROLE) && (
+            hasAnyPermission(b2bUserActions.DELETE_ROLE) && (
               <Tooltip
                 title={
                   getUserCount(selectedRoleId || '') > 0 ? t('cannot-delete-role-with-users') : ''

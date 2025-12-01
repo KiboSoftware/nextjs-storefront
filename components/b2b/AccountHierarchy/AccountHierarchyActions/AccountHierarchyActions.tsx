@@ -8,7 +8,7 @@ import { useTranslation } from 'next-i18next'
 
 import { CartItemActionsMobile } from '@/components/cart'
 import { AllAccountActions } from '@/lib/constants'
-import { actions, b2bUserActions, hasPermission } from '@/lib/helpers'
+import { actions, b2bUserActions, hasAnyPermission } from '@/lib/helpers'
 
 interface AccountHierarchyActionsProps {
   mdScreen?: boolean
@@ -39,28 +39,29 @@ const AccountHierarchyActions = (props: AccountHierarchyActionsProps) => {
   }
   const actionsList = () => {
     const permissionArray = []
-    if (hasPermission(actions.VIEW_USERS) || hasPermission(b2bUserActions.VIEW_BUYER)) {
+    if (hasAnyPermission(actions.VIEW_USERS, b2bUserActions.VIEW_BUYER)) {
       permissionArray.push(AllAccountActions.VIEW_BUYER_ACCOUNT)
     }
-    if (
-      hasPermission(actions.VIEW_CHILD_ACCOUNT_QUOTES) ||
-      hasPermission(b2bUserActions.VIEW_QUOTE)
-    ) {
+    if (hasAnyPermission(actions.VIEW_CHILD_ACCOUNT_QUOTES, b2bUserActions.VIEW_QUOTE)) {
       permissionArray.push(AllAccountActions.VIEW_QUOTES)
     }
     if (
-      hasPermission(actions.CREATE_ACCOUNT) ||
-      hasPermission(b2bUserActions.UPDATE_ACCOUNT_INFO_HIERARCHY_AND_ATTRIBUTES)
+      hasAnyPermission(
+        actions.CREATE_ACCOUNT,
+        b2bUserActions.UPDATE_ACCOUNT_INFO_HIERARCHY_AND_ATTRIBUTES
+      )
     ) {
       permissionArray.push(AllAccountActions.ADD_ACCOUNT)
     }
     if (
-      hasPermission(actions.EDIT_ACCOUNT) ||
-      hasPermission(b2bUserActions.UPDATE_ACCOUNT_INFO_HIERARCHY_AND_ATTRIBUTES)
+      hasAnyPermission(
+        actions.EDIT_ACCOUNT,
+        b2bUserActions.UPDATE_ACCOUNT_INFO_HIERARCHY_AND_ATTRIBUTES
+      )
     ) {
       permissionArray.push(AllAccountActions.EDIT_ACCOUNT)
     }
-    if (hasPermission(actions.VIEW_ACCOUNT)) {
+    if (hasAnyPermission(actions.VIEW_ACCOUNT)) {
       permissionArray.push(AllAccountActions.VIEW_ACCOUNT)
     }
     return permissionArray
@@ -75,7 +76,7 @@ const AccountHierarchyActions = (props: AccountHierarchyActionsProps) => {
       onClick={(e) => e.stopPropagation()}
     >
       <NoSsr>
-        {(hasPermission(actions.VIEW_USERS) || hasPermission(b2bUserActions.VIEW_BUYER)) && (
+        {hasAnyPermission(actions.VIEW_USERS, b2bUserActions.VIEW_BUYER) && (
           <Typography
             variant="caption"
             sx={{ textDecoration: 'underline', cursor: 'pointer' }}
@@ -86,8 +87,7 @@ const AccountHierarchyActions = (props: AccountHierarchyActionsProps) => {
         )}
       </NoSsr>
       <NoSsr>
-        {(hasPermission(actions.VIEW_CHILD_ACCOUNT_QUOTES) ||
-          hasPermission(b2bUserActions.VIEW_QUOTE)) && (
+        {hasAnyPermission(actions.VIEW_CHILD_ACCOUNT_QUOTES, b2bUserActions.VIEW_QUOTE) && (
           <Typography
             variant="caption"
             sx={{ textDecoration: 'underline', cursor: 'pointer' }}
@@ -99,7 +99,7 @@ const AccountHierarchyActions = (props: AccountHierarchyActionsProps) => {
       </NoSsr>
       <Box display={'flex'} gap={2}>
         <NoSsr>
-          {hasPermission(actions.VIEW_ACCOUNT) && (
+          {hasAnyPermission(actions.VIEW_ACCOUNT) && (
             <IconButton
               size="small"
               sx={{ p: 0.5 }}
@@ -112,8 +112,8 @@ const AccountHierarchyActions = (props: AccountHierarchyActionsProps) => {
           )}
         </NoSsr>
         <NoSsr>
-          {(hasPermission(actions.CREATE_ACCOUNT) ||
-            hasPermission(b2bUserActions.UPDATE_ACCOUNT_INFO_HIERARCHY_AND_ATTRIBUTES)) && (
+          {(hasAnyPermission(actions.CREATE_ACCOUNT),
+          b2bUserActions.UPDATE_ACCOUNT_INFO_HIERARCHY_AND_ATTRIBUTES) && (
             <IconButton
               size="small"
               sx={{ p: 0.5 }}
@@ -124,8 +124,10 @@ const AccountHierarchyActions = (props: AccountHierarchyActionsProps) => {
               <AddCircleIcon />
             </IconButton>
           )}
-          {(hasPermission(actions.EDIT_ACCOUNT) ||
-            hasPermission(b2bUserActions.UPDATE_ACCOUNT_INFO_HIERARCHY_AND_ATTRIBUTES)) && (
+          {hasAnyPermission(
+            actions.EDIT_ACCOUNT,
+            b2bUserActions.UPDATE_ACCOUNT_INFO_HIERARCHY_AND_ATTRIBUTES
+          ) && (
             <IconButton
               size="small"
               sx={{ p: 0.5 }}

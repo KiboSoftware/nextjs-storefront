@@ -14,8 +14,8 @@ const onQuotesClickMock = jest.fn()
 const onAddMock = jest.fn()
 const onEditMock = jest.fn()
 const onViewMock = jest.fn()
-jest.mock('@/lib/helpers/hasPermission', () => ({
-  hasPermission: jest.fn().mockImplementation(() => true),
+jest.mock('@/lib/helpers/hasAnyPermission', () => ({
+  hasAnyPermission: jest.fn().mockImplementation(() => true),
 }))
 
 describe('[components] AccountHierarchyActions', () => {

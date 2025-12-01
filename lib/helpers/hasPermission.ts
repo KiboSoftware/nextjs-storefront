@@ -10,27 +10,32 @@ function getUserBehaviors() {
   return [...behaviors, 0] // giving default permission
 }
 
-export const hasPermission = (action: any) => {
+export const hasAnyPermission = (...actionsToCheck: any[]) => {
   const userBehaviors = getUserBehaviors()
   let canAccess = false
 
   // For users having behaviors
   userBehaviors.forEach((behavior) => {
     if (mappings.has(behavior)) {
-      const permissions = mappings.get(behavior)?.includes(action)
-      if (permissions) canAccess = true
+      const permissions = mappings.get(behavior) || []
+      // Check if any of the provided actions are included in the permissions
+      const hasMatch = actionsToCheck.some((action) => permissions.includes(action))
+      if (hasMatch) canAccess = true
     }
   })
 
   return canAccess
 }
 
-
-export const hasB2BPermissions = (action: number, accountUserBehaviors?: Record<number, number[]>, userId?: number) => {
+export const hasB2BPermissions = (
+  action: number,
+  accountUserBehaviors?: Record<number, number[]>,
+  userId?: number
+) => {
   let canAccess = false
 
   if (!accountUserBehaviors || !userId) return false
-  
+
   const behaviors = accountUserBehaviors[userId]
   canAccess = behaviors ? behaviors.includes(action) : false
 

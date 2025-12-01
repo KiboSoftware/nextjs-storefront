@@ -29,8 +29,8 @@ const STEP_STATUS = {
 }
 
 const VALID_COUPON_CODE = 'Valid coupon code'
-jest.mock('@/lib/helpers/hasPermission', () => ({
-  hasPermission: jest.fn(() => true),
+jest.mock('@/lib/helpers/hasAnyPermission', () => ({
+  hasAnyPermission: jest.fn(() => true),
 }))
 const DetailsStepMock = () => {
   const { stepStatus, setStepStatusComplete, setStepNext } = useCheckoutStepContext()

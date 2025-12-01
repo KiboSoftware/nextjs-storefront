@@ -43,7 +43,7 @@ import {
   buildSubscriptionFulfillmentInfoParams,
   buildUpdateSubscriptionPaymentParams,
   buildPauseAndCancelSubscriptionParams,
-  hasPermission,
+  hasAnyPermission,
   actions,
   b2bUserActions,
 } from '@/lib/helpers'
@@ -527,8 +527,10 @@ const SubscriptionItem = (props: SubscriptionItemProps) => {
                     })}
                   </KiboSelect>
 
-                  {(hasPermission(actions.CREATE_CHECKOUT) ||
-                    hasPermission(b2bUserActions.CREATE_OR_UPDATE_ORDER)) && (
+                  {hasAnyPermission(
+                    actions.CREATE_CHECKOUT,
+                    b2bUserActions.CREATE_OR_UPDATE_ORDER
+                  ) && (
                     <Button
                       variant="contained"
                       color="primary"
@@ -608,8 +610,10 @@ const SubscriptionItem = (props: SubscriptionItemProps) => {
                     })}
                   </KiboSelect>
 
-                  {(hasPermission(actions.CREATE_CHECKOUT) ||
-                    hasPermission(b2bUserActions.CREATE_OR_UPDATE_ORDER)) && (
+                  {hasAnyPermission(
+                    actions.CREATE_CHECKOUT,
+                    b2bUserActions.CREATE_OR_UPDATE_ORDER
+                  ) && (
                     <Button
                       variant="contained"
                       color="primary"

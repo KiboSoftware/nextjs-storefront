@@ -36,8 +36,8 @@ const setup = () => {
   return { user }
 }
 
-jest.mock('@/lib/helpers/hasPermission', () => ({
-  hasPermission: jest.fn(() => true),
+jest.mock('@/lib/helpers/hasAnyPermission', () => ({
+  hasAnyPermission: jest.fn(() => true),
 }))
 
 const ListTableMock = ({ onEditFormToggle }: { onEditFormToggle: () => void }) => (

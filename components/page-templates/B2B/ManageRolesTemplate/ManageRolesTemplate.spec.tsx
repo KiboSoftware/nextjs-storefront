@@ -35,8 +35,8 @@ jest.mock('next-i18next', () => ({
   }),
 }))
 
-jest.mock('@/lib/helpers/hasPermission', () => ({
-  hasPermission: jest.fn(() => true),
+jest.mock('@/lib/helpers/hasAnyPermission', () => ({
+  hasAnyPermission: jest.fn(() => true),
 }))
 
 // Mock styled components
@@ -1115,7 +1115,7 @@ describe('[Page Template] ManageRolesTemplate', () => {
       // Alphabetical order: Role 1, Role 10, Role 11, ..., Role 18, Role 19, Role 2, Role 20, ...
       expect(screen.getByText('Role 1')).toBeInTheDocument()
       expect(screen.getByText('Role 10')).toBeInTheDocument()
-      
+
       // Step 2: User clicks page 2
       const page2Button = screen.getByRole('button', { name: 'Go to page 2' })
       await user.click(page2Button)

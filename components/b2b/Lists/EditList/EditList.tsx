@@ -21,7 +21,7 @@ import styles from '@/components/b2b/Lists/EditList/EditList.style'
 import { KiboTextBox } from '@/components/common'
 import { useProductCardActions, useUpdateWishlistItemMutation } from '@/hooks'
 import { productGetters } from '@/lib/getters'
-import { b2bUserActions, hasPermission } from '@/lib/helpers'
+import { b2bUserActions, hasAnyPermission } from '@/lib/helpers'
 import { ProductCustom } from '@/lib/types'
 
 import { CrWishlist, CrWishlistInput, CrWishlistItem, Product } from '@/lib/gql/types'
@@ -231,7 +231,7 @@ const EditList = (props: EditListProps) => {
           </Typography>
           {listData?.items && listData?.items?.length > 0 && (
             <Stack direction="row">
-              {hasPermission(b2bUserActions.MANAGE_CART) && (
+              {hasAnyPermission(b2bUserActions.MANAGE_CART) && (
                 <Button
                   onClick={() => handleEmptyCartAndAddListToCart(listData?.id as string)}
                   sx={{ ...styles.addAllItemsToCartButton }}
@@ -241,7 +241,7 @@ const EditList = (props: EditListProps) => {
                   </Link>
                 </Button>
               )}
-              {hasPermission(b2bUserActions.MANAGE_CART) && (
+              {hasAnyPermission(b2bUserActions.MANAGE_CART) && (
                 <Button
                   onClick={() => handleAddListToCart(listData?.id as string)}
                   sx={{ ...styles.addAllItemsToCartButton }}

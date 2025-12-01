@@ -25,7 +25,7 @@ import {
 } from '@/hooks'
 import { DefaultId, AddressType, CountryCode, FulfillmentOptions } from '@/lib/constants'
 import { orderGetters, userGetters } from '@/lib/getters'
-import { actions, b2bUserActions, buildAddressParams, hasPermission } from '@/lib/helpers'
+import { actions, b2bUserActions, buildAddressParams, hasAnyPermission } from '@/lib/helpers'
 import { Address } from '@/lib/types'
 
 import type {
@@ -379,7 +379,7 @@ const StandardShippingStep = (props: ShippingProps) => {
               </>
             )}
 
-            {(hasPermission(actions.VIEW_CONTACTS) || hasPermission(b2bUserActions.VIEW_CONTACT)) &&
+            {hasAnyPermission(actions.VIEW_CONTACTS, b2bUserActions.VIEW_CONTACT) &&
               previouslySavedShippingAddress?.length > 0 && (
                 <>
                   <Typography variant="subtitle2" fontWeight={'bold'}>
@@ -411,8 +411,7 @@ const StandardShippingStep = (props: ShippingProps) => {
                 </>
               )}
             <NoSsr>
-              {(hasPermission(actions.CREATE_CHECKOUT) ||
-                hasPermission(b2bUserActions.CREATE_OR_UPDATE_ORDER)) && (
+              {hasAnyPermission(actions.CREATE_CHECKOUT, b2bUserActions.CREATE_OR_UPDATE_ORDER) && (
                 <Button
                   variant="contained"
                   color="inherit"
@@ -448,8 +447,7 @@ const StandardShippingStep = (props: ShippingProps) => {
           />
 
           {isAuthenticated &&
-            (hasPermission(actions.CREATE_CONTACTS) ||
-              hasPermission(b2bUserActions.CREATE_OR_UPDATE_CONTACT)) && (
+            hasAnyPermission(actions.CREATE_CONTACTS, b2bUserActions.CREATE_OR_UPDATE_CONTACT) && (
               <FormControlLabel
                 label={t('save-address-to-account')}
                 control={

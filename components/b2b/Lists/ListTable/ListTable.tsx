@@ -23,7 +23,7 @@ import { useTranslation } from 'next-i18next'
 import { styles } from '@/components/b2b/Lists/ListTable/ListTable.style'
 import { ResetATC, AddToCart } from '@/components/icons'
 import { useGetB2BUsersEmailAndId } from '@/hooks'
-import { actions, b2bUserActions, hasPermission } from '@/lib/helpers'
+import { actions, b2bUserActions, hasAnyPermission } from '@/lib/helpers'
 import formatDate from '@/lib/helpers/formatDate'
 
 import { CrWishlist, Maybe } from '@/lib/gql/types'
@@ -62,29 +62,27 @@ const ListTableMobileOptions = (props: ListTableMobileOptions) => {
     {
       name: t('edit'),
       onClick: onEditList,
-      show:
-        hasPermission(actions.MANAGE_LISTS) || hasPermission(b2bUserActions.CREATE_OR_UPDATE_LIST),
+      show: hasAnyPermission(actions.MANAGE_LISTS, b2bUserActions.CREATE_OR_UPDATE_LIST),
     },
     {
       name: t('empty-cart-add-list-to-cart'),
       onClick: onEmptyCartAndAddListToCart,
-      show: hasPermission(b2bUserActions.MANAGE_CART),
+      show: hasAnyPermission(b2bUserActions.MANAGE_CART),
     },
     {
       name: t('add-list-items-to-cart'),
       onClick: onAddListToCart,
-      show: hasPermission(b2bUserActions.MANAGE_CART),
+      show: hasAnyPermission(b2bUserActions.MANAGE_CART),
     },
     {
       name: t('duplicate'),
       onClick: onCopyList,
-      show:
-        hasPermission(actions.MANAGE_LISTS) || hasPermission(b2bUserActions.CREATE_OR_UPDATE_LIST),
+      show: hasAnyPermission(actions.MANAGE_LISTS, b2bUserActions.CREATE_OR_UPDATE_LIST),
     },
     {
       name: t('delete'),
       onClick: onDeleteList,
-      show: hasPermission(actions.MANAGE_LISTS) || hasPermission(b2bUserActions.DELETE_LIST),
+      show: hasAnyPermission(actions.MANAGE_LISTS, b2bUserActions.DELETE_LIST),
     },
   ].filter((option) => option.show)
 
@@ -186,7 +184,7 @@ const ListTable = (props: ListTableProps) => {
                 <TableCell sx={{ ...styles.tableCellStyles, width: mdScreen ? '25%' : '10%' }}>
                   {mdScreen ? (
                     <Box sx={{ justifyContent: 'flex-end', display: 'flex' }}>
-                      {hasPermission(b2bUserActions.MANAGE_CART) && (
+                      {hasAnyPermission(b2bUserActions.MANAGE_CART) && (
                         <Tooltip
                           title={
                             <Typography variant="body2">
@@ -202,7 +200,7 @@ const ListTable = (props: ListTableProps) => {
                           </IconButton>
                         </Tooltip>
                       )}
-                      {hasPermission(b2bUserActions.MANAGE_CART) && (
+                      {hasAnyPermission(b2bUserActions.MANAGE_CART) && (
                         <Tooltip
                           title={<Typography variant="body2">{t('add-to-cart')}</Typography>}
                         >
@@ -216,8 +214,10 @@ const ListTable = (props: ListTableProps) => {
                         </Tooltip>
                       )}
 
-                      {(hasPermission(actions.MANAGE_LISTS) ||
-                        hasPermission(b2bUserActions.CREATE_OR_UPDATE_LIST)) && (
+                      {hasAnyPermission(
+                        actions.MANAGE_LISTS,
+                        b2bUserActions.CREATE_OR_UPDATE_LIST
+                      ) && (
                         <IconButton
                           color="inherit"
                           onClick={() => onEditList(item?.id as string)}
@@ -226,8 +226,10 @@ const ListTable = (props: ListTableProps) => {
                           <Edit />
                         </IconButton>
                       )}
-                      {(hasPermission(actions.MANAGE_LISTS) ||
-                        hasPermission(b2bUserActions.CREATE_OR_UPDATE_LIST)) && (
+                      {hasAnyPermission(
+                        actions.MANAGE_LISTS,
+                        b2bUserActions.CREATE_OR_UPDATE_LIST
+                      ) && (
                         <IconButton
                           color="inherit"
                           onClick={() => onCopyList(item?.id as string)}
@@ -236,8 +238,7 @@ const ListTable = (props: ListTableProps) => {
                           <ContentCopy />
                         </IconButton>
                       )}
-                      {(hasPermission(actions.MANAGE_LISTS) ||
-                        hasPermission(b2bUserActions.DELETE_LIST)) && (
+                      {hasAnyPermission(actions.MANAGE_LISTS, b2bUserActions.DELETE_LIST) && (
                         <IconButton
                           color="inherit"
                           onClick={() => onDeleteList(item?.id as string)}
