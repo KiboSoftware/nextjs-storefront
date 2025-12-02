@@ -1028,7 +1028,8 @@ const QuoteDetailsTemplate = (props: QuoteDetailsTemplateProps) => {
                           <NoSsr>
                             {hasAnyPermission(
                               actions.MANAGE_QUOTES,
-                              b2bUserActions.CREATE_QUOTE
+                              b2bUserActions.CREATE_QUOTE,
+                              b2bUserActions.UPDATE_QUOTE
                             ) && (
                               <Button
                                 variant="contained"

@@ -7,7 +7,7 @@ function getUserBehaviors() {
   if (!behaviorsFromCookie) return [0]
   const behaviorsFromCookieArray = behaviorsFromCookie?.split(',')
   const behaviors = behaviorsFromCookieArray.map((value) => parseInt(value, 10))
-  return [...behaviors, 0] // giving default permission
+  return [...behaviors] // giving default permission
 }
 
 export const hasAnyPermission = (...actionsToCheck: any[]) => {

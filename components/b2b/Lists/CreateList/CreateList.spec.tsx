@@ -36,7 +36,7 @@ const configurableProductMock = {
   ],
 }
 
-jest.mock('@/lib/helpers/hasAnyPermission', () => ({
+jest.mock('@/lib/helpers/hasPermission', () => ({
   hasAnyPermission: jest.fn(() => true),
 }))
 const createMatchMedia = (width: number) => (query: string) => ({

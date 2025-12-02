@@ -29,7 +29,7 @@ const STEP_STATUS = {
 }
 
 const VALID_COUPON_CODE = 'Valid coupon code'
-jest.mock('@/lib/helpers/hasAnyPermission', () => ({
+jest.mock('@/lib/helpers/hasPermission', () => ({
   hasAnyPermission: jest.fn(() => true),
 }))
 const DetailsStepMock = () => {

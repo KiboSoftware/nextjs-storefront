@@ -8,7 +8,7 @@ import * as stories from './BuyerQuoteActions.stories'
 
 const { InReview, ReadyForCheckout, Completed, Expired } = composeStories(stories)
 
-jest.mock('@/lib/helpers/hasAnyPermission', () => ({
+jest.mock('@/lib/helpers/hasPermission', () => ({
   hasAnyPermission: jest.fn(() => true),
 }))
 

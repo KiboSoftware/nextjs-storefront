@@ -10,7 +10,7 @@ import mockRouter from 'next-router-mock'
 import * as stories from './MyAccountTemplate.stories' // import all stories from the stories file
 const { Common } = composeStories(stories)
 
-jest.mock('@/lib/helpers/hasAnyPermission', () => ({
+jest.mock('@/lib/helpers/hasPermission', () => ({
   hasAnyPermission: jest.fn(() => true),
 }))
 

@@ -32,7 +32,7 @@ const { Common } = composeStories(stories)
 
 // Mock
 const onCloseMock = jest.fn()
-jest.mock('@/lib/helpers/hasAnyPermission', () => ({
+jest.mock('@/lib/helpers/hasPermission', () => ({
   hasAnyPermission: jest.fn().mockImplementation(() => true),
 }))
 

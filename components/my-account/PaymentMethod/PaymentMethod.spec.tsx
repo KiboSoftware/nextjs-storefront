@@ -25,7 +25,7 @@ jest.mock('@/components/common/AddressForm/AddressForm', () => () => AddressForm
 const AddressDetailsViewMock = () => <div data-testid="address-details-view" />
 jest.mock('@/components/common/AddressCard/AddressCard', () => () => AddressDetailsViewMock())
 
-jest.mock('@/lib/helpers/hasAnyPermission', () => ({
+jest.mock('@/lib/helpers/hasPermission', () => ({
   hasAnyPermission: jest.fn().mockImplementation(() => true),
 }))
 const user = userEvent.setup()

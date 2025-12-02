@@ -24,7 +24,7 @@ import {
   CustomerPurchaseOrderAccount,
 } from '@/lib/gql/types'
 
-jest.mock('@/lib/helpers/hasAnyPermission', () => ({
+jest.mock('@/lib/helpers/hasPermission', () => ({
   hasAnyPermission: jest.fn().mockImplementation(() => true),
 }))
 

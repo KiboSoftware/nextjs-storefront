@@ -112,7 +112,7 @@ const B2BTemplate = () => {
       header: t('account-information'),
       component: <MyProfile user={user as CustomerAccount} isB2BTemplate />,
       path: null,
-      permissions: [],
+      hasPermission: true,
     },
     {
       id: 'account-hierarchy-accordion',
@@ -120,7 +120,7 @@ const B2BTemplate = () => {
       header: t('account-hierarchy'),
       component: null,
       path: '/my-account/b2b/account-hierarchy',
-      permissions: [],
+      hasPermission: true,
     },
     {
       id: 'users-accordion',
@@ -128,7 +128,7 @@ const B2BTemplate = () => {
       header: t('users'),
       component: null,
       path: '/my-account/b2b/users',
-      permissions: [actions.VIEW_USERS, b2bUserActions.VIEW_BUYER],
+      hasPermission: hasAnyPermission(actions.VIEW_USERS, b2bUserActions.VIEW_BUYER),
     },
     {
       id: 'manage-roles-accordion',
@@ -136,14 +136,14 @@ const B2BTemplate = () => {
       header: t('manage-roles'),
       component: null,
       path: '/my-account/b2b/manage-roles',
-      permissions: [b2bUserActions.VIEW_ROLE],
+      hasPermission: hasAnyPermission(b2bUserActions.VIEW_ROLE),
     },
     {
       id: 'address-book-accordion',
       controls: 'address-book-content',
       header: t('address-book'),
       component: <AddressBook user={user as CustomerAccount} contacts={contacts} />,
-      permissions: [],
+      hasPermission: true,
     },
     {
       id: 'payment-information-accordion',
@@ -161,7 +161,7 @@ const B2BTemplate = () => {
           }
         />
       ),
-      permissions: [],
+      hasPermission: true,
     },
     {
       id: 'custom-attributes-accordion',
@@ -169,9 +169,9 @@ const B2BTemplate = () => {
       header: t('custom-attributes'),
       component: null,
       path: null,
-      permissions: [],
+      hasPermission: true,
     },
-  ].filter((item) => item.permissions.length === 0 || hasAnyPermission(...item.permissions))
+  ].filter((item) => item.hasPermission)
 
   return (
     <Grid container>

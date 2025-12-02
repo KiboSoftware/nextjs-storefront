@@ -112,8 +112,10 @@ const AccountHierarchyActions = (props: AccountHierarchyActionsProps) => {
           )}
         </NoSsr>
         <NoSsr>
-          {(hasAnyPermission(actions.CREATE_ACCOUNT),
-          b2bUserActions.UPDATE_ACCOUNT_INFO_HIERARCHY_AND_ATTRIBUTES) && (
+          {hasAnyPermission(
+            actions.CREATE_ACCOUNT,
+            b2bUserActions.UPDATE_ACCOUNT_INFO_HIERARCHY_AND_ATTRIBUTES
+          ) && (
             <IconButton
               size="small"
               sx={{ p: 0.5 }}

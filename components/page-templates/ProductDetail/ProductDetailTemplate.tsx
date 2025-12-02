@@ -53,7 +53,7 @@ import {
   PurchaseTypes,
 } from '@/lib/constants'
 import { productGetters, subscriptionGetters, wishlistGetters } from '@/lib/getters'
-import { uiHelpers } from '@/lib/helpers'
+import { b2bUserActions, hasAnyPermission, uiHelpers } from '@/lib/helpers'
 import type { ProductCustom, BreadCrumb, LocationCustom } from '@/lib/types'
 
 import type {
@@ -602,7 +602,9 @@ const ProductDetailTemplate = (props: ProductDetailTemplateProps) => {
               fullWidth
               onClick={() => handleAddToCart()}
               loading={addToCart.isPending}
-              {...(!isValidForAddToCart() && { disabled: true })}
+              {...((!isValidForAddToCart() || !hasAnyPermission(b2bUserActions.MANAGE_CART)) && {
+                disabled: true,
+              })}
             >
               {t('add-to-cart')}
             </LoadingButton>

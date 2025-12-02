@@ -16,6 +16,10 @@ const {
   WithQuickViewButton,
 } = composeStories(stories)
 
+jest.mock('@/lib/helpers/hasPermission', () => ({
+  hasAnyPermission: jest.fn(() => true),
+}))
+
 const onAddOrRemoveWishlistItemMock = jest.fn()
 const wishlistSetup = () => {
   const user = userEvent.setup()

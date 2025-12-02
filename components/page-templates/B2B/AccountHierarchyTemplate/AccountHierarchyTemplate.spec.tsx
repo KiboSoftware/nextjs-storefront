@@ -47,7 +47,7 @@ jest.mock('@/components/b2b/User/UserTable/UserTable', () => () => UserTableMock
 
 const QuotesTableMock = () => <div data-testid="quotes-table-mock"></div>
 jest.mock('@/components/b2b/QuotesTable/QuotesTable', () => () => QuotesTableMock())
-jest.mock('@/lib/helpers/hasAnyPermission', () => ({
+jest.mock('@/lib/helpers/hasPermission', () => ({
   hasAnyPermission: jest.fn().mockImplementation(() => true),
 }))
 jest.mock('@/components/b2b/AccountHierarchy/AccountHierarchyTree/AccountHierarchyTree', () => ({

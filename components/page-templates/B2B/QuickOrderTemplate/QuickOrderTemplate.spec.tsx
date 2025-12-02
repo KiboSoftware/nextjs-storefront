@@ -39,7 +39,7 @@ jest.mock('@mui/material', () => ({
   useMediaQuery: jest.fn(),
 }))
 
-jest.mock('@/lib/helpers/hasAnyPermission', () => ({
+jest.mock('@/lib/helpers/hasPermission', () => ({
   hasAnyPermission: jest.fn(() => true),
 }))
 
