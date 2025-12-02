@@ -13,9 +13,9 @@ import { KiboTextBox } from '@/components/common'
 import { useAddRoleToCustomerB2bAccountMutation, useDeleteB2bAccountRoleMutation } from '@/hooks'
 import type { GetRolesAsyncResponse } from '@/lib/api/operations/get-roles-across-accounts'
 import { CustomBehaviors } from '@/lib/constants'
+import { b2bUserActions, hasAnyPermissionForAccountBehaviors } from '@/lib/helpers'
 
 import { B2BUserInput, B2BAccount, B2BUser, B2BUserCollection } from '@/lib/gql/types'
-import { b2bUserActions, hasAnyPermissionForAccountBehaviors } from '@/lib/helpers'
 
 /**
  * Props for the UserForm component
@@ -223,7 +223,7 @@ const UserForm = (props: UserFormProps) => {
         })
         .filter((account) => {
           const accountBehaviors = accountUserBehaviors?.[account.accountId] || []
-          
+
           // In edit mode, check for both VIEW_ROLE and UPDATE_BUYER permissions
           if (isEditMode) {
             const hasRequiredPermissions = hasAnyPermissionForAccountBehaviors(
@@ -233,7 +233,7 @@ const UserForm = (props: UserFormProps) => {
             )
             return hasRequiredPermissions && accountRoles[account.accountId] !== undefined
           }
-          
+
           // In create mode, only check VIEW_ROLE permission
           return hasAnyPermissionForAccountBehaviors(accountBehaviors, b2bUserActions.VIEW_ROLE)
         }) as Array<{
@@ -316,7 +316,14 @@ const UserForm = (props: UserFormProps) => {
 
     // In create mode, button is disabled by default until form is modified
     return !isFormModified && !hasFormFieldsChanged
-  }, [isSubmitting, errors, hasRoleValidationError, isEditMode, hasFormFieldsChanged, isFormModified])
+  }, [
+    isSubmitting,
+    errors,
+    hasRoleValidationError,
+    isEditMode,
+    hasFormFieldsChanged,
+    isFormModified,
+  ])
 
   /**
    * Notify parent component whenever validation state changes
@@ -446,7 +453,7 @@ const UserForm = (props: UserFormProps) => {
       onSubmit={handleSubmit(onSubmit)}
       id="addUserForm"
       data-testid="user-form"
-       className={classes.formContainerStyle}
+      className={classes.formContainerStyle}
     >
       <Grid container spacing={8} className={classes.gridContainerStyle}>
         <Grid item xs={12} md={12} className={classes.textBoxGridStyle}>
