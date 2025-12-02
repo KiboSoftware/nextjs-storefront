@@ -57,7 +57,7 @@ const behaviors = {
 }
 
 // List of B2B User Behaviors
-const b2bUserBehaviors = {
+export const b2bUserBehaviors = {
   ADD_BUYER: 2000,
   VIEW_BUYER: 2001,
   UPDATE_BUYER: 2002,

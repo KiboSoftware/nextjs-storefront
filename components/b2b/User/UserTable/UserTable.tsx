@@ -110,12 +110,6 @@ const UserTable: React.FC<UserTableProps> = React.memo((props) => {
   )
 
   /**
-   * Check if logged-in user has edit permission
-   * Memoized to prevent recalculation on every render
-   */
-  const hasEditPermission = React.useMemo(() => hasAnyPermission(actions.EDIT_USERS), [])
-
-  /**
    * Memoize table header background color from theme
    */
   const headerBackgroundColor = React.useMemo(() => theme.palette.grey[100], [theme.palette.grey])

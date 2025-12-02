@@ -15,6 +15,7 @@ import type { GetRolesAsyncResponse } from '@/lib/api/operations/get-roles-acros
 import { CustomBehaviors } from '@/lib/constants'
 
 import { B2BUserInput, B2BAccount, B2BUser, B2BUserCollection } from '@/lib/gql/types'
+import { b2bUserActions, hasAnyPermissionForAccountBehaviors } from '@/lib/helpers'
 
 /**
  * Props for the UserForm component
@@ -204,22 +205,10 @@ const UserForm = (props: UserFormProps) => {
   )
 
   /**
-   * Check if user has ViewRole permission for a specific account
-   * Memoized callback for stable reference across renders
-   * @param accountId - The account ID to check permissions for
-   * @returns true if user has ViewRole permission
-   */
-  const hasViewRolePermission = React.useCallback(
-    (accountId: number): boolean => {
-      const behaviors = accountUserBehaviors?.[accountId]
-      return behaviors ? behaviors.includes(CustomBehaviors.ViewRole) : false
-    },
-    [accountUserBehaviors]
-  )
-
-  /**
    * Transform and filter accounts based on ViewRole permission
    * Only includes accounts where user has permission to view/manage roles
+   * In edit mode, also filters to only show accounts that have roles in accountRoles
+   * and checks for UPDATE_BUYER permission
    * Memoized to prevent recalculation unless dependencies change
    */
   const accountsWithRoles = React.useMemo(
@@ -227,21 +216,31 @@ const UserForm = (props: UserFormProps) => {
       accounts
         .map((account) => {
           const accountId = account.id || 0
-          const hasPermission = hasViewRolePermission(accountId)
-
-          // Skip accounts without permission
-          if (!hasPermission) return null
-
           return {
             accountId,
             accountName: account.companyOrOrganization || '',
           }
         })
-        .filter(Boolean) as Array<{
+        .filter((account) => {
+          const accountBehaviors = accountUserBehaviors?.[account.accountId] || []
+          
+          // In edit mode, check for both VIEW_ROLE and UPDATE_BUYER permissions
+          if (isEditMode) {
+            const hasRequiredPermissions = hasAnyPermissionForAccountBehaviors(
+              accountBehaviors,
+              b2bUserActions.VIEW_ROLE,
+              b2bUserActions.UPDATE_BUYER
+            )
+            return hasRequiredPermissions && accountRoles[account.accountId] !== undefined
+          }
+          
+          // In create mode, only check VIEW_ROLE permission
+          return hasAnyPermissionForAccountBehaviors(accountBehaviors, b2bUserActions.VIEW_ROLE)
+        }) as Array<{
         accountId: number
         accountName: string
       }>,
-    [accounts, hasViewRolePermission]
+    [accounts, accountUserBehaviors, isEditMode, accountRoles]
   )
 
   const {

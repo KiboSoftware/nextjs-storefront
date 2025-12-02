@@ -4,11 +4,11 @@ import React from 'react'
 
 import { ChevronLeft as ChevronLeftIcon } from '@mui/icons-material'
 import { LoadingButton } from '@mui/lab'
-import { Box, Typography, Paper, styled, Theme, useMediaQuery, useTheme, Grid } from '@mui/material'
-import Link from 'next/link'
+import { Box, Typography, Paper, useMediaQuery, useTheme, Grid } from '@mui/material'
 import { useRouter } from 'next/router'
 import { useTranslation } from 'next-i18next'
 
+import { addUserTemplateStyles } from './AddUserTemplate.styles'
 import { UserForm } from '@/components/b2b'
 import { useAuthContext } from '@/context'
 import {
@@ -23,30 +23,6 @@ import { B2BAccountHierarchyResult } from '@/lib/types'
 import { B2BUserInput } from '@/lib/types/CustomerB2BUser'
 
 import { B2BUser, B2BUserCollection } from '@/lib/gql/types'
-
-const BackButtonLink = styled(Link)(({ theme }: { theme: Theme }) => ({
-  typography: 'body2',
-  textDecoration: 'none',
-  color: theme.palette.grey[600],
-  display: 'flex',
-  alignItems: 'center',
-  gap: theme.spacing(0.5),
-  cursor: 'pointer',
-  '&:hover': {
-    color: theme.palette.grey[900],
-  },
-}))
-
-const ContentPaper = styled(Paper)(({ theme }: { theme: Theme }) => ({
-  marginTop: theme.spacing(2),
-  marginBottom: theme.spacing(2),
-}))
-
-/** Container styles */
-const CONTAINER_STYLES = {
-  marginTop: '10px',
-  marginBottom: '20px',
-} as const
 
 /**
  * Props for the AddUserTemplate component
@@ -100,6 +76,10 @@ const AddUserTemplate = ({
   const { createCustomerB2bUser } = useCreateCustomerB2bUserMutation()
   const { updateCustomerB2bUser } = useUpdateCustomerB2bUserMutation()
   const { addRoleToCustomerB2bAccount } = useAddRoleToCustomerB2bAccountMutation()
+
+  const styles = addUserTemplateStyles
+
+
 
   /**
    * Memoize accounts array to prevent unnecessary child re-renders
@@ -260,14 +240,14 @@ const AddUserTemplate = ({
 
   return (
     <Grid>
-      <Grid item style={CONTAINER_STYLES}>
+      <Grid item sx={styles.container}>
         {/* Mobile: Back button and title together */}
         {!mdScreen && (
-          <Box sx={{ mb: 2, display: 'flex', gap: 1 }}>
-            <BackButtonLink aria-label={t('users')} href={Routes.Users}>
+          <Box sx={styles.mobileHeader}>
+            <Box sx={styles.backButtonLink(theme)}>
               <ChevronLeftIcon fontSize="inherit" />
-            </BackButtonLink>
-            <Typography variant="h2" sx={{ mt: 1 }}>
+            </Box>
+            <Typography variant="h2" sx={styles.mobileTitle}>
               {isEditMode ? t('edit-user') : t('add-new-user')}
             </Typography>
           </Box>
@@ -275,12 +255,12 @@ const AddUserTemplate = ({
 
         {/* Desktop: Back button and title on same line */}
         {mdScreen && (
-          <Box sx={{ mb: 2 }}>
-            <BackButtonLink aria-label={t('users')} href={Routes.Users}>
+          <Box sx={styles.desktopHeader}>
+            <Box sx={styles.backButtonLink(theme)}>
               <ChevronLeftIcon fontSize="inherit" />
               <Typography variant="body2">{t('users')}</Typography>
-            </BackButtonLink>
-            <Typography variant="h1" sx={{ mt: 2 }}>
+            </Box>
+            <Typography variant="h1" sx={styles.desktopTitle}>
               {isEditMode ? t('edit-user') : t('add-new-user')}
             </Typography>
           </Box>
@@ -288,13 +268,13 @@ const AddUserTemplate = ({
 
         {/* Desktop: Action Buttons at top */}
         {mdScreen && (
-          <Box sx={{ display: 'flex', gap: 2, justifyContent: 'flex-end', mb: 2 }}>
+          <Box sx={styles.desktopActionButtons}>
             <LoadingButton
               variant="outlined"
               color="inherit"
               onClick={handleClose}
               disabled={isSubmitting}
-              sx={{ minWidth: 120 }}
+              sx={styles.actionButton}
             >
               {t('cancel')}
             </LoadingButton>
@@ -304,7 +284,7 @@ const AddUserTemplate = ({
               onClick={handleFormSubmit}
               loading={isSubmitting}
               disabled={isSubmitting || !isSaveEnabled}
-              sx={{ minWidth: 120 }}
+              sx={styles.actionButton}
             >
               {t('save')}
             </LoadingButton>
@@ -312,7 +292,7 @@ const AddUserTemplate = ({
         )}
 
         {/* Form Content in Paper */}
-        <ContentPaper elevation={0}>
+        <Paper elevation={0} sx={styles.contentPaper(theme)}>
           <UserForm
             isUserFormInDialog={false}
             isEditMode={isEditMode}
@@ -329,17 +309,7 @@ const AddUserTemplate = ({
 
           {/* Mobile: Action Buttons at bottom */}
           {!mdScreen && (
-            <Box
-              sx={{
-                display: 'flex',
-                gap: 2,
-                flexDirection: 'column-reverse',
-                mt: 3,
-                mb: 2,
-                px: 3,
-                pb: 3,
-              }}
-            >
+            <Box sx={styles.mobileActionButtons}>
               <LoadingButton
                 variant="outlined"
                 color="inherit"
@@ -361,7 +331,7 @@ const AddUserTemplate = ({
               </LoadingButton>
             </Box>
           )}
-        </ContentPaper>
+        </Paper>
       </Grid>
     </Grid>
   )
