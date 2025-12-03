@@ -18,6 +18,7 @@ import { FullWidthDivider, Price } from '@/components/common'
 import { useSnackbarContext } from '@/context'
 import { useProductCardActions } from '@/hooks'
 import { useAddItemsToCurrentCart } from '@/hooks/mutations/cart/useAddItemsToCurrentCart/useAddItemsToCurrentCart'
+import { b2bUserActions, hasAnyPermission } from '@/lib/helpers'
 
 import { CrOrderItem } from '@/lib/gql/types'
 
@@ -101,10 +102,12 @@ const OrderHistoryItem = (props: OrderHistoryItemProps) => {
           </Typography>
         </Stack>
         <Box sx={styles.box}>
-          <Button variant="outlined" onClick={handleReorder}>
-            {' '}
-            Reorder
-          </Button>
+          {hasAnyPermission(b2bUserActions.MANAGE_CART) && (
+            <Button variant="outlined" onClick={handleReorder}>
+              {' '}
+              Reorder
+            </Button>
+          )}
           <IconButton
             onClick={handleHistoryItemClick}
             data-testid="order-history-details-navigator"

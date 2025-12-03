@@ -36,6 +36,10 @@ const setup = () => {
   return { user }
 }
 
+jest.mock('@/lib/helpers/hasPermission', () => ({
+  hasAnyPermission: jest.fn(() => true),
+}))
+
 const ListTableMock = ({ onEditFormToggle }: { onEditFormToggle: () => void }) => (
   <div data-testid="view-lists-mock">
     <button data-testid="toggle-edit-form" onClick={() => onEditFormToggle()}></button>

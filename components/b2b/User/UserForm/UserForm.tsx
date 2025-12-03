@@ -13,6 +13,7 @@ import { KiboTextBox } from '@/components/common'
 import { useAddRoleToCustomerB2bAccountMutation, useDeleteB2bAccountRoleMutation } from '@/hooks'
 import type { GetRolesAsyncResponse } from '@/lib/api/operations/get-roles-across-accounts'
 import { CustomBehaviors } from '@/lib/constants'
+import { b2bUserActions, hasAnyPermissionForAccountBehaviors } from '@/lib/helpers'
 
 import { B2BUserInput, B2BAccount, B2BUser, B2BUserCollection } from '@/lib/gql/types'
 
@@ -54,17 +55,6 @@ interface RoleChangesPerAccount {
   rolesToAdd: string[]
   rolesToRemove: string[]
 }
-
-/** Inline styles extracted as constants to prevent object recreation */
-const FORM_CONTAINER_STYLES = { display: 'flex', width: '100%' } as const
-const GRID_CONTAINER_STYLES = { marginTop: '5px', marginLeft: 0, width: '100%' } as const
-const ACTION_BUTTON_STYLES = {
-  display: 'flex',
-  justifyContent: 'flex-end',
-  gap: 2,
-  mt: 3,
-  mb: 2,
-} as const
 
 /**
  * Custom hook to create form validation schema
@@ -215,22 +205,10 @@ const UserForm = (props: UserFormProps) => {
   )
 
   /**
-   * Check if user has ViewRole permission for a specific account
-   * Memoized callback for stable reference across renders
-   * @param accountId - The account ID to check permissions for
-   * @returns true if user has ViewRole permission
-   */
-  const hasViewRolePermission = React.useCallback(
-    (accountId: number): boolean => {
-      const behaviors = accountUserBehaviors?.[accountId]
-      return behaviors ? behaviors.includes(CustomBehaviors.ViewRole) : false
-    },
-    [accountUserBehaviors]
-  )
-
-  /**
    * Transform and filter accounts based on ViewRole permission
    * Only includes accounts where user has permission to view/manage roles
+   * In edit mode, also filters to only show accounts that have roles in accountRoles
+   * and checks for UPDATE_BUYER permission
    * Memoized to prevent recalculation unless dependencies change
    */
   const accountsWithRoles = React.useMemo(
@@ -238,21 +216,31 @@ const UserForm = (props: UserFormProps) => {
       accounts
         .map((account) => {
           const accountId = account.id || 0
-          const hasPermission = hasViewRolePermission(accountId)
-
-          // Skip accounts without permission
-          if (!hasPermission) return null
-
           return {
             accountId,
             accountName: account.companyOrOrganization || '',
           }
         })
-        .filter(Boolean) as Array<{
+        .filter((account) => {
+          const accountBehaviors = accountUserBehaviors?.[account.accountId] || []
+
+          // In edit mode, check for both VIEW_ROLE and UPDATE_BUYER permissions
+          if (isEditMode) {
+            const hasRequiredPermissions = hasAnyPermissionForAccountBehaviors(
+              accountBehaviors,
+              b2bUserActions.VIEW_ROLE,
+              b2bUserActions.UPDATE_BUYER
+            )
+            return hasRequiredPermissions && accountRoles[account.accountId] !== undefined
+          }
+
+          // In create mode, only check VIEW_ROLE permission
+          return hasAnyPermissionForAccountBehaviors(accountBehaviors, b2bUserActions.VIEW_ROLE)
+        }) as Array<{
         accountId: number
         accountName: string
       }>,
-    [accounts, hasViewRolePermission]
+    [accounts, accountUserBehaviors, isEditMode, accountRoles]
   )
 
   const {
@@ -328,7 +316,14 @@ const UserForm = (props: UserFormProps) => {
 
     // In create mode, button is disabled by default until form is modified
     return !isFormModified && !hasFormFieldsChanged
-  }, [isSubmitting, errors, hasRoleValidationError, isEditMode, hasFormFieldsChanged, isFormModified])
+  }, [
+    isSubmitting,
+    errors,
+    hasRoleValidationError,
+    isEditMode,
+    hasFormFieldsChanged,
+    isFormModified,
+  ])
 
   /**
    * Notify parent component whenever validation state changes
@@ -458,9 +453,9 @@ const UserForm = (props: UserFormProps) => {
       onSubmit={handleSubmit(onSubmit)}
       id="addUserForm"
       data-testid="user-form"
-      style={FORM_CONTAINER_STYLES}
+      className={classes.formContainerStyle}
     >
-      <Grid container spacing={8} style={GRID_CONTAINER_STYLES}>
+      <Grid container spacing={8} className={classes.gridContainerStyle}>
         <Grid item xs={12} md={12} className={classes.textBoxGridStyle}>
           <Controller
             name="emailAddress"
@@ -536,7 +531,7 @@ const UserForm = (props: UserFormProps) => {
         {/* Action Buttons */}
         {showButtons && (
           <Grid item xs={12}>
-            <Box sx={ACTION_BUTTON_STYLES}>
+            <Box className={classes.actionButtonStyle}>
               <LoadingButton
                 variant="outlined"
                 color="inherit"

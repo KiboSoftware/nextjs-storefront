@@ -33,6 +33,10 @@ jest.mock('@mui/material', () => {
   }
 })
 
+jest.mock('@/lib/helpers/hasPermission', () => ({
+  hasAnyPermission: jest.fn(() => true),
+}))
+
 const FullWidthDividerMock = () => <div data-testid="full-width-divider-component" />
 jest.mock('../../../common/FullWidthDivider/FullWidthDivider', () => () => FullWidthDividerMock())
 

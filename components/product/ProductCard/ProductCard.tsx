@@ -12,6 +12,7 @@ import { ProductCardStyles } from './ProductCard.styles'
 import { KiboImage, Price } from '@/components/common'
 import { usePriceRangeFormatter } from '@/hooks'
 import { FulfillmentOptions as FulfillmentOptionsConstant } from '@/lib/constants'
+import { b2bUserActions, hasAnyPermission } from '@/lib/helpers'
 import DefaultImage from '@/public/product_placeholder.svg'
 
 import type { CrProductOption, Product, ProductPriceRange } from '@/lib/gql/types'
@@ -205,6 +206,7 @@ const ProductCard = (props: ProductCardProps) => {
                       variant="contained"
                       color="primary"
                       onClick={handleAddToCart}
+                      disabled={!hasAnyPermission(b2bUserActions.MANAGE_CART)}
                       // loading={isATCLoading}
                     >
                       {t('add-to-cart')}

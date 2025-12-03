@@ -43,6 +43,9 @@ import {
   buildSubscriptionFulfillmentInfoParams,
   buildUpdateSubscriptionPaymentParams,
   buildPauseAndCancelSubscriptionParams,
+  hasAnyPermission,
+  actions,
+  b2bUserActions,
 } from '@/lib/helpers'
 import type {
   Address,
@@ -524,23 +527,28 @@ const SubscriptionItem = (props: SubscriptionItemProps) => {
                     })}
                   </KiboSelect>
 
-                  <Button
-                    variant="contained"
-                    color="primary"
-                    sx={{ ...style.button }}
-                    onClick={() =>
-                      handleShowDialog(EditBillingAddress, {
-                        user,
-                        cards,
-                        contacts,
-                        onSave: handleAddNewCard,
-                        onClose: handleCloseModal,
-                      })
-                    }
-                    disabled={updateSubscriptionPayment.isPending || isSubscriptionCanceled}
-                  >
-                    {t('add-new-address')}
-                  </Button>
+                  {hasAnyPermission(
+                    actions.CREATE_CHECKOUT,
+                    b2bUserActions.CREATE_OR_UPDATE_ORDER
+                  ) && (
+                    <Button
+                      variant="contained"
+                      color="primary"
+                      sx={{ ...style.button }}
+                      onClick={() =>
+                        handleShowDialog(EditBillingAddress, {
+                          user,
+                          cards,
+                          contacts,
+                          onSave: handleAddNewCard,
+                          onClose: handleCloseModal,
+                        })
+                      }
+                      disabled={updateSubscriptionPayment.isPending || isSubscriptionCanceled}
+                    >
+                      {t('add-new-address')}
+                    </Button>
+                  )}
                 </div>
               </Popover>
             </Stack>
@@ -602,22 +610,27 @@ const SubscriptionItem = (props: SubscriptionItemProps) => {
                     })}
                   </KiboSelect>
 
-                  <Button
-                    variant="contained"
-                    color="primary"
-                    sx={{ ...style.button }}
-                    onClick={() =>
-                      handleShowDialog(AddressFormDialog, {
-                        subscriptionId: subscriptionDetailsData?.id as string,
-                        isUserLoggedIn: true,
-                        setAutoFocus: true,
-                        onSaveAddress: handleAddNewShippingAddress,
-                      })
-                    }
-                    disabled={updateSubscriptionShippingInfo.isPending || isSubscriptionCanceled}
-                  >
-                    {t('add-new-address')}
-                  </Button>
+                  {hasAnyPermission(
+                    actions.CREATE_CHECKOUT,
+                    b2bUserActions.CREATE_OR_UPDATE_ORDER
+                  ) && (
+                    <Button
+                      variant="contained"
+                      color="primary"
+                      sx={{ ...style.button }}
+                      onClick={() =>
+                        handleShowDialog(AddressFormDialog, {
+                          subscriptionId: subscriptionDetailsData?.id as string,
+                          isUserLoggedIn: true,
+                          setAutoFocus: true,
+                          onSaveAddress: handleAddNewShippingAddress,
+                        })
+                      }
+                      disabled={updateSubscriptionShippingInfo.isPending || isSubscriptionCanceled}
+                    >
+                      {t('add-new-address')}
+                    </Button>
+                  )}
                 </div>
               </Popover>
             </Stack>

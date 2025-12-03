@@ -32,6 +32,9 @@ jest.mock('@mui/material', () => ({
   ...jest.requireActual('@mui/material'),
   useMediaQuery: jest.fn(),
 }))
+jest.mock('@/lib/helpers/hasPermission', () => ({
+  hasAnyPermission: jest.fn(() => true),
+}))
 
 const userContextValues = (isAuthenticated: boolean, userId: number) => ({
   isAuthenticated: isAuthenticated,

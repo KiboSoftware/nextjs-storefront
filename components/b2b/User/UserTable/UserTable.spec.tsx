@@ -15,7 +15,7 @@ const onDeleteMock = jest.fn()
 const onViewMock = jest.fn()
 
 jest.mock('@/lib/helpers/hasPermission', () => ({
-  hasPermission: jest.fn().mockImplementation(() => true),
+  hasAnyPermission: jest.fn().mockImplementation(() => true),
 }))
 
 const mockPush = jest.fn()

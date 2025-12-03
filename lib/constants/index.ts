@@ -230,6 +230,8 @@ export const OutOfStockBehavior = {
 export const CustomBehaviors = {
   ViewRole: 2029,
   CreateRole: 2027,
+  UpdateRole: 2028,
+  DeleteRole: 2030,
   AddUser: 2000,
   UpdateUser: 2002,
   UpdateAccount: 2024,

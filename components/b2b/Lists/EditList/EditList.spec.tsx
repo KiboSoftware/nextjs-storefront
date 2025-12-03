@@ -16,6 +16,9 @@ const { listData } = stories
 const onEditFormToggleMock = jest.fn()
 const onUpdateListDataMock = jest.fn()
 const onHandleAddListToCartMock = jest.fn()
+jest.mock('@/lib/helpers/hasPermission', () => ({
+  hasAnyPermission: jest.fn(() => true),
+}))
 
 const nonConfigurableProductMock: Product = {
   productCode: 'pdt1',

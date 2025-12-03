@@ -22,3 +22,5 @@ export {
 export { default as getRolesByAccountId } from './get-roles-by-account-id'
 export { default as getUsersByEmailAcrossAccounts } from './get-users-by-email-across-accounts'
 export { default as getRolesAcrossAccounts } from './get-roles-across-accounts'
+export { default as getUsersByRoleAsync } from './get-users-by-role-async'
+export { default as getRoleByRoleIdAsync } from './get-role-by-role-id-async'

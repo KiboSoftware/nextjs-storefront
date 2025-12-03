@@ -23,6 +23,7 @@ import { useTranslation } from 'next-i18next'
 import { styles } from '@/components/b2b/Lists/ListTable/ListTable.style'
 import { ResetATC, AddToCart } from '@/components/icons'
 import { useGetB2BUsersEmailAndId } from '@/hooks'
+import { actions, b2bUserActions, hasAnyPermission } from '@/lib/helpers'
 import formatDate from '@/lib/helpers/formatDate'
 
 import { CrWishlist, Maybe } from '@/lib/gql/types'
@@ -58,25 +59,47 @@ const ListTableMobileOptions = (props: ListTableMobileOptions) => {
   const [anchorEl, setAnchorEL] = useState<HTMLElement | null>(null)
   const { t } = useTranslation('common')
   const options = [
-    { name: t('edit'), onClick: onEditList },
-    { name: t('empty-cart-add-list-to-cart'), onClick: onEmptyCartAndAddListToCart },
-    { name: t('add-list-items-to-cart'), onClick: onAddListToCart },
-    { name: t('duplicate'), onClick: onCopyList },
-    { name: t('delete'), onClick: onDeleteList },
-  ]
+    {
+      name: t('edit'),
+      onClick: onEditList,
+      show: hasAnyPermission(actions.MANAGE_LISTS, b2bUserActions.CREATE_OR_UPDATE_LIST),
+    },
+    {
+      name: t('empty-cart-add-list-to-cart'),
+      onClick: onEmptyCartAndAddListToCart,
+      show: hasAnyPermission(b2bUserActions.MANAGE_CART),
+    },
+    {
+      name: t('add-list-items-to-cart'),
+      onClick: onAddListToCart,
+      show: hasAnyPermission(b2bUserActions.MANAGE_CART),
+    },
+    {
+      name: t('duplicate'),
+      onClick: onCopyList,
+      show: hasAnyPermission(actions.MANAGE_LISTS, b2bUserActions.CREATE_OR_UPDATE_LIST),
+    },
+    {
+      name: t('delete'),
+      onClick: onDeleteList,
+      show: hasAnyPermission(actions.MANAGE_LISTS, b2bUserActions.DELETE_LIST),
+    },
+  ].filter((option) => option.show)
 
   return (
     <>
-      <IconButton
-        sx={{ padding: '0px' }}
-        onClick={(e) => {
-          setAnchorEL(e.currentTarget)
-        }}
-        data-testid="menuBtn"
-        id={itemId}
-      >
-        <MoreVert />
-      </IconButton>
+      {options.length > 0 && (
+        <IconButton
+          sx={{ padding: '0px' }}
+          onClick={(e) => {
+            setAnchorEL(e.currentTarget)
+          }}
+          data-testid="menuBtn"
+          id={itemId}
+        >
+          <MoreVert />
+        </IconButton>
+      )}
       <Menu
         anchorEl={anchorEl}
         open={Boolean(anchorEl)}
@@ -163,51 +186,69 @@ const ListTable = (props: ListTableProps) => {
                 <TableCell sx={{ ...styles.tableCellStyles, width: mdScreen ? '25%' : '10%' }}>
                   {mdScreen ? (
                     <Box sx={{ justifyContent: 'flex-end', display: 'flex' }}>
-                      <Tooltip
-                        title={
-                          <Typography variant="body2">
-                            {t('empty-cart-add-list-to-cart')}
-                          </Typography>
-                        }
-                      >
-                        <IconButton
-                          data-testid="resetAndAddToCartBtn"
-                          onClick={() => onEmptyCartAndAddListToCart(item?.id as string)}
+                      {hasAnyPermission(b2bUserActions.MANAGE_CART) && (
+                        <Tooltip
+                          title={
+                            <Typography variant="body2">
+                              {t('empty-cart-add-list-to-cart')}
+                            </Typography>
+                          }
                         >
-                          <ResetATC />
-                        </IconButton>
-                      </Tooltip>
-                      <Tooltip title={<Typography variant="body2">{t('add-to-cart')}</Typography>}>
+                          <IconButton
+                            data-testid="resetAndAddToCartBtn"
+                            onClick={() => onEmptyCartAndAddListToCart(item?.id as string)}
+                          >
+                            <ResetATC />
+                          </IconButton>
+                        </Tooltip>
+                      )}
+                      {hasAnyPermission(b2bUserActions.MANAGE_CART) && (
+                        <Tooltip
+                          title={<Typography variant="body2">{t('add-to-cart')}</Typography>}
+                        >
+                          <IconButton
+                            color="inherit"
+                            onClick={() => onAddListToCart(item?.id as string)}
+                            data-testid="addToCartBtn"
+                          >
+                            <AddToCart />
+                          </IconButton>
+                        </Tooltip>
+                      )}
+
+                      {hasAnyPermission(
+                        actions.MANAGE_LISTS,
+                        b2bUserActions.CREATE_OR_UPDATE_LIST
+                      ) && (
                         <IconButton
                           color="inherit"
-                          onClick={() => onAddListToCart(item?.id as string)}
-                          data-testid="addToCartBtn"
+                          onClick={() => onEditList(item?.id as string)}
+                          data-testid="editBtn"
                         >
-                          <AddToCart />
+                          <Edit />
                         </IconButton>
-                      </Tooltip>
-
-                      <IconButton
-                        color="inherit"
-                        onClick={() => onEditList(item?.id as string)}
-                        data-testid="editBtn"
-                      >
-                        <Edit />
-                      </IconButton>
-                      <IconButton
-                        color="inherit"
-                        onClick={() => onCopyList(item?.id as string)}
-                        data-testid="copyBtn"
-                      >
-                        <ContentCopy />
-                      </IconButton>
-                      <IconButton
-                        color="inherit"
-                        onClick={() => onDeleteList(item?.id as string)}
-                        data-testid="deleteBtn"
-                      >
-                        <Delete />
-                      </IconButton>
+                      )}
+                      {hasAnyPermission(
+                        actions.MANAGE_LISTS,
+                        b2bUserActions.CREATE_OR_UPDATE_LIST
+                      ) && (
+                        <IconButton
+                          color="inherit"
+                          onClick={() => onCopyList(item?.id as string)}
+                          data-testid="copyBtn"
+                        >
+                          <ContentCopy />
+                        </IconButton>
+                      )}
+                      {hasAnyPermission(actions.MANAGE_LISTS, b2bUserActions.DELETE_LIST) && (
+                        <IconButton
+                          color="inherit"
+                          onClick={() => onDeleteList(item?.id as string)}
+                          data-testid="deleteBtn"
+                        >
+                          <Delete />
+                        </IconButton>
+                      )}
                     </Box>
                   ) : (
                     <>

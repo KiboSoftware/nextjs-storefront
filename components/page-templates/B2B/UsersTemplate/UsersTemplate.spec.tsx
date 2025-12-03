@@ -33,7 +33,7 @@ const { Common } = composeStories(stories)
 // Mock
 const onCloseMock = jest.fn()
 jest.mock('@/lib/helpers/hasPermission', () => ({
-  hasPermission: jest.fn().mockImplementation(() => true),
+  hasAnyPermission: jest.fn().mockImplementation(() => true),
 }))
 
 const createMatchMedia = (width: number) => (query: string) => ({

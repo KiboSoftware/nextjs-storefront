@@ -35,6 +35,7 @@ import {
   useProductCardActions,
 } from '@/hooks'
 import { orderGetters, cartGetters } from '@/lib/getters'
+import { actions, b2bUserActions, hasAnyPermission } from '@/lib/helpers'
 
 import type { CrCart, Location, CrCartItem } from '@/lib/gql/types'
 
@@ -207,19 +208,24 @@ const CartTemplate = (props: CartTemplateProps) => {
             <OrderSummary {...orderSummaryArgs}>
               <NoSsr>
                 <Stack direction="column" gap={2}>
-                  {!isCSR && isCSR === undefined && (
-                    <LoadingButton
-                      variant="contained"
-                      color="primary"
-                      name="goToCart"
-                      fullWidth
-                      onClick={handleGotoCheckout}
-                      loading={showLoadingButton}
-                      disabled={!cartItemCount || showLoadingButton}
-                    >
-                      {t('go-to-checkout')}
-                    </LoadingButton>
-                  )}
+                  {!isCSR &&
+                    isCSR === undefined &&
+                    hasAnyPermission(
+                      actions.CREATE_CHECKOUT,
+                      b2bUserActions.CREATE_OR_UPDATE_ORDER
+                    ) && (
+                      <LoadingButton
+                        variant="contained"
+                        color="primary"
+                        name="goToCart"
+                        fullWidth
+                        onClick={handleGotoCheckout}
+                        loading={showLoadingButton}
+                        disabled={!cartItemCount || showLoadingButton}
+                      >
+                        {t('go-to-checkout')}
+                      </LoadingButton>
+                    )}
                   <Button
                     variant="contained"
                     color="secondary"

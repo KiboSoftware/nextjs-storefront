@@ -22,6 +22,10 @@ jest.mock('@/components/b2b/QuotesTable/QuotesTable', () => ({
   ),
 }))
 
+jest.mock('@/lib/helpers/hasPermission', () => ({
+  hasAnyPermission: jest.fn(() => true),
+}))
+
 describe('[Templates]  QuotesTemplate', () => {
   it('should render component', async () => {
     const setQuotesSearchParamMock = jest.fn()

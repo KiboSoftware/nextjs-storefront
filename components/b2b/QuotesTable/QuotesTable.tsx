@@ -34,7 +34,7 @@ import { useModalContext } from '@/context'
 import { useDebounce, useDeleteQuote, useEmailQuote } from '@/hooks'
 import { QuoteStatus, StatusColorCode } from '@/lib/constants'
 import { quoteGetters } from '@/lib/getters'
-import { buildQuotesFilterParam } from '@/lib/helpers'
+import { actions, b2bUserActions, buildQuotesFilterParam, hasAnyPermission } from '@/lib/helpers'
 import { QuoteFilters, QuoteSortingOptions } from '@/lib/types'
 
 import { QueryQuotesArgs, Quote, QuoteCollection } from '@/lib/gql/types'
@@ -329,47 +329,68 @@ const QuotesTable = (props: QuotesTableProps) => {
                         {showActionButtons && (
                           <TableCell component="td" scope="row" align="right">
                             <Box display={'flex'} justifyContent={'flex-end'}>
-                              <IconButton
-                                size="small"
-                                data-testid="edit-quote"
-                                onClick={(e) => handleEditQuote(e, quoteId)}
-                              >
-                                <Edit fontSize="small" />
-                              </IconButton>
-                              <IconButton
-                                size="small"
-                                data-testid="email-quote"
-                                disabled={
-                                  !(
-                                    QuoteStatus[status] === QuoteStatus.ReadyForCheckout ||
-                                    QuoteStatus[status] === QuoteStatus.InReview ||
-                                    QuoteStatus[status] === QuoteStatus.Expired
-                                  )
-                                }
-                                onClick={(e) => handleEmailQuote(e, quoteId)}
-                              >
-                                <Mail fontSize="small" />
-                              </IconButton>
-                              <IconButton
-                                size="small"
-                                data-testid="delete-quote"
-                                onClick={(e) => handleDeleteQuote(e, quoteId, false)}
-                              >
-                                <Delete fontSize="small" />
-                              </IconButton>
+                              {hasAnyPermission(
+                                actions.MANAGE_QUOTES,
+                                b2bUserActions.VIEW_QUOTE
+                              ) && (
+                                <IconButton
+                                  size="small"
+                                  data-testid="edit-quote"
+                                  onClick={(e) => handleEditQuote(e, quoteId)}
+                                >
+                                  <Edit fontSize="small" />
+                                </IconButton>
+                              )}
+                              {hasAnyPermission(
+                                actions.MANAGE_QUOTES,
+                                b2bUserActions.UPDATE_QUOTE
+                              ) && (
+                                <IconButton
+                                  size="small"
+                                  data-testid="email-quote"
+                                  disabled={
+                                    !(
+                                      QuoteStatus[status] === QuoteStatus.ReadyForCheckout ||
+                                      QuoteStatus[status] === QuoteStatus.InReview ||
+                                      QuoteStatus[status] === QuoteStatus.Expired
+                                    )
+                                  }
+                                  onClick={(e) => handleEmailQuote(e, quoteId)}
+                                >
+                                  <Mail fontSize="small" />
+                                </IconButton>
+                              )}
+                              {hasAnyPermission(
+                                actions.MANAGE_QUOTES,
+                                b2bUserActions.DELETE_QUOTE
+                              ) && (
+                                <IconButton
+                                  size="small"
+                                  data-testid="delete-quote"
+                                  onClick={(e) => handleDeleteQuote(e, quoteId, false)}
+                                >
+                                  <Delete fontSize="small" />
+                                </IconButton>
+                              )}
                             </Box>
                           </TableCell>
                         )}
                       </>
                     ) : (
                       <>
-                        {showActionButtons && (
-                          <TableCell component="td" scope="row" align="right">
-                            <IconButton size="small" onClick={(e) => handleClick(e, quote)}>
-                              <MoreVert fontSize="small" />
-                            </IconButton>
-                          </TableCell>
-                        )}
+                        {showActionButtons &&
+                          hasAnyPermission(
+                            actions.MANAGE_QUOTES,
+                            b2bUserActions.VIEW_QUOTE,
+                            b2bUserActions.UPDATE_QUOTE,
+                            b2bUserActions.DELETE_QUOTE
+                          ) && (
+                            <TableCell component="td" scope="row" align="right">
+                              <IconButton size="small" onClick={(e) => handleClick(e, quote)}>
+                                <MoreVert fontSize="small" />
+                              </IconButton>
+                            </TableCell>
+                          )}
                       </>
                     )}
                   </TableRow>
@@ -395,19 +416,24 @@ const QuotesTable = (props: QuotesTableProps) => {
             horizontal: 'right',
           }}
         >
-          <MenuItem onClick={(e) => handleEditQuote(e, anchorEl?.quote?.id as string)}>
-            <Typography variant="body2">{t('edit-quote')}</Typography>
-          </MenuItem>
-          {(QuoteStatus[anchorEl?.quote?.status as string] === QuoteStatus.InReview ||
-            QuoteStatus[anchorEl?.quote?.status as string] === QuoteStatus.ReadyForCheckout ||
-            QuoteStatus[anchorEl?.quote?.status as string] === QuoteStatus.Expired) && (
-            <MenuItem onClick={(e) => handleEmailQuote(e, anchorEl?.quote?.id as string)}>
-              <Typography variant="body2">{t('email-quote')}</Typography>
+          {hasAnyPermission(actions.MANAGE_QUOTES, b2bUserActions.VIEW_QUOTE) && (
+            <MenuItem onClick={(e) => handleEditQuote(e, anchorEl?.quote?.id as string)}>
+              <Typography variant="body2">{t('edit-quote')}</Typography>
             </MenuItem>
           )}
-          <MenuItem onClick={(e) => handleDeleteQuote(e, anchorEl?.quote?.id as string, false)}>
-            <Typography variant="body2">{t('delete-quote')}</Typography>
-          </MenuItem>
+          {hasAnyPermission(actions.MANAGE_QUOTES, b2bUserActions.UPDATE_QUOTE) &&
+            (QuoteStatus[anchorEl?.quote?.status as string] === QuoteStatus.InReview ||
+              QuoteStatus[anchorEl?.quote?.status as string] === QuoteStatus.ReadyForCheckout ||
+              QuoteStatus[anchorEl?.quote?.status as string] === QuoteStatus.Expired) && (
+              <MenuItem onClick={(e) => handleEmailQuote(e, anchorEl?.quote?.id as string)}>
+                <Typography variant="body2">{t('email-quote')}</Typography>
+              </MenuItem>
+            )}
+          {hasAnyPermission(actions.MANAGE_QUOTES, b2bUserActions.DELETE_QUOTE) && (
+            <MenuItem onClick={(e) => handleDeleteQuote(e, anchorEl?.quote?.id as string, false)}>
+              <Typography variant="body2">{t('delete-quote')}</Typography>
+            </MenuItem>
+          )}
         </Menu>
       </TableContainer>
       <Box pt={2}>

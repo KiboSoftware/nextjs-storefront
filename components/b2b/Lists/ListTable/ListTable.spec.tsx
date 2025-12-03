@@ -19,7 +19,9 @@ const createMatchMedia = (width: number) => (query: string) => ({
   removeEventListener: jest.fn(),
   dispatchEvent: jest.fn(),
 })
-
+jest.mock('@/lib/helpers/hasPermission', () => ({
+  hasAnyPermission: jest.fn(() => true),
+}))
 const onEditMock = jest.fn()
 const onCopyMock = jest.fn()
 const onDeleteMock = jest.fn()

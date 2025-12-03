@@ -27,6 +27,7 @@ import {
   useGetCustomerWishlist,
 } from '@/hooks'
 import { productGetters } from '@/lib/getters'
+import { b2bUserActions, hasAnyPermission } from '@/lib/helpers'
 import { ProductCustom } from '@/lib/types'
 
 import { CrWishlistItem, Product } from '@/lib/gql/types'
@@ -247,17 +248,23 @@ const CreateList = (props: CreateListProps) => {
             </Typography>
             {newListState?.items?.length > 0 && (
               <Stack direction="row">
-                <Button
-                  onClick={handleEmptyCartAndAddListToCart}
-                  sx={{ ...styles.addAllItemsToCartButton }}
-                >
-                  <Link sx={{ ...styles.addAllItemsToCartLink }}>
-                    {t('empty-cart-add-list-to-cart')}
-                  </Link>
-                </Button>
-                <Button onClick={handleAddListToCart} sx={{ ...styles.addAllItemsToCartButton }}>
-                  <Link sx={{ ...styles.addAllItemsToCartLink }}>{t('add-all-items-to-cart')}</Link>
-                </Button>
+                {hasAnyPermission(b2bUserActions.MANAGE_CART) && (
+                  <Button
+                    onClick={handleEmptyCartAndAddListToCart}
+                    sx={{ ...styles.addAllItemsToCartButton }}
+                  >
+                    <Link sx={{ ...styles.addAllItemsToCartLink }}>
+                      {t('empty-cart-add-list-to-cart')}
+                    </Link>
+                  </Button>
+                )}
+                {hasAnyPermission(b2bUserActions.MANAGE_CART) && (
+                  <Button onClick={handleAddListToCart} sx={{ ...styles.addAllItemsToCartButton }}>
+                    <Link sx={{ ...styles.addAllItemsToCartLink }}>
+                      {t('add-all-items-to-cart')}
+                    </Link>
+                  </Button>
+                )}
               </Stack>
             )}
           </Stack>

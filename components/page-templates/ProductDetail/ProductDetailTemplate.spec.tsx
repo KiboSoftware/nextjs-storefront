@@ -12,6 +12,10 @@ const { Common, WithMoreDetails, WithSubscription } = composeStories(stories)
 
 const user = userEvent.setup()
 
+jest.mock('@/lib/helpers/hasPermission', () => ({
+  hasAnyPermission: jest.fn(() => true),
+}))
+
 const ColorSelectorMock = () => <div data-testid="color-selector-mock" />
 jest.mock('@/components/product/ColorSelector/ColorSelector', () => () => ColorSelectorMock())
 

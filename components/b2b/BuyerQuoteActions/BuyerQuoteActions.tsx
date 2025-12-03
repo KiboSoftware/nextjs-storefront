@@ -4,7 +4,7 @@ import { useTranslation } from 'next-i18next'
 
 import { QuoteStatus } from '@/lib/constants'
 import { quoteGetters } from '@/lib/getters'
-import { hasPermission, actions } from '@/lib/helpers'
+import { hasAnyPermission, actions, b2bUserActions } from '@/lib/helpers'
 
 interface BuyerQuoteActionsProps {
   hasDraft: boolean
@@ -46,18 +46,19 @@ export default function BuyerQuoteActions({
           width={'100%'}
         >
           <Box display={'flex'} gap={2} whiteSpace={'nowrap'}>
-            {(mode === 'create' || mode === 'edit') && (
-              <LoadingButton
-                variant="contained"
-                color="secondary"
-                sx={{ width: { xs: '50%', md: '100%' } }}
-                disabled={quoteGetters.isClearChangesButtonDisabled(status, hasDraft)}
-                onClick={handleClearChanges}
-              >
-                {t('clear-changes')}
-              </LoadingButton>
-            )}
-            {!mode && (
+            {(mode === 'create' || mode === 'edit') &&
+              hasAnyPermission(actions.MANAGE_QUOTES, b2bUserActions.UPDATE_QUOTE) && (
+                <LoadingButton
+                  variant="contained"
+                  color="secondary"
+                  sx={{ width: { xs: '50%', md: '100%' } }}
+                  disabled={quoteGetters.isClearChangesButtonDisabled(status, hasDraft)}
+                  onClick={handleClearChanges}
+                >
+                  {t('clear-changes')}
+                </LoadingButton>
+              )}
+            {!mode && hasAnyPermission(actions.MANAGE_QUOTES, b2bUserActions.UPDATE_QUOTE) && (
               <LoadingButton
                 variant="contained"
                 color="secondary"
@@ -77,25 +78,26 @@ export default function BuyerQuoteActions({
               {t('print-quote')}
             </LoadingButton>
           </Box>
-          {(mode === 'create' || mode === 'edit') && (
-            <Box>
-              <LoadingButton
-                variant="contained"
-                color="primary"
-                fullWidth
-                disabled={quoteGetters.isSubmitForApprovalButtonDisabled(
-                  status,
-                  isSubmitForApprovalEnabled,
-                  hasDraft
-                )}
-                onClick={handleSubmitForApproval}
-              >
-                {t('submit-for-approval')}
-              </LoadingButton>
-            </Box>
-          )}
+          {(mode === 'create' || mode === 'edit') &&
+            hasAnyPermission(actions.MANAGE_QUOTES, b2bUserActions.UPDATE_QUOTE) && (
+              <Box>
+                <LoadingButton
+                  variant="contained"
+                  color="primary"
+                  fullWidth
+                  disabled={quoteGetters.isSubmitForApprovalButtonDisabled(
+                    status,
+                    isSubmitForApprovalEnabled,
+                    hasDraft
+                  )}
+                  onClick={handleSubmitForApproval}
+                >
+                  {t('submit-for-approval')}
+                </LoadingButton>
+              </Box>
+            )}
           <NoSsr>
-            {hasPermission(actions.CREATE_CHECKOUT) &&
+            {hasAnyPermission(actions.CREATE_CHECKOUT, b2bUserActions.CREATE_OR_UPDATE_ORDER) &&
               QuoteStatus[status] === QuoteStatus.ReadyForCheckout && (
                 <Box>
                   <LoadingButton

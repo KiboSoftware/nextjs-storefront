@@ -28,6 +28,10 @@ const setup = () => {
   }
 }
 
+jest.mock('@/lib/helpers/hasPermission', () => ({
+  hasAnyPermission: jest.fn(() => true),
+}))
+
 describe('[components] Product Card List View Component', () => {
   it('should render component', () => {
     setup()

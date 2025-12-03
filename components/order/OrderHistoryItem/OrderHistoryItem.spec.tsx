@@ -25,6 +25,9 @@ jest.mock('@mui/material', () => ({
   ...jest.requireActual('@mui/material'),
   useMediaQuery: jest.fn().mockReturnValue(false),
 }))
+jest.mock('@/lib/helpers/hasPermission', () => ({
+  hasAnyPermission: jest.fn(() => true),
+}))
 
 describe('[component] - OrderHistoryItem', () => {
   const { id, submittedDate, productNames, orderStatus } = Common?.args as OrderHistoryItemProps

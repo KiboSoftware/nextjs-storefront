@@ -19,7 +19,8 @@ import { useRouter } from 'next/router'
 import { useTranslation } from 'next-i18next'
 
 import { userGetters } from '@/lib/getters'
-import { actions, hasPermission } from '@/lib/helpers'
+import { actions, b2bUserActions, hasAnyPermission } from '@/lib/helpers'
+import { B2BUserInput } from '@/lib/types'
 
 import { B2BUser } from '@/lib/gql/types'
 
@@ -109,12 +110,6 @@ const UserTable: React.FC<UserTableProps> = React.memo((props) => {
   )
 
   /**
-   * Check if logged-in user has edit permission
-   * Memoized to prevent recalculation on every render
-   */
-  const hasEditPermission = React.useMemo(() => hasPermission(actions.EDIT_USERS), [])
-
-  /**
    * Memoize table header background color from theme
    */
   const headerBackgroundColor = React.useMemo(() => theme.palette.grey[100], [theme.palette.grey])
@@ -135,7 +130,7 @@ const UserTable: React.FC<UserTableProps> = React.memo((props) => {
           )}
           <TableCell>{t('role')}</TableCell>
           {mdScreen && <TableCell>{t('status')}</TableCell>}
-          <NoSsr>{hasEditPermission && <TableCell></TableCell>}</NoSsr>
+          <TableCell></TableCell>
         </TableRow>
       </TableHead>
       <TableBody>
@@ -166,10 +161,10 @@ const UserTable: React.FC<UserTableProps> = React.memo((props) => {
               </TableCell>
             )}
             <NoSsr>
-              {hasEditPermission && (
-                <TableCell sx={FLEX_CELL_STYLES}>
-                  {showActionButtons && (
-                    <Box sx={ACTION_BUTTONS_CONTAINER_STYLES}>
+              <TableCell sx={FLEX_CELL_STYLES}>
+                {showActionButtons && (
+                  <Box sx={ACTION_BUTTONS_CONTAINER_STYLES}>
+                    {hasAnyPermission(actions.EDIT_USERS, b2bUserActions.UPDATE_BUYER) && (
                       <IconButton
                         aria-label="edit-user"
                         name="edit-user"
@@ -177,6 +172,8 @@ const UserTable: React.FC<UserTableProps> = React.memo((props) => {
                       >
                         <EditIcon />
                       </IconButton>
+                    )}
+                    {hasAnyPermission(actions.DELETE_USERS, b2bUserActions.DELETE_BUYER) && (
                       <IconButton
                         aria-label="delete-user"
                         name="delete-user"
@@ -184,10 +181,10 @@ const UserTable: React.FC<UserTableProps> = React.memo((props) => {
                       >
                         <DeleteIcon />
                       </IconButton>
-                    </Box>
-                  )}
-                </TableCell>
-              )}
+                    )}
+                  </Box>
+                )}
+              </TableCell>
             </NoSsr>
           </TableRow>
         ))}

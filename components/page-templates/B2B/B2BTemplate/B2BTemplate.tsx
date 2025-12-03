@@ -26,7 +26,7 @@ import { MyAccountTemplateStyle } from '../../MyAccountTemplate/MyAccountTemplat
 import { MyProfile, PaymentMethod, AddressBook } from '@/components/my-account'
 import { useAuthContext, useSnackbarContext } from '@/context'
 import { useCardContactActions } from '@/hooks'
-import { validateGoogleReCaptcha } from '@/lib/helpers'
+import { actions, b2bUserActions, hasAnyPermission, validateGoogleReCaptcha } from '@/lib/helpers'
 import type { BillingAddress, CardType } from '@/lib/types'
 
 import type { CustomerAccount } from '@/lib/gql/types'
@@ -112,6 +112,7 @@ const B2BTemplate = () => {
       header: t('account-information'),
       component: <MyProfile user={user as CustomerAccount} isB2BTemplate />,
       path: null,
+      hasPermission: true,
     },
     {
       id: 'account-hierarchy-accordion',
@@ -119,6 +120,7 @@ const B2BTemplate = () => {
       header: t('account-hierarchy'),
       component: null,
       path: '/my-account/b2b/account-hierarchy',
+      hasPermission: true,
     },
     {
       id: 'users-accordion',
@@ -126,6 +128,7 @@ const B2BTemplate = () => {
       header: t('users'),
       component: null,
       path: '/my-account/b2b/users',
+      hasPermission: hasAnyPermission(actions.VIEW_USERS, b2bUserActions.VIEW_BUYER),
     },
     {
       id: 'manage-roles-accordion',
@@ -133,12 +136,14 @@ const B2BTemplate = () => {
       header: t('manage-roles'),
       component: null,
       path: '/my-account/b2b/manage-roles',
+      hasPermission: hasAnyPermission(b2bUserActions.VIEW_ROLE),
     },
     {
       id: 'address-book-accordion',
       controls: 'address-book-content',
       header: t('address-book'),
       component: <AddressBook user={user as CustomerAccount} contacts={contacts} />,
+      hasPermission: true,
     },
     {
       id: 'payment-information-accordion',
@@ -156,6 +161,7 @@ const B2BTemplate = () => {
           }
         />
       ),
+      hasPermission: true,
     },
     {
       id: 'custom-attributes-accordion',
@@ -163,8 +169,9 @@ const B2BTemplate = () => {
       header: t('custom-attributes'),
       component: null,
       path: null,
+      hasPermission: true,
     },
-  ]
+  ].filter((item) => item.hasPermission)
 
   return (
     <Grid container>
@@ -226,11 +233,21 @@ const B2BTemplate = () => {
           <Typography variant={mdScreen ? 'h1' : 'h2'}>{t('orders')}</Typography>
         </Box>
 
-        <B2BTemplateListItem heading="quick-order" onClick={handleGoToQuickOrder} />
-        <B2BTemplateListItem heading="order-history" onClick={handleGoToOrderHistory} />
-        <B2BTemplateListItem heading="returns" />
-        <B2BTemplateListItem heading="quotes" onClick={handleGoToQuotes} />
-        <B2BTemplateListItem heading="lists" onClick={handleGoToLists} />
+        {hasAnyPermission(b2bUserActions.MANAGE_CART) && (
+          <B2BTemplateListItem heading="quick-order" onClick={handleGoToQuickOrder} />
+        )}
+        {hasAnyPermission(actions.CREATE_CHECKOUT, b2bUserActions.VIEW_ORDER) && (
+          <B2BTemplateListItem heading="order-history" onClick={handleGoToOrderHistory} />
+        )}
+        {hasAnyPermission(actions.CREATE_RETURNS, b2bUserActions.VIEW_RETURN) && (
+          <B2BTemplateListItem heading="returns" />
+        )}
+        {hasAnyPermission(actions.MANAGE_QUOTES, b2bUserActions.VIEW_QUOTE) && (
+          <B2BTemplateListItem heading="quotes" onClick={handleGoToQuotes} />
+        )}
+        {hasAnyPermission(actions.MANAGE_LISTS, b2bUserActions.VIEW_LIST) && (
+          <B2BTemplateListItem heading="lists" onClick={handleGoToLists} />
+        )}
 
         <Divider sx={{ backgroundColor: 'grey.300', ...B2BTemplateStyle.divider }} />
         <Box

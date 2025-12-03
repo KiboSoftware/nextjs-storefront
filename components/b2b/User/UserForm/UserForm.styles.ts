@@ -17,6 +17,16 @@ const userFormStyles = makeStyles((theme: Theme) => ({
       paddingTop: '6px !important',
     },
   },
+
+  formContainerStyle: { display: 'flex', width: '100%' },
+  gridContainerStyle: { marginTop: '5px', marginLeft: 0, width: '100%' },
+  actionButtonStyle: {
+    display: 'flex',
+    justifyContent: 'flex-end',
+    gap: 2,
+    mt: 3,
+    mb: 2,
+  }
 }))
 
 export default userFormStyles

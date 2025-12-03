@@ -25,7 +25,7 @@ import {
 } from '@/hooks'
 import { DefaultId, AddressType, CountryCode, FulfillmentOptions } from '@/lib/constants'
 import { orderGetters, userGetters } from '@/lib/getters'
-import { actions, buildAddressParams, hasPermission } from '@/lib/helpers'
+import { actions, b2bUserActions, buildAddressParams, hasAnyPermission } from '@/lib/helpers'
 import { Address } from '@/lib/types'
 
 import type {
@@ -379,38 +379,39 @@ const StandardShippingStep = (props: ShippingProps) => {
               </>
             )}
 
-            {previouslySavedShippingAddress?.length > 0 && (
-              <>
-                <Typography variant="subtitle2" fontWeight={'bold'}>
-                  {t('previously-saved-shipping-addresses')}
-                </Typography>
-                <KiboRadio
-                  radioOptions={previouslySavedShippingAddress?.map((address, index) => {
-                    return {
-                      value: String(address.id),
-                      name: String(address.id),
-                      label: (
-                        <AddressCard
-                          firstName={address?.firstName as string}
-                          middleNameOrInitial={address?.middleNameOrInitial as string}
-                          lastNameOrSurname={address?.lastNameOrSurname as string}
-                          address1={address?.address?.address1 as string}
-                          address2={address?.address?.address2 as string}
-                          cityOrTown={address?.address?.cityOrTown as string}
-                          stateOrProvince={address?.address?.stateOrProvince as string}
-                          postalOrZipCode={address?.address?.postalOrZipCode as string}
-                        />
-                      ),
-                    }
-                  })}
-                  selected={selectedShippingAddressId?.toString()}
-                  align="flex-start"
-                  onChange={handleAddressSelect}
-                />
-              </>
-            )}
+            {hasAnyPermission(actions.VIEW_CONTACTS, b2bUserActions.VIEW_CONTACT) &&
+              previouslySavedShippingAddress?.length > 0 && (
+                <>
+                  <Typography variant="subtitle2" fontWeight={'bold'}>
+                    {t('previously-saved-shipping-addresses')}
+                  </Typography>
+                  <KiboRadio
+                    radioOptions={previouslySavedShippingAddress?.map((address, index) => {
+                      return {
+                        value: String(address.id),
+                        name: String(address.id),
+                        label: (
+                          <AddressCard
+                            firstName={address?.firstName as string}
+                            middleNameOrInitial={address?.middleNameOrInitial as string}
+                            lastNameOrSurname={address?.lastNameOrSurname as string}
+                            address1={address?.address?.address1 as string}
+                            address2={address?.address?.address2 as string}
+                            cityOrTown={address?.address?.cityOrTown as string}
+                            stateOrProvince={address?.address?.stateOrProvince as string}
+                            postalOrZipCode={address?.address?.postalOrZipCode as string}
+                          />
+                        ),
+                      }
+                    })}
+                    selected={selectedShippingAddressId?.toString()}
+                    align="flex-start"
+                    onChange={handleAddressSelect}
+                  />
+                </>
+              )}
             <NoSsr>
-              {hasPermission(actions.CREATE_CONTACTS) && (
+              {hasAnyPermission(actions.CREATE_CHECKOUT, b2bUserActions.CREATE_OR_UPDATE_ORDER) && (
                 <Button
                   variant="contained"
                   color="inherit"
@@ -445,20 +446,21 @@ const StandardShippingStep = (props: ShippingProps) => {
             onFormStatusChange={handleFormStatusChange}
           />
 
-          {isAuthenticated && (
-            <FormControlLabel
-              label={t('save-address-to-account')}
-              control={
-                <Checkbox
-                  sx={{ marginLeft: '0.5rem' }}
-                  inputProps={{
-                    'aria-label': t('save-address-to-account'),
-                  }}
-                  onChange={() => setIsAddressSavedToAccount(!isAddressSavedToAccount)}
-                />
-              }
-            />
-          )}
+          {isAuthenticated &&
+            hasAnyPermission(actions.CREATE_CONTACTS, b2bUserActions.CREATE_OR_UPDATE_CONTACT) && (
+              <FormControlLabel
+                label={t('save-address-to-account')}
+                control={
+                  <Checkbox
+                    sx={{ marginLeft: '0.5rem' }}
+                    inputProps={{
+                      'aria-label': t('save-address-to-account'),
+                    }}
+                    onChange={() => setIsAddressSavedToAccount(!isAddressSavedToAccount)}
+                  />
+                }
+              />
+            )}
 
           <Box m={1} maxWidth={'872px'} data-testid="address-form">
             <Grid container>

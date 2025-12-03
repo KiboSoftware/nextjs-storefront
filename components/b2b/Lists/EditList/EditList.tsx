@@ -21,6 +21,7 @@ import styles from '@/components/b2b/Lists/EditList/EditList.style'
 import { KiboTextBox } from '@/components/common'
 import { useProductCardActions, useUpdateWishlistItemMutation } from '@/hooks'
 import { productGetters } from '@/lib/getters'
+import { b2bUserActions, hasAnyPermission } from '@/lib/helpers'
 import { ProductCustom } from '@/lib/types'
 
 import { CrWishlist, CrWishlistInput, CrWishlistItem, Product } from '@/lib/gql/types'
@@ -230,20 +231,24 @@ const EditList = (props: EditListProps) => {
           </Typography>
           {listData?.items && listData?.items?.length > 0 && (
             <Stack direction="row">
-              <Button
-                onClick={() => handleEmptyCartAndAddListToCart(listData?.id as string)}
-                sx={{ ...styles.addAllItemsToCartButton }}
-              >
-                <Link sx={{ ...styles.addAllItemsToCartLink }}>
-                  {t('empty-cart-add-list-to-cart')}
-                </Link>
-              </Button>
-              <Button
-                onClick={() => handleAddListToCart(listData?.id as string)}
-                sx={{ ...styles.addAllItemsToCartButton }}
-              >
-                <Link sx={{ ...styles.addAllItemsToCartLink }}>{t('add-all-items-to-cart')}</Link>
-              </Button>
+              {hasAnyPermission(b2bUserActions.MANAGE_CART) && (
+                <Button
+                  onClick={() => handleEmptyCartAndAddListToCart(listData?.id as string)}
+                  sx={{ ...styles.addAllItemsToCartButton }}
+                >
+                  <Link sx={{ ...styles.addAllItemsToCartLink }}>
+                    {t('empty-cart-add-list-to-cart')}
+                  </Link>
+                </Button>
+              )}
+              {hasAnyPermission(b2bUserActions.MANAGE_CART) && (
+                <Button
+                  onClick={() => handleAddListToCart(listData?.id as string)}
+                  sx={{ ...styles.addAllItemsToCartButton }}
+                >
+                  <Link sx={{ ...styles.addAllItemsToCartLink }}>{t('add-all-items-to-cart')}</Link>
+                </Button>
+              )}
             </Stack>
           )}
         </Stack>

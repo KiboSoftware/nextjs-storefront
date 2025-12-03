@@ -11,6 +11,7 @@ import { KiboStepper, OrderReview } from '@/components/checkout'
 import { OrderSummary, PromoCodeBadge } from '@/components/common'
 import { useCheckoutStepContext, STEP_STATUS } from '@/context'
 import { checkoutGetters, orderGetters } from '@/lib/getters'
+import { actions, b2bUserActions, hasAnyPermission } from '@/lib/helpers'
 
 import type { Checkout, CrOrder } from '@/lib/gql/types'
 
@@ -99,16 +100,21 @@ const CheckoutUITemplate = <T extends CrOrder | Checkout>(props: CheckoutUITempl
           <OrderSummary {...orderSummaryArgs}>
             {activeStep < buttonLabels.length && (
               <Stack direction="column" gap={2}>
-                <Button
-                  variant="contained"
-                  color="primary"
-                  sx={{ ...buttonStyle }}
-                  fullWidth
-                  onClick={handleSubmit}
-                  disabled={stepStatus !== STEP_STATUS.VALID || activeStep === steps.length - 1}
-                >
-                  {buttonLabels[activeStep]}
-                </Button>
+                {hasAnyPermission(
+                  actions.CREATE_CHECKOUT,
+                  b2bUserActions.CREATE_OR_UPDATE_ORDER
+                ) && (
+                  <Button
+                    variant="contained"
+                    color="primary"
+                    sx={{ ...buttonStyle }}
+                    fullWidth
+                    onClick={handleSubmit}
+                    disabled={stepStatus !== STEP_STATUS.VALID || activeStep === steps.length - 1}
+                  >
+                    {buttonLabels[activeStep]}
+                  </Button>
+                )}
                 <Button
                   variant="contained"
                   color="secondary"

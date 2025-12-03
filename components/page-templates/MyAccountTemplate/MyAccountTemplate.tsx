@@ -25,7 +25,7 @@ import { MyAccountTemplateStyle } from './MyAccountTemplate.styles'
 import { MyProfile, PaymentMethod, AddressBook } from '@/components/my-account'
 import { useAuthContext, useSnackbarContext } from '@/context'
 import { useCardContactActions } from '@/hooks'
-import { validateGoogleReCaptcha } from '@/lib/helpers'
+import { actions, b2bUserActions, hasAnyPermission, validateGoogleReCaptcha } from '@/lib/helpers'
 import type { BillingAddress, CardType } from '@/lib/types'
 
 import type { CustomerAccount } from '@/lib/gql/types'
@@ -158,18 +158,19 @@ const MyAccountTemplate = () => {
 
         {/* code for subscription below */}
         <Divider sx={{ borderColor: 'grey.500' }} />
-        {isSubscriptionEnabled && (
-          <Box
-            sx={{
-              ...MyAccountTemplateStyle.myAccountChildren,
-              ...MyAccountTemplateStyle.orderHistory,
-            }}
-            onClick={handleGoToSubscription}
-          >
-            <Typography variant="h3">{t('my-subscription')}</Typography>
-            <ChevronRightIcon />
-          </Box>
-        )}
+        {isSubscriptionEnabled &&
+          hasAnyPermission(actions.CREATE_CHECKOUT, b2bUserActions.VIEW_ORDER) && (
+            <Box
+              sx={{
+                ...MyAccountTemplateStyle.myAccountChildren,
+                ...MyAccountTemplateStyle.orderHistory,
+              }}
+              onClick={handleGoToSubscription}
+            >
+              <Typography variant="h3">{t('my-subscription')}</Typography>
+              <ChevronRightIcon />
+            </Box>
+          )}
         {/* code for subscription ends here */}
 
         <Divider sx={{ borderColor: 'grey.500' }} />

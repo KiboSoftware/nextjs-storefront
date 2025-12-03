@@ -11,6 +11,7 @@ import { ProductCardStyles } from './ProductCardListView.styles'
 import { KiboImage, Price } from '@/components/common'
 import { usePriceRangeFormatter } from '@/hooks'
 import { FulfillmentOptions as FulfillmentOptionsConstant } from '@/lib/constants'
+import { b2bUserActions, hasAnyPermission } from '@/lib/helpers'
 import DefaultImage from '@/public/product_placeholder.svg'
 
 import type { ProductPriceRange } from '@/lib/gql/types'
@@ -216,7 +217,12 @@ const ProductCardListView = (props: ProductCardListViewProps) => {
                     </Button>
                   ) : null}
                   {isShowWishlistIcon && (
-                    <Button variant="contained" color="primary" onClick={handleAddToCart}>
+                    <Button
+                      variant="contained"
+                      color="primary"
+                      disabled={!hasAnyPermission(b2bUserActions.MANAGE_CART)}
+                      onClick={handleAddToCart}
+                    >
                       {t('add-to-cart')}
                     </Button>
                   )}
