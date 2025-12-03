@@ -91,13 +91,6 @@ const RoleForm: React.FC<RoleFormProps> = ({
     ? t('copy-role')
     : t('create-new-role')
 
-  // Calculate submit button text based on mode
-  const submitButtonText = isEditMode
-    ? t('edit-role')
-    : isCopyMode
-    ? t('copy-role')
-    : t('create-role')
-
   const styles = roleFormStyles
   const mdScreen = useMediaQuery((theme: Theme) => theme.breakpoints.up('md'))
   const { showSnackbar } = useSnackbarContext()

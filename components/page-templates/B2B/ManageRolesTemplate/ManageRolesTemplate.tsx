@@ -43,11 +43,11 @@ import {
 import { SearchBar } from '@/components/common'
 import { ConfirmationDialog } from '@/components/dialogs'
 import { useModalContext, useSnackbarContext } from '@/context'
-import { useGetRolesByAccountIdAsync, useDeleteRoleAsync, useGetUsersByRoleAsync } from '@/hooks'
+import { useGetRolesByAccountIdAsync, useDeleteRoleAsync } from '@/hooks'
 import type { GetRolesAsyncResponse } from '@/lib/api/operations/get-roles-by-account-id'
 import type { B2BRole } from '@/lib/api/operations/get-roles-by-account-id'
 import { AccountScope, RoleType, Routes } from '@/lib/constants'
-import { b2bUserActions, hasAnyPermission } from '@/lib/helpers'
+import { b2bUserActions, b2bUserBehaviors, hasAnyPermission, hasPermissionInAllAccounts } from '@/lib/helpers'
 
 import type { CustomerAccount } from '@/lib/gql/types'
 
@@ -63,91 +63,19 @@ interface Role {
 interface ManageRolesTemplateProps {
   customerAccount?: CustomerAccount
   initialData?: GetRolesAsyncResponse
+  usersByRole?: Record<string, number>
+  accountUserBehaviorsForAllAccounts?: Record<number, number[]>
+  accountUserBehaviors?: number[]
   onAccountTitleClick?: () => void
 }
 
-// Component to fetch and display user count for a single account-role pair
-const SingleAccountUserCountComponent = ({
-  accountId,
-  roleId,
-  setUserCount,
-}: {
-  accountId: number
-  roleId: number
-  setUserCount: (accountId: number, count: number) => void
-}) => {
-  const { users, isLoading } = useGetUsersByRoleAsync(accountId, roleId)
-
-  useEffect(() => {
-    if (!isLoading && users) {
-      setUserCount(accountId, users.length)
-    }
-  }, [users, isLoading, accountId, setUserCount])
-
-  return null // This component only fetches data, doesn't render
-}
-
-SingleAccountUserCountComponent.displayName = 'SingleAccountUserCount'
-const SingleAccountUserCount = React.memo(SingleAccountUserCountComponent)
-
-// Component to aggregate user counts across multiple accounts for a role
-const RoleUserCountAggregatorComponent = ({
-  accountIds,
-  roleId,
-  onCountUpdate,
-}: {
-  accountIds: number[]
-  roleId: number
-  onCountUpdate: (roleId: number, count: number) => void
-}) => {
-  const [accountCounts, setAccountCounts] = useState<Record<number, number>>({})
-  const [loadedAccounts, setLoadedAccounts] = useState<Set<number>>(new Set())
-
-  // Callback when a single account's user count is set
-  const setAccountUserCount = useCallback((accountId: number, count: number) => {
-    setAccountCounts((prev) => {
-      if (prev[accountId] !== count) {
-        return { ...prev, [accountId]: count }
-      }
-      return prev
-    })
-    setLoadedAccounts((prev) => new Set(prev).add(accountId))
-  }, [])
-
-  // Calculate total count
-  const totalCount = Object.values(accountCounts).reduce((sum, count) => sum + count, 0)
-
-  // Check if all accounts are loaded
-  const allLoaded = accountIds.every((id) => loadedAccounts.has(id))
-
-  // Update parent when all counts are loaded
-  useEffect(() => {
-    if (allLoaded) {
-      onCountUpdate(roleId, totalCount)
-    }
-  }, [allLoaded, roleId, totalCount, onCountUpdate])
-
-  return (
-    <>
-      {/* Render invisible components to fetch data for each account */}
-      {accountIds.map((accountId) => (
-        <SingleAccountUserCount
-          key={`${accountId}-${roleId}`}
-          accountId={accountId}
-          roleId={roleId}
-          setUserCount={setAccountUserCount}
-        />
-      ))}
-      {/* Display the count */}
-      {allLoaded ? totalCount : '...'}
-    </>
-  )
-}
-
-RoleUserCountAggregatorComponent.displayName = 'RoleUserCountAggregator'
-const RoleUserCountAggregator = React.memo(RoleUserCountAggregatorComponent)
-
-const ManageRolesTemplate = ({ customerAccount, initialData }: ManageRolesTemplateProps) => {
+const ManageRolesTemplate = ({
+  customerAccount,
+  initialData,
+  usersByRole,
+  accountUserBehaviorsForAllAccounts,
+  accountUserBehaviors,
+}: ManageRolesTemplateProps) => {
   const { t } = useTranslation('common')
   const theme = useTheme()
   const router = useRouter()
@@ -160,10 +88,19 @@ const ManageRolesTemplate = ({ customerAccount, initialData }: ManageRolesTempla
   const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null)
   const [selectedRoleId, setSelectedRoleId] = useState<string | null>(null)
   const [currentPage, setCurrentPage] = useState(1)
-  const [userCounts, setUserCounts] = useState<Record<number, number>>({})
-  const [sortOrder, setSortOrder] = useState<'asc' | 'desc'>('asc')
+  const [sortOrder, setSortOrder] = useState<'asc' | 'desc' | null>(null)
 
   const pageSize = 10
+
+  // Permission checks
+  const hasEditPermission = useMemo(
+    () => hasPermissionInAllAccounts(b2bUserBehaviors.UPDATE_ROLE, accountUserBehaviorsForAllAccounts),
+    [accountUserBehaviorsForAllAccounts]
+  )
+  const hasDeletePermission = useMemo(
+    () => hasPermissionInAllAccounts(b2bUserBehaviors.DELETE_ROLE, accountUserBehaviorsForAllAccounts),
+    [accountUserBehaviorsForAllAccounts]
+  )
 
   // Fetch roles from API with initial server-side data
   const {
@@ -185,23 +122,12 @@ const ManageRolesTemplate = ({ customerAccount, initialData }: ManageRolesTempla
     })) as Role[]
   }, [rolesData])
 
-  // Callback to update user count for a role (memoized to prevent infinite loops)
-  const handleUserCountUpdate = useCallback((roleId: number, count: number) => {
-    setUserCounts((prev) => {
-      // Only update if the count has changed
-      if (prev[roleId] !== count) {
-        return { ...prev, [roleId]: count }
-      }
-      return prev
-    })
-  }, [])
-
-  // Get user count for a role (from cached counts or default to 0) - memoized
+  // Get user count for a role from server-side data - memoized
   const getUserCount = useCallback(
     (roleId: string): number => {
-      return userCounts[parseInt(roleId)] ?? 0
+      return usersByRole?.[roleId] ?? 0
     },
-    [userCounts]
+    [usersByRole]
   )
 
   const handleMenuOpen = useCallback((event: React.MouseEvent<HTMLElement>, roleId: string) => {
@@ -222,7 +148,11 @@ const ManageRolesTemplate = ({ customerAccount, initialData }: ManageRolesTempla
   }, [])
 
   const handleSort = useCallback(() => {
-    setSortOrder((prev) => (prev === 'asc' ? 'desc' : 'asc'))
+    setSortOrder((prev) => {
+      if (prev === null) return 'asc'
+      if (prev === 'asc') return 'desc'
+      return null // Reset to original order
+    })
     setCurrentPage(1) // Reset to first page on sort
   }, [])
 
@@ -295,17 +225,26 @@ const ManageRolesTemplate = ({ customerAccount, initialData }: ManageRolesTempla
       role.name.toLowerCase().includes(searchQuery.toLowerCase())
     )
 
-    // Sort by name
-    return filtered.sort((a, b) => {
-      const nameA = a.name.toLowerCase()
-      const nameB = b.name.toLowerCase()
+    // Separate System and Custom roles
+    const systemRoles = filtered.filter((role) => role.roleType === RoleType.System)
+    const customRoles = filtered.filter((role) => role.roleType === RoleType.Custom)
 
-      if (sortOrder === 'asc') {
-        return nameA.localeCompare(nameB)
-      } else {
-        return nameB.localeCompare(nameA)
-      }
-    })
+    // Sort custom roles only if sortOrder is set
+    if (sortOrder !== null) {
+      customRoles.sort((a, b) => {
+        const nameA = a.name.toLowerCase()
+        const nameB = b.name.toLowerCase()
+
+        if (sortOrder === 'asc') {
+          return nameA.localeCompare(nameB)
+        } else {
+          return nameB.localeCompare(nameA)
+        }
+      })
+    }
+
+    // Always return System roles first, then Custom roles
+    return [...systemRoles, ...customRoles]
   }, [roles, searchQuery, sortOrder])
 
   // Pagination logic - memoized
@@ -407,8 +346,10 @@ const ManageRolesTemplate = ({ customerAccount, initialData }: ManageRolesTempla
                   <IconButton size="small" sx={{ ml: 0.5 }}>
                     {sortOrder === 'asc' ? (
                       <ArrowUpwardIcon fontSize="small" />
-                    ) : (
+                    ) : sortOrder === 'desc' ? (
                       <ArrowDownwardIcon fontSize="small" />
+                    ) : (
+                      <ArrowUpwardIcon fontSize="small" sx={{ opacity: 0.3 }} />
                     )}
                   </IconButton>
                 </Box>
@@ -435,16 +376,7 @@ const ManageRolesTemplate = ({ customerAccount, initialData }: ManageRolesTempla
                     />
                   </TableCell>
                   <TableCell>
-                    {role.accountIds?.length > 0 ? (
-                      <RoleUserCountAggregator
-                        accountIds={role.accountIds}
-                        roleId={parseInt(role.id)}
-                        onCountUpdate={handleUserCountUpdate}
-                      />
-                    ) : (
-                      '0'
-                    )}{' '}
-                    {t('users')}
+                    {getUserCount(role.id)} {t('users')}
                   </TableCell>
                   <TableCell align="right">
                     <IconButton
@@ -498,7 +430,7 @@ const ManageRolesTemplate = ({ customerAccount, initialData }: ManageRolesTempla
           )}
 
           {selectedRole?.roleType === RoleType.Custom &&
-            hasAnyPermission(b2bUserActions.UPDATE_ROLE) && (
+            hasPermissionInAllAccounts(b2bUserBehaviors.UPDATE_ROLE, accountUserBehaviorsForAllAccounts) && (
               <MenuItem onClick={() => selectedRoleId && handleEditRole(selectedRoleId)}>
                 <ListItemIcon>
                   <EditIcon fontSize="small" />
@@ -518,7 +450,7 @@ const ManageRolesTemplate = ({ customerAccount, initialData }: ManageRolesTempla
             )}
 
           {selectedRole?.roleType === RoleType.Custom &&
-            hasAnyPermission(b2bUserActions.DELETE_ROLE) && (
+            hasPermissionInAllAccounts(b2bUserBehaviors.DELETE_ROLE, accountUserBehaviorsForAllAccounts) && (
               <Tooltip
                 title={
                   getUserCount(selectedRoleId || '') > 0 ? t('cannot-delete-role-with-users') : ''

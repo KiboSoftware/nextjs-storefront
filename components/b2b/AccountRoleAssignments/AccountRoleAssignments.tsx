@@ -12,10 +12,11 @@ import {
   InputAdornment,
   TextField,
   Typography,
-  styled,
+  useTheme,
 } from '@mui/material'
 import { useTranslation } from 'next-i18next'
 
+import { accountRoleAssignmentsStyles } from './AccountRoleAssignments.styles'
 import type { GetRolesAsyncResponse } from '@/lib/api/operations/get-roles-across-accounts'
 
 /** Represents a role that can be assigned to a user */
@@ -54,72 +55,7 @@ interface AccountAccordionItemProps {
   rolesData?: GetRolesAsyncResponse
 }
 
-/** Styled components */
-
-const StyledAccordion = styled(Accordion)(({ theme }) => ({
-  backgroundColor: theme.palette.grey[50],
-  border: `1px solid ${theme.palette.grey[300]}`,
-  boxShadow: 'none',
-  marginBottom: theme.spacing(2),
-  '&:before': {
-    display: 'none',
-  },
-  '&.Mui-expanded': {
-    margin: `0 0 ${theme.spacing(2)} 0`,
-  },
-}))
-
-const StyledAccordionSummary = styled(AccordionSummary)(({ theme }) => ({
-  backgroundColor: theme.palette.grey[50],
-  borderBottom: `1px solid ${theme.palette.grey[300]}`,
-  minHeight: '56px',
-  '&.Mui-expanded': {
-    minHeight: '56px',
-  },
-  '& .MuiAccordionSummary-content': {
-    margin: theme.spacing(1.5, 0),
-    '&.Mui-expanded': {
-      margin: theme.spacing(1.5, 0),
-    },
-  },
-}))
-
-const RoleChip = styled(Chip)<{ selected?: boolean }>(({ theme, selected }) => ({
-  width: '100%',
-  justifyContent: 'center',
-  backgroundColor: selected ? theme.palette.primary.main : theme.palette.background.paper,
-  color: selected ? theme.palette.primary.contrastText : theme.palette.text.primary,
-  border: `1px solid ${selected ? theme.palette.primary.main : theme.palette.grey[300]}`,
-  cursor: 'pointer',
-  '&:hover': {
-    backgroundColor: selected ? theme.palette.primary.dark : theme.palette.action.hover,
-  },
-  '& .MuiChip-label': {
-    width: '100%',
-    overflow: 'hidden',
-    textOverflow: 'ellipsis',
-    whiteSpace: 'nowrap',
-    textAlign: 'center',
-  },
-}))
-
-const SectionTitle = styled(Typography)(({ theme }) => ({
-  fontWeight: 600,
-  marginBottom: theme.spacing(1),
-  marginTop: theme.spacing(2),
-  color: theme.palette.grey[700],
-}))
-
 // Component to handle individual account accordion with lazy role loading
-interface AccountAccordionItemProps {
-  account: AccountWithRoles
-  isExpanded: boolean
-  onExpandChange: (accountId: number, isExpanded: boolean) => void
-  selectedAccountRoles: string[]
-  onRoleToggle: (accountId: number, roleId: string) => void
-  searchTerm: string
-  rolesData?: GetRolesAsyncResponse
-}
 
 const AccountAccordionItem: React.FC<AccountAccordionItemProps> = memo((props) => {
   const {
@@ -133,6 +69,7 @@ const AccountAccordionItem: React.FC<AccountAccordionItemProps> = memo((props) =
   } = props
 
   const { t } = useTranslation('common')
+  const theme = useTheme()
 
   // Memoize role categorization - only recalculate when rolesData changes
   const { systemRoles, customRoles } = React.useMemo(() => {
@@ -203,7 +140,7 @@ const AccountAccordionItem: React.FC<AccountAccordionItemProps> = memo((props) =
     // If no roles available
     if (!hasVisibleRoles && !searchTerm) {
       return (
-        <Box sx={{ display: 'flex', justifyContent: 'center', p: 3 }}>
+        <Box sx={accountRoleAssignmentsStyles.noRolesBox}>
           <Typography variant="body2" color="text.secondary">
             {t('no-roles-available')}
           </Typography>
@@ -214,7 +151,7 @@ const AccountAccordionItem: React.FC<AccountAccordionItemProps> = memo((props) =
     // If searching and no matches
     if (!hasVisibleRoles && searchTerm) {
       return (
-        <Box sx={{ display: 'flex', justifyContent: 'center', p: 3 }}>
+        <Box sx={accountRoleAssignmentsStyles.noRolesBox}>
           <Typography variant="body2" color="text.secondary">
             {t('no-roles-match', { searchTerm })}
           </Typography>
@@ -227,26 +164,16 @@ const AccountAccordionItem: React.FC<AccountAccordionItemProps> = memo((props) =
       <>
         {filteredSystemRoles.length > 0 && (
           <>
-            <SectionTitle variant="subtitle2">{t('system-roles')}</SectionTitle>
-            <Box
-              sx={{
-                display: 'grid',
-                gridTemplateColumns: {
-                  xs: 'repeat(2, 1fr)',
-                  sm: 'repeat(3, 1fr)',
-                  md: 'repeat(4, 1fr)',
-                  lg: 'repeat(5, 1fr)',
-                },
-                gap: 1,
-                mb: 2,
-              }}
-            >
+            <Typography variant="subtitle2" sx={accountRoleAssignmentsStyles.sectionTitle(theme)}>
+              {t('system-roles')}
+            </Typography>
+            <Box sx={accountRoleAssignmentsStyles.rolesGrid}>
               {filteredSystemRoles.map((role) => (
-                <RoleChip
+                <Chip
                   key={role.id}
                   label={role.name}
                   title={role.name}
-                  selected={isRoleSelected(role.id)}
+                  sx={accountRoleAssignmentsStyles.roleChip(theme, isRoleSelected(role.id))}
                   onClick={(e) => handleRoleClick(e, role.id)}
                 />
               ))}
@@ -256,25 +183,16 @@ const AccountAccordionItem: React.FC<AccountAccordionItemProps> = memo((props) =
 
         {filteredCustomRoles.length > 0 && (
           <>
-            <SectionTitle variant="subtitle2">{t('custom-roles')}</SectionTitle>
-            <Box
-              sx={{
-                display: 'grid',
-                gridTemplateColumns: {
-                  xs: 'repeat(2, 1fr)',
-                  sm: 'repeat(3, 1fr)',
-                  md: 'repeat(4, 1fr)',
-                  lg: 'repeat(5, 1fr)',
-                },
-                gap: 1,
-              }}
-            >
+            <Typography variant="subtitle2" sx={accountRoleAssignmentsStyles.sectionTitle(theme)}>
+              {t('custom-roles')}
+            </Typography>
+            <Box sx={accountRoleAssignmentsStyles.rolesGridNoMargin}>
               {filteredCustomRoles.map((role) => (
-                <RoleChip
+                <Chip
                   key={role.id}
                   label={role.name}
                   title={role.name}
-                  selected={isRoleSelected(role.id)}
+                  sx={accountRoleAssignmentsStyles.roleChip(theme, isRoleSelected(role.id))}
                   onClick={(e) => handleRoleClick(e, role.id)}
                 />
               ))}
@@ -291,23 +209,25 @@ const AccountAccordionItem: React.FC<AccountAccordionItemProps> = memo((props) =
     isRoleSelected,
     handleRoleClick,
     t,
+    theme,
   ])
 
   return (
-    <StyledAccordion expanded={isExpanded} onChange={handleExpansionChange}>
-      <StyledAccordionSummary
+    <Accordion expanded={isExpanded} onChange={handleExpansionChange} sx={accountRoleAssignmentsStyles.styledAccordion(theme)}>
+      <AccordionSummary
         expandIcon={<ExpandMoreIcon />}
         aria-controls={`panel-${account.accountId}-content`}
         id={`panel-${account.accountId}-header`}
+        sx={accountRoleAssignmentsStyles.styledAccordionSummary(theme)}
       >
-        <Box sx={{ display: 'flex', justifyContent: 'space-between', width: '100%', pr: 2 }}>
-          <Typography variant="subtitle1" sx={{ fontWeight: 600 }}>
+        <Box sx={accountRoleAssignmentsStyles.accordionSummaryContent}>
+          <Typography variant="subtitle1" sx={accountRoleAssignmentsStyles.accountName}>
             {account.accountName}
           </Typography>
         </Box>
-      </StyledAccordionSummary>
+      </AccordionSummary>
       <AccordionDetails>{accordionContent}</AccordionDetails>
-    </StyledAccordion>
+    </Accordion>
   )
 })
 
@@ -392,19 +312,12 @@ const AccountRoleAssignments: React.FC<AccountRoleAssignmentsProps> = (props) =>
 
   // Don't filter accounts - let all accounts show and filter roles within each accordion
   return (
-    <Box sx={{ width: '100%', mt: 3 }}>
-      <Box
-        sx={{
-          display: 'flex',
-          justifyContent: 'space-between',
-          alignItems: 'center',
-          mb: 2,
-        }}
-      >
-        <Typography variant="h6" sx={{ fontWeight: 600 }}>
+    <Box sx={accountRoleAssignmentsStyles.container}>
+      <Box sx={accountRoleAssignmentsStyles.header}>
+        <Typography variant="h6" sx={accountRoleAssignmentsStyles.title}>
           {t('account-role-assignments')}
         </Typography>
-        <Box sx={{ display: 'flex', gap: 1 }}>
+        <Box sx={accountRoleAssignmentsStyles.buttonGroup}>
           <Button variant="outlined" size="small" onClick={handleExpandAll}>
             {t('expand-all')}
           </Button>
@@ -426,7 +339,7 @@ const AccountRoleAssignments: React.FC<AccountRoleAssignmentsProps> = (props) =>
             </InputAdornment>
           ),
         }}
-        sx={{ mb: 2 }}
+        sx={accountRoleAssignmentsStyles.searchField}
         size="small"
       />
 
