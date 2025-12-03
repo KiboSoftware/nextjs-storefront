@@ -48,6 +48,7 @@ interface RoleFormProps {
   isLoading?: boolean
   roleAccountIds?: number[]
   roleId?: number
+  isSystemRole?: boolean
 }
 
 const useRoleFormSchema = () => {
@@ -73,6 +74,7 @@ const RoleForm: React.FC<RoleFormProps> = ({
   isLoading = false,
   roleAccountIds = [],
   roleId,
+  isSystemRole = false,
 }) => {
   const { t } = useTranslation('common')
 
@@ -139,7 +141,6 @@ const RoleForm: React.FC<RoleFormProps> = ({
   })
 
   // State management
-  const [selectedPermissions, setSelectedPermissions] = useState<Record<number, number[]>>({})
   const [permissionError, setPermissionError] = useState<string>('')
 
   // Watch form values (must be declared before useEffect hooks that use them)
@@ -200,48 +201,44 @@ const RoleForm: React.FC<RoleFormProps> = ({
     ? getChildAccountsForParent(Number(parentAccount)).length > 0
     : false
 
-  // Update form and selectedPermissions when initialData changes (for view/edit/copy modes)
-  useEffect(() => {
-    if (initialData) {
-      // Reset form with initialData
-      reset(initialData)
+  // Initialize selectedPermissions from initialData
+  const [selectedPermissions, setSelectedPermissions] = useState<Record<number, number[]>>(() =>
+    initialData?.selectedPermissions || {}
+  )
 
-      // Update selectedPermissions state
-      if (initialData.selectedPermissions) {
-        setSelectedPermissions(initialData.selectedPermissions)
-      }
+  // Track if initialData has been applied to prevent unnecessary resets
+  const isInitialDataApplied = React.useRef(false)
+
+  // Update form when initialData changes (for view/edit/copy modes)
+  useEffect(() => {
+    if (initialData && !isInitialDataApplied.current) {
+      reset(initialData)
+      setSelectedPermissions(initialData.selectedPermissions || {})
+      isInitialDataApplied.current = true
     }
   }, [initialData, reset])
 
   // Update parent account when user data loads - set to logged in user's account (only for create mode)
   useEffect(() => {
-    // Don't reset if we have initialData (viewing/editing/copying existing role)
-    if (initialData) return
-
-    // Wait for user data to be available
-    if (!user?.id) return
-
-    const accountsWithPermission = getAccountsWithCreateRolePermission()
+    // Only run for create mode (no initialData)
+    if (initialData || !user?.id || !accountsWithPermission.length) return
 
     // Find logged-in user's account first, fallback to first account with permission
     const userAccount = accountsWithPermission.find((acc) => acc.id === user?.id)
     const defaultAccount = userAccount || accountsWithPermission[0]
 
-    if (defaultAccount) {
+    if (defaultAccount && !parentAccount) {
       const userHasChildren = accounts
         ? accounts.filter((acc) => acc.parentAccountId === defaultAccount.id).length > 0
         : false
 
-      reset({
-        roleName: '',
-        parentAccount: String(defaultAccount.id),
-        accountScope: userHasChildren ? 'all-child' : '',
-        applyToFutureChildren: false,
-        selectedAccounts: [],
-        selectedPermissions: {},
-      })
+      setValue('parentAccount', String(defaultAccount.id))
+      if (userHasChildren) {
+        setValue('accountScope', 'all-child')
+      }
     }
-  }, [user?.id, reset, accounts, getAccountsWithCreateRolePermission, initialData])
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [])
 
   // Event handlers
   const handleParentAccountChange = useCallback(
@@ -544,6 +541,14 @@ const RoleForm: React.FC<RoleFormProps> = ({
         )}
 
       {/* Account Hierarchy View Section - Shows which accounts the role is applied to */}
+      {isSystemRole && (
+        <Box sx={roleFormStyles.container}>
+          <Typography variant="body2">{t('account-hierarchy-scope')}</Typography>
+           <Typography variant="body2" sx={{ mt: 2, p: 2, bgcolor: 'grey.50', borderRadius: 1 }} >
+              {t('system-role-applies-to-all-accounts')}
+            </Typography>
+        </Box>
+      )}
       {/* Show in readonly mode OR edit mode */}
       {(isReadOnly || isEditMode) && roleAccountIds && roleAccountIds.length > 0 && (
         <RoleAccountHierarchyView
@@ -560,6 +565,7 @@ const RoleForm: React.FC<RoleFormProps> = ({
         selectedPermissions={selectedPermissions}
         permissionError={permissionError}
         isReadOnly={isReadOnly}
+        isSystemRole={isSystemRole}
         onBehaviorToggle={handleBehaviorToggle}
         onBehaviorNameCheckboxChange={handleBehaviorNameCheckboxChange}
         getAllSelectedBehaviors={getAllSelectedBehaviors}

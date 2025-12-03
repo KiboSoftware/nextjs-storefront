@@ -73,6 +73,9 @@ export const permissionSelectorStyles = {
     '&:hover': {
       backgroundColor: 'action.hover',
     },
+    '&.Mui-disabled': {
+      opacity: 1,
+    },
   },
   checkbox: {
     padding: 0,

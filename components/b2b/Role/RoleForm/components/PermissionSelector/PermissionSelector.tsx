@@ -31,6 +31,7 @@ interface PermissionSelectorProps {
   selectedPermissions: Record<number, number[]>
   permissionError: string
   isReadOnly?: boolean
+  isSystemRole?: boolean
   onBehaviorToggle: (category: number, behavior: number) => void
   onBehaviorNameCheckboxChange: (selectedCategory: number) => void
   getAllSelectedBehaviors: () => Array<{ category: number; behavior: number }>
@@ -43,6 +44,7 @@ const PermissionSelector: React.FC<PermissionSelectorProps> = ({
   selectedPermissions,
   permissionError,
   isReadOnly = false,
+  isSystemRole = false,
   onBehaviorToggle,
   onBehaviorNameCheckboxChange,
   getAllSelectedBehaviors,
@@ -217,16 +219,18 @@ const PermissionSelector: React.FC<PermissionSelectorProps> = ({
                   <ListItem key={`${category}-${behavior}`} disablePadding>
                     <Box sx={permissionSelectorStyles.selectedBehaviorItem}>
                       <Typography variant="body2">
-                        {behaviorObj?.name || `Behavior ${behavior}`}
+                        {behaviorObj?.name}
                       </Typography>
-                      <IconButton
-                        size="small"
-                        onClick={handleRemoveClick(category, behavior)}
-                        disabled={isReadOnly}
-                        sx={permissionSelectorStyles.removeButton}
-                      >
-                        <CloseIcon fontSize="small" />
-                      </IconButton>
+                      {!isSystemRole && (
+                        <IconButton
+                          size="small"
+                          onClick={handleRemoveClick(category, behavior)}
+                          disabled={isReadOnly}
+                          sx={permissionSelectorStyles.removeButton}
+                        >
+                          <CloseIcon fontSize="small" />
+                        </IconButton>
+                      )}
                     </Box>
                   </ListItem>
                 )

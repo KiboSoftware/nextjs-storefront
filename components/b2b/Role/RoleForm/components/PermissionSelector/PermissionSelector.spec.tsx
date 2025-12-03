@@ -1129,3 +1129,425 @@ describe('PermissionSelector Component', () => {
     })
   })
 })
+
+describe('System Role Functionality', () => {
+  describe('System Role Display', () => {
+    it('should hide close/remove icons when isSystemRole is true', () => {
+      const getAllSelectedBehaviors = jest.fn(() => [
+        { category: 1, behavior: 1 },
+        { category: 1, behavior: 2 },
+      ])
+
+      render(
+        <PermissionSelector
+          {...defaultProps}
+          isSystemRole={true}
+          isReadOnly={true}
+          selectedPermissions={{ 1: [1, 2] }}
+          getAllSelectedBehaviors={getAllSelectedBehaviors}
+        />
+      )
+
+      // Close icons should not be rendered for system roles
+      const closeIcons = screen.queryAllByTestId('CloseIcon')
+      expect(closeIcons.length).toBe(0)
+    })
+
+    it('should show close/remove icons when isSystemRole is false', () => {
+      const getAllSelectedBehaviors = jest.fn(() => [
+        { category: 1, behavior: 1 },
+        { category: 1, behavior: 2 },
+      ])
+
+      render(
+        <PermissionSelector
+          {...defaultProps}
+          isSystemRole={false}
+          selectedPermissions={{ 1: [1, 2] }}
+          getAllSelectedBehaviors={getAllSelectedBehaviors}
+        />
+      )
+
+      // Close icons should be rendered for custom roles
+      const closeIcons = screen.queryAllByTestId('CloseIcon')
+      expect(closeIcons.length).toBeGreaterThan(0)
+    })
+
+    it('should display system role behaviors without remove buttons', () => {
+      const systemRoleBehaviors = [
+        { category: 2000, behavior: 2000 },
+        { category: 2000, behavior: 2001 },
+        { category: 2001, behavior: 2005 },
+      ]
+
+      const getAllSelectedBehaviors = jest.fn(() => systemRoleBehaviors)
+
+      const systemRoleProps = {
+        ...defaultProps,
+        isSystemRole: true,
+        isReadOnly: true,
+        selectedPermissions: {
+          2000: [2000, 2001],
+          2001: [2005],
+        },
+        getAllSelectedBehaviors,
+        behaviorCategories: mockBehaviorCategories,
+        behaviors: mockBehaviors,
+      }
+
+      render(<PermissionSelector {...systemRoleProps} />)
+
+      // Verify behaviors are displayed
+      expect(screen.getByText('selected-behavior')).toBeInTheDocument()
+
+      // Verify no remove buttons are present
+      const closeIcons = screen.queryAllByTestId('CloseIcon')
+      expect(closeIcons.length).toBe(0)
+    })
+
+    it('should render all system role behaviors in readonly mode', () => {
+      const getAllSelectedBehaviors = jest.fn(() => [
+        { category: 1, behavior: 1 },
+        { category: 1, behavior: 2 },
+        { category: 1, behavior: 3 },
+        { category: 2, behavior: 4 },
+        { category: 2, behavior: 5 },
+      ])
+
+      render(
+        <PermissionSelector
+          {...defaultProps}
+          isSystemRole={true}
+          isReadOnly={true}
+          selectedPermissions={{ 1: [1, 2, 3], 2: [4, 5] }}
+          getAllSelectedBehaviors={getAllSelectedBehaviors}
+        />
+      )
+
+      // All behaviors should be displayed
+      expect(screen.getByText('Create Role')).toBeInTheDocument()
+      expect(screen.getByText('Edit Role')).toBeInTheDocument()
+      expect(screen.getByText('Delete Role')).toBeInTheDocument()
+      expect(screen.getByText('Create User')).toBeInTheDocument()
+      expect(screen.getByText('Edit User')).toBeInTheDocument()
+    })
+
+    it('should disable all interactions for system roles', () => {
+      const onBehaviorToggle = jest.fn()
+      const handleRemoveBehavior = jest.fn()
+      const getAllSelectedBehaviors = jest.fn(() => [{ category: 1, behavior: 1 }])
+
+      render(
+        <PermissionSelector
+          {...defaultProps}
+          isSystemRole={true}
+          isReadOnly={true}
+          selectedPermissions={{ 1: [1] }}
+          onBehaviorToggle={onBehaviorToggle}
+          handleRemoveBehavior={handleRemoveBehavior}
+          getAllSelectedBehaviors={getAllSelectedBehaviors}
+        />
+      )
+
+      const checkboxes = screen.getAllByRole('checkbox')
+      checkboxes.forEach((checkbox) => {
+        expect(checkbox).toBeDisabled()
+      })
+
+      // No callbacks should be triggered
+      expect(onBehaviorToggle).not.toHaveBeenCalled()
+      expect(handleRemoveBehavior).not.toHaveBeenCalled()
+    })
+  })
+
+  describe('System Role Scenarios', () => {
+    it('Scenario: Viewing Admin system role with full permissions', () => {
+      const adminBehaviors = {
+        2000: [2000, 2001, 2002, 2003],
+        2001: [2005, 2004],
+        2002: [2007, 2006],
+      }
+
+      const getAllSelectedBehaviors = jest.fn(() => {
+        const behaviors: Array<{ category: number; behavior: number }> = []
+        Object.entries(adminBehaviors).forEach(([category, behaviorIds]) => {
+          behaviorIds.forEach((behaviorId) => {
+            behaviors.push({ category: Number(category), behavior: behaviorId })
+          })
+        })
+        return behaviors
+      })
+
+      render(
+        <PermissionSelector
+          {...defaultProps}
+          isSystemRole={true}
+          isReadOnly={true}
+          selectedPermissions={adminBehaviors}
+          getAllSelectedBehaviors={getAllSelectedBehaviors}
+          behaviorCategories={{
+            items: [
+              { id: 2000, name: 'User Management' },
+              { id: 2001, name: 'Account Management' },
+              { id: 2002, name: 'Order Management' },
+            ],
+          }}
+          behaviors={{
+            items: [
+              { id: 2000, name: 'Add User', categoryId: 2000 },
+              { id: 2001, name: 'View User', categoryId: 2000 },
+              { id: 2002, name: 'Update User', categoryId: 2000 },
+              { id: 2003, name: 'Delete User', categoryId: 2000 },
+              { id: 2005, name: 'View Account', categoryId: 2001 },
+              { id: 2004, name: 'Edit Account', categoryId: 2001 },
+              { id: 2007, name: 'View Order', categoryId: 2002 },
+              { id: 2006, name: 'Create Order', categoryId: 2002 },
+            ],
+          }}
+        />
+      )
+
+      // Verify no remove buttons
+      const closeIcons = screen.queryAllByTestId('CloseIcon')
+      expect(closeIcons.length).toBe(0)
+
+      // Verify all checkboxes are disabled
+      const checkboxes = screen.getAllByRole('checkbox')
+      checkboxes.forEach((checkbox) => {
+        expect(checkbox).toBeDisabled()
+      })
+
+      // Verify behaviors are displayed
+      expect(screen.getAllByText('Add User').length).toBeGreaterThan(0)
+    })
+
+    it('Scenario: Viewing Purchaser system role with limited permissions', () => {
+      const purchaserBehaviors = {
+        2000: [2001],
+        2001: [2005],
+      }
+
+      const getAllSelectedBehaviors = jest.fn(() => [
+        { category: 2000, behavior: 2001 },
+        { category: 2001, behavior: 2005 },
+      ])
+
+      render(
+        <PermissionSelector
+          {...defaultProps}
+          isSystemRole={true}
+          isReadOnly={true}
+          selectedPermissions={purchaserBehaviors}
+          getAllSelectedBehaviors={getAllSelectedBehaviors}
+          behaviorCategories={{
+            items: [
+              { id: 2000, name: 'User Management' },
+              { id: 2001, name: 'Account Management' },
+            ],
+          }}
+          behaviors={{
+            items: [
+              { id: 2001, name: 'View User', categoryId: 2000 },
+              { id: 2005, name: 'View Account', categoryId: 2001 },
+            ],
+          }}
+        />
+      )
+
+      // Verify no remove buttons
+      const closeIcons = screen.queryAllByTestId('CloseIcon')
+      expect(closeIcons.length).toBe(0)
+
+      // Verify behaviors are displayed
+      expect(screen.getAllByText('View User').length).toBeGreaterThan(0)
+      expect(screen.getByText('View Account')).toBeInTheDocument()
+    })
+
+    it('Scenario: Comparing system role and custom role display', () => {
+      const selectedBehaviors = {
+        1: [1, 2],
+      }
+
+      const getAllSelectedBehaviors = jest.fn(() => [
+        { category: 1, behavior: 1 },
+        { category: 1, behavior: 2 },
+      ])
+
+      // Render system role
+      const { rerender } = render(
+        <PermissionSelector
+          {...defaultProps}
+          isSystemRole={true}
+          isReadOnly={true}
+          selectedPermissions={selectedBehaviors}
+          getAllSelectedBehaviors={getAllSelectedBehaviors}
+        />
+      )
+
+      // System role should have no remove buttons
+      let closeIcons = screen.queryAllByTestId('CloseIcon')
+      expect(closeIcons.length).toBe(0)
+
+      // Re-render as custom role
+      rerender(
+        <PermissionSelector
+          {...defaultProps}
+          isSystemRole={false}
+          isReadOnly={false}
+          selectedPermissions={selectedBehaviors}
+          getAllSelectedBehaviors={getAllSelectedBehaviors}
+        />
+      )
+
+      // Custom role should have remove buttons
+      closeIcons = screen.queryAllByTestId('CloseIcon')
+      expect(closeIcons.length).toBeGreaterThan(0)
+    })
+  })
+
+  describe('System Role Edge Cases', () => {
+    it('should handle system role with empty permissions', () => {
+      render(
+        <PermissionSelector
+          {...defaultProps}
+          isSystemRole={true}
+          isReadOnly={true}
+          selectedPermissions={{}}
+          getAllSelectedBehaviors={() => []}
+        />
+      )
+
+      expect(screen.getByText('no-behaviors-selected')).toBeInTheDocument()
+
+      // Should have no remove buttons
+      const closeIcons = screen.queryAllByTestId('CloseIcon')
+      expect(closeIcons.length).toBe(0)
+    })
+
+    it('should handle system role flag without readonly mode', () => {
+      const getAllSelectedBehaviors = jest.fn(() => [{ category: 1, behavior: 1 }])
+
+      render(
+        <PermissionSelector
+          {...defaultProps}
+          isSystemRole={true}
+          isReadOnly={false}
+          selectedPermissions={{ 1: [1] }}
+          getAllSelectedBehaviors={getAllSelectedBehaviors}
+        />
+      )
+
+      // Should still hide remove buttons even if not readonly
+      const closeIcons = screen.queryAllByTestId('CloseIcon')
+      expect(closeIcons.length).toBe(0)
+    })
+
+    it('should maintain system role behavior when switching categories', async () => {
+      const user = userEvent.setup()
+      const getAllSelectedBehaviors = jest.fn(() => [
+        { category: 1, behavior: 1 },
+        { category: 2, behavior: 4 },
+      ])
+
+      render(
+        <PermissionSelector
+          {...defaultProps}
+          isSystemRole={true}
+          isReadOnly={true}
+          selectedPermissions={{ 1: [1], 2: [4] }}
+          getAllSelectedBehaviors={getAllSelectedBehaviors}
+        />
+      )
+
+      // Switch to Users category
+      await user.click(screen.getByText('Users'))
+
+      // Should still have no remove buttons
+      const closeIcons = screen.queryAllByTestId('CloseIcon')
+      expect(closeIcons.length).toBe(0)
+
+      // Checkboxes should still be disabled
+      const checkboxes = screen.getAllByRole('checkbox')
+      checkboxes.forEach((checkbox) => {
+        expect(checkbox).toBeDisabled()
+      })
+    })
+  })
+
+  describe('System Role vs Custom Role Behavior', () => {
+    it('should differentiate between system and custom roles', () => {
+      const selectedBehaviors = { 1: [1, 2] }
+      const getAllSelectedBehaviors = jest.fn(() => [
+        { category: 1, behavior: 1 },
+        { category: 1, behavior: 2 },
+      ])
+
+      const { rerender } = render(
+        <PermissionSelector
+          {...defaultProps}
+          isSystemRole={false}
+          selectedPermissions={selectedBehaviors}
+          getAllSelectedBehaviors={getAllSelectedBehaviors}
+        />
+      )
+
+      // Custom role: should have remove buttons
+      let closeIcons = screen.queryAllByTestId('CloseIcon')
+      expect(closeIcons.length).toBeGreaterThan(0)
+
+      // Switch to system role
+      rerender(
+        <PermissionSelector
+          {...defaultProps}
+          isSystemRole={true}
+          isReadOnly={true}
+          selectedPermissions={selectedBehaviors}
+          getAllSelectedBehaviors={getAllSelectedBehaviors}
+        />
+      )
+
+      // System role: should not have remove buttons
+      closeIcons = screen.queryAllByTestId('CloseIcon')
+      expect(closeIcons.length).toBe(0)
+    })
+
+    it('should allow editing custom roles but not system roles', () => {
+      const selectedBehaviors = { 1: [1] }
+      const getAllSelectedBehaviors = jest.fn(() => [{ category: 1, behavior: 1 }])
+
+      const { rerender } = render(
+        <PermissionSelector
+          {...defaultProps}
+          isSystemRole={false}
+          isReadOnly={false}
+          selectedPermissions={selectedBehaviors}
+          getAllSelectedBehaviors={getAllSelectedBehaviors}
+        />
+      )
+
+      // Custom role: checkboxes should be enabled
+      let checkboxes = screen.getAllByRole('checkbox')
+      checkboxes.forEach((checkbox) => {
+        expect(checkbox).toBeEnabled()
+      })
+
+      // Switch to system role
+      rerender(
+        <PermissionSelector
+          {...defaultProps}
+          isSystemRole={true}
+          isReadOnly={true}
+          selectedPermissions={selectedBehaviors}
+          getAllSelectedBehaviors={getAllSelectedBehaviors}
+        />
+      )
+
+      // System role: checkboxes should be disabled
+      checkboxes = screen.getAllByRole('checkbox')
+      checkboxes.forEach((checkbox) => {
+        expect(checkbox).toBeDisabled()
+      })
+    })
+  })
+})
+
