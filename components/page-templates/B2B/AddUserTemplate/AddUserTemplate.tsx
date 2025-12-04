@@ -4,7 +4,8 @@ import React from 'react'
 
 import { ChevronLeft as ChevronLeftIcon } from '@mui/icons-material'
 import { LoadingButton } from '@mui/lab'
-import { Box, Typography, Paper, useMediaQuery, useTheme, Grid } from '@mui/material'
+import { Box, Typography, Paper, useMediaQuery, useTheme, Grid, styled, Theme } from '@mui/material'
+import Link from 'next/link'
 import { useRouter } from 'next/router'
 import { useTranslation } from 'next-i18next'
 
@@ -57,6 +58,17 @@ interface ExtendedFormValues extends B2BUserInput {
  * Handles user creation/update and role assignment orchestration
  * Optimized for minimal re-renders and maximum performance
  */
+
+const BackButtonLink = styled(Link)(({ theme }: { theme: Theme }) => ({
+  typography: 'body2',
+  textDecoration: 'none',
+  color: theme.palette.grey[900],
+  display: 'flex',
+  alignItems: 'center',
+  padding: '1rem 0rem',
+  cursor: 'pointer',
+}))
+
 const AddUserTemplate = ({
   initialData,
   accountUserBehaviors,
@@ -78,8 +90,6 @@ const AddUserTemplate = ({
   const { addRoleToCustomerB2bAccount } = useAddRoleToCustomerB2bAccountMutation()
 
   const styles = addUserTemplateStyles
-
-
 
   /**
    * Memoize accounts array to prevent unnecessary child re-renders
@@ -245,7 +255,9 @@ const AddUserTemplate = ({
         {!mdScreen && (
           <Box sx={styles.mobileHeader}>
             <Box sx={styles.backButtonLink(theme)}>
-              <ChevronLeftIcon fontSize="inherit" />
+              <BackButtonLink href="/my-account/b2b/users">
+                <ChevronLeftIcon fontSize="inherit" />
+              </BackButtonLink>
             </Box>
             <Typography variant="h2" sx={styles.mobileTitle}>
               {isEditMode ? t('edit-user') : t('add-new-user')}
@@ -257,8 +269,10 @@ const AddUserTemplate = ({
         {mdScreen && (
           <Box sx={styles.desktopHeader}>
             <Box sx={styles.backButtonLink(theme)}>
-              <ChevronLeftIcon fontSize="inherit" />
-              <Typography variant="body2">{t('users')}</Typography>
+              <BackButtonLink href="/my-account/b2b/users">
+                <ChevronLeftIcon fontSize="inherit" />
+                <Typography variant="body2">{t('users')}</Typography>
+              </BackButtonLink>
             </Box>
             <Typography variant="h1" sx={styles.desktopTitle}>
               {isEditMode ? t('edit-user') : t('add-new-user')}

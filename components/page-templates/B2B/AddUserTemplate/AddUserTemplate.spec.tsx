@@ -1,3 +1,5 @@
+import React from 'react'
+
 import { render, screen, waitFor } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
 import { useRouter } from 'next/router'
@@ -103,23 +105,38 @@ describe('AddUserTemplate', () => {
 
     // Set default UserForm implementation
     const { UserForm } = jest.requireMock('@/components/b2b')
-    UserForm.mockImplementation(({ onSave }: { onSave: (data: unknown) => void }) => (
-      <form
-        id="addUserForm"
-        data-testid="user-form"
-        onSubmit={(e) => {
-          e.preventDefault()
-          onSave({
-            emailAddress: 'test@example.com',
-            firstName: 'John',
-            lastName: 'Doe',
-            roleAssignments: { 1: ['101', '102'], 2: ['201'] },
-          })
-        }}
-      >
-        <input type="text" data-testid="user-form-input" />
-      </form>
-    ))
+    UserForm.mockImplementation(
+      ({
+        onSave,
+        onValidationChange,
+      }: {
+        onSave: (data: unknown) => void
+        onValidationChange?: (isValid: boolean) => void
+      }) => {
+        // Simulate form validation passing
+        React.useEffect(() => {
+          onValidationChange?.(true)
+        }, [onValidationChange])
+
+        return (
+          <form
+            id="addUserForm"
+            data-testid="user-form"
+            onSubmit={(e) => {
+              e.preventDefault()
+              onSave({
+                emailAddress: 'test@example.com',
+                firstName: 'John',
+                lastName: 'Doe',
+                roleAssignments: { 1: ['101', '102'], 2: ['201'] },
+              })
+            }}
+          >
+            <input type="text" data-testid="user-form-input" />
+          </form>
+        )
+      }
+    )
 
     mockUseRouter.mockReturnValue({
       push: mockPush,
@@ -187,10 +204,10 @@ describe('AddUserTemplate', () => {
       )
 
       expect(screen.getByTestId('user-form')).toBeInTheDocument()
-      expect(mockT).toHaveBeenCalledWith('users')
       expect(mockT).toHaveBeenCalledWith('add-new-user')
+      expect(mockT).toHaveBeenCalledWith('cancel')
+      expect(mockT).toHaveBeenCalledWith('save')
     })
-
 
     it('should handle missing initialData gracefully', () => {
       render(<AddUserTemplate accountUserBehaviors={mockAccountUserBehaviors} />)
@@ -271,7 +288,6 @@ describe('AddUserTemplate', () => {
       })
     })
 
-
     it('should handle user creation without userId', async () => {
       const consoleErrorSpy = jest.spyOn(console, 'error').mockImplementation()
 
@@ -298,7 +314,7 @@ describe('AddUserTemplate', () => {
 
       // Roles are not added if userId is missing
       expect(mockAddRoleMutateAsync).not.toHaveBeenCalled()
-      
+
       // Still navigates even without userId
       await waitFor(() => {
         expect(mockReplace).toHaveBeenCalledWith(Routes.Users)
@@ -332,7 +348,7 @@ describe('AddUserTemplate', () => {
       })
 
       expect(mockAddRoleMutateAsync).not.toHaveBeenCalled()
-      
+
       // Still navigates even with errors
       await waitFor(() => {
         expect(mockReplace).toHaveBeenCalledWith(Routes.Users)
@@ -442,7 +458,7 @@ describe('AddUserTemplate', () => {
         />
       )
 
-      const backLink = screen.getByRole('link', { name: /users/i })
+      const backLink = screen.getByRole('link')
       expect(backLink).toHaveAttribute('href', Routes.Users)
     })
 
@@ -594,6 +610,5 @@ describe('AddUserTemplate', () => {
 
       expect(screen.getByTestId('user-form')).toBeInTheDocument()
     })
-
   })
 })

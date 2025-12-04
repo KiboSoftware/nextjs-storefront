@@ -33,7 +33,7 @@ export default async function getRolesByAccountId(
   const authTicket = decodeParseCookieValue(cookies[authCookieName])
 
   const variables = {
-    accountId: authTicket?.accountId,
+    accountId: Number(authTicket?.accountId),
   }
 
   const userClaims = await getUserClaimsFromRequest(req, res)

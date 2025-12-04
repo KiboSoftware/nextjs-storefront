@@ -19,7 +19,7 @@ export default async function getB2BAccount(
 
   const authTicket = decodeParseCookieValue(cookies[authCookieName])
   const variables = {
-    accountId: accountId || authTicket?.accountId,
+    accountId: accountId || Number(authTicket?.accountId),
   }
 
   const userClaims = await getUserClaimsFromRequest(req, res)
