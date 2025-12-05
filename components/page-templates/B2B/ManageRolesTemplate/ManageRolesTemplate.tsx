@@ -39,6 +39,7 @@ import {
   BackButtonLink,
   SearchBoxContainer,
   PaginationContainer,
+  ManageRolesTemplateStyles,
 } from './ManageRolesTemplate.styles'
 import { SearchBar } from '@/components/common'
 import { ConfirmationDialog } from '@/components/dialogs'
@@ -275,15 +276,7 @@ const ManageRolesTemplate = ({
     <Grid>
       <Grid item style={{ marginTop: '10px', marginBottom: '20px' }}>
         {/* Header with Back Button */}
-        <Box
-          sx={{
-            display: 'flex',
-            flexDirection: { xs: 'row', md: 'column' },
-            gap: { xs: '36%', sm: '42%', md: 2 },
-            alignItems: { xs: 'center', md: 'start' },
-            margin: '1rem 0',
-          }}
-        >
+        <Box sx={ManageRolesTemplateStyles.headerBox}>
           <BackButtonLink aria-label={t('my-account')} href="/my-account">
             <ChevronLeftIcon />
             {mdScreen && <Typography variant="body1">{t('my-account')}</Typography>}
@@ -301,7 +294,7 @@ const ManageRolesTemplate = ({
                 onClick={handleAddNewRole}
                 disableElevation
                 startIcon={<AddCircleOutlineIcon />}
-                sx={{ width: { xs: '100%', md: 'auto' }, mb: 2 }}
+                sx={ManageRolesTemplateStyles.addRoleButton}
               >
                 {t('add-new-role')}
               </Button>
@@ -331,39 +324,39 @@ const ManageRolesTemplate = ({
             <caption style={{ textAlign: 'center' }}>{t('no-record-found')}</caption>
           ) : null}
           <TableHead>
-            <TableRow style={{ backgroundColor: theme.palette.grey[100] }}>
-              <TableCell>
+            <TableRow sx={ManageRolesTemplateStyles.tableHeaderRow}>
+              <TableCell sx={ManageRolesTemplateStyles.tableHeaderCell}>
                 <Box
-                  sx={{
-                    display: 'flex',
-                    alignItems: 'center',
-                    cursor: 'pointer',
-                    userSelect: 'none',
-                  }}
+                  sx={ManageRolesTemplateStyles.sortBox}
                   onClick={handleSort}
                 >
                   {t('role-name')}
-                  <IconButton size="small" sx={{ ml: 0.5 }}>
+                  <IconButton size="small" sx={ManageRolesTemplateStyles.sortIconButton}>
                     {sortOrder === 'asc' ? (
                       <ArrowUpwardIcon fontSize="small" />
                     ) : sortOrder === 'desc' ? (
                       <ArrowDownwardIcon fontSize="small" />
                     ) : (
-                      <ArrowUpwardIcon fontSize="small" sx={{ opacity: 0.3 }} />
+                      <ArrowUpwardIcon fontSize="small" sx={ManageRolesTemplateStyles.sortIconInactive} />
                     )}
                   </IconButton>
                 </Box>
               </TableCell>
-              <TableCell>{t('role-type')}</TableCell>
-              <TableCell>{t('assigned-users')}</TableCell>
-              <TableCell></TableCell>
+              <TableCell sx={ManageRolesTemplateStyles.tableHeaderCellRoleType}>{t('role-type')}</TableCell>
+              <TableCell sx={ManageRolesTemplateStyles.tableHeaderCellAssignedUsers}>{t('assigned-users')}</TableCell>
+              <TableCell sx={ManageRolesTemplateStyles.tableHeaderCellActions}></TableCell>
             </TableRow>
           </TableHead>
           <TableBody>
             {!isLoading &&
               paginatedRoles.map((role: Role) => (
                 <TableRow key={role.id}>
-                  <TableCell sx={{ fontWeight: 500 }}>{role.name}</TableCell>
+                  <TableCell 
+                    sx={ManageRolesTemplateStyles.roleNameCell}
+                    title={role.name.length > 20 ? role.name : undefined}
+                  >
+                    {role.name}
+                  </TableCell>
                   <TableCell>
                     <Chip
                       label={role.roleType}

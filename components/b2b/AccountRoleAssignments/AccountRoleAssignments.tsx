@@ -12,7 +12,6 @@ import {
   InputAdornment,
   TextField,
   Typography,
-  useTheme,
 } from '@mui/material'
 import { useTranslation } from 'next-i18next'
 
@@ -69,7 +68,6 @@ const AccountAccordionItem: React.FC<AccountAccordionItemProps> = memo((props) =
   } = props
 
   const { t } = useTranslation('common')
-  const theme = useTheme()
 
   // Memoize role categorization - only recalculate when rolesData changes
   const { systemRoles, customRoles } = React.useMemo(() => {
@@ -164,7 +162,7 @@ const AccountAccordionItem: React.FC<AccountAccordionItemProps> = memo((props) =
       <>
         {filteredSystemRoles.length > 0 && (
           <>
-            <Typography variant="subtitle2" sx={accountRoleAssignmentsStyles.sectionTitle(theme)}>
+            <Typography variant="subtitle2" sx={accountRoleAssignmentsStyles.sectionTitle}>
               {t('system-roles')}
             </Typography>
             <Box sx={accountRoleAssignmentsStyles.rolesGrid}>
@@ -173,7 +171,7 @@ const AccountAccordionItem: React.FC<AccountAccordionItemProps> = memo((props) =
                   key={role.id}
                   label={role.name}
                   title={role.name}
-                  sx={accountRoleAssignmentsStyles.roleChip(theme, isRoleSelected(role.id))}
+                  sx={accountRoleAssignmentsStyles.roleChip(isRoleSelected(role.id))}
                   onClick={(e) => handleRoleClick(e, role.id)}
                 />
               ))}
@@ -183,7 +181,7 @@ const AccountAccordionItem: React.FC<AccountAccordionItemProps> = memo((props) =
 
         {filteredCustomRoles.length > 0 && (
           <>
-            <Typography variant="subtitle2" sx={accountRoleAssignmentsStyles.sectionTitle(theme)}>
+            <Typography variant="subtitle2" sx={accountRoleAssignmentsStyles.sectionTitle}>
               {t('custom-roles')}
             </Typography>
             <Box sx={accountRoleAssignmentsStyles.rolesGridNoMargin}>
@@ -192,7 +190,7 @@ const AccountAccordionItem: React.FC<AccountAccordionItemProps> = memo((props) =
                   key={role.id}
                   label={role.name}
                   title={role.name}
-                  sx={accountRoleAssignmentsStyles.roleChip(theme, isRoleSelected(role.id))}
+                  sx={accountRoleAssignmentsStyles.roleChip(isRoleSelected(role.id))}
                   onClick={(e) => handleRoleClick(e, role.id)}
                 />
               ))}
@@ -208,17 +206,16 @@ const AccountAccordionItem: React.FC<AccountAccordionItemProps> = memo((props) =
     searchTerm,
     isRoleSelected,
     handleRoleClick,
-    t,
-    theme,
+    t
   ])
 
   return (
-    <Accordion expanded={isExpanded} onChange={handleExpansionChange} sx={accountRoleAssignmentsStyles.styledAccordion(theme)}>
+    <Accordion expanded={isExpanded} onChange={handleExpansionChange} sx={accountRoleAssignmentsStyles.styledAccordion}>
       <AccordionSummary
         expandIcon={<ExpandMoreIcon />}
         aria-controls={`panel-${account.accountId}-content`}
         id={`panel-${account.accountId}-header`}
-        sx={accountRoleAssignmentsStyles.styledAccordionSummary(theme)}
+        sx={accountRoleAssignmentsStyles.styledAccordionSummary}
       >
         <Box sx={accountRoleAssignmentsStyles.accordionSummaryContent}>
           <Typography variant="subtitle1" sx={accountRoleAssignmentsStyles.accountName}>
