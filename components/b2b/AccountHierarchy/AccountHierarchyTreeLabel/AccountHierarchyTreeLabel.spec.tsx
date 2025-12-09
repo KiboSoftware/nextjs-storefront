@@ -11,8 +11,6 @@ const { Common } = composeStories(stories)
 const handleAddAccountMock = jest.fn()
 const handleEditAccountMock = jest.fn()
 const handleChangeParentMock = jest.fn()
-const handleBuyersBtnClickMock = jest.fn()
-const handleQuotesBtnClickMock = jest.fn()
 const handleViewAccountMock = jest.fn()
 
 const companyOrOrganizationName = b2BAccountHierarchyResult?.accounts?.[0]?.companyOrOrganization
@@ -21,13 +19,11 @@ jest.mock(
   '@/components/b2b/AccountHierarchy/AccountHierarchyActions/AccountHierarchyActions',
   () => ({
     __esModule: true,
-    default: ({ onAdd, onEdit, onView, onBuyersClick, onQuotesClick }: any) => (
+    default: ({ onAdd, onEdit, onAccess }: any) => (
       <div data-testid="account-hierarchy-actions-mock">
         <button onClick={onAdd}>Add</button>
         <button onClick={onEdit}>Edit</button>
-        <button onClick={onView}>View</button>
-        <button onClick={onBuyersClick}>Buyers</button>
-        <button onClick={onQuotesClick}>Quotes</button>
+        <button onClick={onAccess}>Access</button>
       </div>
     ),
   })
@@ -38,13 +34,15 @@ const user = userEvent.setup()
 const props = {
   handleEditAccount: handleEditAccountMock,
   handleAddAccount: handleAddAccountMock,
-  handleBuyersBtnClick: handleBuyersBtnClickMock,
   handleChangeParent: handleChangeParentMock,
-  handleQuotesBtnClick: handleQuotesBtnClickMock,
   handleViewAccount: handleViewAccountMock,
 }
 
 describe('[components] AccountHierarchyTreeLabel', () => {
+  beforeEach(() => {
+    jest.clearAllMocks()
+  })
+
   it('should render component and all action buttons', async () => {
     renderWithQueryClient(<Common {...props} />)
 
@@ -65,20 +63,9 @@ describe('[components] AccountHierarchyTreeLabel', () => {
       accounts: [Common.args?.currentAccount],
     })
 
-    const buyerButton = screen.getByRole('button', { name: 'Buyers' })
-    expect(buyerButton).toBeVisible()
-    await user.click(buyerButton)
-    expect(handleBuyersBtnClickMock).toHaveBeenCalledWith(Common.args?.currentAccount?.id)
-
-    const quoteButton = screen.getByRole('button', { name: 'Quotes' })
-    expect(quoteButton).toBeVisible()
-    await user.click(quoteButton)
-    expect(handleQuotesBtnClickMock).toHaveBeenCalledWith(Common.args?.currentAccount?.id)
-
-    const accountViewButton = screen.getByRole('button', { name: 'View' })
-    expect(accountViewButton).toBeVisible()
-    await user.click(accountViewButton)
-    expect(handleViewAccountMock).toHaveBeenCalledWith(Common.args?.currentAccount)
+    const accountAccessButton = screen.getByRole('button', { name: 'Access' })
+    expect(accountAccessButton).toBeVisible()
+    // Access button triggers account switching (onSwitchAccount), not handleViewAccount
   })
 
   it('should not render action buttons if disableSorting is true', () => {

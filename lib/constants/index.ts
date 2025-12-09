@@ -181,6 +181,7 @@ export const AllAccountActions = {
   VIEW_BUYER_ACCOUNT: 'View buyers for this account',
   VIEW_ACCOUNT: 'View account',
   VIEW_QUOTES: 'View quotes for this account',
+  ACCESS_ACCOUNT: 'Access Account',
   DELETE_ACCOUNT: 'Delete account',
 }
 
@@ -280,7 +281,7 @@ export const SystemRoleBehaviors: Record<string, Record<number, number[]>> = {
     2005: [2015, 2014, 2016],
     2006: [2021, 2032, 2020, 2022],
     2007: [2023],
-    2008: [],
+    2008: [2024],
     2009: [2031],
     2010: [2029],
   },

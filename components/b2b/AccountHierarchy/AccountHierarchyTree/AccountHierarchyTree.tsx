@@ -152,8 +152,6 @@ export default function AccountHierarchyTree(props: AccountHierarchyTreeProps) {
                   handleAddAccount={handleAddAccount}
                   handleEditAccount={handleEditAccount}
                   handleChangeParent={handleChangeParent}
-                  handleBuyersBtnClick={handleBuyersBtnClick}
-                  handleQuotesBtnClick={handleQuotesBtnClick}
                 />
               </SimpleTreeItemWrapper>
             )

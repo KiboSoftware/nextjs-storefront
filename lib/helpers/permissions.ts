@@ -119,6 +119,19 @@ const b2bUserActions = {
   VIEW_PURCHASE_ORDER: 'VIEW_PURCHASE_ORDER',
 }
 
+const guestUserPermissions = [
+  actions.CREATE_CONTACTS,
+  actions.DELETE_CONTACTS,
+  actions.EDIT_CONTACTS,
+  actions.VIEW_CONTACTS,
+  actions.CREATE_PAYMENTS,
+  actions.DELETE_PAYMENTS,
+  actions.EDIT_PAYMENTS,
+  actions.VIEW_PAYMENTS,
+  actions.CREATE_CHECKOUT,
+  b2bUserActions.MANAGE_CART,
+]
+
 // Behavior permissions mapping
 const mappings = new Map()
 mappings.set(behaviors.MANAGE_ACCOUNT_INFORMATION, [
@@ -211,5 +224,5 @@ mappings.set(b2bUserBehaviors.VIEW_ROLE, [b2bUserActions.VIEW_ROLE])
 mappings.set(b2bUserBehaviors.DELETE_ROLE, [b2bUserActions.DELETE_ROLE])
 mappings.set(b2bUserBehaviors.VIEW_PURCHASE_ORDER, [b2bUserActions.VIEW_PURCHASE_ORDER])
 
-export { mappings, actions, b2bUserActions }
+export { mappings, actions, b2bUserActions, guestUserPermissions }
 // Explict permissions

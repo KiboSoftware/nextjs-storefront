@@ -8,11 +8,9 @@ import AccountHierarchyActions from './AccountHierarchyActions'
 export default {
   title: 'B2B/AccountHierarchy/AccountHierarchyActions',
   argTypes: {
-    onBuyersClick: { action: 'onBuyerClick' },
-    onQuotesClick: { action: 'onQuotesClick' },
     onAdd: { action: 'onAdd' },
     onEdit: { action: 'onEdit' },
-    onView: { action: 'onView' },
+    onAccess: { action: 'onAccess' },
   },
   component: AccountHierarchyActions,
 } as ComponentMeta<typeof AccountHierarchyActions>
@@ -24,4 +22,13 @@ const Template: ComponentStory<typeof AccountHierarchyActions> = (args) => (
 export const Common = Template.bind({})
 Common.args = {
   mdScreen: true,
+  currentAccount: { id: 1174 },
+  user: {
+    emailAddress: 'test@example.com',
+    userId: 'testUser',
+    firstName: 'Test',
+    lastName: 'User',
+    id: 1,
+  },
+  selectedAccountId: 1174,
 }

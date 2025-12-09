@@ -1,6 +1,6 @@
 import { getCookie } from 'cookies-next'
 
-import { mappings } from './permissions'
+import { guestUserPermissions, mappings } from './permissions'
 
 function getUserBehaviors() {
   const behaviorsFromCookie = getCookie('behaviors') as string
@@ -11,6 +11,12 @@ function getUserBehaviors() {
 }
 
 export const hasAnyPermission = (...actionsToCheck: any[]) => {
+  const behaviorsFromCookie = getCookie('behaviors') as string
+  // If user is not logged in (no behaviors cookie), check if action is guest-allowed
+  if (!behaviorsFromCookie) {
+    return actionsToCheck.some((action) => guestUserPermissions.includes(action))
+  }
+
   const userBehaviors = getUserBehaviors()
   let canAccess = false
 
@@ -27,7 +33,10 @@ export const hasAnyPermission = (...actionsToCheck: any[]) => {
   return canAccess
 }
 
-export const hasAnyPermissionForAccountBehaviors = (behaviors: number[], ...actionsToCheck: string[]) => {
+export const hasAnyPermissionForAccountBehaviors = (
+  behaviors: number[],
+  ...actionsToCheck: string[]
+) => {
   let canAccess = false
 
   behaviors.forEach((behavior) => {
@@ -46,11 +55,14 @@ export const hasPermissionInAllAccounts = (
   behaviorId: number,
   accountUserBehaviorsForAllAccounts?: Record<number, number[]>
 ): boolean => {
-  if (!accountUserBehaviorsForAllAccounts || Object.keys(accountUserBehaviorsForAllAccounts).length === 0) {
+  if (
+    !accountUserBehaviorsForAllAccounts ||
+    Object.keys(accountUserBehaviorsForAllAccounts).length === 0
+  ) {
     return false
   }
   // Check if the behavior exists in ALL accounts
-  return Object.values(accountUserBehaviorsForAllAccounts).every(
-    (behaviors) => behaviors.includes(behaviorId)
+  return Object.values(accountUserBehaviorsForAllAccounts).every((behaviors) =>
+    behaviors.includes(behaviorId)
   )
 }
