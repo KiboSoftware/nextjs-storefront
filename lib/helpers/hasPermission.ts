@@ -66,3 +66,39 @@ export const hasPermissionInAllAccounts = (
     behaviors.includes(behaviorId)
   )
 }
+
+/**
+ * Check if user has complex permission requirements
+ * Example: Must have VIEW_ROLE AND (UPDATE_BUYER OR EDIT_USERS)
+ * @param behaviors - Array of behavior IDs
+ * @param requiredActions - Array of actions that ALL must be present
+ * @param optionalActions - Array of actions where AT LEAST ONE must be present (if provided)
+ * @returns true if user has all required actions AND (at least one optional action OR no optional actions specified)
+ */
+export const hasComplexPermissionForAccountBehaviors = (
+  behaviors: number[],
+  requiredActions: string[],
+  optionalActions: string[] = []
+) => {
+  const userPermissions = new Set<string>()
+
+  behaviors.forEach((behavior) => {
+    if (mappings.has(behavior)) {
+      const permissions = mappings.get(behavior) || []
+      permissions.forEach((permission: string) => userPermissions.add(permission))
+    }
+  })
+
+  // Check if all required actions are present
+  const hasAllRequired = requiredActions.every((action) => userPermissions.has(action))
+
+  // If no optional actions specified, return hasAllRequired
+  if (optionalActions.length === 0) {
+    return hasAllRequired
+  }
+
+  // Check if at least one optional action is present
+  const hasAnyOptional = optionalActions.some((action) => userPermissions.has(action))
+
+  return hasAllRequired && hasAnyOptional
+}

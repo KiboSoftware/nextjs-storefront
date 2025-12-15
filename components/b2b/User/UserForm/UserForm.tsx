@@ -12,7 +12,7 @@ import { AccountRoleAssignments } from '@/components/b2b'
 import { KiboTextBox } from '@/components/common'
 import { useAddRoleToCustomerB2bAccountMutation, useDeleteB2bAccountRoleMutation } from '@/hooks'
 import type { GetRolesAsyncResponse } from '@/lib/api/operations/get-roles-across-accounts'
-import { b2bUserActions, hasAnyPermissionForAccountBehaviors } from '@/lib/helpers'
+import { actions, b2bUserActions, hasComplexPermissionForAccountBehaviors } from '@/lib/helpers'
 
 import { B2BUserInput, B2BAccount, B2BUser, B2BUserCollection } from '@/lib/gql/types'
 
@@ -225,16 +225,20 @@ const UserForm = (props: UserFormProps) => {
 
           // In edit mode, check for both VIEW_ROLE and UPDATE_BUYER permissions
           if (isEditMode) {
-            const hasRequiredPermissions = hasAnyPermissionForAccountBehaviors(
+            const hasRequiredPermissions = hasComplexPermissionForAccountBehaviors(
               accountBehaviors,
-              b2bUserActions.VIEW_ROLE,
-              b2bUserActions.UPDATE_BUYER
+              [b2bUserActions.VIEW_ROLE],
+              [b2bUserActions.UPDATE_BUYER, actions.EDIT_USERS]
             )
             return hasRequiredPermissions && accountRoles[account.accountId] !== undefined
           }
 
           // In create mode, only check VIEW_ROLE permission
-          return hasAnyPermissionForAccountBehaviors(accountBehaviors, b2bUserActions.VIEW_ROLE)
+          return hasComplexPermissionForAccountBehaviors(
+            accountBehaviors,
+            [b2bUserActions.VIEW_ROLE],
+            []
+          )
         }) as Array<{
         accountId: number
         accountName: string
