@@ -18,9 +18,10 @@ export default async function getB2BAccountHierarchy(
   if (!cookies?.[authCookieName]) return null
 
   const authTicket = decodeParseCookieValue(cookies[authCookieName])
+  const accountId = Number(authTicket?.accountId)
 
   const variables = {
-    accountId: authTicket?.accountId,
+    accountId,
   }
 
   const userClaims = await getUserClaimsFromRequest(req, res)
@@ -33,7 +34,7 @@ export default async function getB2BAccountHierarchy(
   const hierarchy = hierarchyResponse?.accounts
     ? (buildAccountHierarchy(
         hierarchyResponse?.accounts as B2BAccount[],
-        authTicket?.accountId
+        accountId
       ) as HierarchyTree[])
     : []
 

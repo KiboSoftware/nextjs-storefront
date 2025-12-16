@@ -181,6 +181,7 @@ export const AllAccountActions = {
   VIEW_BUYER_ACCOUNT: 'View buyers for this account',
   VIEW_ACCOUNT: 'View account',
   VIEW_QUOTES: 'View quotes for this account',
+  ACCESS_ACCOUNT: 'Access Account',
   DELETE_ACCOUNT: 'Delete account',
 }
 

@@ -19,7 +19,7 @@ import { cartKeys, loginKeys, wishlistKeys } from '@/lib/react-query/queryKeys'
 
 import type { CustomerAccount } from '@/lib/gql/types'
 
-type CustomerAccountWithRole = CustomerAccount & {
+export type CustomerAccountWithRole = CustomerAccount & {
   roleId?: number
   roleName?: string
 }

@@ -98,59 +98,65 @@ describe('[component] User Form', () => {
   })
 
   describe('Form Validation - Email Field', () => {
-    it('should show error when email field is empty and form is submitted', async () => {
+    it('should disable submit button when email field is empty', async () => {
       const user = userEvent.setup()
       render(<Common {...Common.args} onSave={onSave} onClose={onClose} />, {
         wrapper: createQueryClientWrapper(),
       })
 
-      // Fill in other required fields to enable the button
+      // Fill in other required fields
       const firstNameField = screen.getByLabelText('first-name')
       const lastNameField = screen.getByLabelText('last-name-or-sur-name')
       await user.type(firstNameField, 'John')
       await user.type(lastNameField, 'Doe')
 
+      // Submit button should be disabled because email is empty/invalid
       const submitButton = screen.getByTestId('submit-button')
-      await user.click(submitButton)
-
       await waitFor(() => {
-        const errorMessage = screen.getByText('no-email-error')
-        expect(errorMessage).toBeInTheDocument()
+        expect(submitButton).toBeDisabled()
       })
       expect(onSave).not.toHaveBeenCalled()
     })
 
-    it('should show error for invalid email format - missing @', async () => {
+    it('should disable submit button for invalid email format - missing @', async () => {
       const user = userEvent.setup()
       render(<Common {...Common.args} onSave={onSave} onClose={onClose} />, {
         wrapper: createQueryClientWrapper(),
       })
 
       const emailAddressField = screen.getByLabelText('email-address')
+      const firstNameField = screen.getByLabelText('first-name')
+      const lastNameField = screen.getByLabelText('last-name-or-sur-name')
       const submitButton = screen.getByTestId('submit-button')
-      await user.type(emailAddressField, 'invalidemail')
-      await user.click(submitButton)
 
+      await user.type(emailAddressField, 'invalidemail')
+      await user.type(firstNameField, 'John')
+      await user.type(lastNameField, 'Doe')
+
+      // Submit button should be disabled because email format is invalid
       await waitFor(() => {
-        const errorMessage = screen.getByText('invalid-email-error')
-        expect(errorMessage).toBeInTheDocument()
+        expect(submitButton).toBeDisabled()
       })
     })
 
-    it('should show error for invalid email format - missing domain', async () => {
+    it('should disable submit button for invalid email format - missing domain', async () => {
       const user = userEvent.setup()
       render(<Common {...Common.args} onSave={onSave} onClose={onClose} />, {
         wrapper: createQueryClientWrapper(),
       })
 
       const emailAddressField = screen.getByLabelText('email-address')
+      const firstNameField = screen.getByLabelText('first-name')
+      const lastNameField = screen.getByLabelText('last-name-or-sur-name')
       const submitButton = screen.getByTestId('submit-button')
-      await user.type(emailAddressField, 'test@')
-      await user.click(submitButton)
 
+      await user.type(emailAddressField, 'test@')
+      await user.type(firstNameField, 'John')
+      await user.type(lastNameField, 'Doe')
+
+      // Submit button should be disabled because email format is invalid
       await waitFor(() => {
-        const errorMessage = screen.getByText('invalid-email-error')
-        expect(errorMessage).toBeInTheDocument()
+        expect(submitButton).toBeDisabled()
       })
     })
 
@@ -198,7 +204,7 @@ describe('[component] User Form', () => {
   })
 
   describe('Form Validation - Name Fields', () => {
-    it('should show error when first name field is empty', async () => {
+    it('should disable submit button when first name field is empty', async () => {
       const user = userEvent.setup()
       render(<Common {...Common.args} onSave={onSave} onClose={onClose} />, {
         wrapper: createQueryClientWrapper(),
@@ -210,16 +216,15 @@ describe('[component] User Form', () => {
 
       await user.type(emailAddressField, 'test@example.com')
       await user.type(lastNameField, 'Doe')
-      await user.click(submitButton)
 
+      // Submit button should be disabled because first name is empty
       await waitFor(() => {
-        const errorMessage = screen.getByText('firstname-error')
-        expect(errorMessage).toBeInTheDocument()
+        expect(submitButton).toBeDisabled()
       })
       expect(onSave).not.toHaveBeenCalled()
     })
 
-    it('should show error when last name field is empty', async () => {
+    it('should disable submit button when last name field is empty', async () => {
       const user = userEvent.setup()
       render(<Common {...Common.args} onSave={onSave} onClose={onClose} />, {
         wrapper: createQueryClientWrapper(),
@@ -231,11 +236,10 @@ describe('[component] User Form', () => {
 
       await user.type(emailAddressField, 'test@example.com')
       await user.type(firstNameField, 'John')
-      await user.click(submitButton)
 
+      // Submit button should be disabled because last name is empty
       await waitFor(() => {
-        const errorMessage = screen.getByText('lastname-error')
-        expect(errorMessage).toBeInTheDocument()
+        expect(submitButton).toBeDisabled()
       })
       expect(onSave).not.toHaveBeenCalled()
     })
@@ -385,35 +389,38 @@ describe('[component] User Form', () => {
   })
 
   describe('Loading and Disabled States', () => {
-    it('should disable submit button while submitting', async () => {
-      const user = userEvent.setup()
-      const slowOnSave = jest.fn(() => new Promise((resolve) => setTimeout(resolve, 100)))
+    it('should start with submit button disabled in create mode', async () => {
+      render(<Common {...Common.args} onSave={onSave} onClose={onClose} />, {
+        wrapper: createQueryClientWrapper(),
+      })
 
-      render(<Common {...Common.args} onSave={slowOnSave} onClose={onClose} />, {
+      const submitButton = screen.getByTestId('submit-button')
+
+      // Button should be disabled initially
+      expect(submitButton).toBeDisabled()
+    })
+
+    it('should keep submit button disabled until all required fields are valid', async () => {
+      const user = userEvent.setup()
+
+      render(<Common {...Common.args} onSave={onSave} onClose={onClose} />, {
         wrapper: createQueryClientWrapper(),
       })
 
       const emailAddressField = screen.getByLabelText('email-address')
       const firstNameField = screen.getByLabelText('first-name')
-      const lastNameField = screen.getByLabelText('last-name-or-sur-name')
       const submitButton = screen.getByTestId('submit-button')
 
+      // Initially disabled
+      expect(submitButton).toBeDisabled()
+
+      // Still disabled after only email
       await user.type(emailAddressField, 'test@example.com')
+      expect(submitButton).toBeDisabled()
+
+      // Still disabled after email and first name
       await user.type(firstNameField, 'Test')
-      await user.type(lastNameField, 'User')
-
-      // Click submit button
-      await act(async () => {
-        await user.click(submitButton)
-      })
-
-      // Check if button is disabled during submission
-      await waitFor(
-        () => {
-          expect(submitButton).toBeDisabled()
-        },
-        { timeout: 50 }
-      )
+      expect(submitButton).toBeDisabled()
     })
   })
 

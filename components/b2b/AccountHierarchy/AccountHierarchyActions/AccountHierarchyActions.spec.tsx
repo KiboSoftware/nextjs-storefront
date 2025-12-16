@@ -9,24 +9,43 @@ const user = userEvent.setup()
 
 const { Common } = composeStories(stories)
 
-const onBuyersClickMock = jest.fn()
-const onQuotesClickMock = jest.fn()
 const onAddMock = jest.fn()
 const onEditMock = jest.fn()
-const onViewMock = jest.fn()
+const onAccessMock = jest.fn()
+
+const mockCurrentAccount = { id: 1174 }
+
 jest.mock('@/lib/helpers/hasPermission', () => ({
   hasAnyPermission: jest.fn().mockImplementation(() => true),
 }))
 
+jest.mock('@/hooks', () => ({
+  ...jest.requireActual('@/hooks'),
+  useGetAccountsByUser: jest.fn(() => ({
+    activeUsersAccount: [{ id: 1174 }, { id: 1175 }],
+  })),
+}))
+
+jest.mock('@/context', () => ({
+  ...jest.requireActual('@/context'),
+  useAuthContext: jest.fn(() => ({
+    user: { emailAddress: 'test@example.com' },
+    selectedAccountId: 1174,
+  })),
+}))
+
 describe('[components] AccountHierarchyActions', () => {
+  beforeEach(() => {
+    jest.clearAllMocks()
+  })
+
   it('should render component', async () => {
     render(
       <Common
-        onBuyersClick={onBuyersClickMock}
-        onQuotesClick={onQuotesClickMock}
+        currentAccount={mockCurrentAccount}
         onAdd={onAddMock}
         onEdit={onEditMock}
-        onView={onViewMock}
+        onAccess={onAccessMock}
         mdScreen={true}
       />
     )
@@ -42,24 +61,19 @@ describe('[components] AccountHierarchyActions', () => {
     await user.click(accountEditButton)
     expect(onEditMock).toHaveBeenCalled()
 
-    const buyerButton = screen.getByText('buyers')
-    await user.click(buyerButton)
-    expect(onBuyersClickMock).toHaveBeenCalled()
-
-    const quoteButton = screen.getByText('quotes')
-    await user.click(quoteButton)
-    expect(onQuotesClickMock).toHaveBeenCalled()
+    const accessButton = screen.getByText('access-account')
+    await user.click(accessButton)
+    expect(onAccessMock).toHaveBeenCalled()
   })
 
   it('should render AccountHierarchyActions on mobile screen and handle callbacks', async () => {
     render(
       <Common
         mdScreen={false}
-        onBuyersClick={onBuyersClickMock}
-        onQuotesClick={onQuotesClickMock}
+        currentAccount={mockCurrentAccount}
         onAdd={onAddMock}
         onEdit={onEditMock}
-        onView={onViewMock}
+        onAccess={onAccessMock}
       />
     )
 
@@ -68,9 +82,9 @@ describe('[components] AccountHierarchyActions', () => {
 
     await user.click(moreIcon)
 
-    const accountViewButton = screen.getByRole('menuitem', { name: 'View account' })
-    await user.click(accountViewButton)
-    expect(onViewMock).toHaveBeenCalled()
+    const accessButton = screen.getByRole('menuitem', { name: 'Access Account' })
+    await user.click(accessButton)
+    expect(onAccessMock).toHaveBeenCalled()
 
     await user.click(moreIcon)
 
@@ -80,26 +94,21 @@ describe('[components] AccountHierarchyActions', () => {
 
     await user.click(moreIcon)
 
-    const buyerButton = screen.getByRole('menuitem', { name: 'View buyers for this account' })
-    await user.click(buyerButton)
-    expect(onBuyersClickMock).toHaveBeenCalled()
-
-    await user.click(moreIcon)
-
-    const quoteButton = screen.getByRole('menuitem', { name: 'View quotes for this account' })
-    await user.click(quoteButton)
-    expect(onQuotesClickMock).toHaveBeenCalled()
-
-    await user.click(moreIcon)
-
     const addChildAccountButton = screen.getByRole('menuitem', { name: 'Add a child account' })
     await user.click(addChildAccountButton)
     expect(onAddMock).toHaveBeenCalled()
   })
 
-  it("should render Add, Edit, Buyers and Quotes buttons when role is 'Admin'", async () => {
-    // eslint-disable-next-line jsx-a11y/aria-role
-    renderWithQueryClient(<Common mdScreen={true} />)
+  it('should render Add, Edit, and Access link when user has permissions', async () => {
+    renderWithQueryClient(
+      <Common
+        mdScreen={true}
+        currentAccount={mockCurrentAccount}
+        onAdd={onAddMock}
+        onEdit={onEditMock}
+        onAccess={onAccessMock}
+      />
+    )
 
     const accountAddButton = screen.getByRole('button', { name: 'item-add' })
     expect(accountAddButton).toBeVisible()
@@ -107,21 +116,22 @@ describe('[components] AccountHierarchyActions', () => {
     const accountEditButton = screen.getByRole('button', { name: 'item-edit' })
     expect(accountEditButton).toBeVisible()
 
-    const buyerButton = screen.getByText('buyers')
-    expect(buyerButton).toBeVisible()
-
-    const quoteButton = screen.getByText('quotes')
-    expect(quoteButton).toBeVisible()
+    const accessButton = screen.getByText('access-account')
+    expect(accessButton).toBeVisible()
   })
 
-  it("should render Buyer and Quotes buttons when role is 'Purchaser'", async () => {
-    // eslint-disable-next-line jsx-a11y/aria-role
-    renderWithQueryClient(<Common mdScreen={true} />)
+  it('should render Access link when account is accessible', async () => {
+    renderWithQueryClient(
+      <Common
+        mdScreen={true}
+        currentAccount={mockCurrentAccount}
+        onAdd={onAddMock}
+        onEdit={onEditMock}
+        onAccess={onAccessMock}
+      />
+    )
 
-    const buyerButton = screen.getByText('buyers')
-    expect(buyerButton).toBeVisible()
-
-    const quoteButton = screen.getByText('quotes')
-    expect(quoteButton).toBeVisible()
+    const accessButton = screen.getByText('access-account')
+    expect(accessButton).toBeVisible()
   })
 })

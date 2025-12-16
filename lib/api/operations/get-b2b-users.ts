@@ -20,9 +20,9 @@ export default async function getB2BUsers(
   const authTicket = decodeParseCookieValue(cookies[authCookieName])
 
   const variables = quoteUserId
-    ? { b2bAccountId: authTicket?.accountId, filter: `userId eq ${quoteUserId}` }
+    ? { b2bAccountId: Number(authTicket?.accountId), filter: `userId eq ${quoteUserId}` }
     : {
-        b2bAccountId: authTicket?.accountId,
+        b2bAccountId: Number(authTicket?.accountId),
       }
   const userClaims = await getUserClaimsFromRequest(req, res)
 

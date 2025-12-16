@@ -10,11 +10,10 @@ export default {
   title: 'B2B/AccountHierarchy/AccountHierarchyTreeLabel',
   component: AccountHierarchyTreeLabel,
   argTypes: {
+    handleViewAccount: { action: 'handleViewAccount' },
     handleAddAccount: { action: 'handleAddAccount' },
     handleEditAccount: { action: 'handleEditAccount' },
     handleChangeParent: { action: 'handleChangeParent' },
-    handleBuyersBtnClick: { action: 'handleBuyersBtnClick' },
-    handleQuotesBtnClick: { action: 'handleQuotesBtnClick' },
   },
 } as ComponentMeta<typeof AccountHierarchyTreeLabel>
 

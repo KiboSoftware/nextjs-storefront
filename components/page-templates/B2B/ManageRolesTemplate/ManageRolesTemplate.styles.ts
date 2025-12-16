@@ -2,7 +2,9 @@ import { SxProps, Theme, styled } from '@mui/material'
 import { Box } from '@mui/material'
 import Link from 'next/link'
 
-export const BackButtonLink = styled(Link)(({ theme }: { theme: Theme }) => ({
+import  theme  from '@/styles/theme'
+
+export const BackButtonLink = styled(Link)(() => ({
   typography: 'body2',
   textDecoration: 'none',
   color: theme.palette.grey[900],
@@ -17,7 +19,7 @@ export const SearchBoxContainer = styled(Box)({
   width: '100%',
 })
 
-export const PaginationContainer = styled(Box)(({ theme }: { theme: Theme }) => ({
+export const PaginationContainer = styled(Box)(() => ({
   display: 'flex',
   justifyContent: 'space-between',
   color: theme.palette.grey[600],
@@ -170,5 +172,60 @@ export const ManageRolesTemplateStyles: Record<string, SxProps<Theme>> = {
     cursor: 'pointer',
     marginBottom: '1rem',
     fontSize: '0.875rem',
+  },
+  headerBox: {
+    display: 'flex',
+    flexDirection: { xs: 'row', md: 'column' },
+    gap: { xs: '36%', sm: '42%', md: 2 },
+    alignItems: { xs: 'center', md: 'start' },
+    margin: '1rem 0',
+  },
+  addRoleButton: {
+    width: { xs: '100%', md: 'auto' },
+    mb: 2,
+  },
+  tableHeaderRow: {
+    backgroundColor: theme.palette.grey[100],
+  },
+  tableHeaderCell: {
+    width: '40%',
+  },
+  tableHeaderCellRoleType: {
+    width: '20%',
+  },
+  tableHeaderCellAssignedUsers: {
+    width: '30%',
+  },
+  tableHeaderCellActions: {
+    width: '10%',
+  },
+  sortBox: {
+    display: 'flex',
+    alignItems: 'center',
+    cursor: 'pointer',
+    userSelect: 'none',
+  },
+  sortIconButton: {
+    ml: 0.5,
+  },
+  sortIconInactive: {
+    opacity: 0.3,
+  },
+  roleNameCell: {
+    fontWeight: 500,
+    maxWidth: '300px',
+    overflow: 'hidden',
+    textOverflow: 'ellipsis',
+    whiteSpace: 'nowrap',
+  },
+  roleTypeChip: {
+    fontSize: '0.75rem',
+    fontWeight: 500,
+  },
+  roleTypeChipSystem: {
+    color: '#7c7c7c',
+  },
+  roleTypeChipCustom: {
+    color: '#2b2b2b',
   },
 }

@@ -1,4 +1,4 @@
-import { Theme } from '@mui/material'
+import theme from '@/styles/theme'
 
 export const accountRoleAssignmentsStyles = {
   container: {
@@ -38,25 +38,27 @@ export const accountRoleAssignmentsStyles = {
   rolesGrid: {
     display: 'grid',
     gridTemplateColumns: {
-      xs: 'repeat(2, 1fr)',
+      xs: '1fr',
       sm: 'repeat(3, 1fr)',
       md: 'repeat(4, 1fr)',
-      lg: 'repeat(5, 1fr)',
+      lg: 'repeat(6, 1fr)',
     },
     gap: 1,
     mb: 2,
+    overflow: 'hidden',
   },
   rolesGridNoMargin: {
     display: 'grid',
     gridTemplateColumns: {
-      xs: 'repeat(2, 1fr)',
+      xs: '1fr',
       sm: 'repeat(3, 1fr)',
       md: 'repeat(4, 1fr)',
-      lg: 'repeat(5, 1fr)',
+      lg: 'repeat(6, 1fr)',
     },
     gap: 1,
+    overflow: 'hidden',
   },
-  styledAccordion: (theme: Theme) => ({
+  styledAccordion: {
     backgroundColor: theme.palette.grey[50],
     border: `1px solid ${theme.palette.grey[300]}`,
     boxShadow: 'none',
@@ -67,8 +69,8 @@ export const accountRoleAssignmentsStyles = {
     '&.Mui-expanded': {
       margin: `0 0 ${theme.spacing(2)} 0`,
     },
-  }),
-  styledAccordionSummary: (theme: Theme) => ({
+  },
+  styledAccordionSummary: {
     backgroundColor: theme.palette.grey[50],
     borderBottom: `1px solid ${theme.palette.grey[300]}`,
     minHeight: '56px',
@@ -81,9 +83,12 @@ export const accountRoleAssignmentsStyles = {
         margin: theme.spacing(1.5, 0),
       },
     },
-  }),
-  roleChip: (theme: Theme, selected?: boolean) => ({
+  },
+  roleChip: (selected?: boolean) => ({
     width: '100%',
+    maxWidth: '100%',
+    minWidth: 0,
+    height: 'auto',
     justifyContent: 'center',
     backgroundColor: selected ? theme.palette.primary.main : theme.palette.background.paper,
     color: selected ? theme.palette.primary.contrastText : theme.palette.text.primary,
@@ -93,17 +98,20 @@ export const accountRoleAssignmentsStyles = {
       backgroundColor: selected ? theme.palette.primary.dark : theme.palette.action.hover,
     },
     '& .MuiChip-label': {
-      width: '100%',
+      padding: theme.spacing(0.5, 1),
       overflow: 'hidden',
       textOverflow: 'ellipsis',
       whiteSpace: 'nowrap',
+      display: 'block',
+      width: '100%',
+      maxWidth: '100%',
       textAlign: 'center',
     },
   }),
-  sectionTitle: (theme: Theme) => ({
+  sectionTitle: {
     fontWeight: 600,
     marginBottom: theme.spacing(1),
     marginTop: theme.spacing(2),
     color: theme.palette.grey[700],
-  }),
+  },
 } as const

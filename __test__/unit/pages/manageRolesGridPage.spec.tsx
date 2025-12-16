@@ -5,7 +5,14 @@ import React from 'react'
 import { render, screen, waitFor } from '@testing-library/react'
 import { NextRouter, useRouter } from 'next/router'
 
-import { getCurrentUser, getRolesByAccountId } from '@/lib/api/operations'
+import {
+  getCurrentUser,
+  getRolesByAccountId,
+  getUsersByRoleAsync,
+  getRoleByRoleIdAsync,
+  getMultipleB2BAccountUserBehaviors,
+  getB2BAccountUserBehaviors,
+} from '@/lib/api/operations'
 import type { GetRolesAsyncResponse } from '@/lib/api/operations/get-roles-by-account-id'
 import type { CustomerAccount } from '@/lib/gql/types'
 import ManageRolesPage, { getServerSideProps } from '@/src/pages/my-account/b2b/manage-roles'
@@ -18,6 +25,10 @@ jest.mock('next/router', () => ({
 jest.mock('@/lib/api/operations', () => ({
   getCurrentUser: jest.fn(),
   getRolesByAccountId: jest.fn(),
+  getUsersByRoleAsync: jest.fn(),
+  getRoleByRoleIdAsync: jest.fn(),
+  getMultipleB2BAccountUserBehaviors: jest.fn(),
+  getB2BAccountUserBehaviors: jest.fn(),
 }))
 
 jest.mock('next-i18next/serverSideTranslations', () => ({
@@ -43,6 +54,19 @@ jest.mock('@/components/page-templates', () => ({
 const mockGetCurrentUser = getCurrentUser as jest.MockedFunction<typeof getCurrentUser>
 const mockGetRolesByAccountId = getRolesByAccountId as jest.MockedFunction<
   typeof getRolesByAccountId
+>
+const mockGetUsersByRoleAsync = getUsersByRoleAsync as jest.MockedFunction<
+  typeof getUsersByRoleAsync
+>
+const mockGetRoleByRoleIdAsync = getRoleByRoleIdAsync as jest.MockedFunction<
+  typeof getRoleByRoleIdAsync
+>
+const mockGetMultipleB2BAccountUserBehaviors =
+  getMultipleB2BAccountUserBehaviors as jest.MockedFunction<
+    typeof getMultipleB2BAccountUserBehaviors
+  >
+const mockGetB2BAccountUserBehaviors = getB2BAccountUserBehaviors as jest.MockedFunction<
+  typeof getB2BAccountUserBehaviors
 >
 const mockUseRouter = useRouter as jest.MockedFunction<typeof useRouter>
 
@@ -94,6 +118,16 @@ describe('[Page] ManageRolesPage', () => {
   beforeEach(() => {
     jest.clearAllMocks()
     mockUseRouter.mockReturnValue(mockRouter as NextRouter)
+
+    // Set default mock implementations
+    mockGetUsersByRoleAsync.mockResolvedValue([])
+    mockGetRoleByRoleIdAsync.mockResolvedValue({
+      id: 1,
+      name: 'Test Role',
+      accountIds: [1001],
+    } as any)
+    mockGetMultipleB2BAccountUserBehaviors.mockResolvedValue({})
+    mockGetB2BAccountUserBehaviors.mockResolvedValue([])
   })
 
   describe('Component Rendering', () => {
@@ -175,6 +209,9 @@ describe('[Page] ManageRolesPage', () => {
         props: {
           customerAccount: mockCustomerAccount,
           rolesData: mockRolesData,
+          usersByRole: expect.any(Object),
+          accountUserBehaviorsForAllAccounts: expect.any(Object),
+          accountUserBehaviors: expect.any(Array),
           _nextI18Next: {},
         },
       })
