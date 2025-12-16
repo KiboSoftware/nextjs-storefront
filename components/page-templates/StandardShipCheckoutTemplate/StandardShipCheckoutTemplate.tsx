@@ -24,7 +24,13 @@ import {
 } from '@/hooks'
 import { AccountType, AddressType } from '@/lib/constants'
 import { orderGetters } from '@/lib/getters'
-import { buildCreateCustomerCardParam, buildAddressParams } from '@/lib/helpers'
+import {
+  buildCreateCustomerCardParam,
+  buildAddressParams,
+  hasAnyPermission,
+  actions,
+  b2bUserActions,
+} from '@/lib/helpers'
 import type { PersonalDetails } from '@/lib/types'
 
 import type { CrOrder, CrOrderInput, PaymentActionInput } from '@/lib/gql/types'
@@ -50,8 +56,14 @@ const StandardShipCheckoutTemplate = (props: StandardShipCheckoutProps) => {
   })
 
   const { isAuthenticated, user } = useAuthContext()
-  const { data: addressCollection } = useGetCustomerAddresses(user?.id as number)
-  const { data: cardCollection } = useGetCards(user?.id as number)
+  const canViewCards =
+    isAuthenticated && hasAnyPermission(actions.VIEW_PAYMENTS, b2bUserActions.VIEW_PAYMENT)
+  const canViewContacts =
+    isAuthenticated && hasAnyPermission(actions.VIEW_CONTACTS, b2bUserActions.VIEW_CONTACT)
+  const { data: addressCollection } = useGetCustomerAddresses(user?.id as number, {
+    enabled: canViewContacts,
+  })
+  const { data: cardCollection } = useGetCards(user?.id as number, { enabled: canViewCards })
   const { createCustomerAddress } = useCreateCustomerAddress()
   const { createCustomerCard } = useCreateCustomerCard()
   const isB2BUser = user?.accountType?.toLowerCase() === AccountType.B2B.toLowerCase()

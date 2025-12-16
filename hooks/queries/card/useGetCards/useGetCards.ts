@@ -45,7 +45,10 @@ const loadCustomerAccountCards = async (accountId: number) => {
  * @returns 'response?.customerAccountCards' which contains all the saved cards for payment options for the requested user based on accountId
  */
 
-export const useGetCards = (accountId: number): UseCustomerCardsResponse => {
+export const useGetCards = (
+  accountId: number,
+  options?: { enabled?: boolean }
+): UseCustomerCardsResponse => {
   const {
     data = [],
     isLoading,
@@ -53,7 +56,7 @@ export const useGetCards = (accountId: number): UseCustomerCardsResponse => {
   } = useQuery({
     queryKey: customerAccountCardsKeys?.cardById(accountId),
     queryFn: () => loadCustomerAccountCards(accountId),
-    enabled: !!accountId,
+    enabled: (options?.enabled ?? true) && !!accountId,
     refetchOnWindowFocus: false,
   })
 

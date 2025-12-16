@@ -15,6 +15,7 @@ import {
   useGetB2BUserQueries,
 } from '@/hooks'
 import { AccountType } from '@/lib/constants'
+import { b2bUserActions, hasAnyPermission } from '@/lib/helpers'
 import { cartKeys, loginKeys, wishlistKeys } from '@/lib/react-query/queryKeys'
 
 import type { CustomerAccount } from '@/lib/gql/types'
@@ -70,6 +71,7 @@ export const AuthContextProvider = ({ children }: AuthContextProviderProps) => {
       path: '/',
     })
     router.push('/')
+    setUser(undefined)
     queryClient.removeQueries({ queryKey: cartKeys.all })
     queryClient.removeQueries({ queryKey: loginKeys.user })
   })
@@ -106,7 +108,8 @@ export const AuthContextProvider = ({ children }: AuthContextProviderProps) => {
       setUser(account?.customerAccount)
     }
 
-    queryClient.invalidateQueries({ queryKey: cartKeys.all })
+    hasAnyPermission(b2bUserActions.MANAGE_CART) &&
+      queryClient.invalidateQueries({ queryKey: cartKeys.all })
     onSuccessCallBack && onSuccessCallBack()
     queryClient.removeQueries({ queryKey: wishlistKeys.all })
   }

@@ -1,3 +1,4 @@
+import { useAuthContext } from '@/context'
 import {
   useGetCards,
   useGetCustomerAddresses,
@@ -6,11 +7,19 @@ import {
   useCreateCustomerAddress,
   useUpdateCustomerAddress,
 } from '@/hooks'
+import { actions, b2bUserActions, hasAnyPermission } from '@/lib/helpers'
 import { BillingAddress, CardType } from '@/lib/types'
 
 export const useCardContactActions = (userId: number) => {
-  const { data: cards } = useGetCards(userId)
-  const { data: contacts } = useGetCustomerAddresses(userId)
+  const { isAuthenticated } = useAuthContext()
+
+  // Ensure user is authenticated and userId matches the current user
+  const canViewCards =
+    isAuthenticated && hasAnyPermission(actions.VIEW_PAYMENTS, b2bUserActions.VIEW_PAYMENT)
+  const canViewContacts =
+    isAuthenticated && hasAnyPermission(actions.VIEW_CONTACTS, b2bUserActions.VIEW_CONTACT)
+  const { data: cards } = useGetCards(userId, { enabled: canViewCards })
+  const { data: contacts } = useGetCustomerAddresses(userId, { enabled: canViewContacts })
 
   const { createCustomerCard } = useCreateCustomerCard()
   const { updateCustomerCard } = useUpdateCustomerCard()

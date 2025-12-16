@@ -98,6 +98,7 @@ const SearchSuggestions = (props: SearchSuggestionsProps) => {
     router.push({ pathname: '/search', query: { search: value } })
     if (isViewSearchPortal) onEnterSearch?.()
     handleClose()
+    setSearchTerm('')
   }
 
   const searchSuggestionResult = useGetSearchSuggestion2(
