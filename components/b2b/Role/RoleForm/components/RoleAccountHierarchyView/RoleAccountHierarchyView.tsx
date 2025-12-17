@@ -22,8 +22,8 @@ const RoleAccountHierarchyView: React.FC<RoleAccountHierarchyViewProps> = ({
 }) => {
   const { t } = useTranslation('common')
 
-  // Helper function to calculate expanded nodes
-  const getInitialExpandedNodes = useCallback((): Set<number> => {
+  // Compute initial expanded nodes based on selectedAccountIds and parentAccountId
+  const computeExpandedNodes = useMemo((): Set<number> => {
     const expandedSet = new Set<number>()
 
     // Always expand parent account if it exists
@@ -46,13 +46,13 @@ const RoleAccountHierarchyView: React.FC<RoleAccountHierarchyViewProps> = ({
     return expandedSet
   }, [accounts, selectedAccountIds, parentAccountId])
 
-  // Auto-expand all nodes that have selected accounts in their hierarchy
-  const [expandedNodes, setExpandedNodes] = useState<Set<number>>(getInitialExpandedNodes)
+  // State for expanded nodes, initialized with computed value
+  const [expandedNodes, setExpandedNodes] = useState<Set<number>>(computeExpandedNodes)
 
-  // Re-initialize expanded nodes when accounts, selectedAccountIds or parentAccountId change
+  // Update expanded nodes when computed value changes (props update)
   useEffect(() => {
-    setExpandedNodes(getInitialExpandedNodes())
-  }, [getInitialExpandedNodes])
+    setExpandedNodes(computeExpandedNodes)
+  }, [computeExpandedNodes])
 
   // Toggle node expansion (memoized to prevent recreating on every render)
   const handleToggleNodeExpansion = useCallback((nodeId: number) => {
@@ -101,70 +101,70 @@ const RoleAccountHierarchyView: React.FC<RoleAccountHierarchyViewProps> = ({
       const account = accountsById.get(accountId)
       if (!account) return null
 
-    const childAccounts = getChildAccountsForParent(accountId)
-    const hasChildren = childAccounts.length > 0
-    const isExpanded = expandedNodes.has(accountId)
-    const isSelected = selectedAccountIds.includes(accountId)
-    const isParentAccount = accountId === parentAccountId
+      const childAccounts = getChildAccountsForParent(accountId)
+      const hasChildren = childAccounts.length > 0
+      const isExpanded = expandedNodes.has(accountId)
+      const isSelected = selectedAccountIds.includes(accountId)
+      const isParentAccount = accountId === parentAccountId
 
-    return (
-      <Box key={accountId}>
-        <Box
-          sx={{
-            ...roleAccountHierarchyViewStyles.accountItem,
-            pl: level * 3,
-          }}
-        >
-          {hasChildren ? (
-            <IconButton
-              size="small"
-              onClick={() => handleToggleNodeExpansion(accountId)}
-              sx={roleAccountHierarchyViewStyles.expandButton}
-            >
-              {isExpanded ? (
-                <ExpandMoreIcon fontSize="small" />
-              ) : (
-                <ChevronRightIcon fontSize="small" />
-              )}
-            </IconButton>
-          ) : (
-            <Box sx={roleAccountHierarchyViewStyles.spacer} />
-          )}
-
-          <FormControlLabel
-            control={<Checkbox checked={isSelected} disabled={true} size="small" />}
-            label={
-              <Typography
-                variant="body2"
-                sx={roleAccountHierarchyViewStyles.accountLabel(isParentAccount)}
+      return (
+        <Box key={accountId}>
+          <Box
+            sx={{
+              ...roleAccountHierarchyViewStyles.accountItem,
+              pl: level * 3,
+            }}
+          >
+            {hasChildren ? (
+              <IconButton
+                size="small"
+                onClick={() => handleToggleNodeExpansion(accountId)}
+                sx={roleAccountHierarchyViewStyles.expandButton}
               >
-                {account.companyOrOrganization || `Account ${accountId}`}
-                {isParentAccount && ` (${t('parent')})`}
+                {isExpanded ? (
+                  <ExpandMoreIcon fontSize="small" />
+                ) : (
+                  <ChevronRightIcon fontSize="small" />
+                )}
+              </IconButton>
+            ) : (
+              <Box sx={roleAccountHierarchyViewStyles.spacer} />
+            )}
+
+            <FormControlLabel
+              control={<Checkbox checked={isSelected} disabled={true} size="small" />}
+              label={
+                <Typography
+                  variant="body2"
+                  sx={roleAccountHierarchyViewStyles.accountLabel(isParentAccount)}
+                >
+                  {account.companyOrOrganization || `Account ${accountId}`}
+                  {isParentAccount && ` (${t('parent')})`}
+                </Typography>
+              }
+              sx={roleAccountHierarchyViewStyles.formControlLabel}
+            />
+
+            {hasChildren && (
+              <Typography
+                variant="caption"
+                color="text.secondary"
+                sx={roleAccountHierarchyViewStyles.childCountText}
+              >
+                ({childAccounts.length} {childAccounts.length === 1 ? t('child') : t('children')})
               </Typography>
-            }
-            sx={roleAccountHierarchyViewStyles.formControlLabel}
-          />
-
-          {hasChildren && (
-            <Typography
-              variant="caption"
-              color="text.secondary"
-              sx={roleAccountHierarchyViewStyles.childCountText}
-            >
-              ({childAccounts.length} {childAccounts.length === 1 ? t('child') : t('children')})
-            </Typography>
-          )}
-        </Box>
-
-        {hasChildren && isExpanded && (
-          <Box>
-            {childAccounts.map((child: B2BAccount) =>
-              renderAccountHierarchy(child.id as number, level + 1)
             )}
           </Box>
-        )}
-      </Box>
-    )
+
+          {hasChildren && isExpanded && (
+            <Box>
+              {childAccounts.map((child: B2BAccount) =>
+                renderAccountHierarchy(child.id as number, level + 1)
+              )}
+            </Box>
+          )}
+        </Box>
+      )
     },
     [
       accountsById,
