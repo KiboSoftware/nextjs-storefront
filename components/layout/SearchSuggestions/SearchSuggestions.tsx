@@ -116,6 +116,19 @@ const SearchSuggestions = (props: SearchSuggestionsProps) => {
     searchTerm.trim() ? handleOpen() : handleClose()
   }, [searchTerm])
 
+  useEffect(() => {
+    const handleRouteChange = () => {
+      setSearchTerm('')
+      handleClose()
+    }
+
+    router.events.on('routeChangeStart', handleRouteChange)
+
+    return () => {
+      router.events.off('routeChangeStart', handleRouteChange)
+    }
+  }, [router.events])
+
   return (
     <Stack width="100%" position="relative" gap={1} sx={{ maxWidth: { xs: '100%', md: '65%' } }}>
       <Box sx={{ zIndex: 1400 }}>
