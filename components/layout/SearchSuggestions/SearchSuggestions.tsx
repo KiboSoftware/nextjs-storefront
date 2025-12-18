@@ -98,6 +98,7 @@ const SearchSuggestions = (props: SearchSuggestionsProps) => {
     router.push({ pathname: '/search', query: { search: value } })
     if (isViewSearchPortal) onEnterSearch?.()
     handleClose()
+    setSearchTerm('')
   }
 
   const searchSuggestionResult = useGetSearchSuggestion2(
@@ -114,6 +115,19 @@ const SearchSuggestions = (props: SearchSuggestionsProps) => {
   useEffect(() => {
     searchTerm.trim() ? handleOpen() : handleClose()
   }, [searchTerm])
+
+  useEffect(() => {
+    const handleRouteChange = () => {
+      setSearchTerm('')
+      handleClose()
+    }
+
+    router.events.on('routeChangeStart', handleRouteChange)
+
+    return () => {
+      router.events.off('routeChangeStart', handleRouteChange)
+    }
+  }, [router.events])
 
   return (
     <Stack width="100%" position="relative" gap={1} sx={{ maxWidth: { xs: '100%', md: '65%' } }}>

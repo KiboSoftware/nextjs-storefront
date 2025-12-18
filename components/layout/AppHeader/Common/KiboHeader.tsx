@@ -37,7 +37,11 @@ import {
 } from '@/components/layout'
 import { useAuthContext, useHeaderContext, useModalContext } from '@/context'
 import { useCreateCustomerB2bAccountMutation, useGetCategoryTree } from '@/hooks'
-import { buildCreateCustomerB2bAccountParams } from '@/lib/helpers'
+import {
+  b2bUserActions,
+  buildCreateCustomerB2bAccountParams,
+  hasAnyPermission,
+} from '@/lib/helpers'
 import type { CreateCustomerB2bAccountParams, NavigationLink } from '@/lib/types'
 
 import type { Maybe, PrCategory } from '@/lib/gql/types'
@@ -151,7 +155,9 @@ const HeaderActionArea = (props: HeaderActionAreaProps) => {
               />
             </Box>
 
-            <CartIcon size={isHeaderSmall ? 'small' : 'medium'} />
+            {hasAnyPermission(b2bUserActions.MANAGE_CART) && (
+              <CartIcon size={isHeaderSmall ? 'small' : 'medium'} />
+            )}
           </Box>
         </NoSsr>
       </Container>

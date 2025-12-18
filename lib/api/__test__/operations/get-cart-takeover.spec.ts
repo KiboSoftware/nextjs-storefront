@@ -46,6 +46,7 @@ describe('getCartTakeover', () => {
     const secretId = 'test-secret-id'
     const response = { data: 'test-data' }
 
+    ;(getAdditionalHeader as jest.Mock).mockReturnValue({})
     ;(fetcher as jest.Mock).mockResolvedValueOnce(response)
 
     const result = await getCartTakeover(secretId, {} as NextApiRequest)
@@ -53,22 +54,24 @@ describe('getCartTakeover', () => {
     expect(getAdditionalHeader).toHaveBeenCalled()
     expect(fetcher).toHaveBeenCalledWith(
       { query: 'test-query', variables: { secretId } },
-      { headers: { Authorization: 'Bearer test-token' } }
+      { headers: {} }
     )
     expect(result).toEqual(response)
   })
 
   it('should handle fetcher errors', async () => {
     const secretId = 'test-secret-id'
+    const headers = { Authorization: 'Bearer test-token' }
     const error = new Error('Test Error')
 
+    ;(getAdditionalHeader as jest.Mock).mockReturnValue(headers)
     ;(fetcher as jest.Mock).mockRejectedValueOnce(error)
 
     await expect(getCartTakeover(secretId, req)).rejects.toThrow(error)
 
     expect(fetcher).toHaveBeenCalledWith(
       { query: 'test-query', variables: { secretId } },
-      { headers: expect.any(Object) }
+      { headers }
     )
   })
 })

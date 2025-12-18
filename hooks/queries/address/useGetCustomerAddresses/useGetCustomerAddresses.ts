@@ -49,7 +49,10 @@ const loadCustomerAccountContacts = async (accountId: number) => {
  * @returns 'response?.customerAccountContacts' which contains all the saved addresses details for the requested user based on accountId
  */
 
-export const useGetCustomerAddresses = (accountId: number): UseCustomerContactsResponse => {
+export const useGetCustomerAddresses = (
+  accountId: number,
+  options?: { enabled?: boolean }
+): UseCustomerContactsResponse => {
   const {
     data = [],
     isLoading,
@@ -58,7 +61,7 @@ export const useGetCustomerAddresses = (accountId: number): UseCustomerContactsR
     queryKey: customerAccountContactsKeys.addressById(accountId),
     queryFn: () => loadCustomerAccountContacts(accountId),
     refetchOnWindowFocus: false,
-    enabled: !!accountId,
+    enabled: (options?.enabled ?? true) && !!accountId,
   })
 
   return { data, isLoading, isSuccess }

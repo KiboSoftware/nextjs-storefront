@@ -9,6 +9,7 @@ import { useTranslation } from 'next-i18next'
 import { HeaderAction, KiboLogo } from '@/components/common'
 import { HamburgerIcon, StoreFinderIcon, CartIcon } from '@/components/layout'
 import { useHeaderContext } from '@/context'
+import { b2bUserActions, hasAnyPermission } from '@/lib/helpers'
 
 const MobileHeaderStyles = {
   container: {
@@ -58,7 +59,10 @@ const MobileHeader = ({ children }: { children?: React.ReactNode }) => {
               data-testid="mobile-header-store-icon"
             />
           )}
-          <CartIcon size="medium" mobileIconColor="black" data-testid="mobile-header-cart-icon" />
+          {hasAnyPermission(b2bUserActions.MANAGE_CART) && (
+            <CartIcon size="medium" mobileIconColor="black" data-testid="mobile-header-cart-icon" />
+          )}
+          {!hasAnyPermission(b2bUserActions.MANAGE_CART) && <div></div>}
         </Box>
         {children}
       </NoSsr>
