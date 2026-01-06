@@ -290,7 +290,7 @@ export const SystemRoleBehaviors: Record<string, Record<number, number[]>> = {
     2001: [2005],
     2002: [2007],
     2003: [2009],
-    2004: [2012],
+    2004: [2012, 2011, 2013],
     2005: [2015],
     2006: [2021],
     2007: [2023],
