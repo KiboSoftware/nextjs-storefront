@@ -65,21 +65,51 @@ const mockBehaviors = {
   ],
 }
 
+// Shared helper functions
+const createGetAllSelectedBehaviors = (selectedPermissions: Record<number, number[]>) => () => {
+  const allSelected: Array<{ category: number; behavior: number }> = []
+  Object.entries(selectedPermissions).forEach(([categoryId, behaviorIds]) => {
+    behaviorIds.forEach((behaviorId) => {
+      allSelected.push({ category: Number(categoryId), behavior: behaviorId })
+    })
+  })
+  return allSelected
+}
+
+const createNoOpHandlers = () => ({
+  handleBehaviorToggle: () => {},
+  handleBehaviorNameCheckboxChange: () => {},
+  handleRemoveBehavior: () => {},
+  getAllSelectedBehaviors: () => [],
+})
+
+const renderPermissionSelector = (
+  args: any,
+  selectedPermissions: Record<number, number[]>,
+  handlers: {
+    handleBehaviorToggle: (category: number, behavior: number) => void
+    handleBehaviorNameCheckboxChange: (category: number) => void
+    handleRemoveBehavior: (category: number, behavior: number) => void
+    getAllSelectedBehaviors: () => Array<{ category: number; behavior: number }>
+  }
+) => (
+  <Box sx={{ maxWidth: 1200, margin: '0 auto', padding: 2 }}>
+    <PermissionSelector
+      {...args}
+      selectedPermissions={selectedPermissions}
+      onBehaviorToggle={handlers.handleBehaviorToggle}
+      onBehaviorNameCheckboxChange={handlers.handleBehaviorNameCheckboxChange}
+      getAllSelectedBehaviors={handlers.getAllSelectedBehaviors}
+      handleRemoveBehavior={handlers.handleRemoveBehavior}
+    />
+  </Box>
+)
+
 const Template: ComponentStory<typeof PermissionSelector> = (args) => {
   const [selectedPermissions, setSelectedPermissions] = useState<Record<number, number[]>>({
     1: [101, 103], // Order Management: View Orders, Edit Orders
     2: [201], // Product Management: View Products
   })
-
-  const getAllSelectedBehaviors = () => {
-    const allSelected: Array<{ category: number; behavior: number }> = []
-    Object.entries(selectedPermissions).forEach(([categoryId, behaviorIds]) => {
-      behaviorIds.forEach((behaviorId) => {
-        allSelected.push({ category: Number(categoryId), behavior: behaviorId })
-      })
-    })
-    return allSelected
-  }
 
   const handleBehaviorToggle = (category: number, behavior: number) => {
     setSelectedPermissions((prev) => {
@@ -108,13 +138,11 @@ const Template: ComponentStory<typeof PermissionSelector> = (args) => {
     const allSelected = categoryBehaviors.every((id) => currentSelected.includes(id))
 
     if (allSelected) {
-      // Deselect all
       setSelectedPermissions((prev) => ({
         ...prev,
         [selectedCategory]: [],
       }))
     } else {
-      // Select all
       setSelectedPermissions((prev) => ({
         ...prev,
         [selectedCategory]: categoryBehaviors,
@@ -129,18 +157,12 @@ const Template: ComponentStory<typeof PermissionSelector> = (args) => {
     }))
   }
 
-  return (
-    <Box sx={{ maxWidth: 1200, margin: '0 auto', padding: 2 }}>
-      <PermissionSelector
-        {...args}
-        selectedPermissions={selectedPermissions}
-        onBehaviorToggle={handleBehaviorToggle}
-        onBehaviorNameCheckboxChange={handleBehaviorNameCheckboxChange}
-        getAllSelectedBehaviors={getAllSelectedBehaviors}
-        handleRemoveBehavior={handleRemoveBehavior}
-      />
-    </Box>
-  )
+  return renderPermissionSelector(args, selectedPermissions, {
+    handleBehaviorToggle,
+    handleBehaviorNameCheckboxChange,
+    handleRemoveBehavior,
+    getAllSelectedBehaviors: createGetAllSelectedBehaviors(selectedPermissions),
+  })
 }
 
 export const Default = Template.bind({})
@@ -166,30 +188,7 @@ EmptyData.args = {
 
 export const NoSelections: ComponentStory<typeof PermissionSelector> = (args) => {
   const [selectedPermissions] = useState<Record<number, number[]>>({})
-
-  const getAllSelectedBehaviors = () => []
-  const handleBehaviorToggle = () => {
-    // No-op for story demonstration
-  }
-  const handleBehaviorNameCheckboxChange = () => {
-    // No-op for story demonstration
-  }
-  const handleRemoveBehavior = () => {
-    // No-op for story demonstration
-  }
-
-  return (
-    <Box sx={{ maxWidth: 1200, margin: '0 auto', padding: 2 }}>
-      <PermissionSelector
-        {...args}
-        selectedPermissions={selectedPermissions}
-        onBehaviorToggle={handleBehaviorToggle}
-        onBehaviorNameCheckboxChange={handleBehaviorNameCheckboxChange}
-        getAllSelectedBehaviors={getAllSelectedBehaviors}
-        handleRemoveBehavior={handleRemoveBehavior}
-      />
-    </Box>
-  )
+  return renderPermissionSelector(args, selectedPermissions, createNoOpHandlers())
 }
 
 NoSelections.args = {
@@ -214,37 +213,15 @@ export const DisabledWithSelections: ComponentStory<typeof PermissionSelector> =
     4: [401, 403], // Payment Processing: Process Payments and View History
   })
 
-  const getAllSelectedBehaviors = () => {
-    const allSelected: Array<{ category: number; behavior: number }> = []
-    Object.entries(selectedPermissions).forEach(([categoryId, behaviorIds]) => {
-      behaviorIds.forEach((behaviorId) => {
-        allSelected.push({ category: Number(categoryId), behavior: behaviorId })
-      })
-    })
-    return allSelected
-  }
-
-  const handleBehaviorToggle = () => {
-    // No-op for disabled story
-  }
-  const handleBehaviorNameCheckboxChange = () => {
-    // No-op for disabled story
-  }
-  const handleRemoveBehavior = () => {
-    // No-op for disabled story
-  }
-
-  return (
-    <Box sx={{ maxWidth: 1200, margin: '0 auto', padding: 2 }}>
-      <PermissionSelector
-        {...args}
-        selectedPermissions={selectedPermissions}
-        onBehaviorToggle={handleBehaviorToggle}
-        onBehaviorNameCheckboxChange={handleBehaviorNameCheckboxChange}
-        getAllSelectedBehaviors={getAllSelectedBehaviors}
-        handleRemoveBehavior={handleRemoveBehavior}
-      />
-    </Box>
+  return renderPermissionSelector(
+    args,
+    selectedPermissions,
+    createGetAllSelectedBehaviors(selectedPermissions)
+      ? {
+          ...createNoOpHandlers(),
+          getAllSelectedBehaviors: createGetAllSelectedBehaviors(selectedPermissions),
+        }
+      : createNoOpHandlers()
   )
 }
 
@@ -257,30 +234,7 @@ DisabledWithSelections.args = {
 
 export const DisabledWithError: ComponentStory<typeof PermissionSelector> = (args) => {
   const [selectedPermissions] = useState<Record<number, number[]>>({})
-
-  const getAllSelectedBehaviors = () => []
-  const handleBehaviorToggle = () => {
-    // No-op for disabled story
-  }
-  const handleBehaviorNameCheckboxChange = () => {
-    // No-op for disabled story
-  }
-  const handleRemoveBehavior = () => {
-    // No-op for disabled story
-  }
-
-  return (
-    <Box sx={{ maxWidth: 1200, margin: '0 auto', padding: 2 }}>
-      <PermissionSelector
-        {...args}
-        selectedPermissions={selectedPermissions}
-        onBehaviorToggle={handleBehaviorToggle}
-        onBehaviorNameCheckboxChange={handleBehaviorNameCheckboxChange}
-        getAllSelectedBehaviors={getAllSelectedBehaviors}
-        handleRemoveBehavior={handleRemoveBehavior}
-      />
-    </Box>
-  )
+  return renderPermissionSelector(args, selectedPermissions, createNoOpHandlers())
 }
 
 DisabledWithError.args = {
@@ -300,38 +254,10 @@ export const SystemRoleView: ComponentStory<typeof PermissionSelector> = (args) 
     6: [601, 602, 603], // All User Administration permissions
   })
 
-  const getAllSelectedBehaviors = () => {
-    const allSelected: Array<{ category: number; behavior: number }> = []
-    Object.entries(selectedPermissions).forEach(([categoryId, behaviorIds]) => {
-      behaviorIds.forEach((behaviorId) => {
-        allSelected.push({ category: Number(categoryId), behavior: behaviorId })
-      })
-    })
-    return allSelected
-  }
-
-  const handleBehaviorToggle = () => {
-    // No-op for system role
-  }
-  const handleBehaviorNameCheckboxChange = () => {
-    // No-op for system role
-  }
-  const handleRemoveBehavior = () => {
-    // No-op for system role
-  }
-
-  return (
-    <Box sx={{ maxWidth: 1200, margin: '0 auto', padding: 2 }}>
-      <PermissionSelector
-        {...args}
-        selectedPermissions={selectedPermissions}
-        onBehaviorToggle={handleBehaviorToggle}
-        onBehaviorNameCheckboxChange={handleBehaviorNameCheckboxChange}
-        getAllSelectedBehaviors={getAllSelectedBehaviors}
-        handleRemoveBehavior={handleRemoveBehavior}
-      />
-    </Box>
-  )
+  return renderPermissionSelector(args, selectedPermissions, {
+    ...createNoOpHandlers(),
+    getAllSelectedBehaviors: createGetAllSelectedBehaviors(selectedPermissions),
+  })
 }
 
 SystemRoleView.args = {
@@ -349,38 +275,10 @@ export const SystemRolePurchaser: ComponentStory<typeof PermissionSelector> = (a
     4: [403], // Payment Processing: View History
   })
 
-  const getAllSelectedBehaviors = () => {
-    const allSelected: Array<{ category: number; behavior: number }> = []
-    Object.entries(selectedPermissions).forEach(([categoryId, behaviorIds]) => {
-      behaviorIds.forEach((behaviorId) => {
-        allSelected.push({ category: Number(categoryId), behavior: behaviorId })
-      })
-    })
-    return allSelected
-  }
-
-  const handleBehaviorToggle = () => {
-    // No-op for system role
-  }
-  const handleBehaviorNameCheckboxChange = () => {
-    // No-op for system role
-  }
-  const handleRemoveBehavior = () => {
-    // No-op for system role
-  }
-
-  return (
-    <Box sx={{ maxWidth: 1200, margin: '0 auto', padding: 2 }}>
-      <PermissionSelector
-        {...args}
-        selectedPermissions={selectedPermissions}
-        onBehaviorToggle={handleBehaviorToggle}
-        onBehaviorNameCheckboxChange={handleBehaviorNameCheckboxChange}
-        getAllSelectedBehaviors={getAllSelectedBehaviors}
-        handleRemoveBehavior={handleRemoveBehavior}
-      />
-    </Box>
-  )
+  return renderPermissionSelector(args, selectedPermissions, {
+    ...createNoOpHandlers(),
+    getAllSelectedBehaviors: createGetAllSelectedBehaviors(selectedPermissions),
+  })
 }
 
 SystemRolePurchaser.args = {

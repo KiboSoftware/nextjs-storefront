@@ -5,48 +5,27 @@ import '@testing-library/jest-dom'
 import { composeStories } from '@storybook/testing-react'
 import { cleanup, render, screen, waitFor } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
-import mediaQuery from 'css-mediaquery'
 import mockRouter from 'next-router-mock'
 
 import * as stories from './B2BTemplate.stories' // import all stories from the stories file
+import {
+  AddressBookMock,
+  FullWidthDividerMock,
+  MyProfileMock,
+  PaymentMethodMock,
+} from '@/__test__/utils/componentMocks'
+import { createMatchMedia, createMuiMaterialMock } from '@/__test__/utils/testHelpers'
 const { Common } = composeStories(stories)
 
-const createMatchMedia = (width: number) => (query: string) => ({
-  matches: mediaQuery.match(query, { width }),
-  addListener: () => jest.fn(),
-  removeListener: () => jest.fn(),
-  media: query,
-  onchange: null,
-  addEventListener: jest.fn(),
-  removeEventListener: jest.fn(),
-  dispatchEvent: jest.fn(),
-})
-
-jest.mock('@mui/material', () => {
-  const originalModule = jest.requireActual('@mui/material')
-  return {
-    ...originalModule,
-    useTheme: jest.fn().mockReturnValue({
-      breakpoints: { up: jest.fn((size) => `(max-width: ${size})`) },
-    }),
-    useMediaQuery: jest.fn().mockReturnValue(true),
-  }
-})
+jest.mock('@mui/material', () => createMuiMaterialMock())
 
 jest.mock('@/lib/helpers/hasPermission', () => ({
   hasAnyPermission: jest.fn(() => true),
 }))
 
-const FullWidthDividerMock = () => <div data-testid="full-width-divider-component" />
 jest.mock('../../../common/FullWidthDivider/FullWidthDivider', () => () => FullWidthDividerMock())
-
-const MyProfileMock = () => <div data-testid="my-profile-component" />
 jest.mock('../../../my-account/MyProfile/MyProfile', () => () => MyProfileMock())
-
-const PaymentMethodMock = () => <div data-testid="payment-method-component" />
 jest.mock('../../../my-account/PaymentMethod/PaymentMethod', () => () => PaymentMethodMock())
-
-const AddressBookMock = () => <div data-testid="address-book-component" />
 jest.mock('../../../my-account/AddressBook/AddressBook', () => () => AddressBookMock())
 
 jest.mock('next-recaptcha-v3', () => ({
