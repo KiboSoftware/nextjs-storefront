@@ -86,7 +86,7 @@ const AccountHierarchyTreeLabel = (props: AccountHierarchyTreeLabelProps) => {
   }
 
   const companyTextColor =
-    customerAccount?.id === currentAccount.id
+    customerAccount?.id === currentAccount?.id
       ? 'primary'
       : disableSorting
       ? 'text.disabled'

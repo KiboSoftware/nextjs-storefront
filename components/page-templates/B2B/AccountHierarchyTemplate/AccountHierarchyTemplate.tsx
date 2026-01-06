@@ -296,13 +296,18 @@ const AccountHierarchyTemplate = (props: AccountHierarchyTemplateProps) => {
     if (!b2BAccountHierarchy) return
 
     const hierarchy = buildAccountHierarchy(
-      b2BAccountHierarchy?.accounts,
+      b2BAccountHierarchy?.accounts?.length > 0
+        ? b2BAccountHierarchy?.accounts
+        : [user as B2BAccount],
       user?.id as number
     ) as HierarchyTree[]
 
     if (hierarchy) {
       setAccountHierarchy({
-        accounts: b2BAccountHierarchy?.accounts,
+        accounts:
+          b2BAccountHierarchy?.accounts?.length > 0
+            ? b2BAccountHierarchy?.accounts
+            : [user as B2BAccount],
         hierarchy,
       })
     }
