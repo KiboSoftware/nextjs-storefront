@@ -52,10 +52,14 @@ const meta: Meta<typeof AddUserTemplate> = {
           emailAddress: 'john.doe@example.com',
         },
         isAuthenticated: true,
-        login: jest.fn(),
-        logout: jest.fn(),
-        setAuthError: jest.fn(),
-        createAccount: jest.fn(),
+        // eslint-disable-next-line @typescript-eslint/no-empty-function
+        login: () => {},
+        // eslint-disable-next-line @typescript-eslint/no-empty-function
+        logout: () => {},
+        // eslint-disable-next-line @typescript-eslint/no-empty-function
+        setAuthError: () => {},
+        // eslint-disable-next-line @typescript-eslint/no-empty-function
+        createAccount: () => {},
       }
 
       return (
@@ -312,7 +316,8 @@ export const LargeHierarchy: Story = {
       accounts: Array.from({ length: 50 }, (_, i) => ({
         id: i + 1,
         companyOrOrganization: `Company ${i + 1}`,
-        parentAccountId: i === 0 ? null : Math.floor(Math.random() * i) + 1,
+        // Use deterministic parent assignment for test data consistency
+        parentAccountId: i === 0 ? null : Math.floor((i * 7) % i) + 1,
       })),
       hierarchy: [{ id: 1, children: [] }],
     },

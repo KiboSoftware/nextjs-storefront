@@ -4,10 +4,10 @@ import React from 'react'
 import '@testing-library/jest-dom'
 import { composeStories } from '@storybook/testing-react'
 import { fireEvent, render, screen } from '@testing-library/react'
-import mediaQuery from 'css-mediaquery'
 
 import * as stories from './UsersTemplate.stories' // import all stories from the stories file
 import { createQueryClientWrapper, renderWithQueryClient } from '@/__test__/utils'
+import { createMatchMedia, createMuiMaterialMock } from '@/__test__/utils/testHelpers'
 import { ModalContextProvider } from '@/context'
 
 // Mock next/router
@@ -35,17 +35,6 @@ const onCloseMock = jest.fn()
 jest.mock('@/lib/helpers/hasPermission', () => ({
   hasAnyPermission: jest.fn().mockImplementation(() => true),
 }))
-
-const createMatchMedia = (width: number) => (query: string) => ({
-  matches: mediaQuery.match(query, { width }),
-  addListener: () => jest.fn(),
-  removeListener: () => jest.fn(),
-  media: query,
-  onchange: null,
-  addEventListener: jest.fn(),
-  removeEventListener: jest.fn(),
-  dispatchEvent: jest.fn(),
-})
 
 jest.mock('@mui/material', () => {
   const originalModule = jest.requireActual('@mui/material')
