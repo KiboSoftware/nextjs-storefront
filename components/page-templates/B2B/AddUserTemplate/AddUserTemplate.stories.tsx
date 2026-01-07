@@ -52,10 +52,14 @@ const meta: Meta<typeof AddUserTemplate> = {
           emailAddress: 'john.doe@example.com',
         },
         isAuthenticated: true,
-        login: jest.fn(),
-        logout: jest.fn(),
-        setAuthError: jest.fn(),
-        createAccount: jest.fn(),
+        // eslint-disable-next-line @typescript-eslint/no-empty-function
+        login: () => {},
+        // eslint-disable-next-line @typescript-eslint/no-empty-function
+        logout: () => {},
+        // eslint-disable-next-line @typescript-eslint/no-empty-function
+        setAuthError: () => {},
+        // eslint-disable-next-line @typescript-eslint/no-empty-function
+        createAccount: () => {},
       }
 
       return (
