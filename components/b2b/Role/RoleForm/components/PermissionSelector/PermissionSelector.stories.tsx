@@ -77,9 +77,15 @@ const createGetAllSelectedBehaviors = (selectedPermissions: Record<number, numbe
 }
 
 const createNoOpHandlers = () => ({
-  handleBehaviorToggle: () => {},
-  handleBehaviorNameCheckboxChange: () => {},
-  handleRemoveBehavior: () => {},
+  handleBehaviorToggle: () => {
+    // No-op for static stories
+  },
+  handleBehaviorNameCheckboxChange: () => {
+    // No-op for static stories
+  },
+  handleRemoveBehavior: () => {
+    // No-op for static stories
+  },
   getAllSelectedBehaviors: () => [],
 })
 

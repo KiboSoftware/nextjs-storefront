@@ -312,7 +312,8 @@ export const LargeHierarchy: Story = {
       accounts: Array.from({ length: 50 }, (_, i) => ({
         id: i + 1,
         companyOrOrganization: `Company ${i + 1}`,
-        parentAccountId: i === 0 ? null : Math.floor(Math.random() * i) + 1,
+        // Use deterministic parent assignment for test data consistency
+        parentAccountId: i === 0 ? null : Math.floor((i * 7) % i) + 1,
       })),
       hierarchy: [{ id: 1, children: [] }],
     },

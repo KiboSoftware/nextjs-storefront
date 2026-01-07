@@ -55,5 +55,5 @@ EmptyState.args = {
 
 export const Accounts = Template.bind({})
 Accounts.args = {
-  accounts: mockAccounts,
+  accounts: mockB2BAccountsHierarchy,
 }

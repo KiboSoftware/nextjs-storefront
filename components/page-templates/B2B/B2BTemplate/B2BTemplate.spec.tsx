@@ -14,10 +14,19 @@ import {
   MyProfileMock,
   PaymentMethodMock,
 } from '@/__test__/utils/componentMocks'
-import { createMatchMedia, createMuiMaterialMock } from '@/__test__/utils/testHelpers'
+import { createMatchMedia } from '@/__test__/utils/testHelpers'
 const { Common } = composeStories(stories)
 
-jest.mock('@mui/material', () => createMuiMaterialMock())
+jest.mock('@mui/material', () => {
+  const originalModule = jest.requireActual('@mui/material')
+  return {
+    ...originalModule,
+    useTheme: jest.fn().mockReturnValue({
+      breakpoints: { up: jest.fn((size) => `(max-width: ${size})`) },
+    }),
+    useMediaQuery: jest.fn().mockReturnValue(true),
+  }
+})
 
 jest.mock('@/lib/helpers/hasPermission', () => ({
   hasAnyPermission: jest.fn(() => true),

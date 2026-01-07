@@ -36,20 +36,26 @@ jest.mock('@/lib/helpers/hasPermission', () => ({
   hasAnyPermission: jest.fn().mockImplementation(() => true),
 }))
 
-jest.mock('@mui/material', () =>
-  createMuiMaterialMock({
-    palette: {
-      text: {
-        primary: '#2B2B2B',
+jest.mock('@mui/material', () => {
+  const originalModule = jest.requireActual('@mui/material')
+  return {
+    ...originalModule,
+    useTheme: jest.fn().mockReturnValue({
+      breakpoints: { up: jest.fn((size) => `(max-width: ${size})`) },
+      palette: {
+        text: {
+          primary: '#2B2B2B',
+        },
       },
-    },
-    typography: {
-      body2: {
-        fontSize: '1.5rem',
+      typography: {
+        body2: {
+          fontSize: '1.5rem',
+        },
       },
-    },
-  })
-)
+    }),
+    useMediaQuery: jest.fn().mockReturnValue(true),
+  }
+})
 
 const UserFormMock = ({ onClose }: { onClose: () => void }) => (
   <div data-testid="user-form-mock">
