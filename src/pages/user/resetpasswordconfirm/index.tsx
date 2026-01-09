@@ -8,6 +8,7 @@ import type { NextPage } from 'next'
 
 export async function getServerSideProps(context: any) {
   const { locale, query, req } = context
+
   const userId = query?.u
   const customerAccount = await getCustomerAccount(userId, req)
 
