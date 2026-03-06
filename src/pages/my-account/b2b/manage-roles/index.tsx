@@ -34,47 +34,29 @@ export async function getServerSideProps(context: GetServerSidePropsContext) {
   const usersByRole: Record<string, number> = {}
   // Collect all unique account IDs from all roles
   const allAccountIds = new Set<number>()
+  const currentAccountId = response?.customerAccount?.id
 
   if (rolesData?.items) {
     // Fetch users for each role in parallel
     const userCountPromises = rolesData.items.map(async (role) => {
-      if (role.id) {
+      if (role.id && currentAccountId) {
         try {
-          // First, fetch the complete role details to get accountIds
-          const roleDetails = await getRoleByRoleIdAsync(
+          allAccountIds.add(currentAccountId)
+
+          const users = await getUsersByRoleAsync(
             req as NextApiRequest,
             res as NextApiResponse,
+            currentAccountId,
             role.id as number
           )
 
-          if (roleDetails?.accountIds && roleDetails.accountIds.length > 0) {
-            // Collect account IDs for behavior fetching
-            roleDetails.accountIds.forEach((accId) => allAccountIds.add(accId as number))
-
-            // For each account in the role's accountIds, fetch users
-            const accountUserPromises = roleDetails.accountIds.map(async (accId) => {
-              try {
-                const users = await getUsersByRoleAsync(
-                  req as NextApiRequest,
-                  res as NextApiResponse,
-                  accId as number,
-                  role.id as number
-                )
-                return users?.length || 0
-              } catch (error) {
-                console.error(`Error fetching users for role ${role.id}, account ${accId}:`, error)
-                return 0
-              }
-            })
-
-            // Sum up users across all accounts for this role
-            const accountUserCounts = await Promise.all(accountUserPromises)
-            const totalUsers = accountUserCounts.reduce((sum, count) => sum + count, 0)
-
-            return { roleId: role.id.toString(), userCount: totalUsers }
-          }
+          const userCount = users?.length || 0
+          return { roleId: role.id.toString(), userCount }
         } catch (error) {
-          console.error(`Error fetching role details for role ${role.id}:`, error)
+          console.error(
+            `Error fetching users for role ${role.id}, account ${currentAccountId}:`,
+            error
+          )
         }
       }
       return { roleId: role.id?.toString() || '', userCount: 0 }
