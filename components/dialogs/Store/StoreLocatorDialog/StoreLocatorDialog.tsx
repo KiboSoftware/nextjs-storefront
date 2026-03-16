@@ -66,7 +66,7 @@ const StoreLocatorDialog = (props: StoreLocatorProps) => {
   }
   const handleSearchByInput = (inputValue: string) => {
     const param = {
-      filter: `geo near(${inputValue},${publicRuntimeConfig.storeLocator.defaultRange})`,
+      filter: `postalOrZipCode eq "${inputValue}"`,
     }
     setSearchParams(param)
   }
