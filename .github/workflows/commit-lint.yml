@@ -4,11 +4,9 @@ on:
     types: ['opened', 'edited', 'reopened', 'synchronize']
 
 jobs:
-  lint:
+  commitlint:
     name: Validate Pull Request Name (conventional-commit)
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v2
-      - name: Install Dependencies
-        run: npm install @commitlint/config-conventional
-      - uses: JulienKode/pull-request-name-linter-action@v0.1.2
+      - uses: actions/checkout@v3
+      - uses: wagoid/commitlint-github-action@v6
