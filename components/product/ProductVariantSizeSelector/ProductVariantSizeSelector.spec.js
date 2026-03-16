@@ -44,7 +44,7 @@ describe('[component] ProductVariantSizeSelector component', () => {
     await user.click(option)
 
     expect(onSizeChangeMock).toHaveBeenCalled()
-    expect(onSizeChangeMock).toHaveBeenCalledWith(Common.args.attributeFQN, '8')
+    expect(onSizeChangeMock).toHaveBeenCalledWith(Common.args.attributeFQN, '8', true, true)
   })
 
   it('should not call selectOption method when option is disabled', async () => {

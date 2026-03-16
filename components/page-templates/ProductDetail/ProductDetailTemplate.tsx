@@ -507,6 +507,7 @@ const ProductDetailTemplate = (props: ProductDetailTemplateProps) => {
                   productGetters.getOptionSelectedValue(option as ProductOption) ? true : false
                 }
                 onCheckboxChange={selectProductOption}
+                isEnabled={option?.values?.[0]?.isEnabled as boolean}
               />
             )
           })}

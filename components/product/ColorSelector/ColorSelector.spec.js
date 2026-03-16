@@ -47,7 +47,7 @@ describe('[component] ColorSelector component', () => {
       expect(onColorChangeMock).toHaveBeenCalled()
     })
     await waitFor(() => {
-      expect(onColorChangeMock).toHaveBeenCalledWith(Common.args.attributeFQN, 'green')
+      expect(onColorChangeMock).toHaveBeenCalledWith(Common.args.attributeFQN, 'green', true, true)
     })
   })
 

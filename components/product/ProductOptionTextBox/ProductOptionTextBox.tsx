@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 
 import { KiboTextBox } from '@/components/common'
 
@@ -6,7 +6,7 @@ import type { ProductOption } from '@/lib/gql/types'
 
 export interface ProductOptionTextBoxProps {
   option: ProductOption
-  onBlur: (name: string, value: string, shopperEnteredValue: string) => void
+  onBlur: (name: string, value: string, shopperEnteredValue: string, isEnabled?: boolean) => void
 }
 
 const ProductOptionTextBox = ({ option, onBlur }: ProductOptionTextBoxProps) => {
@@ -15,6 +15,12 @@ const ProductOptionTextBox = ({ option, onBlur }: ProductOptionTextBoxProps) => 
   const handleChange = (_: string, value: string) => {
     setValue(value)
   }
+
+  useEffect(() => {
+    if (option?.values?.[0]?.shopperEnteredValue?.trim() !== value?.trim()) {
+      setValue(option?.values?.[0]?.shopperEnteredValue || '')
+    }
+  }, [option?.values?.[0]?.shopperEnteredValue])
 
   return (
     <KiboTextBox
@@ -25,7 +31,7 @@ const ProductOptionTextBox = ({ option, onBlur }: ProductOptionTextBoxProps) => 
       onChange={handleChange}
       onBlur={(name) =>
         option?.values?.[0]?.shopperEnteredValue?.trim() !== value?.trim() &&
-        onBlur(name, '', value)
+        onBlur(option?.attributeFQN as string, '', value, option?.values?.[0]?.isEnabled as boolean)
       }
     />
   )

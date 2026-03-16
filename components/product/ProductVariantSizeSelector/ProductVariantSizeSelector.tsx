@@ -5,12 +5,22 @@ import type { ProductOptionValue } from '@/lib/gql/types'
 interface ProductVariantSizeSelectorProps {
   attributeFQN: string
   values: ProductOptionValue[]
-  onSizeChange: (attributeFQN: string, value: string) => void
+  onSizeChange: (
+    attributeFQN: string,
+    value: string,
+    shopperEnteredValue?: string | boolean,
+    isEnabled?: boolean
+  ) => void
 }
 
 interface SizeOptionsProps extends ProductOptionValue {
   attributeFQN: string
-  onSizeSelection: (attributeFQN: string, value: string) => void
+  onSizeSelection: (
+    attributeFQN: string,
+    value: string,
+    shopperEnteredValue?: string | boolean,
+    isEnabled?: boolean
+  ) => void
 }
 
 const styles = {
@@ -49,7 +59,8 @@ const SizeOptions = (props: SizeOptionsProps) => {
         ...(isSelected && styles.selected),
         ...(!isEnabled && styles.disabled),
       }}
-      {...(isEnabled && !isSelected && { onClick: () => onSizeSelection(attributeFQN, value) })}
+      {...(isEnabled &&
+        !isSelected && { onClick: () => onSizeSelection(attributeFQN, value, true, isEnabled) })}
       data-testid={`size-options-${value}-${isSelected ? 'selected' : ''}`}
     >
       {value}

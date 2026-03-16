@@ -37,6 +37,7 @@ export const cartItemDetails = /* GraphQL */ `
         attributeFQN
         name
         value
+        shopperEnteredValue
       }
       properties {
         attributeFQN
