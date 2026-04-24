@@ -21,7 +21,7 @@ const createCheckout = async (checkout: Checkout) => {
   const client = makeGraphQLClient()
   const checkoutInfo: MultiShipCreateActionParams = {
     checkoutId: checkout.id as string,
-    checkoutActionInput: { actionName: 'SubmitOrder' },
+    checkoutActionInput: { actionName: 'SubmitCheckout' },
   }
 
   const response = await client.request({
