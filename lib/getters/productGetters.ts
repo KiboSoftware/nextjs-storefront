@@ -95,6 +95,7 @@ const handleProtocolRelativeUrl = (url: string) => {
   return url
 }
 
+
 const getBreadcrumbs = (product: Product | ProductCustom): BreadCrumb[] => {
   const homeCrumb = [{ text: 'Home', link: '/' }]
   const { getCategoryLink } = uiHelpers()
